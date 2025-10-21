@@ -368,4 +368,154 @@ describe("CSS Generator", () => {
       expect(result).toContain("--theme-custom3:");
     });
   });
+
+  describe("animation tokens", () => {
+    it("should generate animation duration tokens", () => {
+      const themeWithAnimations: SpexopThemeConfig = {
+        ...mockTheme,
+        animations: {
+          durations: {
+            fast: 150,
+            normal: 250,
+            slow: 400,
+            slower: 600,
+          },
+        },
+      };
+
+      const result = generateCSS(themeWithAnimations);
+      expect(result).toContain("--theme-duration-fast: 150ms");
+      expect(result).toContain("--theme-duration-normal: 250ms");
+      expect(result).toContain("--theme-duration-slow: 400ms");
+      expect(result).toContain("--theme-duration-slower: 600ms");
+    });
+
+    it("should generate easing function tokens", () => {
+      const themeWithEasings: SpexopThemeConfig = {
+        ...mockTheme,
+        animations: {
+          easings: {
+            easeIn: "cubic-bezier(0.4, 0, 1, 1)",
+            easeOut: "cubic-bezier(0, 0, 0.2, 1)",
+            easeInOut: "cubic-bezier(0.4, 0, 0.2, 1)",
+            linear: "linear",
+          },
+        },
+      };
+
+      const result = generateCSS(themeWithEasings);
+      expect(result).toContain(
+        "--theme-easing-ease-in: cubic-bezier(0.4, 0, 1, 1)",
+      );
+      expect(result).toContain(
+        "--theme-easing-ease-out: cubic-bezier(0, 0, 0.2, 1)",
+      );
+      expect(result).toContain(
+        "--theme-easing-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1)",
+      );
+      expect(result).toContain("--theme-easing-linear: linear");
+    });
+
+    it("should generate transition tokens", () => {
+      const themeWithTransitions: SpexopThemeConfig = {
+        ...mockTheme,
+        animations: {
+          transitions: {
+            default: "all 250ms ease-in-out",
+            fast: "all 150ms ease-out",
+            slow: "all 400ms ease-in-out",
+          },
+        },
+      };
+
+      const result = generateCSS(themeWithTransitions);
+      expect(result).toContain(
+        "--theme-transition-default: all 250ms ease-in-out",
+      );
+      expect(result).toContain("--theme-transition-fast: all 150ms ease-out");
+      expect(result).toContain(
+        "--theme-transition-slow: all 400ms ease-in-out",
+      );
+    });
+
+    it("should handle themes without animations", () => {
+      const result = generateCSS(mockTheme);
+      expect(result).not.toContain("--theme-duration-");
+      expect(result).not.toContain("--theme-easing-");
+      expect(result).not.toContain("--theme-transition-");
+    });
+
+    it("should handle partial animation configurations", () => {
+      const themeWithPartialAnimations: SpexopThemeConfig = {
+        ...mockTheme,
+        animations: {
+          durations: {
+            fast: 150,
+            normal: 250,
+          },
+        },
+      };
+
+      const result = generateCSS(themeWithPartialAnimations);
+      expect(result).toContain("--theme-duration-fast: 150ms");
+      expect(result).toContain("--theme-duration-normal: 250ms");
+      expect(result).not.toContain("--theme-duration-slow");
+    });
+  });
+
+  describe("opacity tokens", () => {
+    it("should generate opacity tokens", () => {
+      const themeWithOpacity: SpexopThemeConfig = {
+        ...mockTheme,
+        opacity: {
+          disabled: 0.4,
+          hover: 0.8,
+          overlay: 0.75,
+          subtle: 0.6,
+          muted: 0.7,
+        },
+      };
+
+      const result = generateCSS(themeWithOpacity);
+      expect(result).toContain("--theme-opacity-disabled: 0.4");
+      expect(result).toContain("--theme-opacity-hover: 0.8");
+      expect(result).toContain("--theme-opacity-overlay: 0.75");
+      expect(result).toContain("--theme-opacity-subtle: 0.6");
+      expect(result).toContain("--theme-opacity-muted: 0.7");
+    });
+
+    it("should handle themes without opacity tokens", () => {
+      const result = generateCSS(mockTheme);
+      expect(result).not.toContain("--theme-opacity-");
+    });
+
+    it("should handle partial opacity configurations", () => {
+      const themeWithPartialOpacity: SpexopThemeConfig = {
+        ...mockTheme,
+        opacity: {
+          disabled: 0.4,
+          hover: 0.8,
+        },
+      };
+
+      const result = generateCSS(themeWithPartialOpacity);
+      expect(result).toContain("--theme-opacity-disabled: 0.4");
+      expect(result).toContain("--theme-opacity-hover: 0.8");
+      expect(result).not.toContain("--theme-opacity-overlay");
+    });
+
+    it("should handle custom opacity values", () => {
+      const themeWithCustomOpacity: SpexopThemeConfig = {
+        ...mockTheme,
+        opacity: {
+          customLight: 0.2,
+          customHeavy: 0.9,
+        },
+      };
+
+      const result = generateCSS(themeWithCustomOpacity);
+      expect(result).toContain("--theme-opacity-custom-light: 0.2");
+      expect(result).toContain("--theme-opacity-custom-heavy: 0.9");
+    });
+  });
 });

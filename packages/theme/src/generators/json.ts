@@ -55,7 +55,10 @@ export function generateJSON(config: SpexopThemeConfig): string {
       ...(colors.error && { error: colors.error }),
       ...(colors.info && { info: colors.info }),
     },
-    spacing: spacingValues,
+    spacing: {
+      baseUnit: spacing.baseUnit,
+      values: spacingValues,
+    },
     typography: {
       fontFamily: typography.fontFamily,
       fontFamilyHeading: typography.fontFamilyHeading || typography.fontFamily,

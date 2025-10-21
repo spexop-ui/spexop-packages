@@ -6,6 +6,10 @@
  */
 
 import type { SpexopThemeConfig } from "../types/SpexopThemeConfig.js";
+import {
+  fluidTypographyToCSS,
+  generateFluidTypographyScale,
+} from "../utils/fluidTypography.js";
 import { resolveToken } from "../utils/tokenResolver.js";
 
 /**
@@ -94,8 +98,19 @@ function generateSpacingTokens(spacing: SpexopThemeConfig["spacing"]): string {
  */
 function generateTypographyScale(
   typography: SpexopThemeConfig["typography"],
+  fluidConfig?: SpexopThemeConfig["fluidTypography"],
 ): string {
   const { baseSize, scale, sizes } = typography;
+
+  // If fluid typography is enabled, use clamp() values
+  if (fluidConfig?.enabled) {
+    const fluidSizes = generateFluidTypographyScale(
+      baseSize,
+      scale,
+      fluidConfig,
+    );
+    return fluidTypographyToCSS(fluidSizes);
+  }
 
   // Use custom sizes if provided, otherwise generate from scale ratio
   const typographySizes = sizes || {
@@ -451,6 +466,74 @@ function generateCardTokens(
 }
 
 /**
+ * Generate animation tokens (durations, easings, transitions)
+ */
+function generateAnimationTokens(
+  animations?: SpexopThemeConfig["animations"],
+): string {
+  if (!animations) return "";
+
+  const tokens: string[] = [];
+
+  // Durations
+  if (animations.durations) {
+    if (animations.durations.fast !== undefined) {
+      tokens.push(`  --theme-duration-fast: ${animations.durations.fast}ms;`);
+    }
+    if (animations.durations.normal !== undefined) {
+      tokens.push(
+        `  --theme-duration-normal: ${animations.durations.normal}ms;`,
+      );
+    }
+    if (animations.durations.slow !== undefined) {
+      tokens.push(`  --theme-duration-slow: ${animations.durations.slow}ms;`);
+    }
+    if (animations.durations.slower !== undefined) {
+      tokens.push(
+        `  --theme-duration-slower: ${animations.durations.slower}ms;`,
+      );
+    }
+  }
+
+  // Easings
+  if (animations.easings) {
+    for (const [key, value] of Object.entries(animations.easings)) {
+      if (value) {
+        tokens.push(`  --theme-easing-${camelToKebab(key)}: ${value};`);
+      }
+    }
+  }
+
+  // Transitions
+  if (animations.transitions) {
+    for (const [key, value] of Object.entries(animations.transitions)) {
+      if (value) {
+        tokens.push(`  --theme-transition-${camelToKebab(key)}: ${value};`);
+      }
+    }
+  }
+
+  return tokens.length > 0 ? tokens.join("\n") : "";
+}
+
+/**
+ * Generate opacity tokens
+ */
+function generateOpacityTokens(opacity?: SpexopThemeConfig["opacity"]): string {
+  if (!opacity) return "";
+
+  const tokens: string[] = [];
+
+  for (const [key, value] of Object.entries(opacity)) {
+    if (value !== undefined) {
+      tokens.push(`  --theme-opacity-${camelToKebab(key)}: ${value};`);
+    }
+  }
+
+  return tokens.length > 0 ? tokens.join("\n") : "";
+}
+
+/**
  * Generate CSS variables from theme configuration
  *
  * @param config - Spexop theme configuration
@@ -477,6 +560,7 @@ export function generateCSS(
     colors,
     spacing,
     typography,
+    fluidTypography,
     borders,
     radii,
     shadows,
@@ -485,6 +569,8 @@ export function generateCSS(
     cards,
     breakpoints,
     darkMode,
+    animations,
+    opacity,
   } = config;
 
   return `
@@ -618,7 +704,7 @@ ${generateSpacingTokens(spacing)}
   ${typography.fontFamilyMono ? `--theme-font-family-mono: ${typography.fontFamilyMono};` : ""}
   
   /* Font Sizes */
-${generateTypographyScale(typography)}
+${generateTypographyScale(typography, fluidTypography)}
   
   /* Font Weights */
 ${generateFontWeights(typography.weights)}
@@ -665,6 +751,12 @@ ${generateShadowTokens(shadows)}
 
   /* === Z-Index === */
 ${generateZIndexTokens(zIndex)}
+
+  /* === Animations === */
+${generateAnimationTokens(animations)}
+
+  /* === Opacity === */
+${generateOpacityTokens(opacity)}
 
   /* === Breakpoints === */
 ${generateBreakpoints(breakpoints)}

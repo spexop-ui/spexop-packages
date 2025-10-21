@@ -87,14 +87,19 @@ export type {
   Breakpoints,
   ButtonVariantStyle,
   DarkModeConfig,
+  FluidTypography,
   FontWeights,
   LineHeights,
   SpacingValues,
   SpexopThemeConfig,
   ThemeBorders,
   ThemeButtons,
+  ThemeCards,
   ThemeColors,
+  ThemeForms,
   ThemeMeta,
+  ThemeModals,
+  ThemeNavigation,
   ThemeSpacing,
   ThemeTypography,
   TypographySizes,
@@ -245,3 +250,23 @@ export {
   normalizeColorToHex,
   validateColor,
 } from "./utils/colorValidation.js";
+// Fluid typography utilities
+export {
+  fluidTypographyToCSS,
+  generateFluidFallback,
+  generateFluidSize,
+  generateFluidTypographyScale,
+  supportsClamp,
+  validateFluidTypography,
+} from "./utils/fluidTypography.js";
+// Performance utilities
+export {
+  LRUCache,
+  batchUpdates,
+  createSelector,
+  debounce,
+  memoize,
+  memoizeGenerator,
+  measurePerformance,
+  throttle,
+} from "./utils/memoization.js";

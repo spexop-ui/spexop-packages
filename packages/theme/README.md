@@ -5,7 +5,7 @@ Professional theming system for Spexop Design System with token references, pre-
 ## Features
 
 - ✅ **Token Reference System** - Maintain relationships between design tokens
-- ✅ **12 Pre-built Themes** - Production-ready preset themes
+- ✅ **13 Pre-built Themes** - Production-ready preset themes
 - ✅ **Pre-built CSS Files** - Import and go
 - ✅ **29+ Export Formats** - CSS, SCSS, Tailwind, Figma, and more
 - ✅ **Type-Safe** - Full TypeScript support

@@ -343,6 +343,29 @@ export interface Breakpoints {
 }
 
 /**
+ * Fluid typography configuration for responsive text sizing
+ */
+export interface FluidTypography {
+  /** Enable fluid typography */
+  enabled: boolean;
+  /** Minimum viewport width (px) where fluid sizing starts */
+  minViewport?: number;
+  /** Maximum viewport width (px) where fluid sizing ends */
+  maxViewport?: number;
+  /** Minimum font size multiplier (default: 0.8) */
+  minSizeMultiplier?: number;
+  /** Maximum font size multiplier (default: 1.2) */
+  maxSizeMultiplier?: number;
+  /** Custom fluid size mappings */
+  customSizes?: {
+    [key: string]: {
+      min: number;
+      max: number;
+    };
+  };
+}
+
+/**
  * Animation duration tokens
  */
 export interface ThemeAnimations {
@@ -518,6 +541,246 @@ export interface ThemeCards {
 }
 
 /**
+ * Form component styling
+ */
+export interface ThemeForms {
+  /** Input field styling */
+  input?: {
+    /** Input background color */
+    background?: string;
+    /** Input border color */
+    border?: string;
+    /** Input text color */
+    text?: string;
+    /** Input placeholder color */
+    placeholder?: string;
+    /** Focus state border color */
+    focusBorder?: string;
+    /** Focus state ring color */
+    focusRing?: string;
+    /** Error state border color */
+    errorBorder?: string;
+    /** Disabled state background */
+    disabledBackground?: string;
+  };
+  /** Checkbox styling */
+  checkbox?: {
+    /** Checkbox background (unchecked) */
+    background?: string;
+    /** Checkbox border color */
+    border?: string;
+    /** Checked state background */
+    checkedBackground?: string;
+    /** Checked state checkmark color */
+    checkmarkColor?: string;
+    /** Focus state ring color */
+    focusRing?: string;
+  };
+  /** Radio button styling */
+  radio?: {
+    /** Radio background (unchecked) */
+    background?: string;
+    /** Radio border color */
+    border?: string;
+    /** Checked state background */
+    checkedBackground?: string;
+    /** Checked state dot color */
+    dotColor?: string;
+    /** Focus state ring color */
+    focusRing?: string;
+  };
+  /** Select/dropdown styling */
+  select?: {
+    /** Select background color */
+    background?: string;
+    /** Select border color */
+    border?: string;
+    /** Select text color */
+    text?: string;
+    /** Dropdown menu background */
+    menuBackground?: string;
+    /** Selected option background */
+    optionSelectedBackground?: string;
+    /** Hovered option background */
+    optionHoverBackground?: string;
+  };
+  /** Textarea styling */
+  textarea?: {
+    /** Textarea background color */
+    background?: string;
+    /** Textarea border color */
+    border?: string;
+    /** Textarea text color */
+    text?: string;
+    /** Focus state border color */
+    focusBorder?: string;
+    /** Resize handle color */
+    resizeColor?: string;
+  };
+  /** Label styling */
+  label?: {
+    /** Label text color */
+    text?: string;
+    /** Required indicator color */
+    requiredColor?: string;
+    /** Optional text color */
+    optionalColor?: string;
+  };
+  /** Form validation styling */
+  validation?: {
+    /** Success message color */
+    successColor?: string;
+    /** Error message color */
+    errorColor?: string;
+    /** Warning message color */
+    warningColor?: string;
+    /** Info message color */
+    infoColor?: string;
+  };
+}
+
+/**
+ * Modal/Dialog component styling
+ */
+export interface ThemeModals {
+  /** Modal backdrop styling */
+  backdrop?: {
+    /** Backdrop color */
+    background?: string;
+    /** Backdrop opacity */
+    opacity?: number;
+    /** Backdrop blur amount */
+    blur?: string;
+  };
+  /** Modal content styling */
+  content?: {
+    /** Modal background color */
+    background?: string;
+    /** Modal border color */
+    border?: string;
+    /** Modal shadow */
+    shadow?: string;
+    /** Modal border radius */
+    borderRadius?: string;
+  };
+  /** Modal header styling */
+  header?: {
+    /** Header background color */
+    background?: string;
+    /** Header text color */
+    text?: string;
+    /** Header border color (bottom border) */
+    borderColor?: string;
+  };
+  /** Modal footer styling */
+  footer?: {
+    /** Footer background color */
+    background?: string;
+    /** Footer border color (top border) */
+    borderColor?: string;
+  };
+  /** Close button styling */
+  closeButton?: {
+    /** Close button color */
+    color?: string;
+    /** Close button hover color */
+    hoverColor?: string;
+    /** Close button background (optional) */
+    background?: string;
+    /** Close button hover background */
+    hoverBackground?: string;
+  };
+}
+
+/**
+ * Navigation component styling
+ */
+export interface ThemeNavigation {
+  /** Top navbar styling */
+  navbar?: {
+    /** Navbar background color */
+    background?: string;
+    /** Navbar border color (bottom border) */
+    border?: string;
+    /** Navbar text color */
+    text?: string;
+    /** Navbar shadow */
+    shadow?: string;
+  };
+  /** Sidebar styling */
+  sidebar?: {
+    /** Sidebar background color */
+    background?: string;
+    /** Sidebar border color */
+    border?: string;
+    /** Sidebar text color */
+    text?: string;
+    /** Sidebar width */
+    width?: string;
+  };
+  /** Menu item styling */
+  menuItem?: {
+    /** Menu item text color */
+    text?: string;
+    /** Menu item background color */
+    background?: string;
+    /** Hover state background */
+    hoverBackground?: string;
+    /** Hover state text color */
+    hoverText?: string;
+    /** Active/selected state background */
+    activeBackground?: string;
+    /** Active/selected state text color */
+    activeText?: string;
+    /** Active/selected state indicator color */
+    activeIndicator?: string;
+  };
+  /** Breadcrumb styling */
+  breadcrumb?: {
+    /** Breadcrumb text color */
+    text?: string;
+    /** Active breadcrumb color */
+    activeText?: string;
+    /** Separator color */
+    separatorColor?: string;
+    /** Hover state color */
+    hoverColor?: string;
+  };
+  /** Tab styling */
+  tabs?: {
+    /** Tab text color (inactive) */
+    text?: string;
+    /** Tab background color */
+    background?: string;
+    /** Active tab text color */
+    activeText?: string;
+    /** Active tab background color */
+    activeBackground?: string;
+    /** Active tab indicator color (underline) */
+    activeIndicator?: string;
+    /** Hover state background */
+    hoverBackground?: string;
+    /** Tab border color */
+    borderColor?: string;
+  };
+  /** Pagination styling */
+  pagination?: {
+    /** Pagination button text color */
+    text?: string;
+    /** Pagination button background */
+    background?: string;
+    /** Active page background */
+    activeBackground?: string;
+    /** Active page text color */
+    activeText?: string;
+    /** Hover state background */
+    hoverBackground?: string;
+    /** Disabled state color */
+    disabledColor?: string;
+  };
+}
+
+/**
  * Dark mode configuration
  */
 export interface DarkModeConfig {
@@ -589,6 +852,9 @@ export interface SpexopThemeConfig {
   /** Typography system */
   typography: ThemeTypography;
 
+  /** Fluid typography configuration (optional, enables responsive text sizing) */
+  fluidTypography?: FluidTypography;
+
   /** Spacing system */
   spacing: ThemeSpacing;
 
@@ -621,6 +887,15 @@ export interface SpexopThemeConfig {
 
   /** Grid system (optional) */
   grid?: ThemeGrid;
+
+  /** Form component tokens (optional) */
+  forms?: ThemeForms;
+
+  /** Modal/Dialog component tokens (optional) */
+  modals?: ThemeModals;
+
+  /** Navigation component tokens (optional) */
+  navigation?: ThemeNavigation;
 
   /** Dark mode configuration */
   darkMode?: DarkModeConfig;

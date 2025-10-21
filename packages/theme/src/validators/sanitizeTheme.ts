@@ -292,8 +292,12 @@ function sanitizeBorders(
 
   const sanitized: Record<string, unknown> = {
     default: sanitizeNumber(border.default, options.parseNumbers),
-    strong: sanitizeNumber(border.strong, options.parseNumbers),
   };
+
+  // Handle strong as optional
+  if (border.strong !== undefined && border.strong !== null) {
+    sanitized.strong = sanitizeNumber(border.strong, options.parseNumbers);
+  }
 
   // Handle radius as object or individual properties
   if (border.radius && typeof border.radius === "object") {
