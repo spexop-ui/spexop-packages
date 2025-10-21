@@ -5,6 +5,17 @@ All notable changes to @spexop/react will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.1] - 2025-10-21
+
+### Fixed
+
+- Corrected repository URL in package.json (github.com/spexop-ui/spexop-public)
+- Updated bug tracker URL to point to correct repository
+
+### Note
+
+This is a metadata-only patch release. No code changes from v0.3.0. Users on v0.3.0 can continue using it without any issues - this update only corrects the repository links in package.json for better discoverability.
+
 ## [0.3.0] - 2025-10-21
 
 ### Added - New Component Categories
@@ -155,7 +166,7 @@ Each component now includes:
 - Better source maps generation
 - Optimized bundle output
 
-### Fixed
+### Fixed in 0.3.1
 
 - BadgeProps type export path corrected
 - Template ARIA attributes properly typed (ariaHidden, ariaInvalid, ariaLive)
@@ -252,7 +263,7 @@ This is an active development release. While components follow "The Spexop Way" 
 - Build now generates complete TypeScript definitions in dist directory
 - Updated vite.config.ts to include DTS plugin configuration
 
-### Note
+### Note in 0.2.4
 
 Version 0.2.3 was published without TypeScript definitions due to missing Vite plugin configuration. This version resolves that issue. Users on 0.2.3 should upgrade to 0.2.4 immediately.
 

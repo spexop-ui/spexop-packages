@@ -1,6 +1,6 @@
 {
   "name": "@spexop/react",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "React component library with TypeScript and accessibility. 59 components following the Primitives-First philosophy. Grid primitives, navigation, forms, buttons, cards, data, feedback, and more.",
   "keywords": [
     "react",
@@ -25,11 +25,11 @@
   "homepage": "https://spexop.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/spexop-ui/design-system.git",
+    "url": "https://github.com/spexop-ui/spexop-public.git",
     "directory": "packages/react"
   },
   "bugs": {
-    "url": "https://github.com/spexop-ui/design-system/issues"
+    "url": "https://github.com/spexop-ui/spexop-public/issues"
   },
   "publishConfig": {
     "access": "public"
