@@ -7,11 +7,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/spexop-ui/design-system.git"
+    "url": "https://github.com/spexop-ui/spexop-public.git"
   },
   "homepage": "https://www.spexop.com",
   "bugs": {
-    "url": "https://github.com/spexop-ui/design-system/issues"
+    "url": "https://github.com/spexop-ui/spexop-public/issues"
   },
   "scripts": {
     "build": "pnpm -r build",

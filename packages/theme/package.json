@@ -16,11 +16,11 @@
   "homepage": "https://spexop.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/spexop-ui/design-system.git",
+    "url": "https://github.com/spexop-ui/spexop-public.git",
     "directory": "packages/theme"
   },
   "bugs": {
-    "url": "https://github.com/spexop-ui/design-system/issues"
+    "url": "https://github.com/spexop-ui/spexop-public/issues"
   },
   "publishConfig": {
     "access": "public"
