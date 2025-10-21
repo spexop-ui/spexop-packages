@@ -66,7 +66,7 @@ export interface DebugProviderProps {
   /**
    * Child components
    */
-  children: React.ReactNode;
+  children?: React.ReactNode;
 
   /**
    * Initial debug state (default: false)

@@ -21,7 +21,7 @@ export interface ContainerProps {
   /**
    * Container content
    */
-  children: ReactNode;
+  children?: ReactNode;
 
   /**
    * Maximum width of container

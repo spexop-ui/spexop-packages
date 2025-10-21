@@ -48,7 +48,7 @@ export interface FormProps
   /**
    * Form content
    */
-  children: ReactNode;
+  children?: ReactNode;
 
   /**
    * Form submit handler

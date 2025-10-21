@@ -27,7 +27,7 @@ export interface NavSectionProps {
   /**
    * Section content (NavLink components)
    */
-  children: ReactNode;
+  children?: ReactNode;
 
   /**
    * Callback when section is toggled

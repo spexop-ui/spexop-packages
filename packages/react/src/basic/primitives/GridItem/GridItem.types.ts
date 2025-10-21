@@ -23,7 +23,7 @@ export interface GridItemProps {
   /**
    * Content of the grid item
    */
-  children: ReactNode;
+  children?: ReactNode;
 
   /**
    * Number of columns to span (1-24)

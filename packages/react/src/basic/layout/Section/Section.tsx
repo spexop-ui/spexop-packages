@@ -23,7 +23,7 @@ import styles from "./Section.module.css";
 
 export interface SectionProps {
   /** Section content */
-  children: ReactNode;
+  children?: ReactNode;
 
   /** Visual variant */
   variant?: "white" | "neutral" | "gradient";

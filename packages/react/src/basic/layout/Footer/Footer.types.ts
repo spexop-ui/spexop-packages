@@ -111,7 +111,7 @@ export interface FooterProps {
   /**
    * Footer content
    */
-  children: ReactNode;
+  children?: ReactNode;
 
   /**
    * Additional CSS class

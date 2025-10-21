@@ -9,7 +9,7 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   /**
    * The content to display inside the badge
    */
-  children: React.ReactNode;
+  children?: React.ReactNode;
   /**
    * The visual variant of the badge
    * @default "default"

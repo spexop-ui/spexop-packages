@@ -16,7 +16,7 @@ export interface SidebarProps {
   /**
    * Sidebar content (NavSection, NavLink, SidebarFooter components)
    */
-  children: ReactNode;
+  children?: ReactNode;
 
   /**
    * Whether sidebar is open (controlled mode)

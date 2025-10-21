@@ -102,7 +102,7 @@ export interface ToastContextValue {
  */
 export interface ToastProviderProps {
   /** Child components */
-  children: ReactNode;
+  children?: ReactNode;
   /** Maximum number of toasts to show (default: 5) */
   maxToasts?: number;
   /** Default toast position (default: "top-right") */

@@ -19,7 +19,7 @@ export interface ModalProps {
   title?: React.ReactNode;
 
   /** Modal content */
-  children: React.ReactNode;
+  children?: React.ReactNode;
 
   /** Footer content (typically buttons) */
   footer?: React.ReactNode;

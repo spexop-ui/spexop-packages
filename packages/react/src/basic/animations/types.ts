@@ -98,7 +98,7 @@ export interface AnimationProps {
   /**
    * Children to animate
    */
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 /**

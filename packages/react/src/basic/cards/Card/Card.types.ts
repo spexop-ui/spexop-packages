@@ -46,7 +46,7 @@ export interface CardProps extends HTMLAttributes<HTMLDivElement> {
   fullHeight?: boolean;
 
   /** Card content */
-  children: ReactNode;
+  children?: ReactNode;
 
   /** Additional CSS class */
   className?: string;
@@ -95,7 +95,7 @@ export interface CardHeaderProps {
  */
 export interface CardBodyProps {
   /** Body content */
-  children: ReactNode;
+  children?: ReactNode;
 
   /** Additional CSS class */
   className?: string;
@@ -106,7 +106,7 @@ export interface CardBodyProps {
  */
 export interface CardFooterProps {
   /** Footer content (typically buttons) */
-  children: ReactNode;
+  children?: ReactNode;
 
   /** Content alignment */
   align?: "left" | "center" | "right" | "between";

@@ -162,7 +162,7 @@ export interface ButtonProps {
   /**
    * Button content (text, icons, or both)
    */
-  children: ReactNode;
+  children?: ReactNode;
 
   /**
    * Additional CSS class

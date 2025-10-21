@@ -10,7 +10,7 @@ export interface PanelSectionProps {
   /**
    * Section content
    */
-  children: React.ReactNode;
+  children?: React.ReactNode;
 
   /**
    * Optional description/subtitle

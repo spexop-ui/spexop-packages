@@ -43,7 +43,7 @@ export interface LinkProps
   /**
    * Link content (text, icons, or both)
    */
-  children: ReactNode;
+  children?: ReactNode;
 
   /**
    * Visual style variant

@@ -27,7 +27,7 @@ export interface ButtonGroupProps {
   /**
    * Button elements to group
    */
-  children: ReactNode;
+  children?: ReactNode;
 
   /**
    * Layout direction

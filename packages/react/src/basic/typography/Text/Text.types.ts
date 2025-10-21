@@ -61,7 +61,7 @@ export interface TextProps
   /**
    * Text content
    */
-  children: ReactNode;
+  children?: ReactNode;
 
   /**
    * Font size

@@ -15,7 +15,7 @@ export interface DrawerProps {
   /**
    * Drawer content
    */
-  children: React.ReactNode;
+  children?: React.ReactNode;
 
   /**
    * Drawer position

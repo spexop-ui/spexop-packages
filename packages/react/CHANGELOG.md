@@ -5,6 +5,37 @@ All notable changes to @spexop/react will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.2] - 2025-10-21
+
+### Changed
+
+- Made `children` prop optional across all 50+ components for improved flexibility
+- Updated type definitions to use `children?: ReactNode` instead of `children: ReactNode`
+- Improved TypeScript developer experience by reducing unnecessary type errors
+
+### Components Updated
+
+- **Primitives**: Grid, Stack, Container, GridItem
+- **Buttons**: Button, ButtonGroup
+- **Typography**: Text, Heading, Link
+- **Navigation**: NavLink, NavSection, Sidebar, SidebarFooter
+- **Cards**: Card, CardBody, CardFooter, DashboardCard
+- **Layout**: Section, StickySection, Footer, PanelSection
+- **Overlays**: Modal, Popover, Drawer
+- **Feedback & Display**: Alert, Badge
+- **Settings**: SettingsCard, SettingItem
+- **Providers**: DebugProvider, AccessibilityProvider, ModalProvider, ToastProvider, UnifiedThemeProvider
+- **Data**: Table, TableHeader, TableBody, TableFooter, TableRow, TableCell
+- **Advanced**: ErrorBoundary
+- **Forms**: Form
+- **Animations**: AnimationProps, Motion, Stagger
+
+### Technical Details
+
+- 100% backwards compatible - existing code continues to work
+- No runtime behavior changes - only TypeScript type definitions affected
+- All components build and type-check successfully
+
 ## [0.3.1] - 2025-10-21
 
 ### Fixed

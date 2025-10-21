@@ -102,7 +102,7 @@ export interface UnifiedThemeContextValue {
  */
 export interface UnifiedThemeProviderProps {
   /** Child components */
-  children: ReactNode;
+  children?: ReactNode;
 
   // Mode-only props (simple light/dark mode)
   /** Theme mode ('light' | 'dark' | 'auto') */

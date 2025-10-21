@@ -13,7 +13,7 @@ export interface PopoverProps {
   trigger: React.ReactElement;
 
   /** Popover content */
-  children: React.ReactNode;
+  children?: React.ReactNode;
 
   /** Popover title */
   title?: React.ReactNode;

@@ -85,7 +85,7 @@ export interface ModalContextValue {
  */
 export interface ModalProviderProps {
   /** Child components */
-  children: ReactNode;
+  children?: ReactNode;
   /** Maximum number of modals in stack (default: 3) */
   maxModals?: number;
   /** Enable/disable animations (respects prefers-reduced-motion) */

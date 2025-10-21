@@ -29,7 +29,7 @@ export interface ErrorBoundaryProps {
   /**
    * Child components to render
    */
-  children: ReactNode;
+  children?: ReactNode;
 
   /**
    * Custom fallback UI to display when an error occurs

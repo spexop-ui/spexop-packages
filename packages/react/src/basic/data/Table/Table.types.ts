@@ -43,7 +43,7 @@ export interface TableProps {
   /**
    * Table content (TableHeader, TableBody, TableFooter)
    */
-  children: ReactNode;
+  children?: ReactNode;
 
   /**
    * Visual style variant
@@ -104,7 +104,7 @@ export interface TableHeaderProps {
   /**
    * Table header content (TableRow with th cells)
    */
-  children: ReactNode;
+  children?: ReactNode;
 
   /**
    * Additional CSS class
@@ -119,7 +119,7 @@ export interface TableBodyProps {
   /**
    * Table body content (TableRow components)
    */
-  children: ReactNode;
+  children?: ReactNode;
 
   /**
    * Additional CSS class
@@ -134,7 +134,7 @@ export interface TableFooterProps {
   /**
    * Table footer content (TableRow components)
    */
-  children: ReactNode;
+  children?: ReactNode;
 
   /**
    * Additional CSS class
@@ -149,7 +149,7 @@ export interface TableRowProps {
   /**
    * Table row content (TableCell components)
    */
-  children: ReactNode;
+  children?: ReactNode;
 
   /**
    * Selected state
@@ -175,7 +175,7 @@ export interface TableCellProps {
   /**
    * Cell content
    */
-  children: ReactNode;
+  children?: ReactNode;
 
   /**
    * Header cell (th) vs data cell (td)

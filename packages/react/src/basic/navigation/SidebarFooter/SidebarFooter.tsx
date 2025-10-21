@@ -23,7 +23,7 @@ export interface SidebarFooterProps {
   /**
    * Footer content (version selector, links, etc.)
    */
-  children: ReactNode;
+  children?: ReactNode;
 
   /**
    * Additional CSS class

@@ -40,7 +40,7 @@ export interface AccessibilityContextValue extends AccessibilityState {
  */
 export interface AccessibilityProviderProps {
   /** Child components */
-  children: ReactNode;
+  children?: ReactNode;
   /** Initial keyboard-only mode state */
   initialKeyboardOnlyMode?: boolean;
   /** Initial focus indicators state */

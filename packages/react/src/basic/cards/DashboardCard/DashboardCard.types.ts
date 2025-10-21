@@ -16,7 +16,7 @@ export interface DashboardCardProps {
   /** Optional header actions (buttons, menus, etc.) */
   actions?: React.ReactNode;
   /** Main content (charts, tables, etc.) */
-  children: React.ReactNode;
+  children?: React.ReactNode;
   /** Loading state */
   loading?: boolean;
   /** Error message */

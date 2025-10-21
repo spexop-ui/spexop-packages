@@ -50,7 +50,7 @@ export interface HeadingProps {
   /**
    * Heading content
    */
-  children: ReactNode;
+  children?: ReactNode;
 
   /**
    * Semantic heading level (h1-h6)

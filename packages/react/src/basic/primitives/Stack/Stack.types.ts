@@ -36,7 +36,7 @@ export interface StackProps {
   /**
    * Stack items
    */
-  children: ReactNode;
+  children?: ReactNode;
 
   /**
    * Stack direction

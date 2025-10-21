@@ -21,7 +21,7 @@ export interface NavLinkProps {
   /**
    * Link content (text or elements)
    */
-  children: ReactNode;
+  children?: ReactNode;
 
   /**
    * Whether this link is currently active

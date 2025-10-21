@@ -17,7 +17,7 @@ import styles from "./StickySection.module.css";
 
 export interface StickySectionProps extends Omit<SectionProps, "children"> {
   /** Section content */
-  children: ReactNode;
+  children?: ReactNode;
 
   /** ContextNav component - will be rendered with proper sticky positioning */
   contextNav?: ReactNode;

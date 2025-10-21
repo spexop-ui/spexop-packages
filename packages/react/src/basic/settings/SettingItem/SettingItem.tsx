@@ -16,7 +16,7 @@ export interface SettingItemProps {
   /**
    * The control element (Select, Toggle, etc.)
    */
-  children: React.ReactNode;
+  children?: React.ReactNode;
 
   /**
    * Whether the setting is disabled

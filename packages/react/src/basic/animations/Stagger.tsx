@@ -6,7 +6,7 @@ export interface StaggerProps {
   /**
    * Children to stagger
    */
-  children: React.ReactNode;
+  children?: React.ReactNode;
 
   /**
    * Delay between each child (ms)

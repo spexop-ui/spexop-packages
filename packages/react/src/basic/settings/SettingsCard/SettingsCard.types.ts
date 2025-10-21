@@ -14,7 +14,7 @@ export interface SettingsCardProps {
   /**
    * Content to display in the card
    */
-  children: React.ReactNode;
+  children?: React.ReactNode;
 
   /**
    * Custom className

@@ -10,7 +10,7 @@
 
 export interface AlertProps {
   /** Alert content */
-  children: React.ReactNode;
+  children?: React.ReactNode;
 
   /** Alert title */
   title?: React.ReactNode;

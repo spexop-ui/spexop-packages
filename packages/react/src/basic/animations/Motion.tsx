@@ -26,7 +26,7 @@ export interface MotionProps {
   /** Custom className */
   className?: string;
   /** Children to animate */
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 /**

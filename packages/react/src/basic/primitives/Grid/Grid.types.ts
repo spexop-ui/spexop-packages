@@ -37,7 +37,7 @@ export interface GridProps {
   /**
    * Grid items
    */
-  children: ReactNode;
+  children?: ReactNode;
 
   /**
    * Number of columns or auto-fit/auto-fill mode
