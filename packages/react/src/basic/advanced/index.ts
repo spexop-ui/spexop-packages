@@ -1,15 +1,18 @@
 /**
- * Advanced Components
+ * Advanced Components (Deprecated)
  *
- * Specialized components for specific use cases.
- * Includes carousels, code blocks, theme toggles, and advanced controls.
+ * @deprecated This folder will be removed in v0.4.0.
+ * Components have been moved to their proper categories.
+ *
+ * Migration guide: https://spexop.dev/docs/migrations/from-v0.3-to-v0.4
  */
 
-export * from "./Carousel/index.js";
-export * from "./CodeBlock/index.js";
-export * from "./ErrorBoundary/index.js";
-export * from "./Navigation/index.js";
-export * from "./ScrollHeader/index.js";
-export * from "./SegmentedControl/index.js";
-export * from "./SubmenuPanel/index.js";
-export * from "./ThemeToggle/index.js";
+// Re-export from new locations for backwards compatibility
+export { Carousel } from "../indicators/Carousel/index.js";
+export { CodeBlock } from "../indicators/CodeBlock/index.js";
+export { ErrorBoundary } from "../utils/ErrorBoundary/index.js";
+export { Navigation } from "../navigation/Navigation/index.js";
+export { ScrollHeader } from "../layout/ScrollHeader/index.js";
+export { SegmentedControl } from "../buttons/SegmentedControl/index.js";
+export { SubmenuPanel } from "../navigation/SubmenuPanel/index.js";
+export { ThemeToggle } from "../indicators/ThemeToggle/index.js";

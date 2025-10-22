@@ -2,14 +2,16 @@
  * Card Components
  *
  * Flexible card system with composition patterns.
- * Includes base Card, specialized ServiceCard, and 10 purpose-built card components
- * for common use cases in modern web applications.
+ * Includes base Card primitive and sub-components for maximum flexibility.
+ *
+ * For specialized card patterns, see: src/patterns/cards/
  */
 
-// Specialized Card Components
-export * from "./BlogCard/index.js";
 // Base Card Components
 export * from "./Card/index.js";
+
+// Backwards compatibility re-exports (deprecated in v0.4.0)
+export * from "./BlogCard/index.js";
 export * from "./CTACard/index.js";
 export * from "./DashboardCard/index.js";
 export * from "./FeatureCard/index.js";

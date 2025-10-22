@@ -9,6 +9,7 @@ import { render } from "@testing-library/react";
 import React from "react";
 import { describe, expect, it } from "vitest";
 import { Stagger } from "./Stagger.js";
+import styles from "./Stagger.module.css";
 
 // Add this line to ensure Jest DOM is available
 /// <reference types="@testing-library/jest-dom" />
@@ -178,7 +179,7 @@ describe("Stagger", () => {
       );
 
       const reveal = container.querySelector(".spex-reveal");
-      expect(reveal?.className).toContain("spex-reveal--fadeInUp");
+      expect(reveal).toHaveClass(styles["spex-reveal--fadeInUp"]);
     });
 
     it("should apply custom variant", () => {
@@ -189,7 +190,7 @@ describe("Stagger", () => {
       );
 
       const reveal = container.querySelector(".spex-reveal");
-      expect(reveal?.className).toContain("spex-reveal--slideUp");
+      expect(reveal).toHaveClass(styles["spex-reveal--slideUp"]);
     });
 
     it("should support all variants", () => {

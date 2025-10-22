@@ -14,6 +14,7 @@ export * from "./Form/index.js";
 export * from "./RadioGroup/index.js";
 export * from "./SearchBar/index.js";
 export * from "./Select/index.js";
+export * from "./SettingItem/index.js";
 export * from "./Slider/index.js";
 export * from "./TextArea/index.js";
 export * from "./TextInput/index.js";

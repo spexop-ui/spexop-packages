@@ -24,6 +24,7 @@ import { userEvent } from "@testing-library/user-event";
 import React from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { Dropdown } from "./Dropdown.js";
+import styles from "./Dropdown.module.css";
 import type { DropdownMenuItem } from "./Dropdown.types.js";
 
 // Extend global type for test callback

@@ -12,6 +12,7 @@ import { render, screen } from "@testing-library/react";
 import React from "react";
 import { describe, expect, it } from "vitest";
 import { Heading } from "./Heading.js";
+import styles from "./Heading.module.css";
 
 describe("Heading", () => {
   it("renders with correct text", () => {
@@ -45,21 +46,21 @@ describe("Heading", () => {
         Regular
       </Heading>,
     );
-    expect(screen.getByRole("heading")).toHaveClass("weight-regular");
+    expect(screen.getByRole("heading")).toHaveClass(styles["weight-regular"]);
 
     rerender(
       <Heading level={2} weight="semibold">
         Semibold
       </Heading>,
     );
-    expect(screen.getByRole("heading")).toHaveClass("weight-semibold");
+    expect(screen.getByRole("heading")).toHaveClass(styles["weight-semibold"]);
 
     rerender(
       <Heading level={2} weight="bold">
         Bold
       </Heading>,
     );
-    expect(screen.getByRole("heading")).toHaveClass("weight-bold");
+    expect(screen.getByRole("heading")).toHaveClass(styles["weight-bold"]);
   });
 
   it("applies alignment classes", () => {
@@ -68,21 +69,21 @@ describe("Heading", () => {
         Left
       </Heading>,
     );
-    expect(screen.getByRole("heading")).toHaveClass("align-left");
+    expect(screen.getByRole("heading")).toHaveClass(styles["align-left"]);
 
     rerender(
       <Heading level={2} align="center">
         Center
       </Heading>,
     );
-    expect(screen.getByRole("heading")).toHaveClass("align-center");
+    expect(screen.getByRole("heading")).toHaveClass(styles["align-center"]);
 
     rerender(
       <Heading level={2} align="right">
         Right
       </Heading>,
     );
-    expect(screen.getByRole("heading")).toHaveClass("align-right");
+    expect(screen.getByRole("heading")).toHaveClass(styles["align-right"]);
   });
 
   it("applies size override classes", () => {
@@ -91,7 +92,7 @@ describe("Heading", () => {
         Extra Large
       </Heading>,
     );
-    expect(screen.getByRole("heading")).toHaveClass("size-xl");
+    expect(screen.getByRole("heading")).toHaveClass(styles["size-xl"]);
   });
 
   it("removes margin when noMargin is true", () => {
@@ -100,7 +101,7 @@ describe("Heading", () => {
         No Margin
       </Heading>,
     );
-    expect(screen.getByRole("heading")).toHaveClass("no-margin");
+    expect(screen.getByRole("heading")).toHaveClass(styles["no-margin"]);
   });
 
   it("applies custom className", () => {
@@ -157,9 +158,9 @@ describe("Heading", () => {
       </Heading>,
     );
     const heading = screen.getByRole("heading");
-    expect(heading).toHaveClass("level-1");
-    expect(heading).toHaveClass("weight-bold");
-    expect(heading).toHaveClass("align-center");
-    expect(heading).toHaveClass("size-4xl");
+    expect(heading).toHaveClass(styles["level-1"]);
+    expect(heading).toHaveClass(styles["weight-bold"]);
+    expect(heading).toHaveClass(styles["align-center"]);
+    expect(heading).toHaveClass(styles["size-4xl"]);
   });
 });

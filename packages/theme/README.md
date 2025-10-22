@@ -2,6 +2,10 @@
 
 Professional theming system for Spexop Design System with token references, pre-built themes, and 29+ export formats.
 
+**!!! IMPORTANT !!!**
+This documentation is automatically synced from the spexop-packages repository. Last sync: 2025-10-22
+It's read-only and should be edited in spexop-packages repository. Please don't edit this file and the content of the components directly.
+
 ## Features
 
 - ✅ **Token Reference System** - Maintain relationships between design tokens

@@ -10,6 +10,7 @@ import { render, screen } from "@testing-library/react";
 import React from "react";
 import { describe, expect, it } from "vitest";
 import { Spinner } from "./Spinner";
+import styles from "./Spinner.module.css";
 
 describe("Spinner", () => {
   describe("Rendering", () => {
@@ -17,9 +18,9 @@ describe("Spinner", () => {
       const { container } = render(<Spinner />);
       const spinner = screen.getByRole("status");
       expect(spinner).toBeInTheDocument();
-      expect(spinner).toHaveClass("spinner");
-      expect(spinner).toHaveClass("size-md");
-      expect(spinner).toHaveClass("color-primary");
+      expect(spinner).toHaveClass(styles.spinner);
+      expect(spinner).toHaveClass(styles["size-md"]);
+      expect(spinner).toHaveClass(styles["color-primary"]);
     });
 
     it("should render with default label", () => {
@@ -35,7 +36,7 @@ describe("Spinner", () => {
 
     it("should render the spinner circle", () => {
       const { container } = render(<Spinner />);
-      const circle = container.querySelector(".circle");
+      const circle = container.querySelector(`.${styles.circle}`);
       expect(circle).toBeInTheDocument();
     });
   });
@@ -44,25 +45,25 @@ describe("Spinner", () => {
     it("should render small size", () => {
       render(<Spinner size="sm" />);
       const spinner = screen.getByRole("status");
-      expect(spinner).toHaveClass("size-sm");
+      expect(spinner).toHaveClass(styles["size-sm"]);
     });
 
     it("should render medium size", () => {
       render(<Spinner size="md" />);
       const spinner = screen.getByRole("status");
-      expect(spinner).toHaveClass("size-md");
+      expect(spinner).toHaveClass(styles["size-md"]);
     });
 
     it("should render large size", () => {
       render(<Spinner size="lg" />);
       const spinner = screen.getByRole("status");
-      expect(spinner).toHaveClass("size-lg");
+      expect(spinner).toHaveClass(styles["size-lg"]);
     });
 
     it("should render extra large size", () => {
       render(<Spinner size="xl" />);
       const spinner = screen.getByRole("status");
-      expect(spinner).toHaveClass("size-xl");
+      expect(spinner).toHaveClass(styles["size-xl"]);
     });
   });
 
@@ -70,25 +71,25 @@ describe("Spinner", () => {
     it("should render primary color", () => {
       render(<Spinner color="primary" />);
       const spinner = screen.getByRole("status");
-      expect(spinner).toHaveClass("color-primary");
+      expect(spinner).toHaveClass(styles["color-primary"]);
     });
 
     it("should render secondary color", () => {
       render(<Spinner color="secondary" />);
       const spinner = screen.getByRole("status");
-      expect(spinner).toHaveClass("color-secondary");
+      expect(spinner).toHaveClass(styles["color-secondary"]);
     });
 
     it("should render neutral color", () => {
       render(<Spinner color="neutral" />);
       const spinner = screen.getByRole("status");
-      expect(spinner).toHaveClass("color-neutral");
+      expect(spinner).toHaveClass(styles["color-neutral"]);
     });
 
     it("should render white color", () => {
       render(<Spinner color="white" />);
       const spinner = screen.getByRole("status");
-      expect(spinner).toHaveClass("color-white");
+      expect(spinner).toHaveClass(styles["color-white"]);
     });
   });
 
@@ -100,7 +101,7 @@ describe("Spinner", () => {
 
     it("should render label in sr-only element", () => {
       const { container } = render(<Spinner label="Custom loading" />);
-      const srText = container.querySelector(".sr-only");
+      const srText = container.querySelector(`.${styles["sr-only"]}`);
       expect(srText).toHaveTextContent("Custom loading");
     });
 
@@ -180,14 +181,14 @@ describe("Spinner", () => {
   describe("Screen Reader Support", () => {
     it("should render screen reader only text", () => {
       const { container } = render(<Spinner label="Loading..." />);
-      const srText = container.querySelector(".sr-only");
+      const srText = container.querySelector(`.${styles["sr-only"]}`);
       expect(srText).toBeInTheDocument();
       expect(srText).toHaveTextContent("Loading...");
     });
 
     it("should hide spinner circle from screen readers", () => {
       const { container } = render(<Spinner />);
-      const circle = container.querySelector(".circle");
+      const circle = container.querySelector(`.${styles.circle}`);
       expect(circle).toBeInTheDocument();
       // The circle itself doesn't need aria-hidden as it's decorative
       // The sr-only text provides the necessary information
@@ -205,13 +206,13 @@ describe("Spinner", () => {
     it("should handle undefined className", () => {
       render(<Spinner className={undefined} />);
       const spinner = screen.getByRole("status");
-      expect(spinner).toHaveClass("spinner");
+      expect(spinner).toHaveClass(styles.spinner);
     });
 
     it("should handle empty className", () => {
       render(<Spinner className="" />);
       const spinner = screen.getByRole("status");
-      expect(spinner).toHaveClass("spinner");
+      expect(spinner).toHaveClass(styles.spinner);
     });
 
     it("should handle empty label", () => {
@@ -313,8 +314,8 @@ describe("Spinner", () => {
       );
 
       const spinner = screen.getByRole("status");
-      expect(spinner).toHaveClass("size-lg");
-      expect(spinner).toHaveClass("color-secondary");
+      expect(spinner).toHaveClass(styles["size-lg"]);
+      expect(spinner).toHaveClass(styles["color-secondary"]);
       expect(spinner).toHaveClass("custom-class");
       expect(spinner).toHaveAttribute("aria-label", "Custom loading message");
       expect(spinner.style.getPropertyValue("--spinner-thickness")).toBe("5px");
@@ -332,8 +333,8 @@ describe("Spinner", () => {
       );
 
       const spinner = screen.getByRole("status");
-      expect(spinner).toHaveClass("size-xl");
-      expect(spinner).toHaveClass("color-white");
+      expect(spinner).toHaveClass(styles["size-xl"]);
+      expect(spinner).toHaveClass(styles["color-white"]);
       expect(spinner.style.getPropertyValue("--spinner-thickness")).toBe("4px");
     });
   });
@@ -368,7 +369,7 @@ describe("Spinner", () => {
       );
 
       const spinner = screen.getByRole("status");
-      expect(spinner).toHaveClass("size-lg");
+      expect(spinner).toHaveClass(styles["size-lg"]);
     });
 
     it("should work as inline loading indicator", () => {
@@ -380,7 +381,7 @@ describe("Spinner", () => {
       );
 
       const spinner = screen.getByRole("status");
-      expect(spinner).toHaveClass("size-sm");
+      expect(spinner).toHaveClass(styles["size-sm"]);
       expect(screen.getByText("Processing")).toBeInTheDocument();
     });
   });

@@ -5,6 +5,7 @@ import userEvent from "@testing-library/user-event";
 import React from "react";
 import { describe, expect, it, vi } from "vitest";
 import { TextInput } from "./TextInput";
+import styles from "./TextInput.module.css";
 
 describe("TextInput", () => {
   describe("Rendering", () => {
@@ -192,19 +193,19 @@ describe("TextInput", () => {
   describe("Size Variants", () => {
     it("renders with small size", () => {
       render(<TextInput label="Test" size="sm" />);
-      expect(screen.getByLabelText("Test")).toHaveClass("inputSizeSm");
+      expect(screen.getByLabelText("Test")).toHaveClass(styles.inputSizeSm);
     });
 
     it("renders with medium size by default", () => {
       render(<TextInput label="Test" />);
       const input = screen.getByLabelText("Test");
-      expect(input).not.toHaveClass("inputSizeSm");
-      expect(input).not.toHaveClass("inputSizeLg");
+      expect(input).not.toHaveClass(styles.inputSizeSm);
+      expect(input).not.toHaveClass(styles.inputSizeLg);
     });
 
     it("renders with large size", () => {
       render(<TextInput label="Test" size="lg" />);
-      expect(screen.getByLabelText("Test")).toHaveClass("inputSizeLg");
+      expect(screen.getByLabelText("Test")).toHaveClass(styles.inputSizeLg);
     });
   });
 
@@ -216,7 +217,7 @@ describe("TextInput", () => {
 
     it("applies error styles when error is present", () => {
       render(<TextInput label="Email" error="Invalid" />);
-      expect(screen.getByLabelText("Email")).toHaveClass("inputError");
+      expect(screen.getByLabelText("Email")).toHaveClass(styles.inputError);
     });
 
     it("error message has role alert", () => {
@@ -241,14 +242,14 @@ describe("TextInput", () => {
   describe("Success State", () => {
     it("applies success styles when variant is success", () => {
       render(<TextInput label="Email" variant="success" />);
-      expect(screen.getByLabelText("Email")).toHaveClass("inputSuccess");
+      expect(screen.getByLabelText("Email")).toHaveClass(styles.inputSuccess);
     });
 
     it("error overrides success variant", () => {
       render(
         <TextInput label="Email" variant="success" error="Error message" />,
       );
-      expect(screen.getByLabelText("Email")).toHaveClass("inputError");
+      expect(screen.getByLabelText("Email")).toHaveClass(styles.inputError);
     });
   });
 
@@ -273,14 +274,18 @@ describe("TextInput", () => {
       const { container } = render(
         <TextInput label="Search" leftIcon={<span>🔍</span>} />,
       );
-      expect(container.querySelector(".leftIcon")).toBeInTheDocument();
+      expect(
+        container.querySelector(`.${styles.leftIcon}`),
+      ).toBeInTheDocument();
     });
 
     it("renders with right icon", () => {
       const { container } = render(
         <TextInput label="Password" rightIcon={<span>👁</span>} />,
       );
-      expect(container.querySelector(".rightIcon")).toBeInTheDocument();
+      expect(
+        container.querySelector(`.${styles.rightIcon}`),
+      ).toBeInTheDocument();
     });
 
     it("renders with both left and right icons", () => {
@@ -291,18 +296,26 @@ describe("TextInput", () => {
           rightIcon={<span>✓</span>}
         />,
       );
-      expect(container.querySelector(".leftIcon")).toBeInTheDocument();
-      expect(container.querySelector(".rightIcon")).toBeInTheDocument();
+      expect(
+        container.querySelector(`.${styles.leftIcon}`),
+      ).toBeInTheDocument();
+      expect(
+        container.querySelector(`.${styles.rightIcon}`),
+      ).toBeInTheDocument();
     });
 
     it("applies correct class when left icon is present", () => {
       render(<TextInput label="Test" leftIcon={<span>icon</span>} />);
-      expect(screen.getByLabelText("Test")).toHaveClass("inputWithLeftIcon");
+      expect(screen.getByLabelText("Test")).toHaveClass(
+        styles.inputWithLeftIcon,
+      );
     });
 
     it("applies correct class when right icon is present", () => {
       render(<TextInput label="Test" rightIcon={<span>icon</span>} />);
-      expect(screen.getByLabelText("Test")).toHaveClass("inputWithRightIcon");
+      expect(screen.getByLabelText("Test")).toHaveClass(
+        styles.inputWithRightIcon,
+      );
     });
 
     it("applies correct class when both icons are present", () => {
@@ -313,7 +326,9 @@ describe("TextInput", () => {
           rightIcon={<span>right</span>}
         />,
       );
-      expect(screen.getByLabelText("Test")).toHaveClass("inputWithBothIcons");
+      expect(screen.getByLabelText("Test")).toHaveClass(
+        styles.inputWithBothIcons,
+      );
     });
   });
 

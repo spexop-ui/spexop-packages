@@ -1,0 +1,190 @@
+/* ============================================
+   BADGE COMPONENT STYLES - Theme System
+   ============================================ */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--theme-font-family);
+  font-weight: var(--theme-font-weight-semibold);
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  border: 1px solid;
+  transition: all 0.15s ease;
+}
+
+/* ============================================
+   BADGE VARIANTS
+   ============================================ */
+
+.badge--default {
+  background: var(--theme-surface-secondary);
+  color: var(--theme-text);
+  border-color: var(--theme-border-strong);
+}
+
+[data-theme="dark"] .badge--default {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--theme-text);
+  border-color: var(--theme-border-strong);
+}
+
+.badge--success {
+  background: var(--theme-success-light);
+  color: var(--theme-success-dark);
+  border-color: var(--theme-success);
+}
+
+[data-theme="dark"] .badge--success {
+  background: rgba(34, 197, 94, 0.15);
+  color: #86efac;
+  border-color: var(--theme-success);
+}
+
+.badge--warning {
+  background: var(--theme-warning-light);
+  color: var(--theme-warning-dark);
+  border-color: var(--theme-warning);
+}
+
+[data-theme="dark"] .badge--warning {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fde047;
+  border-color: var(--theme-warning);
+}
+
+.badge--error {
+  background: var(--theme-error-light);
+  color: var(--theme-error-dark);
+  border-color: var(--theme-error);
+}
+
+[data-theme="dark"] .badge--error {
+  background: rgba(239, 68, 68, 0.15);
+  color: #fca5a5;
+  border-color: var(--theme-error);
+}
+
+.badge--info {
+  background: var(--theme-info-light);
+  color: var(--theme-info-dark);
+  border-color: var(--theme-info);
+}
+
+[data-theme="dark"] .badge--info {
+  background: rgba(59, 130, 246, 0.15);
+  color: #93c5fd;
+  border-color: var(--theme-info);
+}
+
+.badge--subtle {
+  background: var(--theme-surface-hover);
+  color: var(--theme-text);
+  border-color: var(--theme-border);
+}
+
+[data-theme="dark"] .badge--subtle {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--theme-text);
+  border-color: var(--theme-border);
+}
+
+/* ============================================
+   BADGE SIZES (Normal Density - Default)
+   ============================================ */
+
+.badge--xs {
+  padding: var(--theme-spacing-1) var(--theme-spacing-3);
+  font-size: 12px;
+  line-height: 1.25;
+  min-height: var(--theme-spacing-5);
+}
+
+.badge--sm {
+  padding: var(--theme-spacing-2) var(--theme-spacing-4);
+  font-size: 12px;
+  line-height: 1.25;
+  min-height: var(--theme-spacing-6);
+}
+
+.badge--md {
+  padding: var(--theme-spacing-3) var(--theme-spacing-5);
+  font-size: 14px;
+  line-height: 1.25;
+  min-height: var(--theme-spacing-7);
+}
+
+/* ============================================
+   DENSITY VARIANTS
+   ============================================ */
+
+/* Compact (Dashboard context) */
+.density--compact.badge--xs {
+  padding: var(--theme-spacing-1) var(--theme-spacing-2);
+  min-height: var(--theme-spacing-4);
+}
+
+.density--compact.badge--sm {
+  padding: var(--theme-spacing-1) var(--theme-spacing-3);
+  min-height: var(--theme-spacing-5);
+}
+
+.density--compact.badge--md {
+  padding: var(--theme-spacing-2) var(--theme-spacing-4);
+  min-height: var(--theme-spacing-6);
+}
+
+/* Spacious (Blog/Content context) */
+.density--spacious.badge--xs {
+  padding: var(--theme-spacing-2) var(--theme-spacing-4);
+  min-height: var(--theme-spacing-6);
+}
+
+.density--spacious.badge--sm {
+  padding: var(--theme-spacing-3) var(--theme-spacing-5);
+  min-height: var(--theme-spacing-7);
+}
+
+.density--spacious.badge--md {
+  padding: var(--theme-spacing-4) var(--theme-spacing-6);
+  min-height: var(--theme-spacing-8);
+}
+
+/* ============================================
+   BADGE SHAPES
+   ============================================ */
+
+.badgePill {
+  border-radius: var(--theme-radius-pill);
+}
+
+.badge:not(.badgePill) {
+  border-radius: var(--theme-radius-subtle);
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+.badge:focus-visible {
+  outline: 2px solid var(--theme-primary);
+  outline-offset: var(--theme-spacing-1);
+}
+
+/* ============================================
+   RESPONSIVE BEHAVIOR
+   Note: Density variants now handle responsive sizing
+   Use density="compact" on mobile instead of media queries
+   ============================================ */
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .badge {
+    transition: none;
+  }
+}

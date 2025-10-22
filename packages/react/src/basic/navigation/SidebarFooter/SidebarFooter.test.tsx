@@ -14,6 +14,7 @@ import { render, screen } from "@testing-library/react";
 import React from "react";
 import { describe, expect, it } from "vitest";
 import { SidebarFooter } from "./SidebarFooter.js";
+import styles from "./SidebarFooter.module.css";
 
 describe("SidebarFooter", () => {
   describe("Rendering", () => {
@@ -121,7 +122,7 @@ describe("SidebarFooter", () => {
       );
 
       const footer = container.querySelector("footer");
-      expect(footer?.className).toContain("custom-footer");
+      expect(footer).toHaveClass("custom-footer");
     });
 
     it("combines custom className with base class", () => {
@@ -132,8 +133,8 @@ describe("SidebarFooter", () => {
       );
 
       const footer = container.querySelector("footer");
-      expect(footer?.className).toContain("sidebarFooter");
-      expect(footer?.className).toContain("custom");
+      expect(footer).toHaveClass(styles.sidebarFooter);
+      expect(footer).toHaveClass("custom");
     });
   });
 

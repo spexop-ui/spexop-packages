@@ -65,8 +65,8 @@ export { useThrottle } from "./useThrottle.js";
 
 export { type WindowSize, useWindowSize } from "./useWindowSize.js";
 export { type Size, useResizeObserver } from "./useResizeObserver.js";
-// Note: useIntersectionObserver is exported from @spexop/react/basic/animations
 export { type ScrollState, useScroll } from "./useScroll.js";
+export { useIntersectionObserver } from "./useIntersectionObserver.js";
 
 /**
  * Accessibility Hooks
@@ -112,3 +112,10 @@ export {
   useLongPress,
 } from "./useLongPress.js";
 export { useCopyToClipboard } from "./useCopyToClipboard.js";
+
+/**
+ * Animation Hooks
+ */
+
+export { useMotionValue } from "./useMotionValue.js";
+export { useSpring } from "./useSpring.js";

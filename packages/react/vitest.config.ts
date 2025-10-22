@@ -17,6 +17,22 @@ export default defineConfig({
       "**/build/**",
       "**/*.e2e.test.*",
     ],
+    // Memory optimization settings - sequential execution
+    pool: "forks",
+    poolOptions: {
+      forks: {
+        singleFork: false,
+        maxForks: 1,
+        minForks: 1,
+      },
+    },
+    maxConcurrency: 5,
+    isolate: false,
+    // Faster test execution with reduced overhead
+    testTimeout: 10000,
+    hookTimeout: 10000,
+    // Disable file parallelization for large test suites to reduce memory
+    fileParallelism: false,
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html"],

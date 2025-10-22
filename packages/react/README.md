@@ -2,13 +2,17 @@
 
 React component library for modern web applications. Built with TypeScript, accessibility, and the Primitives-First philosophy.
 
+**!!! IMPORTANT !!!**
+This documentation is automatically synced from the spexop-packages repository. Last sync: 2025-10-22
+It's read-only and should be edited in spexop-packages repository. Please don't edit this file and the content of the components directly.
+
 [![npm version](https://img.shields.io/npm/v/@spexop/react.svg)](https://www.npmjs.com/package/@spexop/react)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue.svg)](https://www.typescriptlang.org/)
 
 ## What is Spexop?
 
-Spexop is a **Primitives-First Design System** that emphasizes mastering foundational layout components before building complex interfaces. With 59 React components, comprehensive TypeScript support, and built-in accessibility, Spexop helps you build maintainable web applications.
+Spexop is a **Primitives-First Design System** that emphasizes mastering foundational layout components before building complex interfaces. With 75+ React components, comprehensive TypeScript support, and built-in accessibility, Spexop helps you build maintainable web applications.
 
 ### The Primitives-First Approach
 
@@ -20,7 +24,7 @@ This is an active development release (v0.3.0). While components follow "The Spe
 
 ## Features
 
-- 🎨 **59 Components** - Primitives, navigation, forms, buttons, cards, data, feedback, typography, and more
+- 🎨 **75+ Components** - Primitives, navigation, forms, buttons, cards, data, feedback, typography, and more
 - 📐 **Grid System** - Powerful responsive grid with named areas and container queries
 - 🎯 **TypeScript-First** - Full type safety with comprehensive type definitions
 - ♿ **Accessibility Built-In** - WCAG AA compliant with keyboard navigation
@@ -29,7 +33,7 @@ This is an active development release (v0.3.0). While components follow "The Spe
 - 📱 **Responsive** - Mobile-first with breakpoint utilities
 - 🌳 **Tree-Shakeable** - Import only what you need
 - 🎭 **Theme Support** - Light/dark modes with ThemeProvider
-- 🪝 **33+ React Hooks** - Utilities for common patterns
+- 🪝 **36+ React Hooks** - Utilities for common patterns
 - 🔌 **5 Providers** - Theme, Debug, Accessibility, Modal, Toast management
 - 📚 **100% Documentation** - Every component has README + USAGE-GUIDE + tests
 
@@ -355,26 +359,33 @@ import { Grid, GridItem, Stack, Container, Spacer } from '@spexop/react';
 - **Container** - Max-width wrapper with responsive padding
 - **Spacer** - Quick spacing utility
 
-### Navigation (5)
+### Navigation (12)
 
 Complete navigation system for web applications.
 
 ```typescript
-import { TopBar, Sidebar, NavSection, NavLink, SidebarFooter } from '@spexop/react';
+import { Navigation, TopBar, Sidebar, NavSection, NavLink, SidebarFooter, ContextNav, Breadcrumb, Link, Pagination, Tabs, SubmenuPanel } from '@spexop/react';
 ```
 
+- **Navigation** - Router-agnostic navigation bar with mobile menu
 - **TopBar** - Fixed header with logo, search, actions
 - **Sidebar** - Tree-based sidebar with responsive behavior
 - **NavSection** - Accordion sections for sidebar
 - **NavLink** - Individual navigation links
 - **SidebarFooter** - Footer area for version selectors
+- **ContextNav** - Sticky context-aware navigation
+- **Breadcrumb** - Breadcrumb navigation
+- **Link** - Styled link component
+- **Pagination** - Page navigation controls
+- **Tabs** - Tab navigation component
+- **SubmenuPanel** - Submenu panel component
 
-### Forms (7)
+### Forms (8)
 
 Accessible form controls with validation support.
 
 ```typescript
-import { TextInput, TextArea, Select, RadioGroup, Toggle, Slider, SearchBar } from '@spexop/react';
+import { TextInput, TextArea, Select, RadioGroup, Toggle, Slider, SearchBar, SettingItem } from '@spexop/react';
 ```
 
 - **TextInput** - Text input with label, error, helper text
@@ -384,13 +395,14 @@ import { TextInput, TextArea, Select, RadioGroup, Toggle, Slider, SearchBar } fr
 - **Toggle** - Switch/toggle component
 - **Slider** - Range slider control
 - **SearchBar** - Search input with shortcuts
+- **SettingItem** - Settings form item component
 
-### Buttons (5)
+### Buttons (7)
 
 Comprehensive button system with variants.
 
 ```typescript
-import { Button, ButtonGroup, SegmentedButton, SplitButton, ButtonGridItem } from '@spexop/react';
+import { Button, ButtonGroup, SegmentedButton, SplitButton, ButtonGridItem, IconButton, SegmentedControl } from '@spexop/react';
 ```
 
 - **Button** - 7 variants (primary, secondary, outline, ghost, text, pill, border-emphasis)
@@ -398,35 +410,40 @@ import { Button, ButtonGroup, SegmentedButton, SplitButton, ButtonGridItem } fro
 - **SegmentedButton** - Radio-style button selection
 - **SplitButton** - Primary action + dropdown menu
 - **ButtonGridItem** - Interactive media card
+- **IconButton** - Icon-only button component
+- **SegmentedControl** - Segmented control component
 
-### Cards (5)
+### Cards (1 + Patterns)
 
 Flexible card system with composition patterns.
 
 ```typescript
-import { Card, CardHeader, CardBody, CardFooter, ServiceCard } from '@spexop/react';
+import { Card, CardHeader, CardBody, CardFooter } from '@spexop/react';
 ```
 
 - **Card** - Container with 6 variants
 - **CardHeader** - Title area with subtitle and badge
 - **CardBody** - Content area
 - **CardFooter** - Actions area
-- **ServiceCard** - Specialized card with animations
 
-### Layout (6)
+> **Note**: Specialized card components (BlogCard, ProductCard, etc.) are now composition patterns. See [Patterns Documentation](./src/patterns/cards/) for examples.
+
+### Layout (7)
 
 Page structure and section components.
 
 ```typescript
-import { Section, Hero, Footer, ContextNav, StickySection, PanelSection } from '@spexop/react';
+import { Section, Hero, Footer, StickySection, PanelSection, Accordion, ScrollHeader, SettingsPanel } from '@spexop/react';
 ```
 
 - **Section** - Page section with variants, padding, borders
 - **Hero** - Hero section with multiple variants
 - **Footer** - Page footer with links
-- **ContextNav** - Sticky navigation
 - **StickySection** - Section that sticks on scroll
 - **PanelSection** - Collapsible panel
+- **Accordion** - Collapsible content sections
+- **ScrollHeader** - Header that appears on scroll
+- **SettingsPanel** - Settings panel component
 
 ### Overlays (5)
 
@@ -467,22 +484,24 @@ import { SettingsPanel, SettingsCard, SettingItem } from '@spexop/react';
 - **SettingsCard** - Individual setting card
 - **SettingItem** - Single setting item
 
-### Advanced (6)
+### Indicators (6)
 
-Specialized components for specific use cases.
+Visual indicators and media components.
 
 ```typescript
-import { CodeBlock, SegmentedControl, ThemeToggle, ScrollHeader, SubmenuPanel, Navigation } from '@spexop/react';
+import { Avatar, Badge, Carousel, CodeBlock, Divider, Icon, KeyboardShortcut, ThemeToggle } from '@spexop/react';
 ```
 
+- **Avatar** - User profile images
+- **Badge** - Status indicators and labels
+- **Carousel** - Image/content carousel
 - **CodeBlock** - Code syntax highlighting
-- **SegmentedControl** - iOS-style control
+- **Divider** - Visual separators
+- **Icon** - Icon component wrapper
+- **KeyboardShortcut** - Keyboard shortcut display
 - **ThemeToggle** - Light/dark mode toggle
-- **ScrollHeader** - Scroll-reactive header
-- **SubmenuPanel** - Nested menu panel
-- **Navigation** - Legacy navigation
 
-### Animations (10+)
+### Animations (8)
 
 Animation utilities for smooth interactions.
 
@@ -494,26 +513,24 @@ import { Motion, FadeIn, SlideIn, ScaleUp, RotateIn, ZoomIn, Stagger, Reveal } f
 - **FadeIn, SlideIn, ScaleUp, RotateIn, ZoomIn** - Animation primitives
 - **Stagger** - Staggered animations
 - **Reveal** - Reveal on scroll
-- **AnimatedBackground** - Animated backgrounds
 
-### Data (3)
+### Data (2)
 
 Data display and visualization components.
 
 ```typescript
-import { DataTable, DataGrid, Chart } from '@spexop/react';
+import { DataTable, Table } from '@spexop/react';
 ```
 
 - **DataTable** - Sortable, filterable table with pagination
-- **DataGrid** - Advanced grid with virtual scrolling
-- **Chart** - Chart.js integration for data visualization
+- **Table** - Basic table component
 
-### Feedback (6)
+### Feedback (7)
 
 User feedback and loading states.
 
 ```typescript
-import { Alert, Spinner, Progress, Skeleton, Toast, EmptyState } from '@spexop/react';
+import { Alert, Spinner, Progress, Skeleton, Toast, EmptyState, Snackbar } from '@spexop/react';
 ```
 
 - **Alert** - Contextual notifications (success, warning, error, info)
@@ -522,21 +539,30 @@ import { Alert, Spinner, Progress, Skeleton, Toast, EmptyState } from '@spexop/r
 - **Skeleton** - Loading placeholders
 - **Toast** - Non-blocking notifications
 - **EmptyState** - No-data states with actions
+- **Snackbar** - Snackbar notifications
 
-### Typography (4)
+### Typography (2)
 
 Text and typography components.
 
 ```typescript
-import { Heading, Text, Link, Code } from '@spexop/react';
+import { Heading, Text } from '@spexop/react';
 ```
 
 - **Heading** - Semantic headings (h1-h6) with variants
 - **Text** - Paragraph text with size/weight variants
-- **Link** - Standalone link component with variants
-- **Code** - Inline code formatting
 
-### Hooks (33+)
+### Utils (1)
+
+Utility components for error handling and debugging.
+
+```typescript
+import { ErrorBoundary } from '@spexop/react';
+```
+
+- **ErrorBoundary** - React error boundary component
+
+### Hooks (36+)
 
 Essential React hooks for common patterns.
 

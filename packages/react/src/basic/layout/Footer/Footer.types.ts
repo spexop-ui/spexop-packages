@@ -18,7 +18,13 @@ export type ResponsiveProp<T> = T | Partial<Record<Breakpoint, T>>;
 /**
  * Footer visual variants
  */
-export type FooterVariant = "default" | "minimal" | "bordered";
+export type FooterVariant =
+  | "default"
+  | "minimal"
+  | "bordered"
+  | "modern"
+  | "elegant"
+  | "accent";
 
 /**
  * Props for the Footer component
@@ -34,6 +40,12 @@ export interface FooterProps {
 
   /**
    * Visual variant
+   * - default: Standard footer with top border
+   * - minimal: Transparent with no decorations
+   * - bordered: Full border with secondary background
+   * - modern: Contemporary with subtle gradient
+   * - elegant: Refined with enhanced typography
+   * - accent: Bold with primary color accents
    * @default 'default'
    */
   variant?: FooterVariant;

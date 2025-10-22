@@ -22,6 +22,7 @@ import { userEvent } from "@testing-library/user-event";
 import React from "react";
 import { describe, expect, it, vi } from "vitest";
 import { SegmentedButton } from "./SegmentedButton.js";
+import styles from "./SegmentedButton.module.css";
 
 describe("SegmentedButton", () => {
   const mockOptions = [
@@ -395,7 +396,7 @@ describe("SegmentedButton", () => {
         />,
       );
 
-      const icons = container.querySelectorAll(".optionIcon");
+      const icons = container.querySelectorAll(`.${styles.optionIcon}`);
       expect(icons).toHaveLength(2);
     });
 
@@ -414,7 +415,7 @@ describe("SegmentedButton", () => {
         />,
       );
 
-      const icons = container.querySelectorAll(".optionIcon");
+      const icons = container.querySelectorAll(`.${styles.optionIcon}`);
       expect(icons).toHaveLength(1);
     });
   });
@@ -575,7 +576,7 @@ describe("SegmentedButton", () => {
         />,
       );
 
-      const group = container.querySelector(".segmentedButton");
+      const group = container.querySelector(`.${styles.segmentedButton}`);
       expect(group).toBeInTheDocument();
     });
 
@@ -589,7 +590,7 @@ describe("SegmentedButton", () => {
         />,
       );
 
-      const options = container.querySelectorAll(".option");
+      const options = container.querySelectorAll(`.${styles.option}`);
       expect(options).toHaveLength(3);
     });
 
@@ -603,7 +604,7 @@ describe("SegmentedButton", () => {
         />,
       );
 
-      const labels = container.querySelectorAll(".optionLabel");
+      const labels = container.querySelectorAll(`.${styles.optionLabel}`);
       expect(labels).toHaveLength(3);
     });
   });

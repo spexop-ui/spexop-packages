@@ -12,6 +12,7 @@ import { render, screen } from "@testing-library/react";
 import React from "react";
 import { describe, expect, it, vi } from "vitest";
 import { Link } from "./Link.js";
+import styles from "./Link.module.css";
 
 describe("Link", () => {
   it("renders with correct text", () => {
@@ -31,35 +32,35 @@ describe("Link", () => {
         Text
       </Link>,
     );
-    expect(screen.getByRole("link")).toHaveClass("text");
+    expect(screen.getByRole("link")).toHaveClass(styles.text);
 
     rerender(
       <Link href="/test" variant="ghost">
         Ghost
       </Link>,
     );
-    expect(screen.getByRole("link")).toHaveClass("ghost");
+    expect(screen.getByRole("link")).toHaveClass(styles.ghost);
 
     rerender(
       <Link href="/test" variant="outline">
         Outline
       </Link>,
     );
-    expect(screen.getByRole("link")).toHaveClass("outline");
+    expect(screen.getByRole("link")).toHaveClass(styles.outline);
 
     rerender(
       <Link href="/test" variant="secondary">
         Secondary
       </Link>,
     );
-    expect(screen.getByRole("link")).toHaveClass("secondary");
+    expect(screen.getByRole("link")).toHaveClass(styles.secondary);
 
     rerender(
       <Link href="/test" variant="primary">
         Primary
       </Link>,
     );
-    expect(screen.getByRole("link")).toHaveClass("primary");
+    expect(screen.getByRole("link")).toHaveClass(styles.primary);
   });
 
   it("applies size classes", () => {
@@ -68,21 +69,21 @@ describe("Link", () => {
         Small
       </Link>,
     );
-    expect(screen.getByRole("link")).toHaveClass("size-sm");
+    expect(screen.getByRole("link")).toHaveClass(styles["size-sm"]);
 
     rerender(
       <Link href="/test" size="md">
         Medium
       </Link>,
     );
-    expect(screen.getByRole("link")).toHaveClass("size-md");
+    expect(screen.getByRole("link")).toHaveClass(styles["size-md"]);
 
     rerender(
       <Link href="/test" size="lg">
         Large
       </Link>,
     );
-    expect(screen.getByRole("link")).toHaveClass("size-lg");
+    expect(screen.getByRole("link")).toHaveClass(styles["size-lg"]);
   });
 
   it("handles click events", () => {
@@ -104,7 +105,7 @@ describe("Link", () => {
       </Link>,
     );
     const link = screen.getByRole("link");
-    expect(link).toHaveClass("active");
+    expect(link).toHaveClass(styles.active);
     expect(link).toHaveAttribute("aria-current", "page");
   });
 
@@ -123,7 +124,7 @@ describe("Link", () => {
         Full Width
       </Link>,
     );
-    expect(screen.getByRole("link")).toHaveClass("full-width");
+    expect(screen.getByRole("link")).toHaveClass(styles["full-width"]);
   });
 
   it("handles external links correctly", () => {
@@ -135,7 +136,7 @@ describe("Link", () => {
     const link = screen.getByRole("link");
     expect(link).toHaveAttribute("target", "_blank");
     expect(link).toHaveAttribute("rel", "noopener noreferrer");
-    expect(link).toHaveClass("external");
+    expect(link).toHaveClass(styles.external);
   });
 
   it("handles disabled state", () => {

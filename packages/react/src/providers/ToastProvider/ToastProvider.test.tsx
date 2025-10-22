@@ -13,6 +13,7 @@ import {
 import React from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ToastProvider, useToast } from "./ToastProvider.js";
+import styles from "./ToastProvider.module.css";
 
 // Test component that uses the toast hook
 function TestComponent() {
@@ -449,7 +450,7 @@ describe("ToastProvider", () => {
       });
 
       const container = screen.getByRole("region", { name: "Notifications" });
-      expect(container).toHaveClass("position-top-right");
+      expect(container).toHaveClass(styles["position-top-right"]);
     });
 
     it("should render in custom position", () => {
@@ -466,7 +467,7 @@ describe("ToastProvider", () => {
       });
 
       const container = screen.getByRole("region", { name: "Notifications" });
-      expect(container).toHaveClass("position-bottom-center");
+      expect(container).toHaveClass(styles["position-bottom-center"]);
     });
   });
 

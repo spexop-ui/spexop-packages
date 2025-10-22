@@ -21,6 +21,7 @@ import { userEvent } from "@testing-library/user-event";
 import React from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { Drawer } from "./Drawer.js";
+import styles from "./Drawer.module.css";
 
 describe("Drawer", () => {
   beforeEach(() => {

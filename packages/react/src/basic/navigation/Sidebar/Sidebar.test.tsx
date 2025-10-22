@@ -41,6 +41,7 @@ vi.mock("../../../hooks/useEscapeKey.js", () => ({
 }));
 
 import { useMediaQuery } from "../../../hooks/useMediaQuery.js";
+import styles from "./Sidebar.module.css";
 
 describe("Sidebar", () => {
   beforeEach(() => {
@@ -78,7 +79,7 @@ describe("Sidebar", () => {
       );
 
       const sidebar = container.querySelector("aside");
-      expect(sidebar?.className).toContain("open");
+      expect(sidebar).toHaveClass(styles.open);
     });
 
     it("is hidden when isOpen is false", () => {
@@ -89,7 +90,7 @@ describe("Sidebar", () => {
       );
 
       const sidebar = container.querySelector("aside");
-      expect(sidebar?.className).not.toContain("open");
+      expect(sidebar).not.toHaveClass(styles.open);
     });
   });
 
@@ -260,7 +261,7 @@ describe("Sidebar", () => {
       );
 
       const sidebar = container.querySelector("aside");
-      expect(sidebar?.className).toContain("custom-sidebar");
+      expect(sidebar).toHaveClass("custom-sidebar");
     });
   });
 

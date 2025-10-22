@@ -22,6 +22,7 @@ import { userEvent } from "@testing-library/user-event";
 import React from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { Popover } from "./Popover.js";
+import styles from "./Popover.module.css";
 
 // Extend global type for test callback
 interface GlobalWithTestCallbacks {

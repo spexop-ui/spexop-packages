@@ -1,0 +1,17 @@
+#!/bin/bash
+# Post-commit hook to sync documentation to spexop-design-system
+
+echo "🔄 Checking if documentation sync is needed..."
+
+# Check if any documentation files were changed
+if git diff-tree --no-commit-id --name-only -r HEAD | grep -E "(README\.md|USAGE-GUIDE\.md)$"; then
+    echo "📚 Documentation files changed, syncing to spexop-design-system..."
+    
+    # Run sync in spexop-design-system repo
+    cd /Users/olmstedian/__DEV__/spexop-design-system
+    pnpm run sync-docs
+    
+    echo "✅ Documentation synced successfully!"
+else
+    echo "ℹ️  No documentation changes detected"
+fi

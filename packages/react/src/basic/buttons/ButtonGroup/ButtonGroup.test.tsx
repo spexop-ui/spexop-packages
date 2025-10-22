@@ -17,6 +17,7 @@ import { render, screen } from "@testing-library/react";
 import React from "react";
 import { describe, expect, it, vi } from "vitest";
 import { ButtonGroup } from "./ButtonGroup.js";
+import styles from "./ButtonGroup.module.css";
 
 describe("ButtonGroup", () => {
   describe("Rendering", () => {
@@ -66,7 +67,7 @@ describe("ButtonGroup", () => {
         </ButtonGroup>,
       );
 
-      const group = container.querySelector(".horizontal");
+      const group = container.querySelector(`.${styles.horizontal}`);
       expect(group).toBeInTheDocument();
     });
 
@@ -77,7 +78,7 @@ describe("ButtonGroup", () => {
         </ButtonGroup>,
       );
 
-      const group = container.querySelector(".horizontal");
+      const group = container.querySelector(`.${styles.horizontal}`);
       expect(group).toBeInTheDocument();
     });
 
@@ -88,7 +89,7 @@ describe("ButtonGroup", () => {
         </ButtonGroup>,
       );
 
-      const group = container.querySelector(".vertical");
+      const group = container.querySelector(`.${styles.vertical}`);
       expect(group).toBeInTheDocument();
     });
   });
@@ -101,7 +102,7 @@ describe("ButtonGroup", () => {
         </ButtonGroup>,
       );
 
-      const group = container.querySelector(".compact");
+      const group = container.querySelector(`.${styles.compact}`);
       expect(group).toBeInTheDocument();
     });
 
@@ -112,7 +113,7 @@ describe("ButtonGroup", () => {
         </ButtonGroup>,
       );
 
-      const group = container.querySelector(".compact");
+      const group = container.querySelector(`.${styles.compact}`);
       expect(group).not.toBeInTheDocument();
     });
   });
@@ -227,8 +228,8 @@ describe("ButtonGroup", () => {
       );
 
       const group = container.firstChild;
-      expect(group).toHaveClass("vertical");
-      expect(group).toHaveClass("compact");
+      expect(group).toHaveClass(styles.vertical);
+      expect(group).toHaveClass(styles.compact);
       expect(group).toHaveClass("custom");
     });
   });
@@ -310,7 +311,7 @@ describe("ButtonGroup", () => {
         </ButtonGroup>,
       );
 
-      const group = container.querySelector(".buttonGroup");
+      const group = container.querySelector(`.${styles.buttonGroup}`);
       expect(group).toBeInTheDocument();
     });
 

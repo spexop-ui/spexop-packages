@@ -25,6 +25,7 @@ import { userEvent } from "@testing-library/user-event";
 import React from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { SearchModal } from "./SearchModal.js";
+import styles from "./SearchModal.module.css";
 import type { SearchResult } from "./SearchModal.types.js";
 
 const mockResults: SearchResult[] = [

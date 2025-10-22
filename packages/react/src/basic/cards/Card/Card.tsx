@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
 import { cn } from "../../../utils/cn.js";
-import { Icon } from "../../display/Icon/Icon.js";
+import { Icon } from "../../indicators/Icon/Icon.js";
 import styles from "./Card.module.css";
 import type { CardProps } from "./Card.types.js";
 

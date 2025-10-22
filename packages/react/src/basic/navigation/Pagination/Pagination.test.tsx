@@ -20,6 +20,7 @@ import { userEvent } from "@testing-library/user-event";
 import React from "react";
 import { describe, expect, it, vi } from "vitest";
 import { Pagination } from "./Pagination.js";
+import styles from "./Pagination.module.css";
 
 describe("Pagination", () => {
   describe("Rendering", () => {
@@ -454,7 +455,7 @@ describe("Pagination", () => {
       );
 
       const pagination = container.querySelector("nav");
-      expect(pagination?.className).toContain("size-sm");
+      expect(pagination).toHaveClass(styles["size-sm"]);
     });
 
     it("renders with medium size (default)", () => {
@@ -463,7 +464,7 @@ describe("Pagination", () => {
       );
 
       const pagination = container.querySelector("nav");
-      expect(pagination?.className).toContain("size-md");
+      expect(pagination).toHaveClass(styles["size-md"]);
     });
 
     it("renders with large size", () => {
@@ -477,7 +478,7 @@ describe("Pagination", () => {
       );
 
       const pagination = container.querySelector("nav");
-      expect(pagination?.className).toContain("size-lg");
+      expect(pagination).toHaveClass(styles["size-lg"]);
     });
   });
 
@@ -566,7 +567,7 @@ describe("Pagination", () => {
       );
 
       const nav = container.querySelector("nav");
-      expect(nav?.className).toContain("custom-pagination");
+      expect(nav).toHaveClass("custom-pagination");
     });
   });
 

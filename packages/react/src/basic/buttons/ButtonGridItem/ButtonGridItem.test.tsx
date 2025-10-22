@@ -20,6 +20,7 @@ import { userEvent } from "@testing-library/user-event";
 import React from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ButtonGridItem } from "./ButtonGridItem.js";
+import styles from "./ButtonGridItem.module.css";
 
 describe("ButtonGridItem", () => {
   const mockMedia = <img src="/test.jpg" alt="Test visual" />;
@@ -75,7 +76,7 @@ describe("ButtonGridItem", () => {
       );
 
       const card = container.querySelector('[role="button"]');
-      expect(card?.className).toContain("custom-class");
+      expect(card).toHaveClass("custom-class");
     });
   });
 

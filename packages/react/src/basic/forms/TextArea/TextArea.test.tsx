@@ -5,6 +5,7 @@ import userEvent from "@testing-library/user-event";
 import React from "react";
 import { describe, expect, it, vi } from "vitest";
 import { TextArea } from "./TextArea";
+import styles from "./TextArea.module.css";
 
 describe("TextArea", () => {
   describe("Rendering", () => {
@@ -57,12 +58,14 @@ describe("TextArea", () => {
     it("does not auto-resize by default", () => {
       const { container } = render(<TextArea label="Test" />);
       const textarea = screen.getByLabelText("Test");
-      expect(textarea).not.toHaveClass("textareaAutoResize");
+      expect(textarea).not.toHaveClass(styles.textareaAutoResize);
     });
 
     it("applies auto-resize class when enabled", () => {
       render(<TextArea label="Test" autoResize />);
-      expect(screen.getByLabelText("Test")).toHaveClass("textareaAutoResize");
+      expect(screen.getByLabelText("Test")).toHaveClass(
+        styles.textareaAutoResize,
+      );
     });
 
     it("respects minRows with autoResize", () => {
@@ -212,19 +215,19 @@ describe("TextArea", () => {
   describe("Size Variants", () => {
     it("renders with small size", () => {
       render(<TextArea label="Test" size="sm" />);
-      expect(screen.getByLabelText("Test")).toHaveClass("textareaSizeSm");
+      expect(screen.getByLabelText("Test")).toHaveClass(styles.textareaSizeSm);
     });
 
     it("renders with medium size by default", () => {
       render(<TextArea label="Test" />);
       const textarea = screen.getByLabelText("Test");
-      expect(textarea).not.toHaveClass("textareaSizeSm");
-      expect(textarea).not.toHaveClass("textareaSizeLg");
+      expect(textarea).not.toHaveClass(styles.textareaSizeSm);
+      expect(textarea).not.toHaveClass(styles.textareaSizeLg);
     });
 
     it("renders with large size", () => {
       render(<TextArea label="Test" size="lg" />);
-      expect(screen.getByLabelText("Test")).toHaveClass("textareaSizeLg");
+      expect(screen.getByLabelText("Test")).toHaveClass(styles.textareaSizeLg);
     });
   });
 
@@ -236,7 +239,7 @@ describe("TextArea", () => {
 
     it("applies error styles when error is present", () => {
       render(<TextArea label="Bio" error="Invalid" />);
-      expect(screen.getByLabelText("Bio")).toHaveClass("textareaError");
+      expect(screen.getByLabelText("Bio")).toHaveClass(styles.textareaError);
     });
 
     it("error message has role alert", () => {
@@ -261,12 +264,12 @@ describe("TextArea", () => {
   describe("Success State", () => {
     it("applies success styles when variant is success", () => {
       render(<TextArea label="Bio" variant="success" />);
-      expect(screen.getByLabelText("Bio")).toHaveClass("textareaSuccess");
+      expect(screen.getByLabelText("Bio")).toHaveClass(styles.textareaSuccess);
     });
 
     it("error overrides success variant", () => {
       render(<TextArea label="Bio" variant="success" error="Error message" />);
-      expect(screen.getByLabelText("Bio")).toHaveClass("textareaError");
+      expect(screen.getByLabelText("Bio")).toHaveClass(styles.textareaError);
     });
   });
 

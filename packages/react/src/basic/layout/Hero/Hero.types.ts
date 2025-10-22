@@ -3,7 +3,13 @@ import type { ReactNode } from "react";
 /**
  * Hero layout variants
  */
-export type HeroVariant = "split" | "centered" | "minimal" | "full-bleed";
+export type HeroVariant =
+  | "split"
+  | "centered"
+  | "minimal"
+  | "full-bleed"
+  | "modern"
+  | "elegant";
 
 /**
  * Hero background styles

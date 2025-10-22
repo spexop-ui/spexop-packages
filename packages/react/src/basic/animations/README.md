@@ -4,6 +4,10 @@ Smooth, performant animation utilities for React applications following Spexop d
 
 **See [USAGE-GUIDE.md](./USAGE-GUIDE.md) for comprehensive usage examples, best practices, and troubleshooting.**
 
+**!!! IMPORTANT !!!**
+This documentation is automatically synced from the spexop-packages repository. Last sync: 2025-10-22
+It's read-only and should be edited in spexop-packages repository. Please don't edit this file and the content of the components directly.
+
 ## Features
 
 ✅ **Standards Before Frameworks** - Native CSS transitions, IntersectionObserver API, RequestAnimationFrame  

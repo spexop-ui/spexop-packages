@@ -75,8 +75,9 @@
     "build": "vite build",
     "dev": "vite build --watch",
     "clean": "rimraf dist",
-    "test": "vitest",
-    "test:ui": "vitest --ui",
+    "test": "NODE_OPTIONS='--max-old-space-size=4096' vitest",
+    "test:ui": "NODE_OPTIONS='--max-old-space-size=4096' vitest --ui",
+    "test:run": "NODE_OPTIONS='--max-old-space-size=4096' vitest run",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {

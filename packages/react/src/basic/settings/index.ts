@@ -1,10 +1,12 @@
 /**
- * Settings Components
+ * Settings Components (Deprecated)
  *
- * Settings panels and configuration UI.
- * For building application settings interfaces.
+ * @deprecated This folder will be removed in v0.4.0.
+ * Components have been moved to their proper categories.
+ *
+ * Migration guide: https://spexop.dev/docs/migrations/from-v0.3-to-v0.4
  */
 
-export * from "./SettingItem/index.js";
-export * from "./SettingsCard/index.js";
-export * from "./SettingsPanel/index.js";
+// Re-export from new locations for backwards compatibility
+export { SettingItem } from "../forms/SettingItem/index.js";
+export { SettingsPanel } from "../layout/SettingsPanel/index.js";

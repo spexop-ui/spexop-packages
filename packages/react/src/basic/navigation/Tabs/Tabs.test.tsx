@@ -19,6 +19,7 @@ import { userEvent } from "@testing-library/user-event";
 import React from "react";
 import { describe, expect, it, vi } from "vitest";
 import { Tabs } from "./Tabs.js";
+import styles from "./Tabs.module.css";
 import type { Tab } from "./Tabs.types.js";
 
 describe("Tabs", () => {
@@ -323,15 +324,15 @@ describe("Tabs", () => {
     it("renders with default variant", () => {
       const { container } = render(<Tabs tabs={defaultTabs} />);
 
-      const tabs = container.querySelector(".tabs");
-      expect(tabs?.className).toContain("variant-default");
+      const tabs = container.querySelector(`.${styles.tabs}`);
+      expect(tabs).toHaveClass(styles["variant-default"]);
     });
 
     it("renders with pills variant", () => {
       const { container } = render(<Tabs tabs={defaultTabs} variant="pills" />);
 
-      const tabs = container.querySelector(".tabs");
-      expect(tabs?.className).toContain("variant-pills");
+      const tabs = container.querySelector(`.${styles.tabs}`);
+      expect(tabs).toHaveClass(styles["variant-pills"]);
     });
 
     it("renders with underline variant", () => {
@@ -339,8 +340,8 @@ describe("Tabs", () => {
         <Tabs tabs={defaultTabs} variant="underline" />,
       );
 
-      const tabs = container.querySelector(".tabs");
-      expect(tabs?.className).toContain("variant-underline");
+      const tabs = container.querySelector(`.${styles.tabs}`);
+      expect(tabs).toHaveClass(styles["variant-underline"]);
     });
   });
 
@@ -348,22 +349,22 @@ describe("Tabs", () => {
     it("renders with small size", () => {
       const { container } = render(<Tabs tabs={defaultTabs} size="sm" />);
 
-      const tabs = container.querySelector(".tabs");
-      expect(tabs?.className).toContain("size-sm");
+      const tabs = container.querySelector(`.${styles.tabs}`);
+      expect(tabs).toHaveClass(styles["size-sm"]);
     });
 
     it("renders with medium size (default)", () => {
       const { container } = render(<Tabs tabs={defaultTabs} />);
 
-      const tabs = container.querySelector(".tabs");
-      expect(tabs?.className).toContain("size-md");
+      const tabs = container.querySelector(`.${styles.tabs}`);
+      expect(tabs).toHaveClass(styles["size-md"]);
     });
 
     it("renders with large size", () => {
       const { container } = render(<Tabs tabs={defaultTabs} size="lg" />);
 
-      const tabs = container.querySelector(".tabs");
-      expect(tabs?.className).toContain("size-lg");
+      const tabs = container.querySelector(`.${styles.tabs}`);
+      expect(tabs).toHaveClass(styles["size-lg"]);
     });
   });
 
@@ -371,15 +372,15 @@ describe("Tabs", () => {
     it("renders full width when fullWidth is true", () => {
       const { container } = render(<Tabs tabs={defaultTabs} fullWidth />);
 
-      const tabs = container.querySelector(".tabs");
-      expect(tabs?.className).toContain("full-width");
+      const tabs = container.querySelector(`.${styles.tabs}`);
+      expect(tabs).toHaveClass(styles["full-width"]);
     });
 
     it("does not render full width by default", () => {
       const { container } = render(<Tabs tabs={defaultTabs} />);
 
-      const tabs = container.querySelector(".tabs");
-      expect(tabs?.className).not.toContain("full-width");
+      const tabs = container.querySelector(`.${styles.tabs}`);
+      expect(tabs).not.toHaveClass(styles["full-width"]);
     });
   });
 
@@ -454,8 +455,8 @@ describe("Tabs", () => {
         <Tabs tabs={defaultTabs} className="custom-tabs" />,
       );
 
-      const tabs = container.querySelector(".tabs");
-      expect(tabs?.className).toContain("custom-tabs");
+      const tabs = container.querySelector(`.${styles.tabs}`);
+      expect(tabs).toHaveClass("custom-tabs");
     });
 
     it("applies custom className to tab list", () => {
@@ -473,7 +474,7 @@ describe("Tabs", () => {
       );
 
       const panel = screen.getByText("Content 1").closest('[role="tabpanel"]');
-      expect(panel?.className).toContain("custom-panel");
+      expect(panel).toHaveClass("custom-panel");
     });
   });
 

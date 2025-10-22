@@ -21,6 +21,7 @@ import { userEvent } from "@testing-library/user-event";
 import React from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Tooltip } from "./Tooltip.js";
+import styles from "./Tooltip.module.css";
 
 describe("Tooltip", () => {
   beforeEach(() => {

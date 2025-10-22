@@ -18,7 +18,7 @@
 
 import { Search } from "@spexop/icons";
 import { useEffect, useState } from "react";
-import { KeyboardShortcut } from "../../display/KeyboardShortcut/index.js";
+import { KeyboardShortcut } from "../../indicators/KeyboardShortcut/index.js";
 import styles from "./SearchBar.module.css";
 
 export interface SearchBarProps {

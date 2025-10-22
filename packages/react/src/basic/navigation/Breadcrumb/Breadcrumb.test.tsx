@@ -20,6 +20,7 @@ import { userEvent } from "@testing-library/user-event";
 import React from "react";
 import { describe, expect, it, vi } from "vitest";
 import { Breadcrumb } from "./Breadcrumb.js";
+import styles from "./Breadcrumb.module.css";
 import type { BreadcrumbItem } from "./Breadcrumb.types.js";
 
 describe("Breadcrumb", () => {
@@ -134,14 +135,14 @@ describe("Breadcrumb", () => {
       );
 
       const breadcrumb = container.querySelector("nav");
-      expect(breadcrumb?.className).toContain("size-sm");
+      expect(breadcrumb).toHaveClass(styles["size-sm"]);
     });
 
     it("renders with medium size (default)", () => {
       const { container } = render(<Breadcrumb items={defaultItems} />);
 
       const breadcrumb = container.querySelector("nav");
-      expect(breadcrumb?.className).toContain("size-md");
+      expect(breadcrumb).toHaveClass(styles["size-md"]);
     });
 
     it("renders with large size", () => {
@@ -150,7 +151,7 @@ describe("Breadcrumb", () => {
       );
 
       const breadcrumb = container.querySelector("nav");
-      expect(breadcrumb?.className).toContain("size-lg");
+      expect(breadcrumb).toHaveClass(styles["size-lg"]);
     });
   });
 
@@ -338,7 +339,7 @@ describe("Breadcrumb", () => {
       );
 
       const nav = container.querySelector("nav");
-      expect(nav?.className).toContain("custom-breadcrumb");
+      expect(nav).toHaveClass("custom-breadcrumb");
     });
   });
 

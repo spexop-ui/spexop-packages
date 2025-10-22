@@ -12,6 +12,7 @@ import { render, screen } from "@testing-library/react";
 import React from "react";
 import { describe, expect, it, vi } from "vitest";
 import { Form } from "./Form.js";
+import styles from "./Form.module.css";
 
 describe("Form", () => {
   it("renders form element", () => {
@@ -56,14 +57,16 @@ describe("Form", () => {
         <input type="text" />
       </Form>,
     );
-    expect(container.querySelector("form")).toHaveClass("variant-default");
+    expect(container.querySelector("form")).toHaveClass(
+      styles["variant-default"],
+    );
 
     rerender(
       <Form variant="card">
         <input type="text" />
       </Form>,
     );
-    expect(container.querySelector("form")).toHaveClass("variant-card");
+    expect(container.querySelector("form")).toHaveClass(styles["variant-card"]);
   });
 
   it("shows loading overlay when loading", () => {

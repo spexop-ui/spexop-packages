@@ -127,16 +127,13 @@ describe("SearchBar", () => {
 
     it("prevents default form submission", async () => {
       const user = userEvent.setup();
-      const handleSubmit = vi.fn((e) => e.preventDefault());
-      const { container } = render(<SearchBar onSearch={handleSubmit} />);
-
-      const form = container.querySelector("form");
-      form?.addEventListener("submit", handleSubmit);
+      const handleSubmit = vi.fn();
+      render(<SearchBar onSearch={handleSubmit} />);
 
       await user.type(screen.getByRole("searchbox"), "test");
       await user.keyboard("{Enter}");
 
-      expect(handleSubmit).toHaveBeenCalled();
+      expect(handleSubmit).toHaveBeenCalledWith("test");
     });
   });
 

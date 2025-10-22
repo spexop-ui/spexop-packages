@@ -16,6 +16,7 @@ import { render, screen } from "@testing-library/react";
 import React from "react";
 import { describe, expect, it } from "vitest";
 import { PanelSection } from "./PanelSection.js";
+import styles from "./PanelSection.module.css";
 
 describe("PanelSection", () => {
   describe("Basic Rendering", () => {
@@ -127,7 +128,7 @@ describe("PanelSection", () => {
         </PanelSection>,
       );
       const section = container.querySelector("section");
-      expect(section?.className).toContain("custom-section");
+      expect(section).toHaveClass("custom-section");
     });
 
     it("should apply custom titleClassName to title", () => {
@@ -137,7 +138,7 @@ describe("PanelSection", () => {
         </PanelSection>,
       );
       const h3 = container.querySelector("h3");
-      expect(h3?.className).toContain("custom-title");
+      expect(h3).toHaveClass("custom-title");
     });
 
     it("should apply custom contentClassName to content wrapper", () => {
@@ -147,7 +148,7 @@ describe("PanelSection", () => {
         </PanelSection>,
       );
       const content = container.querySelector('[class*="content"]');
-      expect(content?.className).toContain("custom-content");
+      expect(content).toHaveClass("custom-content");
     });
 
     it("should apply multiple custom classNames", () => {
@@ -165,9 +166,9 @@ describe("PanelSection", () => {
       const h3 = container.querySelector("h3");
       const content = container.querySelector('[class*="content"]');
 
-      expect(section?.className).toContain("custom-section");
-      expect(h3?.className).toContain("custom-title");
-      expect(content?.className).toContain("custom-content");
+      expect(section).toHaveClass("custom-section");
+      expect(h3).toHaveClass("custom-title");
+      expect(content).toHaveClass("custom-content");
     });
   });
 

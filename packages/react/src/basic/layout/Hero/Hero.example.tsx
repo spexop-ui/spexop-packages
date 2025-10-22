@@ -3,7 +3,7 @@
  * Demonstrates all variants and features
  */
 
-import { Badge } from "../../display/Badge/Badge.js";
+import { Badge } from "../../indicators/Badge/Badge.js";
 import { Hero } from "./Hero.js";
 
 // Example 1: Centered Hero (Default)

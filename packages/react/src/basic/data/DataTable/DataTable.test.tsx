@@ -86,7 +86,9 @@ describe("DataTable", () => {
 
       expect(screen.getByText("Alice Johnson")).toBeInTheDocument();
       expect(screen.getByText("alice@example.com")).toBeInTheDocument();
-      expect(screen.getByText("Admin")).toBeInTheDocument();
+      // Admin appears multiple times in test data, so use getAllByText
+      const adminCells = screen.getAllByText("Admin");
+      expect(adminCells.length).toBeGreaterThan(0);
     });
 
     it("renders all column headers", () => {

@@ -1,88 +1,83 @@
+import { useEffect, useRef, useState } from "react";
+
+export interface UseIntersectionObserverOptions {
+  /**
+   * Threshold for triggering animation (0-1)
+   * @default 0.1
+   */
+  threshold?: number;
+
+  /**
+   * Root margin for intersection
+   * @default "0px"
+   */
+  rootMargin?: string;
+
+  /**
+   * Only trigger once
+   * @default true
+   */
+  triggerOnce?: boolean;
+
+  /**
+   * Delay before triggering (ms)
+   * @default 0
+   */
+  delay?: number;
+}
+
 /**
- * useIntersectionObserver Hook
- *
- * Generic intersection observer for lazy loading, infinite scroll, and visibility tracking.
- * More flexible than useScrollSpy.
+ * Hook for detecting when an element enters the viewport
+ * Uses IntersectionObserver for performance
  *
  * @example
  * ```tsx
- * // Lazy load images
- * function LazyImage({ src, alt }: { src: string; alt: string }) {
- *   const [ref, isVisible] = useIntersectionObserver<HTMLImageElement>({
- *     threshold: 0.1,
- *     triggerOnce: true,
- *   });
+ * const [ref, isVisible] = useIntersectionObserver({ threshold: 0.5 });
  *
- *   return (
- *     <img
- *       ref={ref}
- *       src={isVisible ? src : placeholder}
- *       alt={alt}
- *     />
- *   );
- * }
- *
- * // Infinite scroll
- * function InfiniteList() {
- *   const [ref, isVisible] = useIntersectionObserver({
- *     rootMargin: '100px',
- *   });
- *
- *   useEffect(() => {
- *     if (isVisible) loadMore();
- *   }, [isVisible]);
- *
- *   return <div ref={ref}>Loading...</div>;
- * }
+ * <div ref={ref} style={{ opacity: isVisible ? 1 : 0 }}>
+ *   Content
+ * </div>
  * ```
- *
- * Features:
- * - Fully configurable IntersectionObserver
- * - Trigger once option
- * - Type-safe with generics
- * - Returns entry data
- * - Automatic cleanup
- *
- * @param options - IntersectionObserver options
- * @returns Tuple of [ref, isIntersecting, entry]
- *
- * @author @olmstedian | github.com/olmstedian | @spexop | github.com/spexop-ui
  */
-
-import { type RefObject, useEffect, useRef, useState } from "react";
-
-export interface UseIntersectionObserverOptions
-  extends IntersectionObserverInit {
-  triggerOnce?: boolean;
-}
-
-export function useIntersectionObserver<T extends HTMLElement = HTMLElement>(
+export function useIntersectionObserver<T extends HTMLElement = HTMLDivElement>(
   options: UseIntersectionObserverOptions = {},
-): [RefObject<T | null>, boolean, IntersectionObserverEntry | null] {
-  const { triggerOnce = false, threshold, root, rootMargin } = options;
-  const ref = useRef<T>(null);
-  const [isIntersecting, setIsIntersecting] = useState(false);
-  const [entry, setEntry] = useState<IntersectionObserverEntry | null>(null);
+): [React.RefObject<T | null>, boolean] {
+  const {
+    threshold = 0.1,
+    rootMargin = "0px",
+    triggerOnce = true,
+    delay = 0,
+  } = options;
+
+  const ref = useRef<T | null>(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     const element = ref.current;
     if (!element) return;
 
-    if (typeof IntersectionObserver === "undefined") {
-      setIsIntersecting(true);
-      return;
-    }
-
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setIsIntersecting(entry.isIntersecting);
-        setEntry(entry);
+        if (entry.isIntersecting) {
+          if (delay > 0) {
+            setTimeout(() => {
+              setIsVisible(true);
+            }, delay);
+          } else {
+            setIsVisible(true);
+          }
 
-        if (entry.isIntersecting && triggerOnce) {
-          observer.unobserve(element);
+          if (triggerOnce) {
+            observer.disconnect();
+          }
+        } else if (!triggerOnce) {
+          setIsVisible(false);
         }
       },
-      { threshold, root, rootMargin },
+      {
+        threshold,
+        rootMargin,
+      },
     );
 
     observer.observe(element);
@@ -90,7 +85,7 @@ export function useIntersectionObserver<T extends HTMLElement = HTMLElement>(
     return () => {
       observer.disconnect();
     };
-  }, [triggerOnce, threshold, root, rootMargin]);
+  }, [threshold, rootMargin, triggerOnce, delay]);
 
-  return [ref, isIntersecting, entry];
+  return [ref, isVisible];
 }

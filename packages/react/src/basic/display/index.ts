@@ -1,16 +1,11 @@
 /**
- * Display Components
+ * Display Components (Deprecated)
  *
- * Typography and visual indicators.
- * Includes badges, icons, and keyboard shortcuts.
+ * @deprecated This folder will be removed in v0.4.0.
+ * Components have been moved to indicators/ category.
+ *
+ * Migration guide: https://spexop.dev/docs/migrations/from-v0.3-to-v0.4
  */
 
-export * from "./Accordion/index.js";
-export * from "./Avatar/index.js";
-export * from "./Badge/index.js";
-export * from "./Divider/index.js";
-export * from "./EmptyState/index.js";
-export * from "./Icon/index.js";
-export * from "./IconButton/index.js";
-export * from "./KeyboardShortcut/index.js";
-export * from "./Skeleton/index.js";
+// Re-export from new location for backwards compatibility
+export * from "../indicators/index.js";

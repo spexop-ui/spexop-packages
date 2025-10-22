@@ -2,6 +2,9 @@
  * BlogCard Component
  * Specialized card for blog post previews
  *
+ * @deprecated This component will be removed in v0.4.0.
+ * Use Card composition patterns instead. See: src/patterns/cards/BlogCard.example.tsx
+ *
  * @module @spexop/react/cards
  */
 
@@ -51,6 +54,14 @@ export const BlogCard = forwardRef<HTMLAnchorElement, BlogCardProps>(
     },
     ref,
   ) => {
+    // Deprecation warning
+    if (process.env.NODE_ENV === "development") {
+      console.warn(
+        "@spexop/react: BlogCard is deprecated and will be removed in v0.4.0. " +
+          "Use Card composition patterns instead. See: https://spexop.dev/patterns/cards",
+      );
+    }
+
     // Format date if it's a Date object
     const formatDate = (d: string | Date): string => {
       if (typeof d === "string") return d;

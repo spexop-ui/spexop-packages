@@ -19,6 +19,7 @@ import { userEvent } from "@testing-library/user-event";
 import React from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Snackbar } from "./Snackbar.js";
+import styles from "./Snackbar.module.css";
 
 describe("Snackbar", () => {
   beforeEach(() => {

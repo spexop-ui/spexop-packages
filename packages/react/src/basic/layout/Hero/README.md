@@ -1,16 +1,19 @@
 # Hero Component
 
-A reusable, animated Hero component that serves as a prominent entry point for landing pages. Features multiple layout variants, scroll-triggered animations, and sophisticated visual effects with the liquid glass design aesthetic.
+A reusable, animated Hero component that serves as a prominent entry point for landing pages. Features multiple layout variants, modern UI/UX elements, smooth animations, and sophisticated visual effects following Spexop principles.
 
 ## Features
 
-- ✅ **4 Layout Variants**: `centered`, `split`, `minimal`, `full-bleed`
-- ✅ **Smooth Animations**: Leverages existing animation system (FadeIn, ScaleUp, Stagger, ZoomIn)
-- ✅ **Fully Accessible**: WCAG 2.1 Level AA compliant with reduced motion support
+- ✅ **6 Layout Variants**: centered, split, minimal, full-bleed, modern, elegant
+- ✅ **Smooth Animations**: FadeIn, ScaleUp, Stagger with reduced motion support
+- ✅ **Modern UI Elements**: Accent bars, enhanced typography, interactive stats
+- ✅ **WCAG AA+ Compliant**: Full accessibility with semantic HTML and ARIA
 - ✅ **Responsive Design**: Optimized for mobile, tablet, and desktop
+- ✅ **Interactive Stats**: Hover effects with accent bar animations
+- ✅ **Enhanced Typography**: Clear hierarchy with design tokens
 - ✅ **Type-Safe**: Comprehensive TypeScript support
-- ✅ **Flexible Content**: Supports eyebrow, title, subtitle, description, actions, and stats
-- ✅ **Media Support**: Background images and autoplay videos
+- ✅ **Flexible Content**: Eyebrow, title, subtitle, description, actions, stats
+- ✅ **Media Support**: Background images and autoplay videos with optimization
 
 ## Installation
 
@@ -43,11 +46,12 @@ function App() {
 
 ### Centered (Default)
 
-Perfect for single-column layouts with center-aligned content.
+Perfect for single-column layouts with center-aligned content. Now features accent bar under title.
 
 ```tsx
 <Hero
   variant="centered"
+  eyebrow={<Badge variant="info">New Release</Badge>}
   title="Welcome to Spexop"
   subtitle="Build beautiful interfaces"
   description="A comprehensive design system for modern React applications"
@@ -59,8 +63,63 @@ Perfect for single-column layouts with center-aligned content.
     label: "View Docs",
     onClick: handleViewDocs
   }}
+  stats={[
+    { value: "60+", label: "Components" },
+    { value: "245+", label: "Tokens" },
+  ]}
 />
 ```
+
+Features:
+
+- 2px accent bar under title
+- Enhanced eyebrow with 2px border
+- Interactive stats with hover effects
+
+### Modern (New in v0.3.2)
+
+Contemporary design with subtle gradient and accent line effect.
+
+```tsx
+<Hero
+  variant="modern"
+  eyebrow="Introducing v2.0"
+  title="Build the Future Today"
+  subtitle="Modern design system for ambitious teams"
+  description="Create stunning, accessible interfaces..."
+  primaryAction={{ label: "Start Building", onClick: handleStart }}
+/>
+```
+
+Features:
+
+- Subtle gradient background
+- Horizontal accent line at top (fades in/out)
+- Center-aligned content
+- Clean and contemporary
+
+### Elegant (New in v0.3.2)
+
+Refined design with accent bar and enhanced typography.
+
+```tsx
+<Hero
+  variant="elegant"
+  eyebrow="Enterprise Ready"
+  title="Premium Design System"
+  subtitle="Built for scale, designed for excellence"
+  description="Trusted by leading companies worldwide..."
+  primaryAction={{ label: "Request Demo", onClick: handleDemo }}
+/>
+```
+
+Features:
+
+- 160px primary accent bar at bottom
+- 3px strong bottom border
+- Enhanced typography (medium weight, letter-spacing)
+- Larger description text (18px)
+- Professional appearance
 
 ### Split
 
@@ -125,7 +184,7 @@ Full-width hero with background media and overlay content.
 
 ## With Statistics
 
-Display key metrics alongside your hero content.
+Display key metrics alongside your hero content with modern interactive cards.
 
 ```tsx
 <Hero
@@ -134,9 +193,9 @@ Display key metrics alongside your hero content.
   subtitle="Building the future of design systems"
   stats={[
     { value: "245+", label: "Design Tokens" },
-    { value: "30+", label: "Components" },
+    { value: "60+", label: "Components" },
     { value: "100%", label: "TypeScript" },
-    { value: "5k+", label: "Downloads" }
+    { value: "10K+", label: "Downloads" }
   ]}
   primaryAction={{
     label: "Get Started",
@@ -144,6 +203,13 @@ Display key metrics alongside your hero content.
   }}
 />
 ```
+
+**Enhanced Features (v0.3.2):**
+
+- Interactive hover effects (top accent bar slides in, card lifts up)
+- 2px borders (following "Borders before shadows")
+- Vertical layout for better mobile experience
+- Primary color on hover for visual feedback
 
 ## Animation Configuration
 
@@ -383,6 +449,41 @@ The Hero component uses S-prefix design tokens for consistent styling:
 --s-blur-*           /* Backdrop blur */
 ```
 
+## Modern UI/UX Improvements (v0.3.2)
+
+### Enhanced Visual Elements
+
+**Title Accent Bar:**
+
+- 4px solid bar under title in primary color
+- Adapts to text alignment (left/center/right)
+- Adds visual emphasis without overwhelming
+
+**Enhanced Eyebrow:**
+
+- 2px solid primary border (was 1px)
+- Light primary background
+- Hover lift effect (translateY -2px)
+- Better spacing and contrast
+
+**Interactive Stats:**
+
+- Top accent bar slides in on hover (scaleX animation)
+- Card lifts up on hover (translateY -4px)
+- Border changes to primary color
+- Vertical layout for better mobile UX
+
+**Enhanced Media:**
+
+- 2px borders (stronger than original 1px)
+- Hover effect with border color change and lift
+- Larger border radius for modern feel
+
+### New Variants
+
+**Modern:** Gradient background + top accent line for contemporary feel  
+**Elegant:** Accent bar + enhanced typography for professional appearance
+
 ## Best Practices
 
 1. **Use h1 for main page heroes**: Set `titleLevel={1}` for the primary hero on a page
@@ -391,6 +492,7 @@ The Hero component uses S-prefix design tokens for consistent styling:
 4. **Test with reduced motion**: Verify experience with animations disabled
 5. **Keep descriptions concise**: Aim for 2-3 sentences maximum
 6. **Use appropriate variants**: Choose variants that match your content layout
+7. **Leverage new variants**: Use modern for SaaS, elegant for corporate sites
 
 ## Examples
 

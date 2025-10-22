@@ -42,7 +42,7 @@
  */
 
 import { useMemo, useState } from "react";
-import { Icon } from "../../display/Icon/index.js";
+import { Icon } from "../../indicators/Icon/index.js";
 import {
   Table,
   TableBody,

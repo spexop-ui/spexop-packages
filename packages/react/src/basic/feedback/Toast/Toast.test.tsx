@@ -13,6 +13,7 @@ import { userEvent } from "@testing-library/user-event";
 import React from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Toast } from "./Toast";
+import styles from "./Toast.module.css";
 
 describe("Toast", () => {
   beforeEach(() => {
@@ -55,7 +56,7 @@ describe("Toast", () => {
       );
 
       await waitFor(() => {
-        const toast = container.querySelector(".variant-info");
+        const toast = container.querySelector(`.${styles["variant-info"]}`);
         expect(toast).toBeInTheDocument();
       });
     });
@@ -66,7 +67,7 @@ describe("Toast", () => {
       );
 
       await waitFor(() => {
-        const toast = container.querySelector(".open");
+        const toast = container.querySelector(`.${styles.open}`);
         expect(toast).toBeInTheDocument();
       });
     });
@@ -84,7 +85,7 @@ describe("Toast", () => {
       );
 
       await waitFor(() => {
-        const toast = container.querySelector(".variant-info");
+        const toast = container.querySelector(`.${styles["variant-info"]}`);
         expect(toast).toBeInTheDocument();
       });
     });
@@ -100,7 +101,7 @@ describe("Toast", () => {
       );
 
       await waitFor(() => {
-        const toast = container.querySelector(".variant-success");
+        const toast = container.querySelector(`.${styles["variant-success"]}`);
         expect(toast).toBeInTheDocument();
       });
     });
@@ -116,7 +117,7 @@ describe("Toast", () => {
       );
 
       await waitFor(() => {
-        const toast = container.querySelector(".variant-warning");
+        const toast = container.querySelector(`.${styles["variant-warning"]}`);
         expect(toast).toBeInTheDocument();
       });
     });
@@ -132,7 +133,7 @@ describe("Toast", () => {
       );
 
       await waitFor(() => {
-        const toast = container.querySelector(".variant-error");
+        const toast = container.querySelector(`.${styles["variant-error"]}`);
         expect(toast).toBeInTheDocument();
       });
     });
@@ -150,7 +151,9 @@ describe("Toast", () => {
       );
 
       await waitFor(() => {
-        const toast = container.querySelector(".position-top-left");
+        const toast = container.querySelector(
+          `.${styles["position-top-left"]}`,
+        );
         expect(toast).toBeInTheDocument();
       });
     });
@@ -166,7 +169,9 @@ describe("Toast", () => {
       );
 
       await waitFor(() => {
-        const toast = container.querySelector(".position-top-center");
+        const toast = container.querySelector(
+          `.${styles["position-top-center"]}`,
+        );
         expect(toast).toBeInTheDocument();
       });
     });
@@ -182,7 +187,9 @@ describe("Toast", () => {
       );
 
       await waitFor(() => {
-        const toast = container.querySelector(".position-top-right");
+        const toast = container.querySelector(
+          `.${styles["position-top-right"]}`,
+        );
         expect(toast).toBeInTheDocument();
       });
     });
@@ -198,7 +205,9 @@ describe("Toast", () => {
       );
 
       await waitFor(() => {
-        const toast = container.querySelector(".position-bottom-left");
+        const toast = container.querySelector(
+          `.${styles["position-bottom-left"]}`,
+        );
         expect(toast).toBeInTheDocument();
       });
     });
@@ -209,7 +218,9 @@ describe("Toast", () => {
       );
 
       await waitFor(() => {
-        const toast = container.querySelector(".position-bottom-center");
+        const toast = container.querySelector(
+          `.${styles["position-bottom-center"]}`,
+        );
         expect(toast).toBeInTheDocument();
       });
     });
@@ -225,7 +236,9 @@ describe("Toast", () => {
       );
 
       await waitFor(() => {
-        const toast = container.querySelector(".position-bottom-right");
+        const toast = container.querySelector(
+          `.${styles["position-bottom-right"]}`,
+        );
         expect(toast).toBeInTheDocument();
       });
     });
@@ -548,7 +561,7 @@ describe("Toast", () => {
       );
 
       await waitFor(() => {
-        const toast = container.querySelector(".custom-toast");
+        const toast = container.querySelector(`.${styles["custom-toast"]}`);
         expect(toast).toBeInTheDocument();
       });
     });
@@ -673,9 +686,9 @@ describe("Toast", () => {
       );
 
       await waitFor(() => {
-        const toast = container.querySelector(".variant-success");
+        const toast = container.querySelector(`.${styles["variant-success"]}`);
         expect(toast).toBeInTheDocument();
-        expect(toast).toHaveClass("position-top-right");
+        expect(toast).toHaveClass(styles["position-top-right"]);
         expect(toast).toHaveClass("custom-complete");
         expect(screen.getByText("Complete toast")).toBeInTheDocument();
         expect(screen.getByText("Undo")).toBeInTheDocument();

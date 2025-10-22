@@ -17,6 +17,7 @@ import { userEvent } from "@testing-library/user-event";
 import React from "react";
 import { describe, expect, it, vi } from "vitest";
 import { NavSection } from "./NavSection.js";
+import styles from "./NavSection.module.css";
 
 describe("NavSection", () => {
   describe("Rendering", () => {
@@ -73,7 +74,7 @@ describe("NavSection", () => {
       );
 
       const content = container.querySelector("section");
-      expect(content?.className).not.toContain("open");
+      expect(content).not.toHaveClass(styles.open);
     });
 
     it("is expanded when defaultOpen is true", () => {
@@ -84,7 +85,7 @@ describe("NavSection", () => {
       );
 
       const content = container.querySelector("section");
-      expect(content?.className).toContain("open");
+      expect(content).toHaveClass(styles.open);
     });
 
     it("toggles on button click", async () => {
@@ -99,15 +100,15 @@ describe("NavSection", () => {
       const content = container.querySelector("section");
 
       // Initially closed
-      expect(content?.className).not.toContain("open");
+      expect(content).not.toHaveClass(styles.open);
 
       // Click to open
       await user.click(button);
-      expect(content?.className).toContain("open");
+      expect(content).toHaveClass(styles.open);
 
       // Click to close
       await user.click(button);
-      expect(content?.className).not.toContain("open");
+      expect(content).not.toHaveClass(styles.open);
     });
 
     it("calls onToggle callback when toggled", async () => {
@@ -204,11 +205,11 @@ describe("NavSection", () => {
       const button = screen.getByRole("button", { name: /section/i });
 
       // Initially not open
-      expect(icon?.className).not.toContain("open");
+      expect(icon).not.toHaveClass(styles.open);
 
       // Click to expand
       await user.click(button);
-      expect(icon?.className).toContain("open");
+      expect(icon).toHaveClass(styles.open);
     });
   });
 
@@ -271,7 +272,7 @@ describe("NavSection", () => {
       );
 
       const section = container.querySelector(".navSection");
-      expect(section?.className).toContain("custom-section");
+      expect(section).toHaveClass("custom-section");
     });
   });
 

@@ -12,6 +12,7 @@ import { render, screen } from "@testing-library/react";
 import React from "react";
 import { describe, expect, it } from "vitest";
 import { Text } from "./Text.js";
+import styles from "./Text.module.css";
 
 describe("Text", () => {
   it("renders with correct text", () => {
@@ -31,73 +32,75 @@ describe("Text", () => {
 
   it("applies size classes", () => {
     const { rerender } = render(<Text size="sm">Small</Text>);
-    expect(screen.getByText("Small")).toHaveClass("size-sm");
+    expect(screen.getByText("Small")).toHaveClass(styles["size-sm"]);
 
     rerender(<Text size="lg">Large</Text>);
-    expect(screen.getByText("Large")).toHaveClass("size-lg");
+    expect(screen.getByText("Large")).toHaveClass(styles["size-lg"]);
 
     rerender(<Text size="2xl">2XL</Text>);
-    expect(screen.getByText("2XL")).toHaveClass("size-2xl");
+    expect(screen.getByText("2XL")).toHaveClass(styles["size-2xl"]);
   });
 
   it("applies weight classes", () => {
     const { rerender } = render(<Text weight="regular">Regular</Text>);
-    expect(screen.getByText("Regular")).toHaveClass("weight-regular");
+    expect(screen.getByText("Regular")).toHaveClass(styles["weight-regular"]);
 
     rerender(<Text weight="semibold">Semibold</Text>);
-    expect(screen.getByText("Semibold")).toHaveClass("weight-semibold");
+    expect(screen.getByText("Semibold")).toHaveClass(styles["weight-semibold"]);
 
     rerender(<Text weight="bold">Bold</Text>);
-    expect(screen.getByText("Bold")).toHaveClass("weight-bold");
+    expect(screen.getByText("Bold")).toHaveClass(styles["weight-bold"]);
   });
 
   it("applies alignment classes", () => {
     const { rerender } = render(<Text align="left">Left</Text>);
-    expect(screen.getByText("Left")).toHaveClass("align-left");
+    expect(screen.getByText("Left")).toHaveClass(styles["align-left"]);
 
     rerender(<Text align="center">Center</Text>);
-    expect(screen.getByText("Center")).toHaveClass("align-center");
+    expect(screen.getByText("Center")).toHaveClass(styles["align-center"]);
 
     rerender(<Text align="right">Right</Text>);
-    expect(screen.getByText("Right")).toHaveClass("align-right");
+    expect(screen.getByText("Right")).toHaveClass(styles["align-right"]);
 
     rerender(<Text align="justify">Justify</Text>);
-    expect(screen.getByText("Justify")).toHaveClass("align-justify");
+    expect(screen.getByText("Justify")).toHaveClass(styles["align-justify"]);
   });
 
   it("applies variant classes", () => {
     const { rerender } = render(<Text variant="default">Default</Text>);
-    expect(screen.getByText("Default")).toHaveClass("variant-default");
+    expect(screen.getByText("Default")).toHaveClass(styles["variant-default"]);
 
     rerender(<Text variant="secondary">Secondary</Text>);
-    expect(screen.getByText("Secondary")).toHaveClass("variant-secondary");
+    expect(screen.getByText("Secondary")).toHaveClass(
+      styles["variant-secondary"],
+    );
 
     rerender(<Text variant="success">Success</Text>);
-    expect(screen.getByText("Success")).toHaveClass("variant-success");
+    expect(screen.getByText("Success")).toHaveClass(styles["variant-success"]);
 
     rerender(<Text variant="error">Error</Text>);
-    expect(screen.getByText("Error")).toHaveClass("variant-error");
+    expect(screen.getByText("Error")).toHaveClass(styles["variant-error"]);
 
     rerender(<Text variant="warning">Warning</Text>);
-    expect(screen.getByText("Warning")).toHaveClass("variant-warning");
+    expect(screen.getByText("Warning")).toHaveClass(styles["variant-warning"]);
   });
 
   it("applies truncate class", () => {
     render(<Text truncate>Truncated text</Text>);
-    expect(screen.getByText("Truncated text")).toHaveClass("truncate");
+    expect(screen.getByText("Truncated text")).toHaveClass(styles.truncate);
   });
 
   it("applies clamp classes", () => {
     const { rerender } = render(<Text clamp={2}>Clamped text</Text>);
-    expect(screen.getByText("Clamped text")).toHaveClass("clamp-2");
+    expect(screen.getByText("Clamped text")).toHaveClass(styles["clamp-2"]);
 
     rerender(<Text clamp={3}>Clamped text</Text>);
-    expect(screen.getByText("Clamped text")).toHaveClass("clamp-3");
+    expect(screen.getByText("Clamped text")).toHaveClass(styles["clamp-3"]);
   });
 
   it("removes margin when noMargin is true", () => {
     render(<Text noMargin>No margin</Text>);
-    expect(screen.getByText("No margin")).toHaveClass("no-margin");
+    expect(screen.getByText("No margin")).toHaveClass(styles["no-margin"]);
   });
 
   it("applies custom className", () => {
@@ -133,9 +136,9 @@ describe("Text", () => {
       </Text>,
     );
     const text = screen.getByText("Combined");
-    expect(text).toHaveClass("size-lg");
-    expect(text).toHaveClass("weight-bold");
-    expect(text).toHaveClass("align-center");
-    expect(text).toHaveClass("variant-success");
+    expect(text).toHaveClass(styles["size-lg"]);
+    expect(text).toHaveClass(styles["weight-bold"]);
+    expect(text).toHaveClass(styles["align-center"]);
+    expect(text).toHaveClass(styles["variant-success"]);
   });
 });

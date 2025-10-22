@@ -1,16 +1,26 @@
 # Cards Usage Guide
 
-Comprehensive guide to using Spexop's 12 card components for building modern, accessible interfaces.
+Comprehensive guide to using Spexop's Card primitive and composition patterns for building modern, accessible interfaces.
 
 ## Overview
 
-The cards category provides 12 specialized components built on a solid base Card primitive. Each component is designed for specific use cases while maintaining consistency through shared design principles and tokens.
+The cards category provides a base Card primitive with sub-components for maximum flexibility. Specialized card patterns are available as composition examples in `src/patterns/cards/` to help you build common UI patterns.
 
-## Component Matrix
+> **⚠️ Breaking Change in v0.4.0**: Specialized card components (BlogCard, ProductCard, etc.) will be removed. Use Card composition patterns instead. See [Migration Guide](../../../docs/migrations/from-v0.3-to-v0.4.md) for details.
+
+## Card Primitive
 
 | Component | Primary Use Case | Key Features | Best For |
 |-----------|-----------------|--------------|----------|
 | **Card** | Base container | Sub-components, variants, density | Generic content, forms, layouts |
+| **CardHeader** | Card header | Title, subtitle, actions | Consistent header styling |
+| **CardBody** | Card content | Main content area | Flexible content layout |
+| **CardFooter** | Card footer | Actions, metadata | Consistent footer styling |
+
+## Composition Patterns
+
+| Pattern | Primary Use Case | Key Features | Best For |
+|---------|-----------------|--------------|----------|
 | **BlogCard** | Blog posts | Cover image, metadata, tags | Content sites, blogs, news |
 | **CTACard** | Calls to action | Primary/secondary actions | Landing pages, conversions |
 | **DashboardCard** | Dashboard widgets | Loading states, errors, actions | Admin panels, analytics |
@@ -22,6 +32,8 @@ The cards category provides 12 specialized components built on a solid base Card
 | **StatsCard** | KPIs/Metrics | Value, trend indicators | Dashboards, reports |
 | **TestimonialCard** | Reviews | Quote, rating, author | Social proof, testimonials |
 | **TimelineCard** | Events | Date, time, location, status | Roadmaps, timelines, history |
+
+> **Note**: These patterns are examples in `src/patterns/cards/` - not exported components. Copy and customize them for your needs.
 
 ## Quick Start
 

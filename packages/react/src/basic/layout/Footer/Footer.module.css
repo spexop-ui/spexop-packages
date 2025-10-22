@@ -1,5 +1,8 @@
-/* ===== BASE FOOTER STYLES =====
-   Migrated to theme system */
+/* ═══════════════════════════════════════════════════════════════════════════
+   Footer Component - Modern UI/UX with Spexop Principles
+   Following: Borders before shadows, Typography before decoration, 
+             Tokens before magic numbers, Accessibility before aesthetics
+   ═══════════════════════════════════════════════════════════════════════════ */
 
 .footer {
   /* Base */
@@ -11,25 +14,134 @@
   background-color: var(--theme-surface);
   color: var(--theme-text);
   
+  /* Typography */
+  font-size: var(--theme-font-size-sm);
+  line-height: 1.6;
+  
+  /* Transitions */
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  
   /* Performance */
   contain: layout style paint;
 }
 
-/* ===== VARIANTS ===== */
-.footer--default {
-  background-color: var(--theme-surface);
-  border-top: 1px solid var(--theme-border);
+/* Footer link styling (applies to all links inside footer) */
+.footer a {
+  color: var(--theme-text-secondary);
+  text-decoration: none;
+  transition: color 0.2s ease, border-color 0.2s ease;
+  border-bottom: 1px solid transparent;
+  display: inline-block;
+  padding-bottom: 2px;
 }
 
+.footer a:hover {
+  color: var(--theme-primary);
+  border-bottom-color: var(--theme-primary);
+}
+
+.footer a:focus-visible {
+  outline: 2px solid var(--theme-primary);
+  outline-offset: var(--theme-spacing-1);
+  border-radius: var(--theme-radius-sm);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   VARIANTS - Modern UI/UX Styles
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Default - Classic footer with clean top border */
+.footer--default {
+  background-color: var(--theme-surface);
+  border-top: 2px solid var(--theme-border);
+}
+
+/* Minimal - Transparent and unobtrusive */
 .footer--minimal {
   background-color: transparent;
   border-top: none;
 }
 
+.footer--minimal a:hover {
+  color: var(--theme-text);
+}
+
+/* Bordered - Contained footer with subtle background */
 .footer--bordered {
   background-color: var(--theme-surface-secondary);
-  border: 1px solid var(--theme-border);
-  border-radius: var(--theme-radius-relaxed);
+  border: 2px solid var(--theme-border);
+  border-radius: var(--theme-radius-lg);
+}
+
+/* Modern - Contemporary with subtle visual effects */
+.footer--modern {
+  background: linear-gradient(
+    to bottom,
+    var(--theme-surface),
+    var(--theme-surface-secondary)
+  );
+  border-top: 2px solid var(--theme-border);
+  position: relative;
+}
+
+.footer--modern::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--theme-primary),
+    transparent
+  );
+  opacity: 0.3;
+}
+
+/* Elegant - Refined with enhanced typography */
+.footer--elegant {
+  background-color: var(--theme-surface);
+  border-top: 2px solid var(--theme-border-strong);
+  position: relative;
+}
+
+.footer--elegant::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: 0;
+  width: 120px;
+  height: 2px;
+  background: var(--theme-primary);
+}
+
+.footer--elegant a {
+  font-weight: var(--theme-font-weight-medium);
+  letter-spacing: 0.01em;
+}
+
+.footer--elegant a:hover {
+  color: var(--theme-primary);
+  border-bottom-color: var(--theme-primary);
+}
+
+/* Accent - Bold with primary color emphasis */
+.footer--accent {
+  background-color: var(--theme-primary-light);
+  border-top: 3px solid var(--theme-primary);
+  border-bottom: 3px solid var(--theme-primary);
+}
+
+.footer--accent a {
+  color: var(--theme-text);
+  font-weight: var(--theme-font-weight-semibold);
+}
+
+.footer--accent a:hover {
+  color: var(--theme-primary-active);
+  border-bottom-color: var(--theme-primary-active);
 }
 
 /* ===== PADDING SCALE (0-10) ===== */
@@ -106,7 +218,10 @@
   background-color: transparent;
 }
 
-/* ===== DARK MODE ===== */
+/* ═══════════════════════════════════════════════════════════════════════════
+   DARK MODE - Enhanced support for all variants
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 @media (prefers-color-scheme: dark) {
   .footer {
     background-color: var(--theme-surface);
@@ -121,6 +236,22 @@
   .footer--bordered {
     background-color: var(--theme-surface-hover);
     border-color: var(--theme-border);
+  }
+
+  .footer--modern {
+    background: linear-gradient(
+      to bottom,
+      var(--theme-surface),
+      rgba(0, 0, 0, 0.2)
+    );
+  }
+
+  .footer--elegant {
+    border-top-color: var(--theme-border-strong);
+  }
+
+  .footer--accent {
+    background-color: rgba(239, 68, 68, 0.1);
   }
 
   .withBorder {
@@ -147,6 +278,22 @@
 :global([data-theme="dark"]) .footer--bordered {
   background-color: var(--theme-surface-hover);
   border-color: var(--theme-border);
+}
+
+:global([data-theme="dark"]) .footer--modern {
+  background: linear-gradient(
+    to bottom,
+    var(--theme-surface),
+    rgba(0, 0, 0, 0.2)
+  );
+}
+
+:global([data-theme="dark"]) .footer--elegant {
+  border-top-color: var(--theme-border-strong);
+}
+
+:global([data-theme="dark"]) .footer--accent {
+  background-color: rgba(239, 68, 68, 0.1);
 }
 
 :global([data-theme="dark"]) .withBorder {
@@ -186,9 +333,16 @@
   pointer-events: none;
 }
 
-/* ===== REDUCED MOTION ===== */
+/* ═══════════════════════════════════════════════════════════════════════════
+   REDUCED MOTION - Accessibility support
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 @media (prefers-reduced-motion: reduce) {
-  .footer * {
+  .footer,
+  .footer *,
+  .footer a,
+  .footer::before,
+  .footer::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }

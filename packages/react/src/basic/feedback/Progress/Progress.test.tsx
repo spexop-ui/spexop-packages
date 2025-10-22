@@ -10,6 +10,7 @@ import { render, screen } from "@testing-library/react";
 import React from "react";
 import { describe, expect, it } from "vitest";
 import { Progress } from "./Progress";
+import styles from "./Progress.module.css";
 
 describe("Progress", () => {
   describe("Rendering", () => {
@@ -17,9 +18,9 @@ describe("Progress", () => {
       const { container } = render(<Progress value={50} />);
       const progressbar = screen.getByRole("progressbar");
       expect(progressbar).toBeInTheDocument();
-      expect(progressbar).toHaveClass("progress");
-      expect(progressbar).toHaveClass("size-md");
-      expect(progressbar).toHaveClass("color-primary");
+      expect(progressbar).toHaveClass(styles.progress);
+      expect(progressbar).toHaveClass(styles["size-md"]);
+      expect(progressbar).toHaveClass(styles["color-primary"]);
     });
 
     it("should render with correct value", () => {
@@ -46,19 +47,19 @@ describe("Progress", () => {
     it("should render small size", () => {
       render(<Progress value={50} size="sm" />);
       const progressbar = screen.getByRole("progressbar");
-      expect(progressbar).toHaveClass("size-sm");
+      expect(progressbar).toHaveClass(styles["size-sm"]);
     });
 
     it("should render medium size", () => {
       render(<Progress value={50} size="md" />);
       const progressbar = screen.getByRole("progressbar");
-      expect(progressbar).toHaveClass("size-md");
+      expect(progressbar).toHaveClass(styles["size-md"]);
     });
 
     it("should render large size", () => {
       render(<Progress value={50} size="lg" />);
       const progressbar = screen.getByRole("progressbar");
-      expect(progressbar).toHaveClass("size-lg");
+      expect(progressbar).toHaveClass(styles["size-lg"]);
     });
   });
 
@@ -66,31 +67,31 @@ describe("Progress", () => {
     it("should render primary color", () => {
       render(<Progress value={50} color="primary" />);
       const progressbar = screen.getByRole("progressbar");
-      expect(progressbar).toHaveClass("color-primary");
+      expect(progressbar).toHaveClass(styles["color-primary"]);
     });
 
     it("should render secondary color", () => {
       render(<Progress value={50} color="secondary" />);
       const progressbar = screen.getByRole("progressbar");
-      expect(progressbar).toHaveClass("color-secondary");
+      expect(progressbar).toHaveClass(styles["color-secondary"]);
     });
 
     it("should render success color", () => {
       render(<Progress value={100} color="success" />);
       const progressbar = screen.getByRole("progressbar");
-      expect(progressbar).toHaveClass("color-success");
+      expect(progressbar).toHaveClass(styles["color-success"]);
     });
 
     it("should render warning color", () => {
       render(<Progress value={60} color="warning" />);
       const progressbar = screen.getByRole("progressbar");
-      expect(progressbar).toHaveClass("color-warning");
+      expect(progressbar).toHaveClass(styles["color-warning"]);
     });
 
     it("should render error color", () => {
       render(<Progress value={30} color="error" />);
       const progressbar = screen.getByRole("progressbar");
-      expect(progressbar).toHaveClass("color-error");
+      expect(progressbar).toHaveClass(styles["color-error"]);
     });
   });
 
@@ -98,19 +99,19 @@ describe("Progress", () => {
     it("should render default variant", () => {
       render(<Progress value={50} variant="default" />);
       const progressbar = screen.getByRole("progressbar");
-      expect(progressbar).toHaveClass("variant-default");
+      expect(progressbar).toHaveClass(styles["variant-default"]);
     });
 
     it("should render striped variant", () => {
       render(<Progress value={50} variant="striped" />);
       const progressbar = screen.getByRole("progressbar");
-      expect(progressbar).toHaveClass("variant-striped");
+      expect(progressbar).toHaveClass(styles["variant-striped"]);
     });
 
     it("should render animated variant", () => {
       render(<Progress value={50} variant="animated" />);
       const progressbar = screen.getByRole("progressbar");
-      expect(progressbar).toHaveClass("variant-animated");
+      expect(progressbar).toHaveClass(styles["variant-animated"]);
     });
   });
 
@@ -180,7 +181,7 @@ describe("Progress", () => {
     it("should render indeterminate progress", () => {
       render(<Progress value={0} indeterminate />);
       const progressbar = screen.getByRole("progressbar");
-      expect(progressbar).toHaveClass("indeterminate");
+      expect(progressbar).toHaveClass(styles.indeterminate);
     });
 
     it("should have aria-busy when indeterminate", () => {
@@ -272,15 +273,15 @@ describe("Progress", () => {
     it("should update color based on progress", () => {
       const { rerender } = render(<Progress value={30} color="error" />);
       let progressbar = screen.getByRole("progressbar");
-      expect(progressbar).toHaveClass("color-error");
+      expect(progressbar).toHaveClass(styles["color-error"]);
 
       rerender(<Progress value={60} color="warning" />);
       progressbar = screen.getByRole("progressbar");
-      expect(progressbar).toHaveClass("color-warning");
+      expect(progressbar).toHaveClass(styles["color-warning"]);
 
       rerender(<Progress value={100} color="success" />);
       progressbar = screen.getByRole("progressbar");
-      expect(progressbar).toHaveClass("color-success");
+      expect(progressbar).toHaveClass(styles["color-success"]);
     });
   });
 
@@ -305,13 +306,13 @@ describe("Progress", () => {
     it("should handle undefined className", () => {
       render(<Progress value={50} className={undefined} />);
       const progressbar = screen.getByRole("progressbar");
-      expect(progressbar).toHaveClass("progress");
+      expect(progressbar).toHaveClass(styles.progress);
     });
 
     it("should handle empty className", () => {
       render(<Progress value={50} className="" />);
       const progressbar = screen.getByRole("progressbar");
-      expect(progressbar).toHaveClass("progress");
+      expect(progressbar).toHaveClass(styles.progress);
     });
   });
 
@@ -363,9 +364,9 @@ describe("Progress", () => {
       );
 
       const progressbar = screen.getByRole("progressbar");
-      expect(progressbar).toHaveClass("size-lg");
-      expect(progressbar).toHaveClass("color-success");
-      expect(progressbar).toHaveClass("variant-striped");
+      expect(progressbar).toHaveClass(styles["size-lg"]);
+      expect(progressbar).toHaveClass(styles["color-success"]);
+      expect(progressbar).toHaveClass(styles["variant-striped"]);
       expect(progressbar).toHaveClass("custom-class");
       expect(progressbar).toHaveAttribute("aria-valuenow", "75");
       expect(screen.getByText("75%")).toBeInTheDocument();
@@ -385,10 +386,10 @@ describe("Progress", () => {
       );
 
       const progressbar = screen.getByRole("progressbar");
-      expect(progressbar).toHaveClass("indeterminate");
-      expect(progressbar).toHaveClass("size-lg");
-      expect(progressbar).toHaveClass("color-primary");
-      expect(progressbar).toHaveClass("variant-animated");
+      expect(progressbar).toHaveClass(styles.indeterminate);
+      expect(progressbar).toHaveClass(styles["size-lg"]);
+      expect(progressbar).toHaveClass(styles["color-primary"]);
+      expect(progressbar).toHaveClass(styles["variant-animated"]);
       expect(progressbar).toHaveClass("custom-indeterminate");
       expect(screen.getByText("Processing...")).toBeInTheDocument();
     });

@@ -17,6 +17,7 @@ import { render } from "@testing-library/react";
 import React from "react";
 import { describe, expect, it, vi } from "vitest";
 import { StickySection } from "./StickySection.js";
+import styles from "./StickySection.module.css";
 
 describe("StickySection", () => {
   describe("Basic Rendering", () => {
@@ -127,7 +128,7 @@ describe("StickySection", () => {
         </StickySection>,
       );
       const section = container.querySelector("section");
-      expect(section?.className).toContain("variant-gradient");
+      expect(section).toHaveClass(styles["variant-gradient"]);
     });
 
     it("should forward padding prop to Section", () => {
@@ -137,7 +138,7 @@ describe("StickySection", () => {
         </StickySection>,
       );
       const section = container.querySelector("section");
-      expect(section?.className).toContain("padding-spacious");
+      expect(section).toHaveClass(styles["padding-spacious"]);
     });
 
     it("should forward marginBottom prop to Section", () => {
@@ -147,7 +148,7 @@ describe("StickySection", () => {
         </StickySection>,
       );
       const section = container.querySelector("section");
-      expect(section?.className).toContain("margin-large");
+      expect(section).toHaveClass(styles["margin-large"]);
     });
 
     it("should forward label prop to Section", () => {
@@ -184,7 +185,7 @@ describe("StickySection", () => {
         </StickySection>,
       );
       const section = container.querySelector("section");
-      expect(section?.className).toContain("accent-left");
+      expect(section).toHaveClass(styles["accent-left"]);
     });
 
     it("should forward border prop to Section", () => {
@@ -194,7 +195,7 @@ describe("StickySection", () => {
         </StickySection>,
       );
       const section = container.querySelector("section");
-      expect(section?.className).toContain("noBorder");
+      expect(section).toHaveClass(styles.noBorder);
     });
 
     it("should forward maxWidth prop to Section", () => {
@@ -240,7 +241,7 @@ describe("StickySection", () => {
       const section = container.querySelector("section");
 
       expect(wrapper.className).toContain("custom-class");
-      expect(section?.className).toContain("custom-class");
+      expect(section).toHaveClass("custom-class");
     });
 
     it("should combine multiple classNames", () => {
@@ -265,7 +266,7 @@ describe("StickySection", () => {
         </StickySection>,
       );
       const section = container.querySelector("section");
-      expect(section?.className).toContain("margin-normal");
+      expect(section).toHaveClass(styles["margin-normal"]);
     });
 
     it("should allow custom margin bottom", () => {
@@ -275,7 +276,7 @@ describe("StickySection", () => {
         </StickySection>,
       );
       const section = container.querySelector("section");
-      expect(section?.className).toContain("margin-large");
+      expect(section).toHaveClass(styles["margin-large"]);
     });
 
     it("should allow no margin bottom", () => {
@@ -285,7 +286,7 @@ describe("StickySection", () => {
         </StickySection>,
       );
       const section = container.querySelector("section");
-      expect(section?.className).toContain("margin-none");
+      expect(section).toHaveClass(styles["margin-none"]);
     });
   });
 

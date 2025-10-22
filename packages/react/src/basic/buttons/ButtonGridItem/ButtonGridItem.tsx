@@ -12,7 +12,7 @@
  */
 
 import { useCallback } from "react";
-import { Icon } from "../../display/Icon/Icon.js";
+import { Icon } from "../../indicators/Icon/Icon.js";
 import styles from "./ButtonGridItem.module.css";
 import type { ButtonGridItemProps } from "./ButtonGridItem.types.js";
 

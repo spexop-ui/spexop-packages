@@ -17,6 +17,7 @@ import { userEvent } from "@testing-library/user-event";
 import React from "react";
 import { describe, expect, it, vi } from "vitest";
 import { NavLink } from "./NavLink.js";
+import styles from "./NavLink.module.css";
 
 describe("NavLink", () => {
   describe("Rendering", () => {
@@ -67,14 +68,14 @@ describe("NavLink", () => {
       );
 
       const link = container.querySelector("a");
-      expect(link?.className).toContain("active");
+      expect(link).toHaveClass(styles.active);
     });
 
     it("does not apply active class by default", () => {
       const { container } = render(<NavLink href="/page">Page</NavLink>);
 
       const link = container.querySelector("a");
-      expect(link?.className).not.toContain("active");
+      expect(link).not.toHaveClass(styles.active);
     });
 
     it("sets aria-current when active", () => {
@@ -186,7 +187,7 @@ describe("NavLink", () => {
       );
 
       const link = container.querySelector("a");
-      expect(link?.className).toContain("custom-nav-link");
+      expect(link).toHaveClass("custom-nav-link");
     });
 
     it("combines custom className with base class", () => {
@@ -197,8 +198,8 @@ describe("NavLink", () => {
       );
 
       const link = container.querySelector("a");
-      expect(link?.className).toContain("navLink");
-      expect(link?.className).toContain("custom");
+      expect(link).toHaveClass(styles.navLink);
+      expect(link).toHaveClass("custom");
     });
 
     it("combines custom className with active class", () => {
@@ -209,9 +210,9 @@ describe("NavLink", () => {
       );
 
       const link = container.querySelector("a");
-      expect(link?.className).toContain("navLink");
-      expect(link?.className).toContain("active");
-      expect(link?.className).toContain("custom");
+      expect(link).toHaveClass(styles.navLink);
+      expect(link).toHaveClass(styles.active);
+      expect(link).toHaveClass("custom");
     });
   });
 

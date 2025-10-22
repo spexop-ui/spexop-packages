@@ -23,6 +23,7 @@ import React from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { CommandPalette } from "./CommandPalette.js";
 import type { CommandPaletteCommand } from "./CommandPalette.js";
+import styles from "./CommandPalette.module.css";
 
 const mockCommands: CommandPaletteCommand[] = [
   {

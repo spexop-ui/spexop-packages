@@ -12,7 +12,7 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Icon } from "../../display/Icon/Icon.js";
+import { Icon } from "../../indicators/Icon/Icon.js";
 import styles from "./SplitButton.module.css";
 import type { SplitButtonProps } from "./SplitButton.types.js";
 

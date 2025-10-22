@@ -23,6 +23,7 @@ import { userEvent } from "@testing-library/user-event";
 import React, { type RefObject, useRef } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { Modal } from "./Modal.js";
+import styles from "./Modal.module.css";
 
 // Extend global type for test callback
 interface GlobalWithTestCallbacks {

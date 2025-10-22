@@ -20,6 +20,7 @@ import { userEvent } from "@testing-library/user-event";
 import React from "react";
 import { describe, expect, it, vi } from "vitest";
 import { TopBar } from "./TopBar.js";
+import styles from "./TopBar.module.css";
 
 describe("TopBar", () => {
   describe("Rendering", () => {
@@ -323,7 +324,7 @@ describe("TopBar", () => {
       const { container } = render(<TopBar className="custom-topbar" />);
 
       const header = container.querySelector("header");
-      expect(header?.className).toContain("custom-topbar");
+      expect(header).toHaveClass("custom-topbar");
     });
   });
 

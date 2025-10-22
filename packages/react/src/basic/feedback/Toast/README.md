@@ -189,4 +189,3 @@ This component follows "The Spexop Way":
 - Alert - For persistent messages
 - Snackbar - Similar brief notifications
 - Modal - For important blocking messages
-

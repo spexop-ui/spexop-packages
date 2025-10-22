@@ -1,0 +1,268 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Icon Component - Theme-aware icon container with wrapper variants
+   Following Spexop principles: Borders before shadows, Tokens before magic numbers
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: currentColor;
+  transition: all 0.2s ease;
+}
+
+.icon svg {
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+}
+
+/* ============================================
+   ICON SIZES (theme-based)
+   ============================================ */
+
+.sm {
+  width: var(--theme-spacing-4);
+  height: var(--theme-spacing-4);
+}
+
+.md {
+  width: var(--theme-spacing-6);
+  height: var(--theme-spacing-6);
+}
+
+.lg {
+  width: var(--theme-spacing-8);  
+  height: var(--theme-spacing-8);
+}
+
+.xl {
+  width: var(--theme-spacing-12);
+  height: var(--theme-spacing-12);
+}
+
+/* ============================================
+   WRAPPER SHAPES
+   ============================================ */
+
+/* Circle wrapper */
+.wrapper-circle {
+  border-radius: var(--theme-radius-pill);
+  padding: var(--theme-spacing-2);
+}
+
+.wrapper-circle.sm {
+  width: var(--theme-spacing-8);
+  height: var(--theme-spacing-8);
+}
+
+.wrapper-circle.md {
+  width: var(--theme-spacing-10);
+  height: var(--theme-spacing-10);
+}
+
+.wrapper-circle.lg {
+  width: var(--theme-spacing-12);
+  height: var(--theme-spacing-12);
+}
+
+.wrapper-circle.xl {
+  width: var(--theme-spacing-16);
+  height: var(--theme-spacing-16);
+}
+
+/* Square wrapper */
+.wrapper-square {
+  border-radius: 0;
+  padding: var(--theme-spacing-2);
+}
+
+.wrapper-square.sm {
+  width: var(--theme-spacing-8);
+  height: var(--theme-spacing-8);
+}
+
+.wrapper-square.md {
+  width: var(--theme-spacing-10);
+  height: var(--theme-spacing-10);
+}
+
+.wrapper-square.lg {
+  width: var(--theme-spacing-12);
+  height: var(--theme-spacing-12);
+}
+
+.wrapper-square.xl {
+  width: var(--theme-spacing-16);
+  height: var(--theme-spacing-16);
+}
+
+/* Rounded wrapper */
+.wrapper-rounded {
+  border-radius: var(--theme-radius-md);
+  padding: var(--theme-spacing-2);
+}
+
+.wrapper-rounded.sm {
+  width: var(--theme-spacing-8);
+  height: var(--theme-spacing-8);
+}
+
+.wrapper-rounded.md {
+  width: var(--theme-spacing-10);
+  height: var(--theme-spacing-10);
+}
+
+.wrapper-rounded.lg {
+  width: var(--theme-spacing-12);
+  height: var(--theme-spacing-12);
+}
+
+.wrapper-rounded.xl {
+  width: var(--theme-spacing-16);
+  height: var(--theme-spacing-16);
+}
+
+/* ============================================
+   VISUAL VARIANTS
+   ============================================ */
+
+/* Default - no background */
+.variant-default {
+  background: transparent;
+  border: none;
+}
+
+/* Filled - solid background */
+.variant-filled {
+  background: var(--theme-primary);
+  color: white;
+  border: none;
+}
+
+/* Outlined - border only */
+.variant-outlined {
+  background: transparent;
+  border: 2px solid currentColor;
+}
+
+/* Soft - subtle background */
+.variant-soft {
+  background: var(--theme-surface-hover);
+  border: none;
+}
+
+/* Ghost - very subtle hover effect */
+.variant-ghost {
+  background: transparent;
+  border: none;
+}
+
+.variant-ghost:hover {
+  background: var(--theme-surface-hover);
+}
+
+/* ============================================
+   COLOR VARIANTS
+   ============================================ */
+
+/* Default color inherits from parent */
+.color-default {
+  color: currentColor;
+}
+
+/* Primary */
+.color-primary {
+  color: var(--theme-primary);
+}
+
+.color-primary.variant-filled {
+  background: var(--theme-primary);
+  color: white;
+}
+
+.color-primary.variant-soft {
+  background: var(--theme-primary-light);
+  color: var(--theme-primary-active);
+}
+
+/* Success */
+.color-success {
+  color: var(--theme-success);
+}
+
+.color-success.variant-filled {
+  background: var(--theme-success);
+  color: white;
+}
+
+.color-success.variant-soft {
+  background: var(--theme-success-light);
+  color: var(--theme-success-dark);
+}
+
+/* Error */
+.color-error {
+  color: var(--theme-error);
+}
+
+.color-error.variant-filled {
+  background: var(--theme-error);
+  color: white;
+}
+
+.color-error.variant-soft {
+  background: var(--theme-error-light);
+  color: var(--theme-error-dark);
+}
+
+/* Warning */
+.color-warning {
+  color: var(--theme-warning);
+}
+
+.color-warning.variant-filled {
+  background: var(--theme-warning);
+  color: white;
+}
+
+.color-warning.variant-soft {
+  background: var(--theme-warning-light);
+  color: var(--theme-warning-dark);
+}
+
+/* Info */
+.color-info {
+  color: var(--theme-info);
+}
+
+.color-info.variant-filled {
+  background: var(--theme-info);
+  color: white;
+}
+
+.color-info.variant-soft {
+  background: var(--theme-info-light);
+  color: var(--theme-info-dark);
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+.icon:focus-visible {
+  outline: 2px solid var(--theme-primary);
+  outline-offset: var(--theme-spacing-1);
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .icon {
+    transition: none;
+  }
+}

@@ -13,6 +13,7 @@ import { userEvent } from "@testing-library/user-event";
 import React from "react";
 import { describe, expect, it, vi } from "vitest";
 import { Alert } from "./Alert";
+import styles from "./Alert.module.css";
 
 describe("Alert", () => {
   describe("Rendering", () => {
@@ -25,8 +26,8 @@ describe("Alert", () => {
       const { container } = render(<Alert>Alert message</Alert>);
       const alert = container.querySelector('[role="alert"]');
       expect(alert).toBeInTheDocument();
-      expect(alert).toHaveClass("alert");
-      expect(alert).toHaveClass("variant-info");
+      expect(alert).toHaveClass(styles.alert);
+      expect(alert).toHaveClass(styles["variant-info"]);
     });
 
     it("should apply custom className", () => {
@@ -53,7 +54,7 @@ describe("Alert", () => {
     it("should render info variant", () => {
       const { container } = render(<Alert variant="info">Info message</Alert>);
       const alert = container.querySelector('[role="alert"]');
-      expect(alert).toHaveClass("variant-info");
+      expect(alert).toHaveClass(styles["variant-info"]);
     });
 
     it("should render success variant", () => {
@@ -61,7 +62,7 @@ describe("Alert", () => {
         <Alert variant="success">Success message</Alert>,
       );
       const alert = container.querySelector('[role="alert"]');
-      expect(alert).toHaveClass("variant-success");
+      expect(alert).toHaveClass(styles["variant-success"]);
     });
 
     it("should render warning variant", () => {
@@ -69,7 +70,7 @@ describe("Alert", () => {
         <Alert variant="warning">Warning message</Alert>,
       );
       const alert = container.querySelector('[role="alert"]');
-      expect(alert).toHaveClass("variant-warning");
+      expect(alert).toHaveClass(styles["variant-warning"]);
     });
 
     it("should render error variant", () => {
@@ -77,14 +78,14 @@ describe("Alert", () => {
         <Alert variant="error">Error message</Alert>,
       );
       const alert = container.querySelector('[role="alert"]');
-      expect(alert).toHaveClass("variant-error");
+      expect(alert).toHaveClass(styles["variant-error"]);
     });
   });
 
   describe("Icons", () => {
     it("should render with default icon for info variant", () => {
       const { container } = render(<Alert variant="info">Info message</Alert>);
-      const icon = container.querySelector(".icon");
+      const icon = container.querySelector(`.${styles.icon}`);
       expect(icon).toBeInTheDocument();
     });
 
@@ -92,7 +93,7 @@ describe("Alert", () => {
       const { container } = render(
         <Alert variant="success">Success message</Alert>,
       );
-      const icon = container.querySelector(".icon");
+      const icon = container.querySelector(`.${styles.icon}`);
       expect(icon).toBeInTheDocument();
     });
 
@@ -100,7 +101,7 @@ describe("Alert", () => {
       const { container } = render(
         <Alert variant="warning">Warning message</Alert>,
       );
-      const icon = container.querySelector(".icon");
+      const icon = container.querySelector(`.${styles.icon}`);
       expect(icon).toBeInTheDocument();
     });
 
@@ -108,7 +109,7 @@ describe("Alert", () => {
       const { container } = render(
         <Alert variant="error">Error message</Alert>,
       );
-      const icon = container.querySelector(".icon");
+      const icon = container.querySelector(`.${styles.icon}`);
       expect(icon).toBeInTheDocument();
     });
 
@@ -122,7 +123,7 @@ describe("Alert", () => {
       const { container } = render(
         <Alert showIcon={false}>Alert without icon</Alert>,
       );
-      const icon = container.querySelector(".icon");
+      const icon = container.querySelector(`.${styles.icon}`);
       expect(icon).not.toBeInTheDocument();
     });
 
@@ -286,13 +287,13 @@ describe("Alert", () => {
         <Alert className={undefined}>Alert message</Alert>,
       );
       const alert = container.querySelector('[role="alert"]');
-      expect(alert).toHaveClass("alert");
+      expect(alert).toHaveClass(styles.alert);
     });
 
     it("should handle empty className", () => {
       const { container } = render(<Alert className="">Alert message</Alert>);
       const alert = container.querySelector('[role="alert"]');
-      expect(alert).toHaveClass("alert");
+      expect(alert).toHaveClass(styles.alert);
     });
   });
 
@@ -320,8 +321,8 @@ describe("Alert", () => {
       );
 
       const alerts = container.querySelectorAll('[role="alert"]');
-      expect(alerts[0]).toHaveClass("variant-info");
-      expect(alerts[1]).toHaveClass("variant-success");
+      expect(alerts[0]).toHaveClass(styles["variant-info"]);
+      expect(alerts[1]).toHaveClass(styles["variant-success"]);
     });
 
     it("should handle multiple dismissible alerts", async () => {
@@ -394,7 +395,7 @@ describe("Alert", () => {
       );
 
       const alert = container.querySelector('[role="status"]');
-      expect(alert).toHaveClass("variant-warning");
+      expect(alert).toHaveClass(styles["variant-warning"]);
       expect(alert).toHaveClass("custom-class");
       expect(screen.getByText("Warning Title")).toBeInTheDocument();
       expect(screen.getByText("Warning message content")).toBeInTheDocument();

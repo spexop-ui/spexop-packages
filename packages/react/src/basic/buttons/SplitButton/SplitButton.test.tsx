@@ -23,6 +23,7 @@ import { userEvent } from "@testing-library/user-event";
 import React from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { SplitButton } from "./SplitButton.js";
+import styles from "./SplitButton.module.css";
 
 describe("SplitButton", () => {
   const mockOptions = [
@@ -505,7 +506,7 @@ describe("SplitButton", () => {
         />,
       );
 
-      const splitButton = container.querySelector(".disabled");
+      const splitButton = container.querySelector(`.${styles.disabled}`);
       expect(splitButton).toBeInTheDocument();
     });
   });
@@ -516,7 +517,9 @@ describe("SplitButton", () => {
         <SplitButton label="Save" onClick={vi.fn()} options={mockOptions} />,
       );
 
-      const variantClass = container.querySelector(".variant-primary");
+      const variantClass = container.querySelector(
+        `.${styles["variant-primary"]}`,
+      );
       expect(variantClass).toBeInTheDocument();
     });
 
@@ -530,7 +533,9 @@ describe("SplitButton", () => {
         />,
       );
 
-      const variantClass = container.querySelector(".variant-secondary");
+      const variantClass = container.querySelector(
+        `.${styles["variant-secondary"]}`,
+      );
       expect(variantClass).toBeInTheDocument();
     });
   });
@@ -546,7 +551,7 @@ describe("SplitButton", () => {
         />,
       );
 
-      const icon = container.querySelector(".buttonIcon");
+      const icon = container.querySelector(`.${styles.buttonIcon}`);
       expect(icon).toBeInTheDocument();
     });
 
@@ -575,7 +580,7 @@ describe("SplitButton", () => {
       });
       await user.click(toggleButton);
 
-      const icon = container.querySelector(".menuItemIcon");
+      const icon = container.querySelector(`.${styles.menuItemIcon}`);
       expect(icon).toBeInTheDocument();
     });
   });
@@ -627,7 +632,7 @@ describe("SplitButton", () => {
         <SplitButton label="Save" onClick={vi.fn()} options={mockOptions} />,
       );
 
-      const splitButton = container.querySelector(".splitButton");
+      const splitButton = container.querySelector(`.${styles.splitButton}`);
       expect(splitButton).toBeInTheDocument();
     });
 
@@ -636,7 +641,7 @@ describe("SplitButton", () => {
         <SplitButton label="Save" onClick={vi.fn()} options={mockOptions} />,
       );
 
-      const mainButton = container.querySelector(".mainButton");
+      const mainButton = container.querySelector(`.${styles.mainButton}`);
       expect(mainButton).toBeInTheDocument();
     });
 
@@ -645,7 +650,7 @@ describe("SplitButton", () => {
         <SplitButton label="Save" onClick={vi.fn()} options={mockOptions} />,
       );
 
-      const toggleButton = container.querySelector(".toggleButton");
+      const toggleButton = container.querySelector(`.${styles.toggleButton}`);
       expect(toggleButton).toBeInTheDocument();
     });
   });
