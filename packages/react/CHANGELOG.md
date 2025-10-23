@@ -11,7 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Component Structure Reorganization
 
-- Removed specialized card components (BlogCard, ProductCard, PricingCard, ProfileCard, TestimonialCard, TeamMemberCard, FeatureCard, StatsCard, MediaCard, EventCard, ComparisonCard)
+- Removed specialized card components: BlogCard, FeatureCard, ProfileCard, StatsCard, TestimonialCard (replaced with composition patterns)
+- Kept ProductCard and PricingCard as examples but removed their test files
 - Eliminated "advanced" category - components moved to semantic categories
 - Renamed "display" to "indicators" for clarity
 - Moved components to semantic categories (Navigation, SegmentedControl, ScrollHeader, etc.)
@@ -30,8 +31,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Composition Patterns
 
 - New `src/patterns/cards/` directory with 11 card composition examples
-- BlogCard, ProductCard, PricingCard, ProfileCard, TestimonialCard patterns
-- TeamMemberCard, FeatureCard, StatCard, MediaCard, EventCard, ComparisonCard patterns
+- BlogCard, FeatureCard, ProfileCard, StatsCard, TestimonialCard patterns
+- TeamMemberCard, StatCard, MediaCard, EventCard, ComparisonCard patterns
 - Complete TypeScript interfaces and usage examples for all patterns
 
 #### Accessibility Enhancements
@@ -105,7 +106,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Deprecated in v0.3.x
 
-- Specialized card components (removed in v0.4.0)
+- Specialized card components: BlogCard, FeatureCard, ProfileCard, StatsCard, TestimonialCard (removed in v0.4.0)
 - Old import paths (removed in v0.4.0)
 - `advanced/` category (removed in v0.4.0)
 - `settings/` category (removed in v0.4.0)
@@ -116,7 +117,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `src/basic/advanced/` folder
 - `src/basic/settings/` folder
 - `src/basic/display/` folder (renamed to `indicators/`)
-- 11 specialized card components
+- Specialized card components: BlogCard, FeatureCard, ProfileCard, StatsCard, TestimonialCard
 - Backwards compatible re-export shims
 
 ### Fixed
