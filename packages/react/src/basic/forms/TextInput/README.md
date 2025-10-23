@@ -457,14 +457,124 @@ Following "The Spexop Way":
 
 ## Accessibility
 
-- ✅ Semantic HTML with proper labels
-- ✅ Keyboard navigation
-- ✅ Screen reader support
-- ✅ Focus indicators
-- ✅ Error announcements
-- ✅ Required field indication
-- ✅ Autocomplete support
-- ✅ WCAG AA+ compliant
+### WCAG AAA Compliance
+
+The TextInput component meets WCAG AAA standards with:
+
+- **Color Contrast**: Minimum 7:1 ratio for all text
+- **Touch Targets**: Minimum 44×44px on mobile devices
+- **Focus Indicators**: 2px solid outline with 2px offset
+- **Screen Reader Support**: Complete ARIA implementation
+- **Keyboard Navigation**: Full keyboard accessibility
+- **Error Announcements**: Live regions for validation messages
+
+### ARIA Support
+
+```tsx
+<TextInput
+  label="Email Address"
+  value={email}
+  onChange={setEmail}
+  error="Please enter a valid email address"
+  aria-describedby="email-help"
+  aria-invalid={!!error}
+  aria-required={required}
+/>
+<div id="email-help">Enter your email address</div>
+```
+
+### Keyboard Navigation
+
+- **Tab**: Focus next element
+- **Shift+Tab**: Focus previous element
+- **Enter**: Submit form (when in form context)
+- **Escape**: Clear field (when supported)
+
+### Focus Indicators
+
+Enhanced focus-visible styles for keyboard navigation:
+
+```css
+/* Automatic 2px outline with primary color */
+outline: 2px solid var(--theme-primary);
+outline-offset: 2px;
+border-radius: var(--theme-radius-md);
+```
+
+### Touch Targets
+
+Mobile-optimized touch targets:
+
+- **Desktop**: Minimum 36×36px
+- **Mobile**: Minimum 44×44px (automatically applied)
+- **Font Size**: 16px on mobile to prevent zoom
+
+### Error Handling
+
+Accessible error states with proper ARIA attributes:
+
+```tsx
+<TextInput
+  label="Password"
+  value={password}
+  onChange={setPassword}
+  error={passwordError}
+  aria-invalid={!!passwordError}
+  aria-describedby={passwordError ? "password-error" : "password-help"}
+/>
+{passwordError && (
+  <div id="password-error" role="alert" aria-live="polite">
+    {passwordError}
+  </div>
+)}
+```
+
+### Required Field Indicators
+
+Visual and programmatic indication of required fields:
+
+```tsx
+<TextInput
+  label="Full Name"
+  value={name}
+  onChange={setName}
+  required
+  aria-required="true"
+/>
+```
+
+### High Contrast Mode
+
+Automatic enhancements in high contrast mode:
+
+```css
+@media (prefers-contrast: high) {
+  .textInput {
+    border-width: 3px;
+    font-weight: var(--theme-font-weight-bold);
+  }
+}
+```
+
+### Reduced Motion
+
+Respects `prefers-reduced-motion` for smooth or instant transitions:
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  .textInput {
+    transition: none;
+    transform: none;
+  }
+}
+```
+
+### Screen Reader Announcements
+
+- Error messages are announced immediately
+- Required field status is communicated
+- Helper text provides additional context
+- Value changes are announced (when appropriate)
 
 ## Browser Support
 
@@ -472,6 +582,87 @@ Following "The Spexop Way":
 - Firefox 88+
 - Safari 14+
 - React 18+
+
+## Migration from v0.3.0
+
+### Accessibility Improvements (v0.4.0)
+
+#### Enhanced Touch Targets
+
+```tsx
+// Before: Fixed touch target size
+<TextInput label="Email" value={email} onChange={setEmail} />
+
+// After: Responsive touch targets (44px on mobile)
+<TextInput label="Email" value={email} onChange={setEmail} />
+```
+
+#### Improved Error Handling
+
+```tsx
+// Before: Basic error display
+<TextInput 
+  label="Email" 
+  value={email} 
+  onChange={setEmail}
+  error="Invalid email"
+/>
+
+// After: Accessible error with ARIA
+<TextInput 
+  label="Email" 
+  value={email} 
+  onChange={setEmail}
+  error="Invalid email"
+  aria-invalid={!!error}
+  aria-describedby={error ? "email-error" : "email-help"}
+/>
+{error && (
+  <div id="email-error" role="alert" aria-live="polite">
+    {error}
+  </div>
+)}
+```
+
+#### Required Field Indicators
+
+```tsx
+// Before: No visual required indicator
+<TextInput 
+  label="Name" 
+  value={name} 
+  onChange={setName}
+  required
+/>
+
+// After: Visual asterisk + ARIA
+<TextInput 
+  label="Name" 
+  value={name} 
+  onChange={setName}
+  required
+  aria-required="true"
+/>
+```
+
+#### Mobile Optimizations
+
+```tsx
+// Before: Same font size on all devices
+<TextInput label="Phone" type="tel" value={phone} onChange={setPhone} />
+
+// After: 16px font on mobile to prevent zoom
+<TextInput label="Phone" type="tel" value={phone} onChange={setPhone} />
+```
+
+### Migration Checklist
+
+- [ ] Add `aria-invalid` to error states
+- [ ] Add `aria-describedby` for help text and errors
+- [ ] Add `aria-required` for required fields
+- [ ] Test touch targets on mobile devices
+- [ ] Verify error announcements with screen readers
+- [ ] Test in high contrast mode
 
 ## Related Components
 

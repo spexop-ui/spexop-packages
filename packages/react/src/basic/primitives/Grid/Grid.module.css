@@ -220,12 +220,69 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
+   MOBILE OPTIMIZATIONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  .grid {
+    /* Better mobile performance */
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    
+    /* Prevent horizontal overflow on mobile */
+    min-width: 0;
+    max-width: 100vw;
+    overflow-x: auto;
+  }
+  
+  /* Mobile-specific gap adjustments */
+  .gap4 { gap: var(--theme-spacing-3, 12px); }
+  .gap5 { gap: var(--theme-spacing-3, 12px); }
+  .gap6 { gap: var(--theme-spacing-4, 16px); }
+  .gap7 { gap: var(--theme-spacing-4, 16px); }
+  .gap8 { gap: var(--theme-spacing-5, 20px); }
+  .gap9 { gap: var(--theme-spacing-5, 20px); }
+  .gap10 { gap: var(--theme-spacing-6, 24px); }
+  
+  /* Mobile-specific row gap adjustments */
+  .rowGap4 { row-gap: var(--theme-spacing-3, 12px); }
+  .rowGap5 { row-gap: var(--theme-spacing-3, 12px); }
+  .rowGap6 { row-gap: var(--theme-spacing-4, 16px); }
+  .rowGap7 { row-gap: var(--theme-spacing-4, 16px); }
+  .rowGap8 { row-gap: var(--theme-spacing-5, 20px); }
+  .rowGap9 { row-gap: var(--theme-spacing-5, 20px); }
+  .rowGap10 { row-gap: var(--theme-spacing-6, 24px); }
+  
+  /* Mobile-specific column gap adjustments */
+  .columnGap4 { column-gap: var(--theme-spacing-3, 12px); }
+  .columnGap5 { column-gap: var(--theme-spacing-3, 12px); }
+  .columnGap6 { column-gap: var(--theme-spacing-4, 16px); }
+  .columnGap7 { column-gap: var(--theme-spacing-4, 16px); }
+  .columnGap8 { column-gap: var(--theme-spacing-5, 20px); }
+  .columnGap9 { column-gap: var(--theme-spacing-5, 20px); }
+  .columnGap10 { column-gap: var(--theme-spacing-6, 24px); }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PERFORMANCE OPTIMIZATIONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Hardware acceleration for smooth scrolling */
+.grid {
+  will-change: scroll-position;
+  transform: translateZ(0);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
    ACCESSIBILITY
    ═══════════════════════════════════════════════════════════════════════════ */
 
 @media (prefers-reduced-motion: reduce) {
   .grid {
     transition: none;
+    scroll-behavior: auto;
+    will-change: auto;
+    transform: none;
   }
 }
 

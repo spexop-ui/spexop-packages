@@ -150,6 +150,14 @@
   font-weight: var(--theme-font-weight-medium);
   color: var(--theme-text);
   line-height: var(--theme-line-height-snug);
+  display: flex;
+  align-items: center;
+  gap: var(--theme-spacing-1);
+}
+
+.requiredIndicator {
+  color: var(--theme-danger);
+  font-weight: var(--theme-font-weight-bold);
 }
 
 [data-theme="dark"] .labelText {
@@ -229,6 +237,46 @@
 
   .input:focus-visible + .checkbox {
     outline-width: var(--theme-spacing-1);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MOBILE OPTIMIZATIONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  .label {
+    /* Better touch targets on mobile */
+    min-height: 48px;
+    padding: var(--theme-spacing-2) 0;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  
+  .checkbox {
+    /* Ensure minimum touch target */
+    min-width: 48px;
+    min-height: 48px;
+    margin-top: 0;
+  }
+  
+  .densityCompact .checkbox {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  
+  .densitySpacious .checkbox {
+    min-width: 52px;
+    min-height: 52px;
+  }
+  
+  /* Improve text sizing on mobile */
+  .labelText {
+    font-size: var(--theme-font-size-base);
+  }
+  
+  .description {
+    font-size: var(--theme-font-size-sm);
   }
 }
 

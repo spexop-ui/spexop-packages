@@ -1,29 +1,57 @@
 # SegmentedControl Component
 
-**Version**: 0.1.0  
+**Version**: 0.2.0  
 **Package**: `@spexop/react`  
 **Status**: Production Ready  
 **Author**: @olmstedian | @spexop
 
 ## Overview
 
-A modern, accessible segmented control for selecting between multiple mutually exclusive options. Following "The Spexop Way" with refined minimalism, border-based design, and typography-driven hierarchy. Perfect for theme selection, view modes, filters, and settings panels.
+A modern, accessible segmented control for selecting between multiple mutually exclusive options. Following "The Spexop Way" with refined minimalism, border-based design, and typography-driven hierarchy. Enhanced with modern UI/UX patterns including smooth micro-interactions, improved accessibility, and better mobile experience.
 
 ## Features
 
-- ✅ Multiple options with visual selection state
-- ✅ Optional icons from @spexop/icons
-- ✅ Full keyboard navigation (Arrow keys, Home, End)
-- ✅ WCAG AA+ accessible (ARIA, focus management)
+- ✅ Multiple options with enhanced visual selection state
+- ✅ Optional icons from @spexop/icons with smooth animations
+- ✅ Full keyboard navigation (Arrow keys, Home, End, Enter, Space)
+- ✅ WCAG AA+ accessible (ARIA, focus management, screen reader support)
 - ✅ Roving tabindex pattern for efficient navigation
-- ✅ Individual option disable support
+- ✅ Individual option disable support with descriptive feedback
 - ✅ Entire control disable support
-- ✅ Mobile-responsive with touch-friendly 44px targets
+- ✅ Mobile-responsive with touch-friendly 44px+ targets
 - ✅ Theme-aware styling using design tokens
-- ✅ Smooth animations with reduced motion support
+- ✅ Smooth micro-interactions with spring animations
+- ✅ Enhanced focus states and visual hierarchy
+- ✅ High contrast mode support
+- ✅ Print-friendly styles
 - ✅ TypeScript support with full type safety
 - ✅ Comprehensive test coverage
 - ✅ Complete USAGE-GUIDE.md documentation
+
+## What's New in v0.2.0
+
+### Modern UI/UX Enhancements
+
+- **Smooth micro-interactions** - Spring-based animations with cubic-bezier timing
+- **Enhanced visual hierarchy** - Better contrast and typography-driven selection states
+- **Improved focus states** - Enhanced focus indicators with proper contrast
+- **Modern border-radius** - Updated to use theme tokens for consistent spacing
+- **Better mobile experience** - Improved touch targets and responsive behavior
+
+### Accessibility Improvements
+
+- **Enhanced ARIA support** - Better screen reader announcements
+- **Focus management** - Improved focus handling with aria-live regions
+- **Disabled state feedback** - Descriptive text for disabled options
+- **High contrast support** - Special styles for high contrast mode
+- **Keyboard navigation** - Enhanced with Enter/Space key support
+
+### Design System Alignment
+
+- **Borders before shadows** - Clean 2-3px borders with subtle elevation
+- **Typography hierarchy** - Font weight (600/700) for clear selection states
+- **Token-based styling** - All values from @spexop/theme system
+- **Consistent spacing** - Using theme spacing tokens throughout
 
 For detailed usage examples and integration patterns, see [USAGE-GUIDE.md](./USAGE-GUIDE.md).
 

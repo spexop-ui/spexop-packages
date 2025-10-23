@@ -30,6 +30,7 @@ export type TextSize =
  */
 export type TextWeight =
   | "regular" // 400 (default)
+  | "medium" // 500
   | "semibold" // 600
   | "bold"; // 700
 
@@ -46,7 +47,28 @@ export type TextVariant =
   | "secondary" // Secondary/muted text
   | "success" // Success state (green)
   | "error" // Error state (red)
-  | "warning"; // Warning state (yellow/orange)
+  | "warning" // Warning state (yellow/orange)
+  | "info"; // Info state (blue)
+
+/**
+ * Text decoration options
+ */
+export type TextDecoration = "none" | "underline" | "line-through";
+
+/**
+ * Text transform options
+ */
+export type TextTransform = "none" | "uppercase" | "lowercase" | "capitalize";
+
+/**
+ * Text overflow options
+ */
+export type TextOverflow = "clip" | "ellipsis" | "string";
+
+/**
+ * White space options
+ */
+export type WhiteSpace = "normal" | "nowrap" | "pre" | "pre-line" | "pre-wrap";
 
 /**
  * Text component props
@@ -56,7 +78,7 @@ export interface TextProps
     HTMLAttributes<
       HTMLParagraphElement | HTMLSpanElement | HTMLDivElement | HTMLLabelElement
     >,
-    "className"
+    "className" | "style"
   > {
   /**
    * Text content
@@ -91,7 +113,7 @@ export interface TextProps
    * Render as different element
    * @default 'p'
    */
-  as?: "p" | "span" | "div" | "label";
+  as?: "p" | "span" | "div" | "label" | "strong" | "em" | "small" | "mark";
 
   /**
    * Remove margin
@@ -107,13 +129,61 @@ export interface TextProps
 
   /**
    * Number of lines to clamp (for multi-line truncation)
+   * @default undefined
    */
-  clamp?: number;
+  clamp?: 1 | 2 | 3 | 4 | 5;
+
+  /**
+   * Text decoration
+   * @default 'none'
+   */
+  decoration?: TextDecoration;
+
+  /**
+   * Text transform
+   * @default 'none'
+   */
+  transform?: TextTransform;
+
+  /**
+   * Text overflow behavior
+   * @default 'clip'
+   */
+  overflow?: TextOverflow;
+
+  /**
+   * White space handling
+   * @default 'normal'
+   */
+  whiteSpace?: WhiteSpace;
+
+  /**
+   * Custom line height
+   * @default undefined (uses theme default)
+   */
+  lineHeight?: number;
+
+  /**
+   * Letter spacing
+   * @default undefined (uses theme default)
+   */
+  letterSpacing?: number;
+
+  /**
+   * Word spacing
+   * @default undefined (uses theme default)
+   */
+  wordSpacing?: number;
 
   /**
    * Additional CSS class
    */
   className?: string;
+
+  /**
+   * Custom inline styles
+   */
+  style?: React.CSSProperties;
 
   /**
    * Custom ID
@@ -136,4 +206,31 @@ export interface TextProps
    * ARIA described by
    */
   "aria-describedby"?: string;
+
+  /**
+   * ARIA atomic
+   */
+  "aria-atomic"?: boolean;
+
+  /**
+   * ARIA relevant
+   */
+  "aria-relevant"?:
+    | "additions"
+    | "additions removals"
+    | "additions text"
+    | "all"
+    | "removals"
+    | "text";
+
+  /**
+   * Role for screen readers
+   */
+  role?: string;
+
+  /**
+   * Tab index for keyboard navigation
+   * @default -1 (not focusable by default)
+   */
+  tabIndex?: number;
 }

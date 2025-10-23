@@ -179,6 +179,52 @@
    Use density="compact" on mobile instead of media queries
    ============================================ */
 
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .badge {
+    /* Better mobile touch targets */
+    min-height: 32px;
+    min-width: 32px;
+    /* Better mobile text sizing */
+    font-size: 14px;
+    /* Better mobile spacing */
+    padding: var(--theme-spacing-2) var(--theme-spacing-4);
+  }
+  
+  .badge--xs {
+    min-height: 28px;
+    min-width: 28px;
+    font-size: 12px;
+    padding: var(--theme-spacing-1) var(--theme-spacing-3);
+  }
+  
+  .badge--sm {
+    min-height: 32px;
+    min-width: 32px;
+    font-size: 13px;
+    padding: var(--theme-spacing-2) var(--theme-spacing-4);
+  }
+  
+  .badge--md {
+    min-height: 36px;
+    min-width: 36px;
+    font-size: 14px;
+    padding: var(--theme-spacing-3) var(--theme-spacing-5);
+  }
+  
+  /* Better mobile contrast */
+  .badge--default {
+    border-width: 2px;
+  }
+  
+  .badge--success,
+  .badge--warning,
+  .badge--error,
+  .badge--info {
+    border-width: 2px;
+  }
+}
+
 /* ============================================
    REDUCED MOTION
    ============================================ */

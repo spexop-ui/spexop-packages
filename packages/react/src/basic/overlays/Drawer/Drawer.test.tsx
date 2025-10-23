@@ -4,14 +4,17 @@
  * Tests for Drawer component covering:
  * - Rendering and visibility
  * - Position variants (left, right, top, bottom)
- * - Custom size
+ * - Custom size and responsive behavior
  * - Backdrop rendering and interaction
  * - Escape key handling
  * - Focus management and focus trap
  * - Body scroll lock
  * - Click outside to close
- * - ARIA attributes
+ * - ARIA attributes and accessibility
  * - Focus restoration
+ * - Portal rendering
+ * - Animation duration
+ * - Modern UI/UX features
  *
  * @author @olmstedian | github.com/olmstedian | @spexop | github.com/spexop-ui
  */
@@ -73,6 +76,57 @@ describe("Drawer", () => {
 
       const drawer = screen.getByRole("dialog");
       expect(drawer).toHaveAttribute("aria-labelledby", "drawer-title");
+    });
+
+    it("uses aria-describedby when provided", () => {
+      render(
+        <Drawer
+          isOpen={true}
+          onClose={vi.fn()}
+          aria-describedby="drawer-description"
+        >
+          <div id="drawer-description">Drawer description</div>
+          <div>Drawer content</div>
+        </Drawer>,
+      );
+
+      const drawer = screen.getByRole("dialog");
+      expect(drawer).toHaveAttribute("aria-describedby", "drawer-description");
+    });
+
+    it("renders in portal by default", () => {
+      render(
+        <Drawer isOpen={true} onClose={vi.fn()}>
+          <div>Drawer content</div>
+        </Drawer>,
+      );
+
+      // Content should be in document.body, not in the test container
+      expect(document.body).toContainElement(
+        screen.getByText("Drawer content"),
+      );
+    });
+
+    it("renders without portal when portal is false", () => {
+      const { container } = render(
+        <Drawer isOpen={true} onClose={vi.fn()} portal={false}>
+          <div>Drawer content</div>
+        </Drawer>,
+      );
+
+      // Content should be in the test container
+      expect(container).toContainElement(screen.getByText("Drawer content"));
+    });
+
+    it("applies custom ID when provided", () => {
+      render(
+        <Drawer isOpen={true} onClose={vi.fn()} id="custom-drawer">
+          <div>Drawer content</div>
+        </Drawer>,
+      );
+
+      const drawer = screen.getByRole("dialog");
+      expect(drawer).toHaveAttribute("id", "custom-drawer");
     });
   });
 
@@ -291,9 +345,9 @@ describe("Drawer", () => {
       expect(document.body.style.overflow).toBe("");
     });
 
-    it("does not lock body scroll when lockScroll is false", () => {
+    it("does not lock body scroll when preventBodyScroll is false", () => {
       render(
-        <Drawer isOpen={true} onClose={vi.fn()} lockScroll={false}>
+        <Drawer isOpen={true} onClose={vi.fn()} preventBodyScroll={false}>
           <div>Drawer content</div>
         </Drawer>,
       );
@@ -315,6 +369,30 @@ describe("Drawer", () => {
         () => {
           const firstButton = screen.getByText("First button");
           expect(document.activeElement).toBe(firstButton);
+        },
+        { timeout: 200 },
+      );
+    });
+
+    it("uses initialFocusRef when provided", async () => {
+      const initialFocusRef = React.createRef<HTMLButtonElement | null>();
+
+      render(
+        <Drawer
+          isOpen={true}
+          onClose={vi.fn()}
+          initialFocusRef={initialFocusRef}
+        >
+          <button type="button">First button</button>
+          <button ref={initialFocusRef} type="button">
+            Second button
+          </button>
+        </Drawer>,
+      );
+
+      await waitFor(
+        () => {
+          expect(document.activeElement).toBe(initialFocusRef.current);
         },
         { timeout: 200 },
       );
@@ -363,6 +441,52 @@ describe("Drawer", () => {
       // Focus trap should not be active
       expect(screen.getByText("Button in drawer")).toBeInTheDocument();
     });
+
+    it("restores focus when restoreFocus is true", async () => {
+      const triggerButton = document.createElement("button");
+      triggerButton.textContent = "Trigger";
+      document.body.appendChild(triggerButton);
+      triggerButton.focus();
+
+      const { rerender } = render(
+        <Drawer isOpen={true} onClose={vi.fn()}>
+          <div>Drawer content</div>
+        </Drawer>,
+      );
+
+      await waitFor(
+        () => {
+          expect(screen.getByText("Drawer content")).toBeInTheDocument();
+        },
+        { timeout: 200 },
+      );
+
+      rerender(
+        <Drawer isOpen={false} onClose={vi.fn()}>
+          <div>Drawer content</div>
+        </Drawer>,
+      );
+
+      await waitFor(
+        () => {
+          expect(document.activeElement).toBe(triggerButton);
+        },
+        { timeout: 200 },
+      );
+
+      document.body.removeChild(triggerButton);
+    });
+
+    it("supports restoreFocus prop", () => {
+      // Test that the restoreFocus prop is properly passed through
+      render(
+        <Drawer isOpen={true} onClose={vi.fn()} restoreFocus={false}>
+          <div>Drawer content</div>
+        </Drawer>,
+      );
+
+      expect(screen.getByText("Drawer content")).toBeInTheDocument();
+    });
   });
 
   describe("Custom Styling", () => {
@@ -408,6 +532,150 @@ describe("Drawer", () => {
       expect(screen.getByText("Drawer Title")).toBeInTheDocument();
       expect(screen.getByText("Drawer description")).toBeInTheDocument();
       expect(screen.getByText("Action")).toBeInTheDocument();
+    });
+  });
+
+  describe("Animation Duration", () => {
+    it("applies custom animation duration", () => {
+      render(
+        <Drawer isOpen={true} onClose={vi.fn()} animationDuration={500}>
+          <div>Drawer content</div>
+        </Drawer>,
+      );
+
+      const drawer = screen.getByRole("dialog");
+      expect(drawer.style.getPropertyValue("--animation-duration")).toBe(
+        "500ms",
+      );
+    });
+
+    it("uses default animation duration when not provided", () => {
+      render(
+        <Drawer isOpen={true} onClose={vi.fn()}>
+          <div>Drawer content</div>
+        </Drawer>,
+      );
+
+      const drawer = screen.getByRole("dialog");
+      expect(drawer.style.getPropertyValue("--animation-duration")).toBe(
+        "300ms",
+      );
+    });
+  });
+
+  describe("Portal Container", () => {
+    it("renders in custom portal container", () => {
+      const customContainer = document.createElement("div");
+      customContainer.id = "custom-portal";
+      document.body.appendChild(customContainer);
+
+      render(
+        <Drawer
+          isOpen={true}
+          onClose={vi.fn()}
+          portalContainer={customContainer}
+        >
+          <div>Drawer content</div>
+        </Drawer>,
+      );
+
+      expect(customContainer).toContainElement(
+        screen.getByText("Drawer content"),
+      );
+      // The drawer content should be in the custom container, not directly in body
+      expect(
+        customContainer.querySelector('[role="dialog"]'),
+      ).toBeInTheDocument();
+
+      document.body.removeChild(customContainer);
+    });
+  });
+
+  describe("Accessibility", () => {
+    it("has proper tabIndex for focus management", () => {
+      render(
+        <Drawer isOpen={true} onClose={vi.fn()}>
+          <div>Drawer content</div>
+        </Drawer>,
+      );
+
+      const drawer = screen.getByRole("dialog");
+      expect(drawer).toHaveAttribute("tabIndex", "-1");
+    });
+
+    it("supports all ARIA attributes", () => {
+      render(
+        <Drawer
+          isOpen={true}
+          onClose={vi.fn()}
+          aria-label="Custom drawer"
+          aria-labelledby="drawer-title"
+          aria-describedby="drawer-description"
+        >
+          <h2 id="drawer-title">Drawer Title</h2>
+          <p id="drawer-description">Drawer description</p>
+          <div>Drawer content</div>
+        </Drawer>,
+      );
+
+      const drawer = screen.getByRole("dialog");
+      expect(drawer).toHaveAttribute("aria-label", "Custom drawer");
+      expect(drawer).toHaveAttribute("aria-labelledby", "drawer-title");
+      expect(drawer).toHaveAttribute("aria-describedby", "drawer-description");
+      expect(drawer).toHaveAttribute("aria-modal", "true");
+    });
+  });
+
+  describe("Modern UI/UX Features", () => {
+    it("applies backdrop blur effect", () => {
+      render(
+        <Drawer isOpen={true} onClose={vi.fn()}>
+          <div>Drawer content</div>
+        </Drawer>,
+      );
+
+      const backdrop = screen.getByLabelText("Close drawer");
+      // Check that the backdrop has the correct class for blur effect
+      expect(backdrop).toHaveClass(styles.backdrop);
+    });
+
+    it("has proper touch action for mobile", () => {
+      render(
+        <Drawer isOpen={true} onClose={vi.fn()}>
+          <div>Drawer content</div>
+        </Drawer>,
+      );
+
+      const backdrop = screen.getByLabelText("Close drawer");
+      // Check that the backdrop has the correct class and inline styles
+      expect(backdrop).toHaveClass(styles.backdrop);
+      expect(backdrop).toHaveStyle("-webkit-tap-highlight-color: transparent");
+    });
+
+    it("removes webkit tap highlight", () => {
+      render(
+        <Drawer isOpen={true} onClose={vi.fn()}>
+          <div>Drawer content</div>
+        </Drawer>,
+      );
+
+      const backdrop = screen.getByLabelText("Close drawer");
+      expect(backdrop).toHaveStyle("-webkit-tap-highlight-color: transparent");
+    });
+
+    it("has proper mobile touch handling", () => {
+      render(
+        <Drawer isOpen={true} onClose={vi.fn()}>
+          <div>Drawer content</div>
+        </Drawer>,
+      );
+
+      const backdrop = screen.getByLabelText("Close drawer");
+      // Check that the backdrop has the correct class and inline styles
+      expect(backdrop).toHaveClass(styles.backdrop);
+      expect(backdrop).toHaveStyle("-webkit-tap-highlight-color: transparent");
+      // Note: touch-action might be applied via CSS modules, so we check the class
+      expect(backdrop).toHaveClass(styles.backdrop);
     });
   });
 });

@@ -1,9 +1,9 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   Card Component - Refined Minimalism
+   Card Component - Modern UI/UX Enhanced
    Border-based content container with density variants and sub-components
    Theme-driven aesthetics with Spexop architecture
-   @version 0.3.0
-   @updated 2025-10-17 - Migrated to theme system
+   @version 1.1.0
+   @updated 2025-01-15 - Enhanced with modern UI/UX principles
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ============================================
@@ -15,6 +15,7 @@
   display: flex;
   flex-direction: column;
   min-width: 0; /* Allow flex items to shrink below content size */
+  position: relative; /* For loading overlays and state indicators */
 
   /* Appearance - Using dedicated card tokens */
   background-color: var(--theme-card-basic-bg);
@@ -24,12 +25,28 @@
   /* Spacing (default: normal density) */
   padding: var(--theme-spacing-6);
 
-  /* Transitions */
-  transition: border-color 150ms ease-out;
+  /* Modern transitions with better easing */
+  transition: 
+    border-color 200ms cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 200ms cubic-bezier(0.4, 0, 0.2, 1),
+    transform 150ms cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Better focus management */
+  outline: none;
 }
 
 .card:hover {
   border-color: var(--theme-card-basic-border-hover);
+  /* Subtle elevation on hover for modern feel */
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--theme-primary);
+  outline-offset: 2px;
+  border-color: var(--theme-primary);
 }
 
 /* Dark theme */
@@ -40,6 +57,164 @@
 
 [data-theme="dark"] .card:hover {
   border-color: var(--theme-card-basic-border-hover);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================
+   MODERN STATE MANAGEMENT
+   ============================================ */
+
+/* Loading state */
+.card--loading {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.card--loading::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  animation: shimmer 1.5s infinite;
+  border-radius: inherit;
+}
+
+[data-theme="dark"] .card--loading::after {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.05),
+    transparent
+  );
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Error state */
+.card--error {
+  border-color: var(--theme-error);
+  background-color: var(--theme-error-bg);
+}
+
+.card--error:hover {
+  border-color: var(--theme-error-hover);
+  background-color: var(--theme-error-bg-hover);
+}
+
+/* Success state */
+.card--success {
+  border-color: var(--theme-success);
+  background-color: var(--theme-success-bg);
+}
+
+.card--success:hover {
+  border-color: var(--theme-success-hover);
+  background-color: var(--theme-success-bg-hover);
+}
+
+/* Disabled state */
+.card--disabled {
+  opacity: 0.6;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+.card--disabled:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: var(--theme-card-basic-border);
+}
+
+/* Feedback levels */
+.card--feedback-subtle:hover {
+  transform: translateY(-0.5px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.card--feedback-prominent:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* ============================================
+   STATE INDICATORS
+   ============================================ */
+
+.card__state {
+  display: flex;
+  align-items: center;
+  gap: var(--theme-spacing-3);
+  padding: var(--theme-spacing-4);
+  margin-bottom: var(--theme-spacing-4);
+  border-radius: var(--theme-radius-md);
+  font-size: var(--theme-font-size-sm);
+  font-weight: var(--theme-font-weight-medium);
+}
+
+.card__state__spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--theme-border);
+  border-top: 2px solid var(--theme-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.card__state__icon {
+  font-size: var(--theme-font-size-base);
+  line-height: 1;
+}
+
+.card__state__text {
+  color: var(--theme-text-secondary);
+}
+
+/* Loading state styling */
+.card--loading .card__state {
+  background-color: var(--theme-surface-hover);
+  border: 1px solid var(--theme-border);
+}
+
+/* Error state styling */
+.card--error .card__state {
+  background-color: var(--theme-error-bg);
+  border: 1px solid var(--theme-error);
+  color: var(--theme-error-text);
+}
+
+.card--error .card__state__text {
+  color: var(--theme-error-text);
+}
+
+/* Success state styling */
+.card--success .card__state {
+  background-color: var(--theme-success-bg);
+  border: 1px solid var(--theme-success);
+  color: var(--theme-success-text);
+}
+
+.card--success .card__state__text {
+  color: var(--theme-success-text);
 }
 
 /* ============================================
@@ -143,6 +318,80 @@
   border-color: var(--theme-card-elevated-border);
 }
 
+/* Featured - Full-width emphasis with gradient background */
+.variant--featured {
+  background: linear-gradient(135deg, var(--theme-primary-light), var(--theme-primary));
+  border: 3px solid var(--theme-primary);
+  color: var(--theme-surface);
+}
+
+.variant--featured:hover {
+  border-color: var(--theme-primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.variant--featured .card__title,
+.variant--featured .card__subtitle {
+  color: var(--theme-surface);
+}
+
+/* Pricing - Specialized styling for pricing plans */
+.variant--pricing {
+  border: 2px solid var(--theme-border);
+  background: var(--theme-surface);
+}
+
+.variant--pricing:hover {
+  border-color: var(--theme-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Product - Specialized styling for product cards */
+.variant--product {
+  border: 2px solid var(--theme-border);
+  background: var(--theme-surface);
+}
+
+.variant--product:hover {
+  border-color: var(--theme-primary);
+  transform: translateY(-1px);
+}
+
+/* Service - Specialized styling for service cards */
+.variant--service {
+  border: 2px solid var(--theme-border);
+  background: var(--theme-surface);
+  position: relative;
+}
+
+.variant--service:hover {
+  border-color: var(--theme-primary);
+  transform: translateY(-1px);
+}
+
+.variant--service:hover::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--theme-primary);
+  border-radius: 0 2px 2px 0;
+}
+
+/* Timeline - Specialized styling for timeline events */
+.variant--timeline {
+  border-left: 4px solid var(--theme-primary);
+  background: var(--theme-surface);
+}
+
+.variant--timeline:hover {
+  border-left-color: var(--theme-primary-dark);
+}
+
 /* ============================================
    BACKWARD COMPATIBILITY ALIASES
    ============================================ */
@@ -210,7 +459,7 @@
    STATE MODIFIERS
    ============================================ */
 
-/* Clickable - Button behavior */
+/* Clickable - Enhanced button behavior */
 .clickable {
   cursor: pointer;
   border: var(--theme-border-width) solid var(--theme-card-interactive-border);
@@ -218,19 +467,58 @@
   text-align: left;
   font-family: inherit;
   width: 100%;
+  min-height: 44px;
+  min-width: 44px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  
+  /* Enhanced accessibility */
+  position: relative;
+  overflow: hidden;
 }
 
 .clickable:hover {
   border-color: var(--theme-card-interactive-border-hover);
+  background-color: var(--theme-card-interactive-bg-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .clickable:focus-visible {
-  outline: var(--theme-border-width) solid var(--theme-card-interactive-border-hover);
+  outline: 2px solid var(--theme-primary);
   outline-offset: 2px;
+  border-color: var(--theme-primary);
 }
 
 .clickable:active {
   border-color: var(--theme-card-interactive-border-hover);
+  transform: translateY(0) scale(0.98);
+  transition-duration: 100ms;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Ripple effect for modern interaction */
+.clickable::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.1);
+  transform: translate(-50%, -50%);
+  transition: width 0.3s, height 0.3s;
+  pointer-events: none;
+}
+
+.clickable:active::before {
+  width: 300px;
+  height: 300px;
+}
+
+[data-theme="dark"] .clickable::before {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 [data-theme="dark"] .clickable {
@@ -391,6 +679,142 @@ html[data-theme="dark"] .card__footer {
 
 .card__footer--between {
   justify-content: space-between;
+}
+
+/* ============================================
+   SPECIALIZED COMPONENT STYLES
+   ============================================ */
+
+/* CardHeader specialized features */
+.card__header__number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: var(--theme-primary);
+  color: var(--theme-surface);
+  border-radius: var(--theme-radius-md);
+  font-size: var(--theme-font-size-sm);
+  font-weight: var(--theme-font-weight-bold);
+  margin-right: var(--theme-spacing-3);
+  transition: all 200ms ease;
+}
+
+.card--service:hover .card__header__number {
+  transform: scale(1.1);
+  background: var(--theme-primary-dark);
+}
+
+.card__header__text {
+  flex: 1;
+}
+
+.card__header__meta {
+  display: block;
+  font-size: var(--theme-font-size-xs);
+  color: var(--theme-text-tertiary);
+  margin-top: var(--theme-spacing-2);
+  font-weight: var(--theme-font-weight-medium);
+}
+
+/* CardBody specialized features */
+.card__body__image {
+  width: 100%;
+  margin-bottom: var(--theme-spacing-4);
+}
+
+.card__body__image img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: var(--theme-radius-md);
+}
+
+.card__body__price {
+  margin-bottom: var(--theme-spacing-3);
+}
+
+.card__body__price__value {
+  font-size: var(--theme-font-size-2xl);
+  font-weight: var(--theme-font-weight-bold);
+  color: var(--theme-primary);
+}
+
+.card__body__rating {
+  margin-bottom: var(--theme-spacing-3);
+}
+
+.card__body__rating__stars {
+  font-size: var(--theme-font-size-sm);
+  color: var(--theme-warning);
+}
+
+.card__body__stock {
+  margin-bottom: var(--theme-spacing-3);
+}
+
+.card__body__stock__status {
+  font-size: var(--theme-font-size-xs);
+  font-weight: var(--theme-font-weight-medium);
+  padding: var(--theme-spacing-1) var(--theme-spacing-2);
+  border-radius: var(--theme-radius-sm);
+}
+
+.card__body__stock__status--in-stock {
+  background: var(--theme-success-light);
+  color: var(--theme-success-dark);
+}
+
+.card__body__stock__status--out-of-stock {
+  background: var(--theme-error-light);
+  color: var(--theme-error-dark);
+}
+
+.card__body__event {
+  margin-bottom: var(--theme-spacing-3);
+}
+
+.card__body__event__date,
+.card__body__event__time,
+.card__body__event__location {
+  font-size: var(--theme-font-size-sm);
+  color: var(--theme-text-secondary);
+  margin-bottom: var(--theme-spacing-1);
+}
+
+.card__body__event__status {
+  font-size: var(--theme-font-size-xs);
+  font-weight: var(--theme-font-weight-medium);
+  padding: var(--theme-spacing-1) var(--theme-spacing-2);
+  border-radius: var(--theme-radius-sm);
+  display: inline-block;
+}
+
+.card__body__event__status--upcoming {
+  background: var(--theme-warning-light);
+  color: var(--theme-warning-dark);
+}
+
+.card__body__event__status--ongoing {
+  background: var(--theme-success-light);
+  color: var(--theme-success-dark);
+}
+
+.card__body__event__status--completed {
+  background: var(--theme-text-tertiary);
+  color: var(--theme-surface);
+}
+
+/* CardFooter specialized features */
+.card__footer__actions {
+  display: flex;
+  gap: var(--theme-spacing-3);
+  align-items: center;
+}
+
+.card__footer__action {
+  flex-shrink: 0;
 }
 
 /* ============================================
@@ -576,6 +1000,14 @@ html[data-theme="dark"] .card__footer {
   .card {
     transition: none;
   }
+  
+  .clickable {
+    transition: none;
+  }
+  
+  .clickable:active {
+    transform: none;
+  }
 }
 
 /* ============================================
@@ -587,5 +1019,30 @@ html[data-theme="dark"] .card__footer {
   .density--compact,
   .densityCompact {
     padding: var(--theme-spacing-3);
+  }
+  
+  /* Mobile clickable card optimizations */
+  .clickable {
+    min-height: 48px;
+    min-width: 48px;
+  }
+  
+  .clickable:active {
+    transform: scale(0.96);
+    transition-duration: 80ms;
+  }
+  
+  /* Better mobile card spacing */
+  .card {
+    /* Ensure minimum touch targets */
+    min-height: 44px;
+  }
+  
+  .density--normal {
+    padding: var(--theme-spacing-4);
+  }
+  
+  .density--spacious {
+    padding: var(--theme-spacing-6);
   }
 }

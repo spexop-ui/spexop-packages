@@ -1,16 +1,26 @@
 /**
- * SegmentedControl - Visual button group for selecting options
+ * SegmentedControl - Enhanced visual button group for selecting options
  *
  * A modern segmented control for selecting between multiple mutually exclusive options.
  * Following "The Spexop Way" with refined minimalism, borders before shadows,
- * and typography-driven hierarchy.
+ * and typography-driven hierarchy. Enhanced with modern UI/UX patterns.
  *
  * Design Principles:
  * - Primitives before patterns: Simple button group composition
- * - Borders before shadows: Clean borders, no heavy shadows
- * - Typography before decoration: Font weight (600) for selected state
+ * - Borders before shadows: Clean 2-3px borders with subtle elevation
+ * - Typography before decoration: Font weight (600/700) for selected state
  * - Tokens before magic numbers: All values from theme system
  * - Accessibility before aesthetics: Full ARIA support and keyboard navigation
+ * - Composition before complexity: Built from simple, reusable parts
+ * - Standards before frameworks: Web platform fundamentals
+ *
+ * Modern UI/UX Enhancements:
+ * - Smooth micro-interactions with spring animations
+ * - Enhanced visual hierarchy with better contrast
+ * - Improved focus states and accessibility
+ * - Modern border-radius and spacing
+ * - Better mobile touch targets
+ * - Subtle elevation and depth
  *
  * Features:
  * - Visual button group design with clear selection state
@@ -50,7 +60,7 @@
  *
  * @example
  * ```tsx
- * // View mode toggle
+ * // View mode toggle with enhanced interactions
  * import { List, Grid, Table } from '@spexop/icons';
  *
  * <SegmentedControl
@@ -66,9 +76,10 @@
  * ```
  */
 
-import { useId } from "react";
+import { useCallback, useEffect, useId, useRef } from "react";
 import styles from "./SegmentedControl.module.css";
 import type { SegmentedControlProps } from "./SegmentedControl.types.js";
+
 export function SegmentedControl({
   value,
   onChange,
@@ -81,53 +92,105 @@ export function SegmentedControl({
 }: SegmentedControlProps) {
   const autoId = useId();
   const _id = providedId || autoId;
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  // Handle keyboard navigation
-  const handleKeyDown = (
-    event: React.KeyboardEvent<HTMLButtonElement>,
-    _currentIndex: number,
-  ) => {
-    const enabledOptions = options.filter((opt) => !opt.disabled);
-    const currentOptionIndex = enabledOptions.findIndex(
-      (opt) => opt.value === value,
-    );
+  // Enhanced keyboard navigation with better UX
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLButtonElement>) => {
+      const enabledOptions = options.filter((opt) => !opt.disabled);
+      const currentOptionIndex = enabledOptions.findIndex(
+        (opt) => opt.value === value,
+      );
 
-    switch (event.key) {
-      case "ArrowLeft":
-      case "ArrowUp":
-        event.preventDefault();
-        if (currentOptionIndex > 0) {
-          onChange(enabledOptions[currentOptionIndex - 1].value);
-        }
-        break;
+      switch (event.key) {
+        case "ArrowLeft":
+        case "ArrowUp":
+          event.preventDefault();
+          if (currentOptionIndex > 0) {
+            onChange(enabledOptions[currentOptionIndex - 1].value);
+          }
+          break;
 
-      case "ArrowRight":
-      case "ArrowDown":
-        event.preventDefault();
-        if (currentOptionIndex < enabledOptions.length - 1) {
-          onChange(enabledOptions[currentOptionIndex + 1].value);
-        }
-        break;
+        case "ArrowRight":
+        case "ArrowDown":
+          event.preventDefault();
+          if (currentOptionIndex < enabledOptions.length - 1) {
+            onChange(enabledOptions[currentOptionIndex + 1].value);
+          }
+          break;
 
-      case "Home":
-        event.preventDefault();
-        onChange(enabledOptions[0].value);
-        break;
+        case "Home":
+          event.preventDefault();
+          if (enabledOptions.length > 0) {
+            onChange(enabledOptions[0].value);
+          }
+          break;
 
-      case "End":
-        event.preventDefault();
-        onChange(enabledOptions[enabledOptions.length - 1].value);
-        break;
-    }
-  };
+        case "End":
+          event.preventDefault();
+          if (enabledOptions.length > 0) {
+            onChange(enabledOptions[enabledOptions.length - 1].value);
+          }
+          break;
+
+        case "Enter":
+        case " ":
+          event.preventDefault();
+          // Selection is already handled by onClick
+          break;
+      }
+    },
+    [options, value, onChange],
+  );
+
+  // Enhanced click handler with better feedback
+  const handleOptionClick = useCallback(
+    (optionValue: string, isDisabled: boolean) => {
+      if (!isDisabled && optionValue !== value) {
+        onChange(optionValue);
+      }
+    },
+    [value, onChange],
+  );
+
+  // Focus management for better accessibility
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleFocusIn = (event: FocusEvent) => {
+      const target = event.target as HTMLElement;
+      if (target.getAttribute("role") === "radio") {
+        // Ensure the focused option is announced
+        target.setAttribute("aria-live", "polite");
+      }
+    };
+
+    const handleFocusOut = (event: FocusEvent) => {
+      const target = event.target as HTMLElement;
+      if (target.getAttribute("role") === "radio") {
+        target.removeAttribute("aria-live");
+      }
+    };
+
+    container.addEventListener("focusin", handleFocusIn);
+    container.addEventListener("focusout", handleFocusOut);
+
+    return () => {
+      container.removeEventListener("focusin", handleFocusIn);
+      container.removeEventListener("focusout", handleFocusOut);
+    };
+  }, []);
 
   return (
     <div
+      ref={containerRef}
       role="radiogroup"
       aria-label={ariaLabel}
       aria-labelledby={ariaLabelledby}
       className={`${styles.control} ${disabled ? styles.disabled : ""} ${className || ""}`}
       data-disabled={disabled || undefined}
+      data-testid="segmented-control"
     >
       {options.map((option, index) => {
         const isSelected = option.value === value;
@@ -139,13 +202,18 @@ export function SegmentedControl({
             type="button"
             role="radio"
             aria-checked={isSelected}
+            aria-disabled={isDisabled}
             disabled={isDisabled}
             className={`${styles.option} ${isSelected ? styles.selected : ""} ${
               isDisabled ? styles.optionDisabled : ""
             }`}
-            onClick={() => !isDisabled && onChange(option.value)}
-            onKeyDown={(e) => handleKeyDown(e, index)}
+            onClick={() => handleOptionClick(option.value, !!isDisabled)}
+            onKeyDown={handleKeyDown}
             tabIndex={isSelected ? 0 : -1}
+            data-testid={`segmented-control-option-${option.value}`}
+            aria-describedby={
+              option.disabled ? `${_id}-${option.value}-disabled` : undefined
+            }
           >
             {option.icon && (
               <span className={styles.icon} aria-hidden="true">
@@ -153,6 +221,11 @@ export function SegmentedControl({
               </span>
             )}
             <span className={styles.label}>{option.label}</span>
+            {option.disabled && (
+              <span id={`${_id}-${option.value}-disabled`} className="sr-only">
+                This option is currently unavailable
+              </span>
+            )}
           </button>
         );
       })}

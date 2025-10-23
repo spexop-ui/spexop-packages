@@ -1,36 +1,65 @@
 /**
  * SegmentedControl Component Styles
- * Following "The Spexop Way"
+ * Following "The Spexop Way" - Enhanced v0.2.0
  * 
  * Design Principles Applied:
- * - Borders before shadows: Clean 1-2px borders, no heavy shadows
- * - Typography before decoration: Font weight for hierarchy
+ * - Borders before shadows: Clean 2-3px borders, subtle elevation
+ * - Typography before decoration: Font weight (600/700) for hierarchy
  * - Tokens before magic numbers: All values from theme system
- * - Accessibility before aesthetics: Focus indicators, contrast
+ * - Accessibility before aesthetics: WCAG AA+ compliance
+ * - Composition before complexity: Built from simple, reusable parts
+ * - Standards before frameworks: Web platform fundamentals
+ * - Primitives before patterns: Simple button group composition
  * 
- * Visual button group for selecting options.
- * Aligned with modern Spexop design system.
+ * Modern UI/UX Enhancements:
+ * - Smooth micro-interactions with spring animations
+ * - Enhanced visual hierarchy with better contrast
+ * - Improved focus states and accessibility
+ * - Modern border-radius and spacing
+ * - Better mobile touch targets
+ * - Subtle elevation and depth
  */
 
 /* Control Container */
 .control {
   display: inline-flex;
-  gap: var(--theme-spacing-2);
+  gap: var(--theme-spacing-1);
   padding: var(--theme-spacing-1);
-  background: var(--theme-surface-secondary);
-  border: var(--theme-border-width) solid var(--theme-border);
-  border-radius: var(--theme-radius-lg); /* 12px - clean, rounded container */
+  background: var(--theme-surface);
+  border: 2px solid var(--theme-border);
+  border-radius: var(--theme-radius-lg); /* 12px - modern rounded container */
   font-family: var(--theme-font-family);
+  position: relative;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: 
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.1s ease;
 }
 
 [data-theme="dark"] .control {
-  background: var(--theme-surface-hover);
-  border-color: var(--theme-border);
+  background: var(--theme-surface-secondary);
+  border-color: var(--theme-border-strong);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .control.disabled {
-  opacity: 0.5;
+  opacity: 0.6;
   cursor: not-allowed;
+  pointer-events: none;
+}
+
+.control:focus-within {
+  border-color: var(--theme-primary);
+  box-shadow: 
+    0 1px 3px rgba(0, 0, 0, 0.1),
+    0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+[data-theme="dark"] .control:focus-within {
+  box-shadow: 
+    0 1px 3px rgba(0, 0, 0, 0.3),
+    0 0 0 3px rgba(59, 130, 246, 0.2);
 }
 
 /* Option Button */
@@ -39,21 +68,26 @@
   align-items: center;
   justify-content: center;
   gap: var(--theme-spacing-2);
-  padding: var(--theme-spacing-2) var(--theme-spacing-3);
-  min-width: 70px;
+  padding: var(--theme-spacing-3) var(--theme-spacing-4);
+  min-width: 80px;
+  min-height: 44px;
   border: none;
   background: transparent;
   color: var(--theme-text-secondary);
-  font-size: 14px;
+  font-size: var(--theme-font-size-sm);
   font-weight: var(--theme-font-weight-medium);
   font-family: var(--theme-font-family);
   cursor: pointer;
-  border-radius: var(--theme-radius-md); /* 8px - slightly less than container */
+  border-radius: var(--theme-radius-md); /* 8px - modern rounded */
   transition: 
-    background-color 0.15s ease,
-    color 0.15s ease;
+    background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.1s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
   flex: 1;
+  position: relative;
+  overflow: hidden;
 }
 
 [data-theme="dark"] .option {
@@ -62,34 +96,61 @@
 
 /* Hover State */
 .option:hover:not(.selected):not(.optionDisabled) {
-  background: var(--theme-surface-secondary);
+  background: var(--theme-surface-hover);
+  color: var(--theme-text);
+  transform: translateY(-1px);
 }
 
 [data-theme="dark"] .option:hover:not(.selected):not(.optionDisabled) {
   background: var(--theme-border);
+  color: var(--theme-text);
 }
 
 /* Selected State */
 .option.selected {
-  background: var(--theme-surface-secondary);
+  background: var(--theme-surface);
   color: var(--theme-text);
   font-weight: var(--theme-font-weight-semibold);
+  box-shadow: 
+    0 1px 2px rgba(0, 0, 0, 0.1),
+    0 0 0 1px var(--theme-border-strong);
+  transform: translateY(-1px);
 }
 
 [data-theme="dark"] .option.selected {
-  background: var(--theme-border-strong);
+  background: var(--theme-surface-secondary);
   color: var(--theme-text);
+  box-shadow: 
+    0 1px 2px rgba(0, 0, 0, 0.3),
+    0 0 0 1px var(--theme-border);
 }
 
 /* Active/Press State */
 .option:active:not(.optionDisabled) {
-  background: var(--theme-surface-secondary);
+  background: var(--theme-surface-hover);
+  transform: translateY(0) scale(0.98);
+  transition-duration: 100ms;
+}
+
+.option.selected:active:not(.optionDisabled) {
+  background: var(--theme-surface-hover);
+  transform: translateY(0) scale(0.98);
 }
 
 /* Disabled State */
 .option.optionDisabled {
   cursor: not-allowed;
-  opacity: 0.4;
+  opacity: 0.5;
+  background: var(--theme-surface-secondary);
+  color: var(--theme-text-muted);
+  transform: none;
+  box-shadow: none;
+}
+
+.option.optionDisabled:hover {
+  background: var(--theme-surface-secondary);
+  color: var(--theme-text-muted);
+  transform: none;
 }
 
 /* Icon */
@@ -97,31 +158,78 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .icon svg {
   width: 100%;
   height: 100%;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.option:hover .icon {
+  transform: scale(1.05);
+}
+
+.option.selected .icon {
+  transform: scale(1.1);
 }
 
 /* Label */
 .label {
-  line-height: 1;
+  line-height: 1.2;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.option:hover .label {
+  transform: translateY(-0.5px);
+}
+
+.option.selected .label {
+  transform: translateY(-0.5px);
 }
 
 /* Focus Visible */
 .option:focus-visible {
-  outline: var(--theme-border-width) solid var(--theme-primary);
+  outline: 2px solid var(--theme-primary);
   outline-offset: 2px;
   z-index: 1;
+  background: var(--theme-surface-hover);
+}
+
+.option.selected:focus-visible {
+  background: var(--theme-surface);
+  box-shadow: 
+    0 1px 2px rgba(0, 0, 0, 0.1),
+    0 0 0 1px var(--theme-border-strong),
+    0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 /* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
-  .option {
+  .control,
+  .option,
+  .icon,
+  .label {
     transition: none;
+  }
+  
+  .option:hover,
+  .option.selected {
+    transform: none;
+  }
+  
+  .option:hover .icon,
+  .option.selected .icon {
+    transform: none;
+  }
+  
+  .option:hover .label,
+  .option.selected .label {
+    transform: none;
   }
 }
 
@@ -129,11 +237,26 @@
 @media (max-width: 768px) {
   .control {
     width: 100%;
+    gap: var(--theme-spacing-1);
   }
 
   .option {
     flex: 1;
     min-width: 0;
+    min-height: 48px;
+    padding: var(--theme-spacing-4) var(--theme-spacing-3);
+    font-size: var(--theme-font-size-sm);
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  
+  .option:active:not(.optionDisabled) {
+    transform: translateY(0) scale(0.96);
+    transition-duration: 80ms;
+  }
+  
+  .option.selected:active:not(.optionDisabled) {
+    transform: translateY(0) scale(0.96);
   }
 }
 
@@ -141,11 +264,55 @@
 @media (max-width: 420px) {
   .option {
     min-width: 60px;
-    padding: var(--theme-spacing-1) var(--theme-spacing-2);
-    font-size: 12px;
+    padding: var(--theme-spacing-3) var(--theme-spacing-2);
+    font-size: var(--theme-font-size-xs);
+    gap: var(--theme-spacing-1);
   }
   
   .control {
     gap: var(--theme-spacing-1);
+    padding: var(--theme-spacing-1);
+  }
+  
+  .icon {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .control {
+    border-width: 3px;
+    border-color: var(--theme-text);
+  }
+  
+  .option.selected {
+    background: var(--theme-text);
+    color: var(--theme-surface);
+    box-shadow: none;
+  }
+  
+  .option:focus-visible {
+    outline-width: 3px;
+  }
+}
+
+/* Print styles */
+@media print {
+  .control {
+    box-shadow: none;
+    border: 1px solid #000;
+  }
+  
+  .option {
+    background: transparent !important;
+    color: #000 !important;
+    transform: none !important;
+  }
+  
+  .option.selected {
+    background: #f0f0f0 !important;
+    font-weight: bold;
   }
 }

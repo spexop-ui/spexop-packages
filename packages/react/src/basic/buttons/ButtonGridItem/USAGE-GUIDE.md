@@ -1,7 +1,7 @@
 # ButtonGridItem Component - Complete Usage Guide
 
-**Component Version**: v0.1.0
-**Last Updated**: October 20, 2025
+**Component Version**: v0.4.0
+**Last Updated**: October 23, 2025
 **Package**: @spexop/react
 **Status**: Production Ready
 
@@ -10,16 +10,17 @@
 1. [Overview](#overview)
 2. [Quick Start](#quick-start)
 3. [Installation](#installation)
-4. [Media Integration](#media-integration)
-5. [Grid Layouts](#grid-layouts)
-6. [Aspect Ratio Control](#aspect-ratio-control)
-7. [Interactive Patterns](#interactive-patterns)
-8. [Accessibility](#accessibility)
-9. [Performance Optimization](#performance-optimization)
-10. [Responsive Design](#responsive-design)
-11. [Advanced Patterns](#advanced-patterns)
-12. [Best Practices](#best-practices)
-13. [API Reference](#api-reference)
+4. [State Management](#state-management)
+5. [Media Integration](#media-integration)
+6. [Grid Layouts](#grid-layouts)
+7. [Aspect Ratio Control](#aspect-ratio-control)
+8. [Interactive Patterns](#interactive-patterns)
+9. [Accessibility](#accessibility)
+10. [Performance Optimization](#performance-optimization)
+11. [Responsive Design](#responsive-design)
+12. [Advanced Patterns](#advanced-patterns)
+13. [Best Practices](#best-practices)
+14. [API Reference](#api-reference)
 
 ## Overview
 
@@ -50,16 +51,18 @@ Consider alternatives when you need:
 
 ### Key Features
 
-- Dual click areas (card + button)
-- Multiple media types (img, picture, video)
-- Configurable aspect ratio
-- Smooth animations (card lift, media zoom, button slide)
-- Gradient overlay for text legibility
-- Full keyboard navigation
-- WCAG AA+ accessible
-- GPU-accelerated animations
-- Responsive mobile optimizations
-- Theme-aware styling
+- **Dual click areas** (card + button)
+- **Multiple media types** (img, picture, video)
+- **Configurable aspect ratio** with minimum height control
+- **Modern animations** with cubic-bezier easing
+- **Enhanced gradient overlay** for optimal text legibility
+- **State management** (loading, disabled, error, media loading)
+- **Full keyboard navigation** with enhanced focus management
+- **WCAG AA+ accessible** with comprehensive ARIA support
+- **GPU-accelerated animations** with reduced motion support
+- **Responsive mobile optimizations** for all screen sizes
+- **Theme-aware styling** with proper design token usage
+- **Performance optimized** with efficient re-renders
 
 ## Quick Start
 
@@ -140,6 +143,78 @@ yarn add @spexop/react @spexop/icons @spexop/theme
 
 ```tsx
 import '@spexop/react/dist/index.css';
+```
+
+## State Management
+
+ButtonGridItem now includes comprehensive state management for better user experience and visual feedback.
+
+### Loading State
+
+```tsx
+<ButtonGridItem
+  media={<img src="/processing.jpg" alt="Processing" />}
+  label="Processing Request"
+  description="Please wait while we process your data"
+  buttonText="Processing..."
+  loading={isProcessing}
+  onClick={handleProcess}
+/>
+```
+
+### Disabled State
+
+```tsx
+<ButtonGridItem
+  media={<img src="/locked.jpg" alt="Locked content" />}
+  label="Premium Feature"
+  description="This feature requires a premium subscription"
+  buttonText="Upgrade"
+  disabled={!hasAccess}
+  onClick={handleUpgrade}
+/>
+```
+
+### Error State
+
+```tsx
+<ButtonGridItem
+  media={<img src="/error.jpg" alt="Error occurred" />}
+  label="Something went wrong"
+  description="We encountered an error processing your request"
+  buttonText="Try Again"
+  error={hasError}
+  onClick={handleRetry}
+/>
+```
+
+### Media Loading State
+
+```tsx
+<ButtonGridItem
+  media={<img src="/large-image.jpg" alt="Loading image" />}
+  label="High Resolution Image"
+  description="Loading high-quality image..."
+  buttonText="View"
+  mediaLoading={isImageLoading}
+  onClick={handleView}
+/>
+```
+
+### Combined States
+
+```tsx
+<ButtonGridItem
+  media={<img src="/content.jpg" alt="Content" />}
+  label="Dynamic Content"
+  description="Content that changes based on state"
+  buttonText={isLoading ? "Loading..." : "View"}
+  loading={isLoading}
+  disabled={!isAuthenticated}
+  error={hasError}
+  mediaLoading={isMediaLoading}
+  onClick={handleAction}
+/>
 ```
 
 ## Media Integration
@@ -454,15 +529,16 @@ function ModalTriggerCard() {
 
 ## Accessibility
 
-### Keyboard Navigation
+### Enhanced Keyboard Navigation
 
-Full keyboard support:
+Full keyboard support with improved focus management:
 
 - **Tab**: Focus the card
 - **Shift + Tab**: Focus previous element
 - **Enter**: Activate card action
 - **Space**: Activate card action
 - **Tab** (within card): Focus button
+- **Escape**: Blur focus (when appropriate)
 
 ```tsx
 // Keyboard accessible by default
@@ -475,7 +551,7 @@ Full keyboard support:
 />
 ```
 
-### ARIA Labels
+### Enhanced ARIA Support
 
 ```tsx
 // Custom aria-label for card
@@ -496,6 +572,18 @@ Full keyboard support:
   buttonText="Download"
   onClick={handleDownload}
   aria-label-button="Download latest version of the software"
+/>
+
+// Additional ARIA attributes
+<ButtonGridItem
+  media={<img src="/feature.jpg" alt="Feature preview" />}
+  label="New Feature"
+  description="Discover our latest addition"
+  buttonText="Learn More"
+  aria-describedby="feature-details"
+  aria-live="polite"
+  data-testid="feature-card"
+  onClick={handleLearnMore}
 />
 ```
 
@@ -557,6 +645,23 @@ Screen readers will announce:
   label="Lazy Loaded"
   description="Loads when scrolled into view"
   buttonText="View"
+  onClick={handleClick}
+/>
+```
+
+### State-Based Performance
+
+```tsx
+// Efficient re-renders with proper state management
+<ButtonGridItem
+  media={<img src="/card.jpg" alt="Card" />}
+  label="Optimized Card"
+  description="Efficient state handling"
+  buttonText="Action"
+  loading={isLoading}
+  disabled={isDisabled}
+  error={hasError}
+  mediaLoading={isMediaLoading}
   onClick={handleClick}
 />
 ```
@@ -905,11 +1010,32 @@ interface ButtonGridItemProps {
   /** Minimum height in pixels */
   minHeight?: number;
   
+  /** Loading state */
+  loading?: boolean;
+  
+  /** Disabled state */
+  disabled?: boolean;
+  
+  /** Error state */
+  error?: boolean;
+  
+  /** Media loading state */
+  mediaLoading?: boolean;
+  
   /** ARIA label for card (overrides default) */
   "aria-label"?: string;
   
   /** ARIA label for button */
   "aria-label-button"?: string;
+  
+  /** ARIA described by for additional description */
+  "aria-describedby"?: string;
+  
+  /** ARIA live region for dynamic content */
+  "aria-live"?: "polite" | "assertive" | "off";
+  
+  /** Test ID for testing */
+  "data-testid"?: string;
 }
 ```
 
@@ -917,6 +1043,10 @@ interface ButtonGridItemProps {
 
 - `aspectRatio`: `"16/9"`
 - `minHeight`: `300`
+- `loading`: `false`
+- `disabled`: `false`
+- `error`: `false`
+- `mediaLoading`: `false`
 
 ## Related Components
 
@@ -934,9 +1064,13 @@ interface ButtonGridItemProps {
 
 ## Performance
 
-- **Bundle Size**: ~3KB gzipped
-- **GPU Accelerated**: All animations
+- **Bundle Size**: ~3.2KB gzipped
+- **GPU Accelerated**: All animations with `transform: translateZ(0)`
+- **Modern Easing**: Cubic-bezier transitions for smoother animations
 - **Lazy Loading**: Support for lazy images
+- **Reduced Motion**: Respects `prefers-reduced-motion` user preference
+- **State Management**: Efficient re-renders with proper state handling
+- **Memory Management**: Proper cleanup of event listeners and animations
 - **Optimized Hover**: Efficient transform animations
 
 ## License

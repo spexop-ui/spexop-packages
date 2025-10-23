@@ -30,6 +30,12 @@ export interface NavLinkProps {
   active?: boolean;
 
   /**
+   * Whether this link is disabled
+   * @default false
+   */
+  disabled?: boolean;
+
+  /**
    * Click handler for custom navigation logic
    */
   onClick?: (e: MouseEvent<HTMLAnchorElement>) => void;

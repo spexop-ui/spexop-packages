@@ -2,6 +2,9 @@
  * ProductCard Component
  * Specialized card for e-commerce products
  *
+ * @deprecated This component will be removed in v0.4.0.
+ * Use Card composition patterns instead. See: src/patterns/cards/ProductCard.example.tsx
+ *
  * @module @spexop/react/cards
  */
 
@@ -55,6 +58,14 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
     },
     ref,
   ) => {
+    // Runtime deprecation warning
+    if (process.env.NODE_ENV === "development") {
+      console.warn(
+        "@spexop/react: ProductCard is deprecated and will be removed in v0.4.0. " +
+          "Use Card composition instead. See: src/patterns/cards/ProductCard.example.tsx",
+      );
+    }
+
     // Round rating to nearest 0.5 for star display
     const roundedRating = rating ? Math.round(rating * 2) / 2 : 0;
     const fullStars = Math.floor(roundedRating);
@@ -112,7 +123,7 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
           <div className={styles.actions}>
             <Button
               variant="primary"
-              onClick={(e) => {
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                 e.stopPropagation();
                 onAddToCart();
               }}
@@ -125,7 +136,7 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
             {onViewDetails && (
               <Button
                 variant="ghost"
-                onClick={(e) => {
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                   e.stopPropagation();
                   onViewDetails();
                 }}

@@ -1,355 +1,228 @@
-# Card Composition Patterns
+# Card Patterns
 
-**Examples of how to compose Card primitives** into common UI patterns for modern web applications.
+Composition patterns for building specialized card components using the base Card primitive.
 
 ## Overview
 
-These patterns demonstrate how to build sophisticated card interfaces using Spexop's Card primitive and its sub-components (CardHeader, CardBody, CardFooter). Each pattern is a **composition example**, not an exported component.
+These patterns replace the specialized card components that were removed in v0.4.0. Each pattern demonstrates how to compose complex card layouts using Card, CardHeader, CardBody, and CardFooter primitives.
 
 ## Available Patterns
 
-| Pattern | Use Case | Key Features |
-|---------|----------|--------------|
-| **BlogCard** | Blog posts, articles | Cover image, metadata, tags, author info |
-| **ProductCard** | E-commerce products | Product image, price, rating, add to cart |
-| **PricingCard** | Pricing tiers, subscriptions | Feature lists, pricing, CTA buttons |
-| **FeatureCard** | Product features, services | Icon, title, description, optional CTA |
-| **ProfileCard** | Team members, user profiles | Avatar, bio, social links, contact info |
-| **TestimonialCard** | Customer reviews, testimonials | Quote, rating, author, company |
-| **StatsCard** | KPIs, metrics, analytics | Value, trend indicators, labels |
-| **DashboardCard** | Admin widgets, data displays | Loading states, error handling, actions |
-| **CTACard** | Calls to action, conversions | Headline, description, primary/secondary actions |
-| **ServiceCard** | Service offerings, processes | Numbered badge, meta tag, description |
-| **TimelineCard** | Events, milestones, history | Date, time, location, status indicators |
+### Content Cards
 
-## Base Card Primitive
+- **BlogCard** - Article preview with metadata
+- **MediaCard** - Image/video content display
+- **EventCard** - Event listing with details
 
-All patterns build on the Card primitive:
+### Product Cards
+
+- **ProductCard** - E-commerce product display
+- **PricingCard** - Pricing plan comparison
+- **ComparisonCard** - Feature comparison table
+
+### Profile Cards
+
+- **ProfileCard** - User profile display
+- **TeamMemberCard** - Team member profile
+- **TestimonialCard** - Customer testimonial
+
+### Data Cards
+
+- **FeatureCard** - Feature highlight
+- **StatCard** - Statistics display
+
+## Design Principles
+
+All patterns follow these principles:
+
+1. **Composition over inheritance** - Build from primitives
+2. **Borders before shadows** - Use 2px borders for structure
+3. **Typography before decoration** - Font weight for hierarchy
+4. **Tokens before magic numbers** - Use design tokens
+5. **Accessibility first** - WCAG AA+ compliance
+
+## Usage Guidelines
+
+### Basic Structure
 
 ```tsx
 import { Card, CardHeader, CardBody, CardFooter } from '@spexop/react';
 
-<Card variant="basic" density="normal">
-  <CardHeader title="Title" subtitle="Subtitle" />
+<Card variant="basic">
+  <CardHeader>
+    {/* Title, subtitle, icon */}
+  </CardHeader>
   <CardBody>
-    <p>Main content goes here</p>
+    {/* Main content */}
   </CardBody>
-  <CardFooter align="right">
-    <Button variant="primary">Action</Button>
+  <CardFooter>
+    {/* Actions, metadata */}
   </CardFooter>
 </Card>
 ```
 
-## Pattern Examples
+### Common Patterns
 
-### BlogCard Pattern
-
-```tsx
-import { Card, CardHeader, CardBody, Avatar, Badge, Text } from '@spexop/react';
-
-export function BlogCard({ 
-  title, 
-  excerpt, 
-  coverImage, 
-  author, 
-  date, 
-  readTime, 
-  tags, 
-  href 
-}) {
-  return (
-    <Card variant="basic" density="normal">
-      <CardHeader>
-        <img 
-          src={coverImage} 
-          alt={title}
-          className="blog-cover-image"
-        />
-        <h3 className="blog-title">{title}</h3>
-      </CardHeader>
-      <CardBody>
-        <Text className="blog-excerpt">{excerpt}</Text>
-        <div className="blog-meta">
-          <Avatar src={author.avatar} name={author.name} size="sm" />
-          <div className="blog-author-info">
-            <Text size="sm" weight="semibold">{author.name}</Text>
-            <Text size="xs" color="secondary">
-              {date} • {readTime} read
-            </Text>
-          </div>
-        </div>
-        <div className="blog-tags">
-          {tags.map(tag => (
-            <Badge key={tag} variant="secondary" size="sm">
-              {tag}
-            </Badge>
-          ))}
-        </div>
-      </CardBody>
-    </Card>
-  );
-}
-```
-
-### ProductCard Pattern
+#### Image + Content
 
 ```tsx
-import { Card, CardHeader, CardBody, CardFooter, Button, Badge, Text } from '@spexop/react';
-
-export function ProductCard({ 
-  name, 
-  price, 
-  originalPrice, 
-  image, 
-  rating, 
-  reviewCount, 
-  onAddToCart,
-  onViewDetails 
-}) {
-  const discount = originalPrice ? Math.round((1 - price / originalPrice) * 100) : 0;
-  
-  return (
-    <Card variant="interactive" density="normal">
-      <CardHeader>
-        {discount > 0 && (
-          <Badge variant="destructive" className="product-discount">
-            -{discount}%
-          </Badge>
-        )}
-        <img src={image} alt={name} className="product-image" />
-      </CardHeader>
-      <CardBody>
-        <Text size="sm" color="secondary" className="product-category">
-          Category
-        </Text>
-        <h3 className="product-name">{name}</h3>
-        <div className="product-rating">
-          <div className="stars">★★★★★</div>
-          <Text size="sm" color="secondary">
-            {rating} ({reviewCount} reviews)
-          </Text>
-        </div>
-        <div className="product-pricing">
-          <Text size="lg" weight="bold">${price}</Text>
-          {originalPrice && (
-            <Text size="sm" color="secondary" className="original-price">
-              ${originalPrice}
-            </Text>
-          )}
-        </div>
-      </CardBody>
-      <CardFooter align="between">
-        <Button variant="ghost" onClick={onViewDetails}>
-          View Details
-        </Button>
-        <Button variant="primary" onClick={onAddToCart}>
-          Add to Cart
-        </Button>
-      </CardFooter>
-    </Card>
-  );
-}
+<Card variant="basic">
+  <CardHeader>
+    <img src="..." alt="..." />
+  </CardHeader>
+  <CardBody>
+    <h3>Title</h3>
+    <p>Description</p>
+  </CardBody>
+</Card>
 ```
 
-### PricingCard Pattern
+#### Action Card
 
 ```tsx
-import { Card, CardHeader, CardBody, CardFooter, Button, Badge, Text } from '@spexop/react';
-
-export function PricingCard({ 
-  name, 
-  price, 
-  period, 
-  description, 
-  features, 
-  isPopular, 
-  ctaText, 
-  onSelect 
-}) {
-  return (
-    <Card 
-      variant={isPopular ? "highlighted" : "basic"} 
-      density="spacious"
-      className={isPopular ? "pricing-popular" : ""}
-    >
-      <CardHeader>
-        {isPopular && (
-          <Badge variant="primary" className="pricing-badge">
-            Most Popular
-          </Badge>
-        )}
-        <h3 className="pricing-name">{name}</h3>
-        <div className="pricing-price">
-          <Text size="4xl" weight="bold">${price}</Text>
-          <Text size="lg" color="secondary">/{period}</Text>
-        </div>
-        <Text color="secondary" className="pricing-description">
-          {description}
-        </Text>
-      </CardHeader>
-      <CardBody>
-        <ul className="pricing-features">
-          {features.map((feature, index) => (
-            <li key={index} className="pricing-feature">
-              <Text size="sm">✓ {feature}</Text>
-            </li>
-          ))}
-        </ul>
-      </CardBody>
-      <CardFooter align="center">
-        <Button 
-          variant={isPopular ? "primary" : "outline"} 
-          size="lg"
-          onClick={onSelect}
-          className="pricing-cta"
-        >
-          {ctaText}
-        </Button>
-      </CardFooter>
-    </Card>
-  );
-}
+<Card variant="interactive">
+  <CardBody>
+    <h3>Title</h3>
+    <p>Description</p>
+  </CardBody>
+  <CardFooter>
+    <Button>Action</Button>
+  </CardFooter>
+</Card>
 ```
 
-## Styling Patterns
-
-### CSS Custom Properties
-
-Use design tokens for consistent styling:
-
-```css
-.blog-card {
-  /* Use theme tokens */
-  border: 2px solid var(--theme-border);
-  border-radius: var(--theme-radius-md);
-  padding: var(--theme-spacing-6);
-  
-  /* Custom spacing */
-  --blog-meta-gap: var(--theme-spacing-3);
-  --blog-tags-gap: var(--theme-spacing-2);
-}
-
-.blog-cover-image {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-radius: var(--theme-radius-sm);
-  margin-bottom: var(--theme-spacing-4);
-}
-
-.blog-meta {
-  display: flex;
-  align-items: center;
-  gap: var(--blog-meta-gap);
-  margin: var(--theme-spacing-4) 0;
-}
-
-.blog-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--blog-tags-gap);
-  margin-top: var(--theme-spacing-4);
-}
-```
-
-### Responsive Design
-
-Make patterns responsive using the Grid system:
+#### Metadata Card
 
 ```tsx
-import { Grid, GridItem } from '@spexop/react';
-
-export function BlogGrid({ posts }) {
-  return (
-    <Grid columns={{ xs: 1, md: 2, lg: 3 }} gap={6}>
-      {posts.map(post => (
-        <GridItem key={post.id}>
-          <BlogCard {...post} />
-        </GridItem>
-      ))}
-    </Grid>
-  );
-}
+<Card variant="basic">
+  <CardHeader>
+    <h3>Title</h3>
+    <div className="metadata">
+      <Badge>Category</Badge>
+      <time>Date</time>
+    </div>
+  </CardHeader>
+  <CardBody>
+    <p>Content</p>
+  </CardBody>
+</Card>
 ```
+
+## Customization
+
+### Variants
+
+- `basic` - Standard card with subtle border
+- `interactive` - Hover effects for clickable cards
+- `elevated` - Slight shadow for emphasis
+- `outlined` - Strong border for separation
+
+### Density
+
+- `compact` - Reduced padding for dense layouts
+- `normal` - Standard spacing
+- `spacious` - Extra padding for emphasis
+
+### Responsive Behavior
+
+- Cards stack vertically on mobile
+- Images scale appropriately
+- Text remains readable at all sizes
+- Touch targets meet 44x44px minimum
+
+## Accessibility
+
+All patterns include:
+
+- Proper heading hierarchy (h1-h6)
+- Alt text for images
+- ARIA labels where needed
+- Keyboard navigation support
+- Screen reader announcements
+- High contrast support
 
 ## Migration from Specialized Components
 
-### Before (Old Specialized Components)
+### Before (v0.3.x)
 
 ```tsx
-import { BlogCard, ProductCard, PricingCard } from '@spexop/react';
+import { BlogCard } from '@spexop/react';
 
 <BlogCard 
-  title="Getting Started"
-  author="Jane Doe"
+  title="Article Title"
+  author="Author Name"
   date="2025-10-22"
-  tags={["Tutorial", "React"]}
+  tags={["Tag1", "Tag2"]}
+  excerpt="Article excerpt..."
+  imageUrl="/path/to/image.jpg"
 />
 ```
 
-### After (Pattern Composition)
+### After (v0.4.0)
 
 ```tsx
 import { Card, CardHeader, CardBody, Avatar, Badge } from '@spexop/react';
 
 <Card variant="basic">
   <CardHeader>
-    <h3>Getting Started</h3>
-  </CardHeader>
-  <CardBody>
+    <img src="/path/to/image.jpg" alt="Article Title" />
+    <h3>Article Title</h3>
     <div className="blog-meta">
-      <Avatar name="Jane Doe" />
-      <span>Jane Doe</span>
+      <Avatar name="Author Name" />
+      <span>Author Name</span>
       <time>2025-10-22</time>
     </div>
+  </CardHeader>
+  <CardBody>
+    <p>Article excerpt...</p>
     <div className="blog-tags">
-      <Badge>Tutorial</Badge>
-      <Badge>React</Badge>
+      <Badge>Tag1</Badge>
+      <Badge>Tag2</Badge>
     </div>
   </CardBody>
 </Card>
 ```
 
-## Best Practices
+## Styling
 
-### 1. **Composition Over Inheritance**
+Use CSS custom properties for consistent styling:
 
-Build patterns by composing primitives, not extending them
+```css
+.blog-card {
+  /* Use theme tokens */
+  border: 2px solid var(--theme-border);
+  border-radius: var(--theme-radius-md);
+  padding: var(--theme-spacing-4);
+}
 
-### 2. **Consistent Spacing**
+.blog-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--theme-spacing-2);
+  color: var(--theme-text-secondary);
+  font-size: var(--theme-font-size-sm);
+}
 
-Use design tokens for all spacing and sizing
+.blog-tags {
+  display: flex;
+  gap: var(--theme-spacing-1);
+  flex-wrap: wrap;
+}
+```
 
-### 3. **Accessible Markup**
+## Examples
 
-Use semantic HTML and proper ARIA attributes
+See individual pattern files for complete examples:
 
-### 4. **Responsive Design**
+- `BlogCard.example.tsx`
+- `ProductCard.example.tsx`
+- `PricingCard.example.tsx`
+- etc.
 
-Ensure patterns work across all screen sizes
+Each example includes:
 
-### 5. **Performance**
-
-Keep patterns lightweight and focused
-
-### 6. **Documentation**
-
-Add clear comments explaining the composition
-
-## Contributing
-
-To add a new card pattern:
-
-1. Create a new `.example.tsx` file
-2. Follow the established naming convention
-3. Include comprehensive documentation
-4. Add usage examples
-5. Test across different screen sizes
-6. Submit a pull request
-
-## Resources
-
-- [Card Component Documentation](../../basic/cards/Card/README.md)
-- [Design Tokens Reference](../../../theme/README.md)
-- [Grid System Guide](../../basic/primitives/Grid/README.md)
-- [The Spexop Way Principles](../../../docs/getting-started.md)
+- Complete TypeScript implementation
+- Props interface
+- Usage examples
+- Styling guidelines
+- Accessibility notes

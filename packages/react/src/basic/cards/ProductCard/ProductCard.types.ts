@@ -1,36 +1,44 @@
 /**
- * ProductCard Types
+ * ProductCard Component Types
+ *
  * @module @spexop/react/cards
  */
 
-import type { CardVariant } from "../Card/Card.types.js";
+import type { ReactNode } from "react";
 
-/**
- * Props for ProductCard component
- */
 export interface ProductCardProps {
-  /** Product name */
+  /** Product name/title */
   name: string;
-  /** Product price */
+  /** Product price (number) */
   price: number;
   /** Product image URL */
-  image: string;
-  /** Star rating (0-5) */
+  image?: string;
+  /** Product rating (0-5) */
   rating?: number;
   /** Number of reviews */
   reviews?: number;
-  /** Badge text (e.g., "Sale", "New", "20% Off") */
+  /** Product badge text */
   badge?: string;
-  /** Add to cart handler */
-  onAddToCart?: () => void;
-  /** View details handler */
-  onViewDetails?: () => void;
   /** Whether product is in stock */
   inStock?: boolean;
-  /** Currency symbol (default: "$") */
+  /** Currency symbol */
   currency?: string;
-  /** Card visual variant */
-  variant?: CardVariant;
-  /** Additional CSS class names */
+  /** Card variant */
+  variant?:
+    | "basic"
+    | "highlighted"
+    | "outlined"
+    | "interactive"
+    | "ghost"
+    | "elevated"
+    | "default"
+    | "outline";
+  /** Click handler for add to cart */
+  onAddToCart?: () => void;
+  /** Click handler for view details */
+  onViewDetails?: () => void;
+  /** Additional CSS class */
   className?: string;
+  /** Children elements */
+  children?: ReactNode;
 }

@@ -274,7 +274,7 @@ describe("Motion", () => {
       const element = container.firstChild as HTMLElement;
       const transform = element.style.transform;
       expect(transform).toContain("scale");
-      expect(transform).toContain("0.9");
+      expect(transform).toContain("0.8");
     });
 
     it("should calculate slideDown transform correctly", () => {

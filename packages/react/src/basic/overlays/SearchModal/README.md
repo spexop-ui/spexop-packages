@@ -8,11 +8,17 @@ A centered modal-style search with quick links and categorized results, followin
 - **Close Button**: Easy-to-tap close button on all devices
 - **Quick Links**: Shows quick access links in empty state
 - **Recent Searches**: Optional recent search suggestions
-- **Categorized Results**: Groups results by category
-- **Fuzzy Search**: Searches titles, descriptions, categories, and keywords
-- **Keyboard Navigation**: Full keyboard support on desktop (↑↓ to navigate, Enter to select, ESC to close)
+- **Popular Results**: Shows trending/popular results in empty state
+- **Categorized Results**: Groups results by category with relevance scoring
+- **Enhanced Search**: Fuzzy matching with intelligent relevance scoring
+- **Search Highlighting**: Highlights matching terms in results
+- **Loading States**: Visual feedback during search with debouncing
+- **Keyboard Navigation**: Full keyboard support (↑↓ to navigate, Enter to select, ESC to close, Home/End for first/last)
+- **Touch Interactions**: Swipe-to-dismiss, haptic feedback, optimized touch targets
 - **Responsive Design**: Mobile-first with optimized touch targets
 - **Accessibility**: Full ARIA support, focus trap, screen reader friendly
+- **Analytics Ready**: Built-in callbacks for search and selection tracking
+- **Modern Animations**: Smooth micro-interactions and hover effects
 
 ## Props
 
@@ -25,6 +31,9 @@ interface SearchModalProps {
   recentSearches?: string[];        // Recent search queries
   placeholder?: string;             // Search input placeholder
   className?: string;               // Additional CSS class
+  onSearch?: (query: string) => void;           // Callback when search is performed
+  onResultSelect?: (result: SearchResult) => void;  // Callback when result is selected
+  onQuickLinkClick?: (link: QuickLink) => void;    // Callback when quick link is clicked
 }
 
 interface SearchResult {
@@ -164,14 +173,18 @@ Desktop only (keyboard shortcuts footer is hidden on mobile/tablet):
 - **ESC**: Close modal
 - **↑/↓**: Navigate through results
 - **Enter**: Select highlighted result
-- **Type**: Filter results in real-time
+- **Home**: Jump to first result
+- **End**: Jump to last result
+- **Tab**: Natural tab navigation
+- **Type**: Filter results in real-time with debouncing
 
 Mobile/Tablet:
 
 - **Tap Close Button (X)**: Close modal
 - **Tap Backdrop**: Close modal
+- **Swipe Up**: Dismiss modal (swipe gesture)
 - **Type**: Filter results in real-time
-- **Tap Result**: Select result
+- **Tap Result**: Select result with haptic feedback
 
 ## Responsive Behavior
 
@@ -287,6 +300,36 @@ transform: translate(0, 100%);
 }
 ```
 
+## Analytics Integration
+
+The SearchModal includes built-in analytics callbacks for tracking user behavior:
+
+```tsx
+<SearchModal
+  isOpen={isSearchOpen}
+  onClose={() => setIsSearchOpen(false)}
+  results={searchResults}
+  onSearch={(query) => {
+    // Track search queries
+    analytics.track('search_performed', { query });
+  }}
+  onResultSelect={(result) => {
+    // Track result selections
+    analytics.track('search_result_selected', { 
+      resultId: result.id, 
+      resultTitle: result.title 
+    });
+  }}
+  onQuickLinkClick={(link) => {
+    // Track quick link clicks
+    analytics.track('quick_link_clicked', { 
+      linkUrl: link.url, 
+      linkLabel: link.label 
+    });
+  }}
+/>
+```
+
 ## Best Practices
 
 **Do** ✅:
@@ -295,10 +338,12 @@ transform: translate(0, 100%);
 - Include quick links for common pages
 - Track and show recent searches
 - Use appropriate categories
+- Implement analytics tracking for insights
 - Test keyboard navigation
 - Test on mobile devices (especially iOS Safari)
 - Test with Dynamic Island and home indicator
 - Test landscape and portrait orientations
+- Test haptic feedback on mobile devices
 
 **Don't** ❌:
 
@@ -308,6 +353,7 @@ transform: translate(0, 100%);
 - Don't ignore mobile optimization
 - Don't forget to add `viewport-fit=cover` meta tag
 - Don't use fixed pixel values for safe areas
+- Don't forget to implement analytics for user insights
 
 ## Examples
 

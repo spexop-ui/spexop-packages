@@ -2,6 +2,9 @@
  * PricingCard Component
  * Specialized card for pricing plans and tiers
  *
+ * @deprecated This component will be removed in v0.4.0.
+ * Use Card composition patterns instead. See: src/patterns/cards/PricingCard.example.tsx
+ *
  * @module @spexop/react/cards
  */
 
@@ -56,6 +59,14 @@ export const PricingCard = forwardRef<HTMLDivElement, PricingCardProps>(
     },
     ref,
   ) => {
+    // Runtime deprecation warning
+    if (process.env.NODE_ENV === "development") {
+      console.warn(
+        "@spexop/react: PricingCard is deprecated and will be removed in v0.4.0. " +
+          "Use Card composition instead. See: src/patterns/cards/PricingCard.example.tsx",
+      );
+    }
+
     // Auto-select variant based on highlighted prop if not specified
     const cardVariant = variant || (highlighted ? "highlighted" : "basic");
 

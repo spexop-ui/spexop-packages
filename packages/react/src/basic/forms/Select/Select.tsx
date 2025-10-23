@@ -36,6 +36,11 @@ export interface SelectProps {
   disabled?: boolean;
 
   /**
+   * Whether the select is required
+   */
+  required?: boolean;
+
+  /**
    * Placeholder text when no value selected
    */
   placeholder?: string;
@@ -100,6 +105,7 @@ export function Select({
   onChange,
   options,
   disabled = false,
+  required = false,
   placeholder = "Select...",
   density = "normal",
   className,

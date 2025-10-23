@@ -45,7 +45,7 @@ This release removes **83 tokens (18.3%)** from `@spexop/theme` that don't align
 
 #### Migration Guide
 
-See [packages/tokens/CHANGELOG.md](./packages/tokens/CHANGELOG.md) for detailed migration instructions and code examples.
+See [packages/theme/CHANGELOG.md](./packages/theme/CHANGELOG.md) for detailed migration instructions and code examples.
 
 #### Benefits
 
@@ -69,7 +69,7 @@ See [packages/tokens/CHANGELOG.md](./packages/tokens/CHANGELOG.md) for detailed 
 ### What Changed
 
 - **Total Token Count**: 441 → 452 tokens (+11 tokens)
-- **Repository Name**: Renamed from "spexop-design-system-public" to "spexop-tokens"
+- **Repository Name**: Renamed from "spexop-design-system-public" to "spexop-packages"
 
 ---
 
@@ -111,7 +111,7 @@ See [packages/tokens/CHANGELOG.md](./packages/tokens/CHANGELOG.md) for detailed 
 
 ## Links
 
-- [Package README](./packages/tokens/README.md)
-- [Detailed Package Changelog](./packages/tokens/CHANGELOG.md)
+- [Package README](./packages/theme/README.md)
+- [Detailed Package Changelog](./packages/theme/CHANGELOG.md)
 - [NPM Package](https://www.npmjs.com/package/@spexop/theme)
-- [GitHub Repository](https://github.com/spexop-ui/spexop-tokens)
+- [GitHub Repository](https://github.com/spexop-ui/spexop-packages)

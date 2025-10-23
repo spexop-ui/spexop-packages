@@ -50,6 +50,14 @@ export const TimelineCard = forwardRef<HTMLDivElement, TimelineCardProps>(
     },
     ref,
   ) => {
+    // Runtime deprecation warning
+    if (process.env.NODE_ENV === "development") {
+      console.warn(
+        "@spexop/react: TimelineCard is deprecated and will be removed in v0.4.0. " +
+          "Use Card composition instead. See: src/patterns/cards/TimelineCard.example.tsx",
+      );
+    }
+
     // Format date if it's a Date object
     const formatDate = (d: string | Date): string => {
       if (typeof d === "string") return d;

@@ -17,8 +17,10 @@ export * from "./buttons/index.js";
 export * from "./cards/index.js";
 // Data Components (2 components)
 export * from "./data/index.js";
-// Display Components (6 components)
-export * from "./indicators/index.js";
+// Display Components (6 components) - exclude IconProps to avoid conflict
+export { 
+  Avatar, Badge, Carousel, CodeBlock, Divider, Icon, KeyboardShortcut, ThemeToggle, IconButton 
+} from "./indicators/index.js";
 // Feedback Components (7 components)
 export * from "./feedback/index.js";
 // Form Components (8 components)
@@ -35,6 +37,3 @@ export * from "./primitives/index.js";
 export * from "./typography/index.js";
 // Utility Components (1 component)
 export * from "./utils/index.js";
-
-// Backwards compatibility re-exports (deprecated in v0.4.0)
-export * from "./display/index.js";

@@ -10,6 +10,81 @@ import {
 import { createPortal } from "react-dom";
 import styles from "./CommandPalette.module.css";
 
+// Fuzzy search scoring function
+const calculateFuzzyScore = (text: string, query: string): number => {
+  const textLower = text.toLowerCase();
+  const queryLower = query.toLowerCase();
+
+  // Exact match gets highest score
+  if (textLower === queryLower) return 1000;
+
+  // Starts with query gets high score
+  if (textLower.startsWith(queryLower)) return 900;
+
+  // Contains query gets medium score
+  if (textLower.includes(queryLower)) return 500;
+
+  // For longer queries (more than 6 characters), require word-based matching
+  if (queryLower.length > 6) {
+    const textWords = textLower.split(/\s+/);
+    const queryWords = queryLower.split(/\s+/);
+
+    // Check if any query word starts with any text word
+    for (const queryWord of queryWords) {
+      for (const textWord of textWords) {
+        if (textWord.startsWith(queryWord)) {
+          return 400;
+        }
+      }
+    }
+
+    // Check if any query word is contained in any text word
+    for (const queryWord of queryWords) {
+      for (const textWord of textWords) {
+        if (textWord.includes(queryWord)) {
+          return 300;
+        }
+      }
+    }
+
+    // For longer queries, don't do character-based fuzzy matching
+    return 0;
+  }
+
+  // For shorter queries, allow fuzzy matching but be strict
+  let queryIndex = 0;
+  let consecutiveMatches = 0;
+  let maxConsecutive = 0;
+
+  for (let i = 0; i < textLower.length && queryIndex < queryLower.length; i++) {
+    if (textLower[i] === queryLower[queryIndex]) {
+      queryIndex++;
+      consecutiveMatches++;
+      maxConsecutive = Math.max(maxConsecutive, consecutiveMatches);
+    } else {
+      consecutiveMatches = 0;
+    }
+  }
+
+  // If all query characters found in order, allow fuzzy matching
+  if (queryIndex === queryLower.length) {
+    // For very short queries (3-4 chars), be more lenient
+    if (queryLower.length <= 4) {
+      return 300 + maxConsecutive * 10;
+    }
+
+    // For medium queries, require at least 2 consecutive matches
+    if (maxConsecutive >= 2) {
+      const matchRatio = queryLower.length / textLower.length;
+      if (matchRatio >= 0.3) {
+        return 300 + maxConsecutive * 10;
+      }
+    }
+  }
+
+  return 0;
+};
+
 export interface CommandPaletteCommand {
   /**
    * Unique identifier for the command
@@ -74,6 +149,11 @@ export interface CommandPaletteProps {
   commands: CommandPaletteCommand[];
 
   /**
+   * Recent commands to show at the top
+   */
+  recentCommands?: CommandPaletteCommand[];
+
+  /**
    * Placeholder text for search input
    * @default "Type a command or search..."
    */
@@ -90,6 +170,12 @@ export interface CommandPaletteProps {
    * @default true
    */
   showShortcuts?: boolean;
+
+  /**
+   * Whether to show recent commands section
+   * @default true
+   */
+  showRecent?: boolean;
 
   /**
    * Custom class name
@@ -117,6 +203,11 @@ export interface CommandPaletteProps {
    * @default "No commands found"
    */
   emptyMessage?: string;
+
+  /**
+   * Callback when a command is selected
+   */
+  onCommandSelect?: (command: CommandPaletteCommand) => void;
 }
 
 /**
@@ -165,60 +256,174 @@ export function CommandPalette({
   open,
   onClose,
   commands,
+  recentCommands = [],
   placeholder = "Type a command or search...",
   showCategories = true,
   showShortcuts = true,
+  showRecent = true,
   className = "",
   style,
   ariaLabel = "Command palette",
   maxResults = 10,
   emptyMessage = "No commands found",
+  onCommandSelect,
 }: CommandPaletteProps): ReactElement | null {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [announcement, setAnnouncement] = useState("");
+  const [scrollTop, setScrollTop] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const previousActiveElement = useRef<HTMLElement | null>(null);
 
-  // Filter and search commands
+  // Virtualization constants
+  const ITEM_HEIGHT = 48; // Height of each command item in pixels
+  const CONTAINER_HEIGHT = 320; // Height of the command list container
+  const OVERSCAN = 5; // Number of items to render outside the visible area
+  const VIRTUALIZATION_THRESHOLD = 50; // Only virtualize if there are more than 50 commands
+
+  // Filter and search commands with fuzzy matching
   const filteredCommands = useMemo(() => {
     if (!searchQuery.trim()) {
-      return commands.slice(0, maxResults);
+      // When no search query, show recent commands first, then all commands
+      const allCommands = [...commands];
+      const recentIds = new Set(recentCommands.map((cmd) => cmd.id));
+      const nonRecentCommands = allCommands.filter(
+        (cmd) => !recentIds.has(cmd.id),
+      );
+      return [...recentCommands, ...nonRecentCommands].slice(0, maxResults);
     }
 
     const query = searchQuery.toLowerCase();
-    const results = commands.filter((cmd) => {
-      if (cmd.disabled) return false;
+    const recentIds = new Set(recentCommands.map((cmd) => cmd.id));
 
-      const labelMatch = cmd.label.toLowerCase().includes(query);
-      const descMatch = cmd.description?.toLowerCase().includes(query);
-      const categoryMatch = cmd.category?.toLowerCase().includes(query);
-      const keywordMatch = cmd.keywords?.some((kw) =>
-        kw.toLowerCase().includes(query),
-      );
+    // Combine commands and recent commands, avoiding duplicates
+    const allCommands = [
+      ...recentCommands,
+      ...commands.filter((cmd) => !recentIds.has(cmd.id)),
+    ];
 
-      return labelMatch || descMatch || categoryMatch || keywordMatch;
-    });
+    const results = allCommands
+      .filter((cmd) => !cmd.disabled)
+      .map((cmd) => {
+        let score = 0;
+
+        // Calculate scores for different fields
+        const labelScore = calculateFuzzyScore(cmd.label, query) * 3; // Label is most important
+        const descScore = cmd.description
+          ? calculateFuzzyScore(cmd.description, query) * 2
+          : 0;
+        const categoryScore = cmd.category
+          ? calculateFuzzyScore(cmd.category, query)
+          : 0;
+        const keywordScore = cmd.keywords
+          ? Math.max(
+              ...cmd.keywords.map((kw) => calculateFuzzyScore(kw, query)),
+            ) * 1.5
+          : 0;
+
+        score = Math.max(labelScore, descScore, categoryScore, keywordScore);
+
+        // Boost score for recent commands
+        const isRecent = recentIds.has(cmd.id);
+        if (isRecent) score *= 1.2;
+
+        return { command: cmd, score };
+      })
+      .filter(({ score }) => score > 0)
+      .sort((a, b) => b.score - a.score) // Sort by score descending
+      .map(({ command }) => command);
 
     return results.slice(0, maxResults);
-  }, [searchQuery, commands, maxResults]);
+  }, [searchQuery, commands, recentCommands, maxResults]);
+
+  // Virtualization logic
+  const virtualizedItems = useMemo(() => {
+    const totalItems = filteredCommands.length;
+    if (totalItems === 0)
+      return {
+        startIndex: 0,
+        endIndex: 0,
+        visibleItems: [],
+        shouldVirtualize: false,
+      };
+
+    // Only virtualize if there are many commands
+    const shouldVirtualize = totalItems > VIRTUALIZATION_THRESHOLD;
+
+    if (!shouldVirtualize) {
+      return {
+        startIndex: 0,
+        endIndex: totalItems - 1,
+        visibleItems: filteredCommands,
+        totalHeight: totalItems * ITEM_HEIGHT,
+        offsetY: 0,
+        shouldVirtualize: false,
+      };
+    }
+
+    const startIndex = Math.max(
+      0,
+      Math.floor(scrollTop / ITEM_HEIGHT) - OVERSCAN,
+    );
+    const endIndex = Math.min(
+      totalItems - 1,
+      Math.ceil((scrollTop + CONTAINER_HEIGHT) / ITEM_HEIGHT) + OVERSCAN,
+    );
+
+    const visibleItems = filteredCommands.slice(startIndex, endIndex + 1);
+
+    return {
+      startIndex,
+      endIndex,
+      visibleItems,
+      totalHeight: totalItems * ITEM_HEIGHT,
+      offsetY: startIndex * ITEM_HEIGHT,
+      shouldVirtualize: true,
+    };
+  }, [filteredCommands, scrollTop]);
 
   // Group commands by category
   const groupedCommands = useMemo(() => {
-    if (!showCategories) {
+    if (!showCategories && !showRecent) {
       return { "": filteredCommands };
     }
 
     const groups: Record<string, CommandPaletteCommand[]> = {};
+    const recentIds = new Set(recentCommands.map((cmd) => cmd.id));
+
+    // Separate recent commands if showing recent and no search query
+    if (showRecent && !searchQuery.trim() && recentCommands.length > 0) {
+      const recentCommandsInResults = filteredCommands.filter((cmd) =>
+        recentIds.has(cmd.id),
+      );
+      if (recentCommandsInResults.length > 0) {
+        groups.Recent = recentCommandsInResults;
+      }
+    }
+
+    // Group remaining commands by category
     for (const cmd of filteredCommands) {
+      // Skip if already in recent group
+      if (showRecent && !searchQuery.trim() && recentIds.has(cmd.id)) {
+        continue;
+      }
+
       const category = cmd.category || "Other";
       if (!groups[category]) {
         groups[category] = [];
       }
       groups[category].push(cmd);
     }
+
     return groups;
-  }, [filteredCommands, showCategories]);
+  }, [
+    filteredCommands,
+    showCategories,
+    showRecent,
+    recentCommands,
+    searchQuery,
+  ]);
 
   // Reset state when opened/closed
   useEffect(() => {
@@ -242,6 +447,37 @@ export function CommandPalette({
     setSelectedIndex(0);
   }, [searchQuery]);
 
+  // Announce search results and navigation changes
+  useEffect(() => {
+    if (!open) return;
+
+    if (searchQuery.trim()) {
+      const resultCount = filteredCommands.length;
+      if (resultCount === 0) {
+        setAnnouncement("No commands found");
+      } else {
+        setAnnouncement(
+          `${resultCount} ${resultCount === 1 ? "command" : "commands"} found`,
+        );
+      }
+    } else {
+      setAnnouncement("");
+    }
+  }, [open, searchQuery, filteredCommands.length]);
+
+  // Announce selection changes
+  useEffect(() => {
+    if (!open || filteredCommands.length === 0) return;
+
+    const selectedCommand = filteredCommands[selectedIndex];
+    if (selectedCommand) {
+      const description = selectedCommand.description
+        ? `, ${selectedCommand.description}`
+        : "";
+      setAnnouncement(`${selectedCommand.label}${description}`);
+    }
+  }, [open, selectedIndex, filteredCommands]);
+
   // Lock body scroll when open
   useEffect(() => {
     if (open) {
@@ -260,7 +496,7 @@ export function CommandPalette({
     };
   }, [open]);
 
-  // ESC key handler
+  // ESC key handler and focus trapping
   useEffect(() => {
     if (!open) return;
 
@@ -271,21 +507,60 @@ export function CommandPalette({
       }
     };
 
+    // Focus trapping
+    const handleTabKey = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+
+      const focusableElements = document.querySelectorAll(
+        'button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      );
+      const firstElement = focusableElements[0] as HTMLElement;
+      const lastElement = focusableElements[
+        focusableElements.length - 1
+      ] as HTMLElement;
+
+      if (e.shiftKey) {
+        // Shift + Tab
+        if (document.activeElement === firstElement) {
+          e.preventDefault();
+          lastElement?.focus();
+        }
+      } else {
+        // Tab
+        if (document.activeElement === lastElement) {
+          e.preventDefault();
+          firstElement?.focus();
+        }
+      }
+    };
+
     document.addEventListener("keydown", handleEscape);
-    return () => document.removeEventListener("keydown", handleEscape);
+    document.addEventListener("keydown", handleTabKey);
+
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+      document.removeEventListener("keydown", handleTabKey);
+    };
   }, [open, onClose]);
 
   // Handle command selection
   const handleSelect = useCallback(
     (command: CommandPaletteCommand) => {
       if (command.disabled) return;
+
+      // Call custom handler if provided
+      onCommandSelect?.(command);
+
+      // Execute command
       command.onSelect();
+
+      // Close palette
       onClose();
     },
-    [onClose],
+    [onClose, onCommandSelect],
   );
 
-  // Keyboard navigation
+  // Keyboard navigation with enhanced accessibility
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       if (filteredCommands.length === 0) return;
@@ -293,28 +568,49 @@ export function CommandPalette({
       switch (e.key) {
         case "ArrowDown":
           e.preventDefault();
-          setSelectedIndex((prev) =>
-            prev < filteredCommands.length - 1 ? prev + 1 : 0,
-          );
+          setSelectedIndex((prev) => {
+            const newIndex = prev < filteredCommands.length - 1 ? prev + 1 : 0;
+            return newIndex;
+          });
           break;
         case "ArrowUp":
           e.preventDefault();
-          setSelectedIndex((prev) =>
-            prev > 0 ? prev - 1 : filteredCommands.length - 1,
-          );
+          setSelectedIndex((prev) => {
+            const newIndex = prev > 0 ? prev - 1 : filteredCommands.length - 1;
+            return newIndex;
+          });
           break;
         case "Enter":
+        case " ":
           e.preventDefault();
           if (selectedIndex >= 0 && selectedIndex < filteredCommands.length) {
             handleSelect(filteredCommands[selectedIndex]);
           }
+          break;
+        case "Home":
+          e.preventDefault();
+          setSelectedIndex(0);
+          break;
+        case "End":
+          e.preventDefault();
+          setSelectedIndex(filteredCommands.length - 1);
+          break;
+        case "PageUp":
+          e.preventDefault();
+          setSelectedIndex((prev) => Math.max(0, prev - 5));
+          break;
+        case "PageDown":
+          e.preventDefault();
+          setSelectedIndex((prev) =>
+            Math.min(filteredCommands.length - 1, prev + 5),
+          );
           break;
       }
     },
     [filteredCommands, selectedIndex, handleSelect],
   );
 
-  // Scroll selected item into view
+  // Scroll selected item into view with reduced motion support
   useEffect(() => {
     if (!listRef.current) return;
 
@@ -322,12 +618,22 @@ export function CommandPalette({
       `[data-command-index="${selectedIndex}"]`,
     );
     if (selectedElement) {
+      // Check for reduced motion preference
+      const prefersReducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+
       selectedElement.scrollIntoView({
         block: "nearest",
-        behavior: "smooth",
+        behavior: prefersReducedMotion ? "auto" : "smooth",
       });
     }
   }, [selectedIndex]);
+
+  // Handle scroll events for virtualization
+  const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
+    setScrollTop(e.currentTarget.scrollTop);
+  }, []);
 
   // Backdrop click handler
   const handleBackdropClick = useCallback(
@@ -365,6 +671,25 @@ export function CommandPalette({
           onKeyDown={(e) => e.stopPropagation()}
           style={style}
         >
+          {/* ARIA Live Region for announcements */}
+          <div
+            aria-live="polite"
+            aria-atomic="true"
+            className="sr-only"
+            style={{
+              position: "absolute",
+              width: "1px",
+              height: "1px",
+              padding: "0",
+              margin: "-1px",
+              overflow: "hidden",
+              clip: "rect(0, 0, 0, 0)",
+              whiteSpace: "nowrap",
+              border: "0",
+            }}
+          >
+            {announcement}
+          </div>
           {/* Search Input */}
           <div className={styles.searchContainer}>
             {/* Search Icon */}
@@ -383,6 +708,9 @@ export function CommandPalette({
               onKeyDown={handleKeyDown}
               placeholder={placeholder}
               aria-label={placeholder}
+              aria-describedby="search-hint"
+              aria-autocomplete="list"
+              aria-expanded={filteredCommands.length > 0}
               autoComplete="off"
               spellCheck={false}
               className={styles.searchInput}
@@ -392,15 +720,34 @@ export function CommandPalette({
             <div className={styles.keyboardHintContainer}>
               <kbd className={styles.kbd}>ESC</kbd>
             </div>
+
+            {/* Search hint for screen readers */}
+            <div id="search-hint" className="sr-only">
+              Type to search commands. Use arrow keys to navigate, Enter to
+              select, Escape to close.
+            </div>
           </div>
 
           {/* Command List */}
           <div
             ref={listRef}
             role="listbox"
-            aria-label="Commands"
+            aria-label={`Commands, ${filteredCommands.length} ${filteredCommands.length === 1 ? "item" : "items"}`}
+            aria-activedescendant={
+              filteredCommands.length > 0
+                ? `command-${filteredCommands[selectedIndex]?.id}`
+                : undefined
+            }
             className={styles.commandList}
             tabIndex={-1}
+            onScroll={handleScroll}
+            style={{
+              height: virtualizedItems.shouldVirtualize
+                ? CONTAINER_HEIGHT
+                : "auto",
+              overflowY: virtualizedItems.shouldVirtualize ? "auto" : "visible",
+              position: "relative",
+            }}
           >
             {filteredCommands.length === 0 ? (
               // Empty state
@@ -411,7 +758,8 @@ export function CommandPalette({
                 ([category, categoryCommands]) => (
                   <div key={category} className={styles.categoryContainer}>
                     {/* Category Header */}
-                    {showCategories && category && (
+                    {((showCategories && category) ||
+                      (showRecent && category === "Recent")) && (
                       <div className={styles.categoryHeader}>{category}</div>
                     )}
 
@@ -423,10 +771,16 @@ export function CommandPalette({
                       return (
                         <button
                           key={command.id}
+                          id={`command-${command.id}`}
                           type="button"
                           role="option"
                           aria-selected={isSelected}
                           aria-disabled={command.disabled}
+                          aria-label={
+                            command.description
+                              ? `${command.label}, ${command.description}`
+                              : command.label
+                          }
                           data-command-index={currentIndex}
                           onClick={() => handleSelect(command)}
                           disabled={command.disabled}

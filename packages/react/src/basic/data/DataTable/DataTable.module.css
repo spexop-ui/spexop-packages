@@ -63,6 +63,13 @@
   color: var(--theme-text-muted, #737373);
 }
 
+.searchHelp {
+  font-size: var(--theme-font-size-xs, 12px);
+  color: var(--theme-text-muted, #737373);
+  margin-top: var(--theme-spacing-1, 4px);
+  line-height: 1.4;
+}
+
 .toolbarActions {
   display: flex;
   align-items: center;
@@ -98,6 +105,19 @@
 .filterInput:focus {
   outline: none;
   border-color: var(--theme-primary, #3b82f6);
+}
+
+.filterHelp {
+  font-size: var(--theme-font-size-xs, 12px);
+  color: var(--theme-text-muted, #737373);
+  margin-top: var(--theme-spacing-1, 4px);
+  line-height: 1.4;
+}
+
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+  min-width: 150px;
 }
 
 /* ========================================
@@ -260,6 +280,13 @@
   border-color: var(--theme-primary, #3b82f6);
 }
 
+.pageSizeHelp {
+  font-size: var(--theme-font-size-xs, 12px);
+  color: var(--theme-text-muted, #737373);
+  margin-top: var(--theme-spacing-1, 4px);
+  line-height: 1.4;
+}
+
 .pageButtons {
   display: flex;
   align-items: center;
@@ -271,7 +298,7 @@
   align-items: center;
   justify-content: center;
   min-width: 36px;
-  height: 36px;
+  min-height: 36px;
   padding: 0 var(--theme-spacing-3, 12px);
   font-size: var(--theme-font-size-sm, 14px);
   font-weight: var(--theme-font-weight-semibold, 600);
@@ -281,6 +308,8 @@
   border-radius: var(--theme-radius-md, 8px);
   cursor: pointer;
   transition: all 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .pageButton:hover:not(:disabled) {
@@ -290,6 +319,8 @@
 
 .pageButton:active:not(:disabled) {
   background: var(--theme-border-subtle, #e5e5e5);
+  transform: scale(0.95);
+  transition-duration: 100ms;
 }
 
 .pageButton:disabled {
@@ -328,6 +359,8 @@
   .toolbar {
     flex-direction: column;
     align-items: stretch;
+    gap: var(--theme-spacing-3);
+    padding: var(--theme-spacing-3);
   }
 
   .searchContainer {
@@ -337,10 +370,100 @@
   .pagination {
     flex-direction: column;
     align-items: stretch;
+    gap: var(--theme-spacing-3);
   }
 
   .paginationControls {
     flex-direction: column;
+    gap: var(--theme-spacing-2);
+  }
+  
+  /* Mobile table - horizontal scroll with wrapper */
+  .tableWrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border: 2px solid var(--theme-border);
+    border-radius: var(--theme-radius-md);
+  }
+  
+  .table {
+    min-width: 600px; /* Ensure table doesn't get too cramped */
+  }
+  
+  /* Mobile-friendly cell padding */
+  .cell {
+    padding: var(--theme-spacing-3) var(--theme-spacing-2);
+    font-size: var(--theme-font-size-sm);
+  }
+  
+  .headerCell {
+    padding: var(--theme-spacing-3) var(--theme-spacing-2);
+    font-size: var(--theme-font-size-sm);
+  }
+  
+  /* Better mobile buttons */
+  .button {
+    min-height: 44px;
+    min-width: 44px;
+    padding: var(--theme-spacing-3) var(--theme-spacing-4);
+  }
+  
+  /* Mobile pagination buttons */
+  .pageButton {
+    min-height: 44px;
+    min-width: 44px;
+    padding: var(--theme-spacing-3, 12px);
+    font-size: var(--theme-font-size-base, 16px);
+  }
+  
+  .pageButton:active:not(:disabled) {
+    transform: scale(0.92);
+    transition-duration: 80ms;
+  }
+  
+  /* Mobile search input */
+  .searchInput {
+    min-height: 44px;
+    font-size: 16px; /* Prevents zoom on iOS */
+    padding: var(--theme-spacing-3, 12px) var(--theme-spacing-4, 16px);
+  }
+  
+  /* Mobile page size select */
+  .pageSizeSelect {
+    min-height: 44px;
+    font-size: 16px; /* Prevents zoom on iOS */
+    padding: var(--theme-spacing-3, 12px) var(--theme-spacing-4, 16px);
+  }
+  
+  /* Mobile column filters */
+  .filterInput {
+    min-height: 44px;
+    font-size: 16px; /* Prevents zoom on iOS */
+    padding: var(--theme-spacing-3, 12px) var(--theme-spacing-4, 16px);
+  }
+}
+
+/* ========================================
+   Reduced Motion Support
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .loadingSpinner {
+    animation: none;
+  }
+  
+  .pageButton {
+    transition: none;
+  }
+  
+  .pageButton:active:not(:disabled) {
+    transform: none;
+  }
+  
+  .searchInput,
+  .filterInput,
+  .pageSizeSelect {
+    transition: none;
   }
 }
 

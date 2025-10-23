@@ -1,19 +1,23 @@
 # Card Component
 
-**Flexible container component** for displaying structured content with Refined Minimalism aesthetic and sub-component composition.
+**Enhanced flexible container component** for displaying structured content with Modern UI/UX principles, Refined Minimalism aesthetic, and comprehensive accessibility features.
 
 ## Features
 
-- ✅ **Border-Based Design**: Clean 2px borders (no heavy shadows)
+- ✅ **Modern UI/UX**: Micro-interactions, better spacing, enhanced feedback
+- ✅ **Border-Based Design**: Clean 2px borders with subtle elevation on hover
 - ✅ **Sub-Component Composition**: CardHeader, CardBody, CardFooter for flexibility
 - ✅ **Density Variants**: Compact (16px), Normal (24px), Spacious (32px) for different contexts
-- ✅ **6+ Visual Variants**: basic, highlighted, outlined, interactive, ghost, elevated
-- ✅ **High Contrast**: WCAG AAA accessible colors (9:1+ contrast)
-- ✅ **Minimal Effects**: Border-color changes only (no transforms)
+- ✅ **11+ Visual Variants**: basic, highlighted, outlined, interactive, ghost, elevated, featured, pricing, product, service, timeline
+- ✅ **State Management**: Loading, error, success states with proper ARIA support
+- ✅ **Enhanced Accessibility**: WCAG AAA compliant with comprehensive ARIA attributes
+- ✅ **Modern Interactions**: Ripple effects, smooth transitions, feedback levels
+- ✅ **Typography-Driven Hierarchy**: Semantic heading levels (h1-h6)
 - ✅ **Theme-Aware**: Automatic light and dark mode support
 - ✅ **TypeScript**: Full type safety with comprehensive prop types
-- ✅ **Clickable**: Transforms to semantic button element
+- ✅ **Clickable**: Transforms to semantic button element with enhanced interactions
 - ✅ **Responsive**: Works seamlessly with Grid system
+- ✅ **Keyboard Navigation**: Full keyboard support with proper focus management
 
 ---
 
@@ -36,20 +40,156 @@ import { Card, CardHeader, CardBody, CardFooter, Button } from '@spexop/react';
 </Card>
 ```
 
-### Old API (Backward Compatible)
+### Modern State Management
 
 ```tsx
-import { Card } from '@spexop/react';
-import { Package } from '@spexop/icons';
+import { Card, CardHeader, CardBody, CardFooter, Button } from '@spexop/react';
 
-// Still works with deprecation warnings in development
+// Loading state with shimmer effect
+<Card state="loading" loadingText="Loading content...">
+  <CardHeader title="Loading Card" />
+  <CardBody>This card is loading</CardBody>
+</Card>
+
+// Error state with proper ARIA support
+<Card state="error" errorMessage="Something went wrong">
+  <CardHeader title="Error Card" />
+  <CardBody>An error occurred</CardBody>
+</Card>
+
+// Success state
+<Card state="success" successMessage="Operation completed successfully">
+  <CardHeader title="Success Card" />
+  <CardBody>Your action was successful</CardBody>
+</Card>
+```
+
+### Enhanced Interactions
+
+```tsx
+import { Card, CardHeader, CardBody } from '@spexop/react';
+
+// Clickable card with prominent feedback
 <Card 
-  icon={<Package />} 
-  title="Feature Title" 
-  description="Feature description"
-  density="compact"
+  clickable 
+  onClick={handleClick} 
+  variant="interactive"
+  feedback="prominent"
+  aria-label="Click to view details"
 >
-  Additional content
+  <CardHeader title="Interactive Card" />
+  <CardBody>Click me for enhanced interaction</CardBody>
+</Card>
+
+// Disabled state
+<Card disabled>
+  <CardHeader title="Disabled Card" />
+  <CardBody>This card is disabled</CardBody>
+</Card>
+```
+
+---
+
+## Specialized Card Replacements
+
+The enhanced Card component now covers all functionality previously provided by specialized card components:
+
+### Service Cards
+
+```tsx
+<Card variant="service" density="spacious">
+  <CardHeader
+    number="01"
+    title="Primitives First"
+    meta="Foundation → Features"
+  />
+  <CardBody>
+    <p>Master five grid primitives before building complex layouts.</p>
+  </CardBody>
+</Card>
+```
+
+### Pricing Cards
+
+```tsx
+<Card variant="pricing" density="normal">
+  <CardHeader title="Pro Plan" subtitle="Perfect for growing businesses" />
+  <CardBody price={29} currency="$" period="month">
+    <ul>
+      <li>Unlimited projects</li>
+      <li>Priority support</li>
+      <li>10GB storage</li>
+    </ul>
+  </CardBody>
+  <CardFooter
+    primaryAction="Start Free Trial"
+    onPrimaryAction={() => console.log("Selected Pro")}
+    primaryVariant="primary"
+  />
+</Card>
+```
+
+### Product Cards
+
+```tsx
+<Card variant="product" density="normal">
+  <CardBody
+    image="/product.jpg"
+    imageAlt="Wireless Headphones"
+    price={199}
+    currency="$"
+    rating={4.5}
+    reviews={128}
+    inStock={true}
+  >
+    <h3>Wireless Headphones</h3>
+    <p>Premium noise-canceling wireless headphones.</p>
+  </CardBody>
+  <CardFooter
+    primaryAction="Add to Cart"
+    onPrimaryAction={() => console.log("Added to cart")}
+    secondaryAction="View Details"
+    onSecondaryAction={() => console.log("View details")}
+  />
+</Card>
+```
+
+### Timeline Cards
+
+```tsx
+<Card variant="timeline" density="normal">
+  <CardHeader title="Product Launch Event" />
+  <CardBody
+    date="2025-02-15"
+    time="2:00 PM"
+    location="San Francisco, CA"
+    status="upcoming"
+  >
+    <p>Join us for the official launch of our new product line.</p>
+  </CardBody>
+  <CardFooter
+    primaryAction="Register"
+    onPrimaryAction={() => console.log("Registered")}
+    primaryVariant="primary"
+  />
+</Card>
+```
+
+### CTA Cards
+
+```tsx
+<Card variant="highlighted" density="spacious">
+  <CardHeader title="Ready to Get Started?" subtitle="Join thousands of users" />
+  <CardBody>
+    <p>Start your free trial today and experience the power of our platform.</p>
+  </CardBody>
+  <CardFooter
+    align="center"
+    primaryAction="Start Free Trial"
+    onPrimaryAction={() => console.log("Started trial")}
+    secondaryAction="View Pricing"
+    onSecondaryAction={() => console.log("View pricing")}
+  />
 </Card>
 ```
 
@@ -79,15 +219,33 @@ interface CardProps extends HTMLAttributes<HTMLDivElement> {
   /** Additional CSS class */
   className?: string;
   
-  /** HTML id for anchor links */
-  id?: string;
-  
   /** Click handler (requires clickable=true for button element) */
   onClick?: () => void;
+  
+  /** Card interaction state */
+  state?: 'idle' | 'loading' | 'error' | 'success';
+  
+  /** Interaction feedback level */
+  feedback?: 'none' | 'subtle' | 'prominent';
+  
+  /** Disabled state */
+  disabled?: boolean;
+  
+  /** Loading text for loading state */
+  loadingText?: string;
+  
+  /** Error message for error state */
+  errorMessage?: string;
+  
+  /** Success message for success state */
+  successMessage?: string;
+  
+  /** ARIA label for accessibility */
+  'aria-label'?: string;
+  
+  /** ARIA described by for accessibility */
+  'aria-describedby'?: string;
 }
-
-**Note on `id` prop**: The Card component is excluded from Biome's `useUniqueElementIds` rule because it's commonly used with static IDs for navigation and deep linking purposes (e.g., in feature sections with ContextNav). This is intentional and safe for this component.
-```
 
 ### CardHeader Props
 
@@ -102,6 +260,12 @@ interface CardHeaderProps {
   /** Optional badge/tag */
   badge?: ReactNode;
   
+  /** Sequential number badge (e.g., "01", "02", "03") */
+  number?: string;
+  
+  /** Meta tag text showing relationships or outcomes */
+  meta?: string;
+  
   /** Hide bottom border */
   noBorder?: boolean;
   
@@ -110,6 +274,12 @@ interface CardHeaderProps {
   
   /** Additional CSS class */
   className?: string;
+  
+  /** Title heading level (h1-h6) */
+  headingLevel?: 1 | 2 | 3 | 4 | 5 | 6;
+  
+  /** ARIA label for title */
+  'aria-label'?: string;
 }
 ```
 
@@ -122,6 +292,48 @@ interface CardBodyProps {
   
   /** Additional CSS class */
   className?: string;
+  
+  /** ARIA label for body content */
+  'aria-label'?: string;
+  
+  /** ARIA described by for body content */
+  'aria-describedby'?: string;
+  
+  /** Price value for pricing cards */
+  price?: number;
+  
+  /** Currency symbol */
+  currency?: string;
+  
+  /** Billing period */
+  period?: string;
+  
+  /** Product rating (0-5) */
+  rating?: number;
+  
+  /** Number of reviews */
+  reviews?: number;
+  
+  /** Whether product is in stock */
+  inStock?: boolean;
+  
+  /** Event date */
+  date?: string | Date;
+  
+  /** Event time */
+  time?: string;
+  
+  /** Event location */
+  location?: string;
+  
+  /** Event status */
+  status?: "upcoming" | "ongoing" | "completed";
+  
+  /** Product image URL */
+  image?: string;
+  
+  /** Image alt text */
+  imageAlt?: string;
 }
 ```
 
@@ -140,7 +352,119 @@ interface CardFooterProps {
   
   /** Additional CSS class */
   className?: string;
+  
+  /** ARIA label for footer content */
+  'aria-label'?: string;
+  
+  /** Primary action button label */
+  primaryAction?: string;
+  
+  /** Primary action click handler */
+  onPrimaryAction?: () => void;
+  
+  /** Secondary action button label */
+  secondaryAction?: string;
+  
+  /** Secondary action click handler */
+  onSecondaryAction?: () => void;
+  
+  /** Primary action variant */
+  primaryVariant?: "primary" | "secondary" | "outline" | "ghost";
+  
+  /** Secondary action variant */
+  secondaryVariant?: "primary" | "secondary" | "outline" | "ghost";
+  
+  /** Whether primary action is loading */
+  primaryLoading?: boolean;
+  
+  /** Whether secondary action is loading */
+  secondaryLoading?: boolean;
+  
+  /** Whether primary action is disabled */
+  primaryDisabled?: boolean;
+  
+  /** Whether secondary action is disabled */
+  secondaryDisabled?: boolean;
 }
+```
+
+---
+
+## Modern Features
+
+### State Management
+
+The Card component now supports comprehensive state management with proper accessibility:
+
+```tsx
+// Loading state with shimmer effect
+<Card state="loading" loadingText="Loading content...">
+  <CardHeader title="Loading Card" />
+  <CardBody>This card is loading</CardBody>
+</Card>
+
+// Error state with ARIA alert
+<Card state="error" errorMessage="Something went wrong">
+  <CardHeader title="Error Card" />
+  <CardBody>An error occurred</CardBody>
+</Card>
+
+// Success state with ARIA status
+<Card state="success" successMessage="Operation completed">
+  <CardHeader title="Success Card" />
+  <CardBody>Your action was successful</CardBody>
+</Card>
+```
+
+### Modern Interactions
+
+Modern micro-interactions and feedback levels:
+
+```tsx
+// Subtle feedback (default)
+<Card feedback="subtle" clickable onClick={handleClick}>
+  <CardHeader title="Subtle Feedback" />
+  <CardBody>Gentle hover effects</CardBody>
+</Card>
+
+// Prominent feedback
+<Card feedback="prominent" clickable onClick={handleClick}>
+  <CardHeader title="Prominent Feedback" />
+  <CardBody>More noticeable hover effects</CardBody>
+</Card>
+
+// No feedback
+<Card feedback="none" clickable onClick={handleClick}>
+  <CardHeader title="No Feedback" />
+  <CardBody>No hover effects</CardBody>
+</Card>
+```
+
+### Enhanced Accessibility
+
+Comprehensive ARIA support and semantic structure:
+
+```tsx
+// Semantic heading levels
+<Card>
+  <CardHeader title="Main Title" headingLevel={1} />
+  <CardBody>Content with proper heading hierarchy</CardBody>
+</Card>
+
+// ARIA attributes for screen readers
+<Card 
+  aria-label="Product information card"
+  aria-describedby="product-description"
+>
+  <CardHeader title="Product" />
+  <CardBody id="product-description">Product details</CardBody>
+</Card>
+
+// Proper roles and live regions
+<Card state="loading" aria-live="polite">
+  <CardHeader title="Loading" />
+  <CardBody>Content is loading</CardBody>
+</Card>
 ```
 
 ---
@@ -964,6 +1288,7 @@ Requires CSS Grid and CSS Custom Properties support.
 
 ---
 
-**Version**: 1.0.0 (Refactored 2025-10-13)  
+**Version**: 1.1.0 (Enhanced 2025-01-15)  
 **Status**: Stable  
-**Bundle Size**: ~2KB (gzipped)
+**Bundle Size**: ~3KB (gzipped)  
+**Modern UI/UX**: Enhanced with micro-interactions, state management, and comprehensive accessibility

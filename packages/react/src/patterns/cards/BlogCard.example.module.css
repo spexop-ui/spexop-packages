@@ -1,0 +1,131 @@
+/* BlogCard Pattern Styles */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--theme-spacing-6);
+  padding: var(--theme-spacing-4);
+}
+
+.link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.link:hover {
+  text-decoration: none;
+}
+
+.imageContainer {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  border-radius: var(--theme-radius-md) var(--theme-radius-md) 0 0;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--theme-duration-normal) var(--theme-easing-ease-out);
+}
+
+.link:hover .image {
+  transform: scale(1.05);
+}
+
+.title {
+  font-size: var(--theme-font-size-lg);
+  font-weight: var(--theme-font-weight-bold);
+  line-height: var(--theme-line-height-tight);
+  color: var(--theme-text);
+  margin: 0 0 var(--theme-spacing-3) 0;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: var(--theme-spacing-3);
+}
+
+.authorInfo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--theme-spacing-1);
+}
+
+.author {
+  font-size: var(--theme-font-size-sm);
+  font-weight: var(--theme-font-weight-semibold);
+  color: var(--theme-text);
+}
+
+.dateTime {
+  display: flex;
+  align-items: center;
+  gap: var(--theme-spacing-2);
+  font-size: var(--theme-font-size-xs);
+  color: var(--theme-text-secondary);
+}
+
+.readTime {
+  color: var(--theme-text-muted);
+}
+
+.excerpt {
+  font-size: var(--theme-font-size-sm);
+  line-height: var(--theme-line-height-relaxed);
+  color: var(--theme-text-secondary);
+  margin: 0 0 var(--theme-spacing-4) 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.tags {
+  display: flex;
+  gap: var(--theme-spacing-2);
+  flex-wrap: wrap;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: var(--theme-spacing-4);
+    padding: var(--theme-spacing-2);
+  }
+  
+  .imageContainer {
+    height: 180px;
+  }
+  
+  .title {
+    font-size: var(--theme-font-size-base);
+  }
+  
+  .meta {
+    gap: var(--theme-spacing-2);
+  }
+}
+
+/* Focus styles for accessibility */
+.link:focus {
+  outline: 2px solid var(--theme-primary);
+  outline-offset: 2px;
+  border-radius: var(--theme-radius-md);
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .image {
+    transition: none;
+  }
+  
+  .link:hover .image {
+    transform: none;
+  }
+}

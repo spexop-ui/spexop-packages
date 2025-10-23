@@ -46,6 +46,8 @@
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
+  min-height: 44px;
+  min-width: 44px;
 }
 
 .tab:hover:not(.disabled) {
@@ -154,6 +156,20 @@
   .tab-list::-webkit-scrollbar-thumb {
     background: var(--theme-border-strong, #a3a3a3);
     border-radius: var(--theme-radius-sm, 4px);
+  }
+
+  .tab {
+    min-height: 48px;
+    min-width: 48px;
+    padding: var(--theme-spacing-4, 16px) var(--theme-spacing-5, 20px);
+    font-size: var(--theme-font-size-base, 16px);
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  
+  .tab:active:not(.disabled) {
+    transform: scale(0.98);
+    transition-duration: 80ms;
   }
 
   .tabs.size-lg .tab {

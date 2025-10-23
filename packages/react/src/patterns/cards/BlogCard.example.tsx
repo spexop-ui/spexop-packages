@@ -1,149 +1,186 @@
 /**
- * BlogCard Pattern Example
+ * BlogCard Pattern - Article preview with metadata
  *
- * Composition example showing how to build a blog post card
- * using Card primitives and other Spexop components.
+ * Replaces the specialized BlogCard component removed in v0.4.0.
+ * This composition pattern uses Card primitives to create a blog post preview.
  *
- * This is NOT an exported component - it's a pattern example
- * that demonstrates composition techniques.
+ * @example
+ * ```tsx
+ * <BlogCard
+ *   title="Getting Started with React"
+ *   author="Jane Doe"
+ *   date="2025-10-22"
+ *   tags={["Tutorial", "React", "JavaScript"]}
+ *   excerpt="Learn the fundamentals of React development..."
+ *   imageUrl="/images/blog-post.jpg"
+ *   readTime="5 min read"
+ *   href="/blog/getting-started-react"
+ * />
+ * ```
  */
 
-import { Avatar, Badge, Card, CardBody, CardHeader, Text } from "@spexop/react";
-import type { ReactNode } from "react";
+import { Avatar, Badge, Card, CardBody, CardHeader, Link } from "@spexop/react";
+import React from "react";
+import styles from "./BlogCard.example.module.css";
 
-interface BlogCardProps {
+export interface BlogCardProps {
+  /** Article title */
   title: string;
-  excerpt: string;
-  coverImage?: string;
-  author: {
-    name: string;
-    avatar?: string;
-  };
+  /** Author name */
+  author: string;
+  /** Publication date */
   date: string;
-  readTime: string;
+  /** Article tags */
   tags: string[];
+  /** Article excerpt */
+  excerpt: string;
+  /** Featured image URL */
+  imageUrl?: string;
+  /** Estimated read time */
+  readTime?: string;
+  /** Article URL */
   href?: string;
+  /** Card variant */
+  variant?: "basic" | "interactive" | "elevated" | "outlined";
+  /** Card density */
+  density?: "compact" | "normal" | "spacious";
+  /** Additional CSS class */
+  className?: string;
 }
 
 export function BlogCard({
   title,
-  excerpt,
-  coverImage,
   author,
   date,
-  readTime,
   tags,
+  excerpt,
+  imageUrl,
+  readTime,
   href,
+  variant = "basic",
+  density = "normal",
+  className,
 }: BlogCardProps) {
   return (
-    <Card
-      variant="basic"
-      density="normal"
-      className="blog-card"
-      onClick={href ? () => window.open(href, "_blank") : undefined}
-    >
-      <CardHeader>
-        {coverImage && (
-          <img src={coverImage} alt={title} className="blog-cover-image" />
-        )}
-        <h3 className="blog-title">{title}</h3>
-      </CardHeader>
+    <>
+      {href ? (
+        <Link href={href} className={styles.link}>
+          <Card variant={variant} density={density} className={className}>
+            {imageUrl && (
+              <div className={styles.imageContainer}>
+                <img
+                  src={imageUrl}
+                  alt={title}
+                  className={styles.image}
+                  loading="lazy"
+                />
+              </div>
+            )}
 
-      <CardBody>
-        <Text className="blog-excerpt" color="secondary">
-          {excerpt}
-        </Text>
+            <CardHeader>
+              <h3 className={styles.title}>{title}</h3>
+              <div className={styles.meta}>
+                <Avatar name={author} size="sm" />
+                <div className={styles.authorInfo}>
+                  <span className={styles.author}>{author}</span>
+                  <div className={styles.dateTime}>
+                    <time dateTime={date}>
+                      {new Date(date).toLocaleDateString()}
+                    </time>
+                    {readTime && (
+                      <span className={styles.readTime}>• {readTime}</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </CardHeader>
 
-        <div className="blog-meta">
-          <Avatar src={author.avatar} name={author.name} size="sm" />
-          <div className="blog-author-info">
-            <Text size="sm" weight="semibold">
-              {author.name}
-            </Text>
-            <Text size="xs" color="secondary">
-              {date} • {readTime} read
-            </Text>
-          </div>
-        </div>
+            <CardBody>
+              <p className={styles.excerpt}>{excerpt}</p>
+              <div className={styles.tags}>
+                {tags.map((tag) => (
+                  <Badge key={tag} variant="info" size="sm">
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+            </CardBody>
+          </Card>
+        </Link>
+      ) : (
+        <Card variant={variant} density={density} className={className}>
+          {imageUrl && (
+            <div className={styles.imageContainer}>
+              <img
+                src={imageUrl}
+                alt={title}
+                className={styles.image}
+                loading="lazy"
+              />
+            </div>
+          )}
 
-        <div className="blog-tags">
-          {tags.map((tag) => (
-            <Badge key={tag} variant="subtle" size="sm">
-              {tag}
-            </Badge>
-          ))}
-        </div>
-      </CardBody>
-    </Card>
+          <CardHeader>
+            <h3 className={styles.title}>{title}</h3>
+            <div className={styles.meta}>
+              <Avatar name={author} size="sm" />
+              <div className={styles.authorInfo}>
+                <span className={styles.author}>{author}</span>
+                <div className={styles.dateTime}>
+                  <time dateTime={date}>
+                    {new Date(date).toLocaleDateString()}
+                  </time>
+                  {readTime && (
+                    <span className={styles.readTime}>• {readTime}</span>
+                  )}
+                </div>
+              </div>
+            </div>
+          </CardHeader>
+
+          <CardBody>
+            <p className={styles.excerpt}>{excerpt}</p>
+            <div className={styles.tags}>
+              {tags.map((tag) => (
+                <Badge key={tag} variant="info" size="sm">
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+          </CardBody>
+        </Card>
+      )}
+    </>
   );
 }
 
-// Usage Example
+// Usage example
 export function BlogCardExample() {
   return (
-    <BlogCard
-      title="Getting Started with Spexop Design System"
-      excerpt="Learn how to build beautiful, accessible interfaces using Spexop's primitives-first approach. Master the grid system, then build anything."
-      coverImage="/blog/getting-started.jpg"
-      author={{
-        name: "Jane Smith",
-        avatar: "/avatars/jane-smith.jpg",
-      }}
-      date="October 22, 2025"
-      readTime="5 min"
-      tags={["Tutorial", "Design System", "React"]}
-      href="/blog/getting-started"
-    />
+    <div className={styles.grid}>
+      <BlogCard
+        title="Getting Started with React"
+        author="Jane Doe"
+        date="2025-10-22"
+        tags={["Tutorial", "React", "JavaScript"]}
+        excerpt="Learn the fundamentals of React development with this comprehensive guide covering components, hooks, and state management."
+        imageUrl="/images/blog-post.jpg"
+        readTime="5 min read"
+        href="/blog/getting-started-react"
+        variant="interactive"
+      />
+
+      <BlogCard
+        title="Advanced TypeScript Patterns"
+        author="John Smith"
+        date="2025-10-20"
+        tags={["TypeScript", "Advanced", "Patterns"]}
+        excerpt="Explore advanced TypeScript patterns and techniques for building robust applications."
+        readTime="8 min read"
+        href="/blog/advanced-typescript"
+        variant="basic"
+        density="compact"
+      />
+    </div>
   );
 }
-
-// CSS for styling (add to your stylesheet)
-/*
-.blog-card {
-  cursor: pointer;
-  transition: border-color 0.2s ease;
-}
-
-.blog-card:hover {
-  border-color: var(--theme-border-strong);
-}
-
-.blog-cover-image {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-radius: var(--theme-radius-sm);
-  margin-bottom: var(--theme-spacing-4);
-}
-
-.blog-title {
-  font-size: var(--theme-font-size-lg);
-  font-weight: var(--theme-font-weight-bold);
-  line-height: 1.3;
-  margin: 0 0 var(--theme-spacing-3) 0;
-}
-
-.blog-excerpt {
-  line-height: 1.6;
-  margin-bottom: var(--theme-spacing-4);
-}
-
-.blog-meta {
-  display: flex;
-  align-items: center;
-  gap: var(--theme-spacing-3);
-  margin-bottom: var(--theme-spacing-4);
-}
-
-.blog-author-info {
-  display: flex;
-  flex-direction: column;
-  gap: var(--theme-spacing-1);
-}
-
-.blog-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--theme-spacing-2);
-}
-*/

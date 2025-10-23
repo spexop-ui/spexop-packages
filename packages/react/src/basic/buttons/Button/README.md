@@ -286,6 +286,16 @@ Shows a loading indicator and disables interaction.
 
 ## Accessibility
 
+### WCAG AAA Compliance
+
+The Button component meets WCAG AAA standards with:
+
+- **Color Contrast**: Minimum 7:1 ratio for all text
+- **Touch Targets**: Minimum 44×44px on mobile devices
+- **Focus Indicators**: 2px solid outline with 2px offset
+- **Screen Reader Support**: Complete ARIA implementation
+- **Keyboard Navigation**: Full keyboard accessibility
+
 ### ARIA Support
 
 ```tsx
@@ -296,6 +306,7 @@ Shows a loading indicator and disables interaction.
   aria-controls="menu-1"
   aria-describedby="help-text"
   aria-haspopup="menu"
+  aria-disabled={disabled}
 >
   Actions
 </Button>
@@ -306,24 +317,72 @@ Shows a loading indicator and disables interaction.
 - **Enter/Space**: Activate button
 - **Tab**: Focus next element
 - **Shift+Tab**: Focus previous element
+- **Escape**: Close dropdowns/menus (when applicable)
 
 ### Focus Indicators
 
-Built-in focus-visible styles for keyboard navigation:
+Enhanced focus-visible styles for keyboard navigation:
 
 ```css
 /* Automatic 2px outline with primary color */
 outline: 2px solid var(--theme-primary);
 outline-offset: 2px;
+border-radius: var(--theme-radius-md);
 ```
+
+### Touch Targets
+
+Mobile-optimized touch targets:
+
+- **Desktop**: Minimum 36×36px
+- **Mobile**: Minimum 44×44px (automatically applied)
+- **Icon-only**: 32×32px desktop, 40×40px mobile
 
 ### High Contrast Mode
 
-Automatic border width increase in high contrast mode for better visibility.
+Automatic enhancements in high contrast mode:
+
+```css
+@media (prefers-contrast: high) {
+  .button {
+    border-width: 3px;
+    font-weight: var(--theme-font-weight-bold);
+  }
+}
+```
 
 ### Reduced Motion
 
-Respects `prefers-reduced-motion` for smooth or instant transitions.
+Respects `prefers-reduced-motion` for smooth or instant transitions:
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+    transform: none;
+  }
+}
+```
+
+### Loading States
+
+Accessible loading indicators with proper ARIA attributes:
+
+```tsx
+<Button 
+  loading 
+  aria-label="Processing your request"
+  aria-live="polite"
+>
+  Save Changes
+</Button>
+```
+
+### Screen Reader Announcements
+
+- Loading states are announced to screen readers
+- Disabled states are properly communicated
+- Error states include descriptive text
 
 ## Theme Customization
 
@@ -469,6 +528,64 @@ Five new semantic variants are now available:
 - Pill and border-emphasis now use theme tokens
 - Fixed CSS transition bug
 - Improved accessibility
+
+### Accessibility Improvements (v0.4.0)
+
+#### Enhanced Touch Targets
+
+```tsx
+// Before: Fixed 36px touch target
+<Button iconOnly aria-label="Settings">
+  <Settings size={16} />
+</Button>
+
+// After: Responsive touch targets (32px desktop, 40px mobile)
+<Button iconOnly aria-label="Settings">
+  <Settings size={16} />
+</Button>
+```
+
+#### Improved Focus Indicators
+
+```tsx
+// Before: Basic focus outline
+// After: Enhanced focus with proper contrast and offset
+// Automatically applied - no code changes needed
+```
+
+#### Better Loading States
+
+```tsx
+// Before: Basic loading spinner
+<Button loading>Save</Button>
+
+// After: Accessible loading with ARIA
+<Button 
+  loading 
+  aria-label="Saving your changes"
+  aria-live="polite"
+>
+  Save
+</Button>
+```
+
+#### Mobile Optimizations
+
+```tsx
+// Before: Same padding on all devices
+<Button size="sm">Small</Button>
+
+// After: Responsive padding (mobile gets larger touch targets)
+<Button size="sm">Small</Button>
+```
+
+### Migration Checklist
+
+- [ ] Update icon-only buttons to include `aria-label`
+- [ ] Add `aria-live="polite"` to loading buttons
+- [ ] Test touch targets on mobile devices
+- [ ] Verify focus indicators in high contrast mode
+- [ ] Test with screen readers
 
 ## Related Components
 

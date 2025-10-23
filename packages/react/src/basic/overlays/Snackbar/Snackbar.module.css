@@ -1,162 +1,318 @@
 /**
  * Snackbar Component Styles
- * Theme-driven with Spexop architecture
  * 
- * @component Snackbar
- * @packageName @spexop/react
- * @version 0.3.0
- * @updated 2025-10-18 - Migrated to theme system
+ * Following "The Spexop Way":
+ * - Principle 2: Borders before shadows - strong borders with subtle shadow
+ * - Principle 3: Typography before decoration - clear messaging
+ * - Principle 4: Theme variables before magic numbers - all values use theme variables
+ * - Principle 7: Accessibility before aesthetics - high contrast
  */
 
-/* Snackbar Container */
 .snackbar {
   position: fixed;
-  left: var(--theme-spacing-4);
-  right: var(--theme-spacing-4);
-  z-index: 1100;
-  font-family: var(--theme-font-family);
-  background: var(--theme-surface-secondary); /* One tone darker than background */
-  border-radius: var(--theme-radius-relaxed); /* 12px - relaxed corners */
-  box-shadow: none; /* No elevated styles */
+  z-index: var(--theme-z-toast, 1600);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--theme-spacing-3, 12px);
+  min-width: 300px;
+  max-width: 500px;
+  padding: var(--theme-spacing-4, 16px);
+  background: var(--theme-surface, #ffffff);
+  border: 2px solid;
+  border-radius: var(--theme-radius-lg, 12px);
+  box-shadow: var(--theme-shadow-lg, 0 10px 15px rgba(0, 0, 0, 0.1));
   opacity: 0;
-  transform: translateY(20px);
-  transition: 
-    opacity 0.3s ease,
-    transform 0.3s ease;
+  transform: translateY(100px);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+              opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  will-change: transform, opacity;
+  backdrop-filter: blur(8px);
 }
 
-/* Dark theme - one tone lighter than background */
-[data-theme="dark"] .snackbar {
-  background: var(--theme-border-strong);
-}
-
-/* Position: Bottom (default) */
-.snackbar.bottom {
-  bottom: var(--theme-spacing-4);
-}
-
-/* Position: Top */
-.snackbar.top {
-  top: var(--theme-spacing-4);
-  transform: translateY(-20px);
-}
-
-/* Visible state */
-.snackbar[data-visible="true"] {
+.snackbar.visible {
   opacity: 1;
   transform: translateY(0);
+  pointer-events: auto;
+  will-change: auto;
 }
 
-/* Content Layout */
+/* Position variants */
+.snackbar.position-top-left {
+  top: var(--theme-spacing-4, 16px);
+  left: var(--theme-spacing-4, 16px);
+  transform: translateY(-100px);
+}
+
+.snackbar.position-top-center {
+  top: var(--theme-spacing-4, 16px);
+  left: 50%;
+  transform: translate(-50%, -100px);
+}
+
+.snackbar.position-top-right {
+  top: var(--theme-spacing-4, 16px);
+  right: var(--theme-spacing-4, 16px);
+  transform: translateY(-100px);
+}
+
+.snackbar.position-bottom-left {
+  bottom: var(--theme-spacing-4, 16px);
+  left: var(--theme-spacing-4, 16px);
+}
+
+.snackbar.position-bottom-center {
+  bottom: var(--theme-spacing-4, 16px);
+  left: 50%;
+  transform: translate(-50%, 100px);
+}
+
+.snackbar.position-bottom-right {
+  bottom: var(--theme-spacing-4, 16px);
+  right: var(--theme-spacing-4, 16px);
+}
+
+.snackbar.position-top-left.visible,
+.snackbar.position-top-center.visible,
+.snackbar.position-top-right.visible {
+  transform: translate(0, 0);
+}
+
+.snackbar.position-top-center.visible {
+  transform: translate(-50%, 0);
+}
+
+.snackbar.position-bottom-center.visible {
+  transform: translate(-50%, 0);
+}
+
+/* Content */
 .content {
+  flex: 1;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--theme-spacing-4);
-  padding: var(--theme-spacing-4) var(--theme-spacing-5);
-  min-height: 48px; /* Comfortable touch target */
+  gap: var(--theme-spacing-4, 16px);
 }
 
-/* Message Text */
 .message {
   flex: 1;
-  font-size: 14px; /* Not too small */
-  font-weight: var(--theme-font-weight-medium);
-  color: var(--theme-text);
-  line-height: 1.25;
+  color: var(--theme-text, #171717);
+  font-size: var(--theme-font-size-sm, 14px);
+  font-weight: var(--theme-font-weight-regular, 400);
+  line-height: 1.5;
 }
 
-[data-theme="dark"] .message {
-  color: var(--theme-text);
-}
-
-/* Action Button */
+/* Action button */
 .action {
-  flex-shrink: 0;
-  padding: var(--theme-spacing-2) var(--theme-spacing-3);
-  border: none;
+  padding: var(--theme-spacing-1, 4px) var(--theme-spacing-3, 12px);
   background: transparent;
-  color: var(--theme-primary);
-  font-size: 14px;
-  font-weight: var(--theme-font-weight-medium);
-  font-family: var(--theme-font-family);
+  border: 1px solid currentColor;
+  border-radius: var(--theme-radius-sm, 4px);
+  color: inherit;
+  font-size: var(--theme-font-size-sm, 14px);
+  font-weight: var(--theme-font-weight-semibold, 600);
   cursor: pointer;
-  border-radius: var(--theme-radius-base); /* 8px */
-  transition: 
-    background-color 0.15s ease,
-    color 0.15s ease;
+  transition: all 0.2s ease;
   white-space: nowrap;
 }
 
-/* Hover effects - similar to Sidebar */
 .action:hover {
-  background: var(--theme-surface-secondary);
-  color: var(--theme-primary-hover);
+  background: rgba(0, 0, 0, 0.05);
 }
 
-[data-theme="dark"] .action:hover {
-  background: var(--theme-surface-hover);
-  color: var(--theme-primary);
+.action:focus {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
 }
 
-/* Active state */
-.action:active {
-  background: var(--theme-surface-secondary);
-  color: var(--theme-primary-active);
-}
-
-[data-theme="dark"] .action:active {
-  background: var(--theme-surface);
-  color: var(--theme-primary);
-}
-
-/* Focus visible */
 .action:focus-visible {
-  outline: var(--theme-border-width) solid var(--theme-primary);
-  outline-offset: var(--theme-border-width);
+  outline: 3px solid currentColor;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Reduced Motion */
+/* Close button */
+.closeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  min-height: 32px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--theme-radius-sm, 4px);
+  color: currentColor;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.closeButton:hover {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: currentColor;
+}
+
+.closeButton:focus {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.closeButton:focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.closeButton:active {
+  background: rgba(0, 0, 0, 0.1);
+  transform: scale(0.95);
+  transition-duration: 100ms;
+}
+
+/* Variant styles */
+.snackbar.variant-info {
+  border-color: var(--theme-info, #3b82f6);
+}
+
+.snackbar.variant-success {
+  border-color: var(--theme-success, #22c55e);
+}
+
+.snackbar.variant-warning {
+  border-color: var(--theme-warning, #eab308);
+}
+
+.snackbar.variant-error {
+  border-color: var(--theme-error, #ef4444);
+}
+
+/* Animation variants */
+.snackbar.animation-fade {
+  transform: none;
+  opacity: 0;
+}
+
+.snackbar.animation-fade.visible {
+  opacity: 1;
+}
+
+.snackbar.animation-scale {
+  transform: scale(0.8);
+}
+
+.snackbar.animation-scale.visible {
+  transform: scale(1);
+}
+
+.snackbar.animation-none {
+  transition: none;
+  transform: none;
+}
+
+.snackbar.animation-none.visible {
+  transform: none;
+}
+
+/* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
   .snackbar {
+    transition: opacity 0.1s ease;
+    will-change: auto;
+  }
+
+  .snackbar.visible {
+    transform: translateY(0);
+  }
+
+  .snackbar.position-top-left,
+  .snackbar.position-top-center,
+  .snackbar.position-top-right,
+  .snackbar.position-bottom-left,
+  .snackbar.position-bottom-center,
+  .snackbar.position-bottom-right {
+    transform: translateY(0);
+  }
+
+  .closeButton {
     transition: none;
   }
-}
 
-/* Mobile Adjustments */
-@media (max-width: 768px) {
-  .snackbar {
-    left: var(--theme-spacing-3);
-    right: var(--theme-spacing-3);
-    bottom: var(--theme-spacing-3);
-  }
-
-  .snackbar.top {
-    top: var(--theme-spacing-3);
-  }
-
-  .content {
-    padding: var(--theme-spacing-3) var(--theme-spacing-4);
-    gap: var(--theme-spacing-3);
-  }
-
-  .message {
-    font-size: 14px;
+  .closeButton:active {
+    transform: none;
   }
 
   .action {
-    padding: var(--theme-spacing-2);
-    font-size: 14px;
+    transition: none;
+  }
+
+  .action:active {
+    transform: none;
   }
 }
 
-/* High Contrast Mode */
+/* High contrast mode support */
 @media (prefers-contrast: high) {
   .snackbar {
-    border: var(--theme-border-width) solid var(--theme-border-strong);
+    border-width: 3px;
+    box-shadow: none;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .snackbar {
+    min-width: auto;
+    max-width: calc(100vw - var(--theme-spacing-8, 32px));
+    padding: var(--theme-spacing-4, 16px);
+    gap: var(--theme-spacing-3, 12px);
+    font-size: var(--theme-font-size-base, 16px);
+    margin: var(--theme-spacing-2, 8px);
+    border-radius: var(--theme-radius-md, 8px);
   }
 
-  [data-theme="dark"] .snackbar {
-    border-color: var(--theme-border-strong);
+  .snackbar.position-top-center,
+  .snackbar.position-bottom-center {
+    left: var(--theme-spacing-4, 16px);
+    right: var(--theme-spacing-4, 16px);
+    transform: translateY(100px);
+  }
+
+  .snackbar.position-top-center.visible,
+  .snackbar.position-bottom-center.visible {
+    transform: translateY(0);
+  }
+
+  .closeButton {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+  }
+  
+  .closeButton:active {
+    transform: scale(0.92);
+    transition-duration: 80ms;
+  }
+  
+  .action {
+    min-width: 44px;
+    min-height: 44px;
+    padding: var(--theme-spacing-3, 12px) var(--theme-spacing-4, 16px);
+    font-size: var(--theme-font-size-sm, 14px);
+  }
+  
+  .action:active {
+    transform: scale(0.95);
+    transition-duration: 100ms;
+  }
+
+  .message {
+    font-size: var(--theme-font-size-sm, 14px);
+    line-height: 1.6;
   }
 }

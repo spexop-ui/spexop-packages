@@ -2,29 +2,36 @@
  * Tooltip Styles
  * 
  * Following "The Spexop Way":
- * - Principle 2: Borders before shadows - subtle border with minimal shadow
- * - Principle 3: Typography before decoration - clear typography
+ * - Principle 2: Borders before shadows - strong borders with subtle shadow
+ * - Principle 3: Typography before decoration - clear hierarchy
  * - Principle 4: Theme variables before magic numbers - all values use theme variables
- * - Principle 7: Accessibility before aesthetics - high contrast, readable
+ * - Principle 7: Accessibility before aesthetics - high contrast, keyboard focus
+ * - Modern UX patterns with enhanced animations and responsive design
  */
 
 .tooltip {
   position: fixed;
   z-index: var(--theme-z-tooltip, 1500);
   max-width: 320px;
-  padding: var(--theme-spacing-2, 8px) var(--theme-spacing-3, 12px);
-  background: var(--theme-text, #171717);
-  color: var(--theme-surface, #ffffff);
-  border: 1px solid var(--theme-text, #262626);
-  border-radius: var(--theme-radius-md, 8px);
+  padding: var(--theme-spacing-3, 12px) var(--theme-spacing-4, 16px);
+  background: var(--theme-surface, #ffffff);
+  color: var(--theme-text, #171717);
+  border: var(--theme-border-width-default, 2px) solid var(--theme-border, #d4d4d4);
+  border-radius: var(--theme-radius-lg, 12px);
   font-size: var(--theme-font-size-sm, 14px);
   font-weight: var(--theme-font-weight-regular, 400);
-  line-height: 1.5;
-  box-shadow: var(--theme-shadow-md, 0 4px 6px rgba(0, 0, 0, 0.1));
+  line-height: var(--theme-line-height-normal, 1.5);
+  font-family: var(--theme-font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  box-shadow: var(--theme-shadow-lg, 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05));
   pointer-events: none;
   opacity: 0;
   transform: scale(0.95);
-  transition: opacity 0.15s ease, transform 0.15s ease;
+  transition: 
+    opacity var(--theme-duration-fast, 200ms) var(--theme-easing-ease-out, ease-out),
+    transform var(--theme-duration-fast, 200ms) var(--theme-easing-ease-out, ease-out);
+  will-change: transform, opacity;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .tooltip.visible {
@@ -32,21 +39,78 @@
   transform: scale(1);
 }
 
+/* Size variants */
+.tooltip.size-sm {
+  max-width: 240px;
+  padding: var(--theme-spacing-2, 8px) var(--theme-spacing-3, 12px);
+  font-size: var(--theme-font-size-xs, 12px);
+}
+
+.tooltip.size-md {
+  max-width: 320px;
+  padding: var(--theme-spacing-3, 12px) var(--theme-spacing-4, 16px);
+  font-size: var(--theme-font-size-sm, 14px);
+}
+
+.tooltip.size-lg {
+  max-width: 400px;
+  padding: var(--theme-spacing-4, 16px) var(--theme-spacing-5, 20px);
+  font-size: var(--theme-font-size-base, 16px);
+}
+
+.tooltip.size-auto {
+  max-width: none;
+  width: max-content;
+  min-width: 120px;
+}
+
 /* Placement variants */
 .tooltip.placement-top {
   transform-origin: bottom center;
+}
+
+.tooltip.placement-top-start {
+  transform-origin: bottom left;
+}
+
+.tooltip.placement-top-end {
+  transform-origin: bottom right;
 }
 
 .tooltip.placement-bottom {
   transform-origin: top center;
 }
 
+.tooltip.placement-bottom-start {
+  transform-origin: top left;
+}
+
+.tooltip.placement-bottom-end {
+  transform-origin: top right;
+}
+
 .tooltip.placement-left {
   transform-origin: right center;
 }
 
+.tooltip.placement-left-start {
+  transform-origin: right top;
+}
+
+.tooltip.placement-left-end {
+  transform-origin: right bottom;
+}
+
 .tooltip.placement-right {
   transform-origin: left center;
+}
+
+.tooltip.placement-right-start {
+  transform-origin: left top;
+}
+
+.tooltip.placement-right-end {
+  transform-origin: left bottom;
 }
 
 /* Arrow */
@@ -54,9 +118,10 @@
   position: absolute;
   width: 8px;
   height: 8px;
-  background: var(--theme-text, #171717);
-  border: 1px solid var(--theme-text, #262626);
+  background: var(--theme-surface, #ffffff);
+  border: var(--theme-border-width-default, 2px) solid var(--theme-border, #d4d4d4);
   transform: rotate(45deg);
+  z-index: 1;
 }
 
 .tooltip.placement-top .arrow {
@@ -67,10 +132,38 @@
   border-left: none;
 }
 
+.tooltip.placement-top-start .arrow {
+  bottom: -5px;
+  left: var(--theme-spacing-4, 16px);
+  border-top: none;
+  border-left: none;
+}
+
+.tooltip.placement-top-end .arrow {
+  bottom: -5px;
+  right: var(--theme-spacing-4, 16px);
+  border-top: none;
+  border-right: none;
+}
+
 .tooltip.placement-bottom .arrow {
   top: -5px;
   left: 50%;
   margin-left: -4px;
+  border-bottom: none;
+  border-right: none;
+}
+
+.tooltip.placement-bottom-start .arrow {
+  top: -5px;
+  left: var(--theme-spacing-4, 16px);
+  border-bottom: none;
+  border-left: none;
+}
+
+.tooltip.placement-bottom-end .arrow {
+  top: -5px;
+  right: var(--theme-spacing-4, 16px);
   border-bottom: none;
   border-right: none;
 }
@@ -83,6 +176,20 @@
   border-bottom: none;
 }
 
+.tooltip.placement-left-start .arrow {
+  right: -5px;
+  top: var(--theme-spacing-4, 16px);
+  border-left: none;
+  border-top: none;
+}
+
+.tooltip.placement-left-end .arrow {
+  right: -5px;
+  bottom: var(--theme-spacing-4, 16px);
+  border-left: none;
+  border-bottom: none;
+}
+
 .tooltip.placement-right .arrow {
   left: -5px;
   top: 50%;
@@ -91,11 +198,145 @@
   border-top: none;
 }
 
+.tooltip.placement-right-start .arrow {
+  left: -5px;
+  top: var(--theme-spacing-4, 16px);
+  border-right: none;
+  border-top: none;
+}
+
+.tooltip.placement-right-end .arrow {
+  left: -5px;
+  bottom: var(--theme-spacing-4, 16px);
+  border-right: none;
+  border-bottom: none;
+}
+
+/* Animation variants */
+.tooltip.animation-fade {
+  transform: none;
+}
+
+.tooltip.animation-fade.visible {
+  transform: none;
+}
+
+.tooltip.animation-scale {
+  transform: scale(0.95);
+}
+
+.tooltip.animation-scale.visible {
+  transform: scale(1);
+}
+
+.tooltip.animation-slide {
+  transform: translateY(8px);
+}
+
+.tooltip.animation-slide.visible {
+  transform: translateY(0);
+}
+
+.tooltip.placement-top.animation-slide {
+  transform: translateY(-8px);
+}
+
+.tooltip.placement-top.animation-slide.visible {
+  transform: translateY(0);
+}
+
+.tooltip.placement-left.animation-slide {
+  transform: translateX(-8px);
+}
+
+.tooltip.placement-left.animation-slide.visible {
+  transform: translateX(0);
+}
+
+.tooltip.placement-right.animation-slide {
+  transform: translateX(8px);
+}
+
+.tooltip.placement-right.animation-slide.visible {
+  transform: translateX(0);
+}
+
+.tooltip.animation-zoom {
+  transform: scale(0.8);
+}
+
+.tooltip.animation-zoom.visible {
+  transform: scale(1);
+}
+
+.tooltip.animation-none {
+  transition: none;
+}
+
+.tooltip.animation-none.visible {
+  transform: none;
+}
+
 /* Responsive adjustments */
 @media (max-width: 640px) {
   .tooltip {
-    max-width: 240px;
-    font-size: var(--theme-font-size-xs, 12px);
+    max-width: 280px;
+    font-size: var(--theme-font-size-sm, 14px);
+    padding: var(--theme-spacing-3, 12px) var(--theme-spacing-4, 16px);
+    /* Better mobile positioning */
+    transform: scale(0.98);
+  }
+  
+  .tooltip.visible {
+    transform: scale(1);
+  }
+}
+
+/* Mobile touch optimizations */
+@media (max-width: 768px) {
+  .tooltip {
+    /* Larger touch targets for mobile */
+    min-width: 120px;
+    /* Better mobile contrast */
+    background: var(--theme-surface, #ffffff);
+    color: var(--theme-text, #171717);
+    border-color: var(--theme-border-strong, #a3a3a3);
+    /* Improved mobile shadows */
+    box-shadow: var(--theme-shadow-lg, 0 8px 25px rgba(0, 0, 0, 0.15));
+  }
+  
+  /* Larger arrows on mobile */
+  .tooltip.with-arrow .arrow {
+    width: 10px;
+    height: 10px;
+  }
+  
+  .tooltip.placement-top .arrow {
+    margin-left: -5px;
+  }
+  
+  .tooltip.placement-bottom .arrow {
+    margin-left: -5px;
+  }
+  
+  .tooltip.placement-left .arrow {
+    margin-top: -5px;
+  }
+  
+  .tooltip.placement-right .arrow {
+    margin-top: -5px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .tooltip {
+    transition: none;
+    transform: none;
+  }
+  
+  .tooltip.visible {
+    transform: none;
   }
 }
 

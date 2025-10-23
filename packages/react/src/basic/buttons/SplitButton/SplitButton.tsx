@@ -6,15 +6,22 @@
  * @packageName @spexop/react
  * @description Split button with main action and dropdown options
  * @author @spexop-ui | github.com/spexop-ui | @olmstedian | github.com/olmstedian
- * @version 0.1.0
+ * @version 0.2.0
  * @since 2025-10-13
  *
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { cn } from "../../../utils/index.js";
 import { Icon } from "../../indicators/Icon/Icon.js";
 import styles from "./SplitButton.module.css";
-import type { SplitButtonProps } from "./SplitButton.types.js";
+import type {
+  SplitButtonMenuDivider,
+  SplitButtonMenuGroup,
+  SplitButtonMenuItem,
+  SplitButtonMenuOption,
+  SplitButtonProps,
+} from "./SplitButton.types.js";
 
 /**
  * SplitButton component
@@ -24,7 +31,7 @@ import type { SplitButtonProps } from "./SplitButton.types.js";
  * <SplitButton
  *   label="Save Document"
  *   onClick={handleSave}
- *   options={[
+ *   menuItems={[
  *     { label: 'Save as Draft', value: 'draft', onClick: handleDraft },
  *     { label: 'Save as Template', value: 'template', onClick: handleTemplate }
  *   ]}
@@ -34,46 +41,76 @@ import type { SplitButtonProps } from "./SplitButton.types.js";
 export function SplitButton({
   label,
   onClick,
-  options,
+  menuItems = [],
   variant = "primary",
+  size = "md",
+  compact,
   disabled = false,
+  loading = false,
+  fullWidth = false,
   className = "",
   icon,
+  loadingIcon,
   "aria-label": ariaLabel,
   "aria-label-toggle": ariaLabelToggle = "Show more options",
+  "aria-describedby": ariaDescribedBy,
+  "aria-expanded": ariaExpanded,
+  "aria-controls": ariaControls,
+  "aria-live": ariaLive = "polite",
 }: SplitButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const toggleButtonRef = useRef<HTMLButtonElement>(null);
+  const menuId = useRef(
+    `splitbutton-menu-${Math.random().toString(36).substr(2, 9)}`,
+  );
+
+  // Determine if component is disabled (either explicitly disabled or loading)
+  const isDisabled = disabled || loading;
 
   // Handle main button click
   const handleMainClick = useCallback(() => {
-    if (!disabled) {
-      requestAnimationFrame(() => {
-        onClick();
-      });
+    if (!isDisabled) {
+      onClick();
     }
-  }, [onClick, disabled]);
+  }, [onClick, isDisabled]);
 
   // Handle dropdown toggle
   const handleToggle = useCallback(() => {
-    if (!disabled) {
-      requestAnimationFrame(() => {
-        setIsOpen((prev) => !prev);
-      });
+    if (!isDisabled) {
+      setIsOpen((prev) => !prev);
     }
-  }, [disabled]);
+  }, [isDisabled]);
 
-  // Handle option click
-  const handleOptionClick = useCallback((option: (typeof options)[number]) => {
-    if (!option.disabled) {
-      requestAnimationFrame(() => {
-        option.onClick();
-        setIsOpen(false);
-      });
+  // Handle menu item click
+  const handleMenuItemClick = useCallback((item: SplitButtonMenuItem) => {
+    if (!item.disabled) {
+      item.onClick();
+      setIsOpen(false);
     }
   }, []);
+
+  // Check if menu item is a regular item (not divider or group)
+  const isMenuItem = (
+    item: SplitButtonMenuOption,
+  ): item is SplitButtonMenuItem => {
+    return !("type" in item) || item.type === undefined;
+  };
+
+  // Check if menu item is a divider
+  const isMenuDivider = (
+    item: SplitButtonMenuOption,
+  ): item is SplitButtonMenuDivider => {
+    return "type" in item && item.type === "divider";
+  };
+
+  // Check if menu item is a group
+  const isMenuGroup = (
+    item: SplitButtonMenuOption,
+  ): item is SplitButtonMenuGroup => {
+    return "type" in item && item.type === "group";
+  };
 
   // Close menu on click outside
   useEffect(() => {
@@ -84,9 +121,7 @@ export function SplitButton({
         containerRef.current &&
         !containerRef.current.contains(event.target as Node)
       ) {
-        requestAnimationFrame(() => {
-          setIsOpen(false);
-        });
+        setIsOpen(false);
       }
     };
 
@@ -102,10 +137,8 @@ export function SplitButton({
 
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        requestAnimationFrame(() => {
-          setIsOpen(false);
-          toggleButtonRef.current?.focus();
-        });
+        setIsOpen(false);
+        toggleButtonRef.current?.focus();
       }
     };
 
@@ -113,6 +146,20 @@ export function SplitButton({
     return () => {
       document.removeEventListener("keydown", handleEscape);
     };
+  }, [isOpen]);
+
+  // Handle controlled aria-expanded
+  useEffect(() => {
+    if (ariaExpanded !== undefined) {
+      setIsOpen(ariaExpanded);
+    }
+  }, [ariaExpanded]);
+
+  // Focus menu when it opens
+  useEffect(() => {
+    if (isOpen && menuRef.current) {
+      menuRef.current.focus();
+    }
   }, [isOpen]);
 
   // Handle keyboard navigation in menu (Arrow Up/Down)
@@ -151,33 +198,85 @@ export function SplitButton({
     [isOpen],
   );
 
+  // Render menu item
+  const renderMenuItem = (item: SplitButtonMenuItem, index: number) => (
+    <button
+      key={item.value}
+      type="button"
+      role="menuitem"
+      className={cn(
+        styles.menuItem,
+        item.disabled && styles.menuItemDisabled,
+        size && styles[`menuItem-${size}`],
+      )}
+      onClick={() => handleMenuItemClick(item)}
+      disabled={item.disabled}
+      aria-label={item["aria-label"] || item.label}
+      tabIndex={-1}
+    >
+      {item.icon && <span className={styles.menuItemIcon}>{item.icon}</span>}
+      <div className={styles.menuItemContent}>
+        <span className={styles.menuItemLabel}>{item.label}</span>
+        {item.description && (
+          <span className={styles.menuItemDescription}>{item.description}</span>
+        )}
+      </div>
+      {item.badge && <span className={styles.menuItemBadge}>{item.badge}</span>}
+      {item.shortcut && (
+        <span className={styles.menuItemShortcut}>{item.shortcut}</span>
+      )}
+    </button>
+  );
+
+  // Render menu divider
+  const renderMenuDivider = (index: number) => (
+    <div
+      key={`divider-${index}`}
+      className={styles.menuDivider}
+      aria-hidden="true"
+    />
+  );
+
+  // Render menu group
+  const renderMenuGroup = (group: SplitButtonMenuGroup, index: number) => (
+    <div key={`group-${index}`} className={styles.menuGroup}>
+      <div className={styles.menuGroupLabel}>{group.label}</div>
+      <div className={styles.menuGroupItems}>
+        {group.items.map((item, itemIndex) => renderMenuItem(item, itemIndex))}
+      </div>
+    </div>
+  );
+
   // Compose classNames
-  const containerClassName = [
+  const containerClassName = cn(
     styles.splitButton,
     styles[`variant-${variant}`],
-    disabled ? styles.disabled : "",
+    size && styles[`size-${size}`],
+    compact && styles[`compact-${compact}`],
+    fullWidth && styles.fullWidth,
+    isDisabled && styles.disabled,
     className,
-  ]
-    .filter(Boolean)
-    .join(" ");
+  );
 
-  const mainButtonClassName = [
+  const mainButtonClassName = cn(
     styles.mainButton,
-    disabled ? styles.buttonDisabled : "",
-  ]
-    .filter(Boolean)
-    .join(" ");
+    size && styles[`mainButton-${size}`],
+    compact && styles[`mainButton-compact-${compact}`],
+    isDisabled && styles.buttonDisabled,
+  );
 
-  const toggleButtonClassName = [
+  const toggleButtonClassName = cn(
     styles.toggleButton,
-    disabled ? styles.buttonDisabled : "",
-  ]
-    .filter(Boolean)
-    .join(" ");
+    size && styles[`toggleButton-${size}`],
+    compact && styles[`toggleButton-compact-${compact}`],
+    isDisabled && styles.buttonDisabled,
+  );
 
-  const menuClassName = [styles.menu, isOpen ? styles.menuOpen : ""]
-    .filter(Boolean)
-    .join(" ");
+  const menuClassName = cn(
+    styles.menu,
+    size && styles[`menu-${size}`],
+    isOpen && styles.menuOpen,
+  );
 
   return (
     <div ref={containerRef} className={containerClassName}>
@@ -186,11 +285,17 @@ export function SplitButton({
         type="button"
         className={mainButtonClassName}
         onClick={handleMainClick}
-        disabled={disabled}
+        disabled={isDisabled}
         aria-label={ariaLabel || label}
+        aria-describedby={ariaDescribedBy}
+        aria-live={ariaLive}
       >
-        {icon && <span className={styles.buttonIcon}>{icon}</span>}
-        <span className={styles.buttonLabel}>{label}</span>
+        {loading
+          ? loadingIcon || (
+              <Icon name="loader" className={styles.loadingIcon} size="sm" />
+            )
+          : icon && <span className={styles.buttonIcon}>{icon}</span>}
+        {!compact && <span className={styles.buttonLabel}>{label}</span>}
       </button>
 
       {/* Dropdown Toggle Button */}
@@ -199,40 +304,43 @@ export function SplitButton({
         type="button"
         className={toggleButtonClassName}
         onClick={handleToggle}
-        disabled={disabled}
+        disabled={isDisabled}
         aria-label={ariaLabelToggle}
         aria-expanded={isOpen}
         aria-haspopup="true"
+        aria-controls={ariaControls || menuId.current}
       >
-        <Icon name="chevronDown" className={styles.toggleIcon} size="md" />
+        <Icon
+          name="chevronDown"
+          className={cn(styles.toggleIcon, isOpen && styles.toggleIconOpen)}
+          size={compact ? "sm" : "md"}
+        />
       </button>
 
       {/* Dropdown Menu */}
       {isOpen && (
         <div
           ref={menuRef}
+          id={menuId.current}
           className={menuClassName}
           role="menu"
           onKeyDown={handleMenuKeyDown}
+          aria-live={ariaLive}
+          data-testid="menu"
+          tabIndex={-1}
         >
-          {options.map((option) => (
-            <button
-              key={option.value}
-              type="button"
-              role="menuitem"
-              className={`${styles.menuItem} ${
-                option.disabled ? styles.menuItemDisabled : ""
-              }`}
-              onClick={() => handleOptionClick(option)}
-              disabled={option.disabled}
-              aria-label={option["aria-label"] || option.label}
-            >
-              {option.icon && (
-                <span className={styles.menuItemIcon}>{option.icon}</span>
-              )}
-              <span className={styles.menuItemLabel}>{option.label}</span>
-            </button>
-          ))}
+          {menuItems.map((item, index) => {
+            if (isMenuItem(item)) {
+              return renderMenuItem(item, index);
+            }
+            if (isMenuDivider(item)) {
+              return renderMenuDivider(index);
+            }
+            if (isMenuGroup(item)) {
+              return renderMenuGroup(item, index);
+            }
+            return null;
+          })}
         </div>
       )}
     </div>

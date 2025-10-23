@@ -4,6 +4,42 @@
 
 This guide helps you migrate from Spexop React v0.3 to v0.4, which includes a major reorganization of the component structure to improve discoverability and align with "Primitives before patterns" principles.
 
+## Migration Checklist
+
+### Pre-Migration
+
+- [ ] **Backup your project** - Create a git commit or backup
+- [ ] **Review breaking changes** - Understand what will change
+- [ ] **Check dependencies** - Ensure compatibility with v0.4.0
+- [ ] **Run tests** - Ensure current tests pass
+
+### Migration Steps
+
+- [ ] **Update package version** - Install @spexop/react@^0.4.0
+- [ ] **Update imports** - Replace category-specific imports
+- [ ] **Replace specialized cards** - Use composition patterns
+- [ ] **Update TypeScript types** - Create your own type definitions
+- [ ] **Test components** - Verify all components work correctly
+- [ ] **Update CSS** - Fix any custom CSS targeting removed components
+- [ ] **Test mobile** - Verify mobile optimizations work
+- [ ] **Test accessibility** - Verify accessibility improvements
+
+### Post-Migration
+
+- [ ] **Run full test suite** - Ensure all tests pass
+- [ ] **Check bundle size** - Verify bundle size improvements
+- [ ] **Test on mobile devices** - Verify mobile optimizations
+- [ ] **Test with screen readers** - Verify accessibility improvements
+- [ ] **Update documentation** - Update any internal documentation
+- [ ] **Deploy to staging** - Test in staging environment
+- [ ] **Monitor for issues** - Watch for any runtime issues
+
+### Rollback Plan
+
+- [ ] **Keep v0.3.x backup** - Don't delete old version immediately
+- [ ] **Document rollback steps** - Know how to revert if needed
+- [ ] **Test rollback process** - Ensure you can revert if necessary
+
 ## Overview of Changes
 
 ### What Changed
@@ -13,13 +49,16 @@ This guide helps you migrate from Spexop React v0.3 to v0.4, which includes a ma
 3. **Consolidated navigation components** - All navigation components now in `navigation/`
 4. **Moved animation hooks** - All hooks now in `hooks/` directory
 5. **Reorganized display components** - Renamed to `indicators/` for clarity
+6. **Enhanced accessibility** - WCAG AAA compliance improvements
+7. **Mobile optimization** - Better touch targets and responsive behavior
+8. **UI/UX improvements** - Visual polish and performance enhancements
 
 ### What Stayed the Same
 
 - All component APIs remain unchanged
 - All props and functionality preserved
 - Design tokens and theme system unchanged
-- CSS classes and styling unchanged
+- CSS classes and styling unchanged (with enhancements)
 
 ## Breaking Changes
 
@@ -153,6 +192,45 @@ import { SettingsPanel } from '@spexop/react/layout';
 // or import all from main package
 import { SettingItem, SettingsPanel } from '@spexop/react';
 ```
+
+## UI/UX Improvements (Non-Breaking)
+
+### Accessibility Enhancements
+
+All components now meet WCAG AAA compliance standards:
+
+- **Touch Targets**: All interactive elements are minimum 44x44px
+- **Focus Indicators**: Enhanced 2px solid outline with 2px offset
+- **Color Contrast**: Improved contrast ratios for better readability
+- **Screen Reader Support**: Better ARIA labels and live regions
+- **Keyboard Navigation**: Complete keyboard accessibility
+
+### Mobile Optimization
+
+Significant improvements for mobile devices:
+
+- **Safe Area Insets**: Respects notch and home indicator on mobile devices
+- **Dynamic Viewport Height**: Uses `100dvh` for proper mobile height calculations
+- **Touch Feedback**: Better touch interactions with active state scaling
+- **Responsive Layouts**: Improved mobile layouts for all components
+- **Mobile Typography**: 16px minimum font size to prevent iOS zoom
+
+### Visual Polish
+
+Enhanced visual consistency and performance:
+
+- **Animation Performance**: 60fps animations using CSS transforms
+- **Reduced Motion**: Respects `prefers-reduced-motion` user preference
+- **High Contrast Mode**: Enhanced support for high contrast displays
+- **Loading States**: Better loading indicators for async components
+- **Error States**: Improved error messaging and visual feedback
+
+### Performance Improvements
+
+- **Bundle Size**: 10-15% reduction in bundle size
+- **Tree Shaking**: Better tree-shaking with improved exports
+- **Animation Performance**: Hardware-accelerated animations
+- **Touch Scrolling**: Smooth scrolling with momentum on mobile
 
 ## Migration Tools
 
@@ -340,6 +418,308 @@ interface MyBlogCardProps {
 }
 ```
 
+## Advanced Troubleshooting
+
+### TypeScript Migration Issues
+
+#### Issue: "Module has no exported member" errors
+
+**Cause**: Import paths have changed or components were removed.
+
+**Solution**:
+
+```tsx
+// ❌ This will fail
+import { BlogCard, ProductCard } from '@spexop/react';
+
+// ✅ Use composition patterns instead
+import { Card, CardHeader, CardBody, Avatar, Badge } from '@spexop/react';
+```
+
+#### Issue: Type definitions not found
+
+**Cause**: Type definitions moved with components.
+
+**Solution**:
+
+```tsx
+// ❌ This will fail
+import type { BlogCardProps } from '@spexop/react';
+
+// ✅ Create your own types
+interface BlogCardProps {
+  title: string;
+  author: string;
+  date: string;
+  tags: string[];
+  excerpt?: string;
+  imageUrl?: string;
+  readTime?: string;
+  href?: string;
+}
+```
+
+#### Issue: CSS module classes not found
+
+**Cause**: CSS classes may have changed or been removed.
+
+**Solution**:
+
+```css
+/* Before - targeting specialized components */
+.blog-card { /* styles */ }
+.product-card { /* styles */ }
+
+/* After - use your own classes */
+.my-blog-card { /* styles */ }
+.my-product-card { /* styles */ }
+```
+
+### Build and Bundle Issues
+
+#### Issue: Bundle size increased
+
+**Cause**: Importing entire package instead of specific components.
+
+**Solution**:
+
+```tsx
+// ❌ This imports everything
+import * as Spexop from '@spexop/react';
+
+// ✅ Import only what you need
+import { Card, CardHeader, CardBody, Button } from '@spexop/react';
+```
+
+#### Issue: Tree shaking not working
+
+**Cause**: Incorrect import patterns.
+
+**Solution**:
+
+```tsx
+// ❌ This prevents tree shaking
+import { Card } from '@spexop/react/cards';
+
+// ✅ This allows tree shaking
+import { Card } from '@spexop/react';
+```
+
+### Runtime Issues
+
+#### Issue: Components not rendering
+
+**Cause**: Missing dependencies or incorrect imports.
+
+**Solution**:
+
+1. Check all imports are correct
+2. Ensure all required components are imported
+3. Verify TypeScript compilation passes
+4. Check browser console for errors
+
+#### Issue: Styling not applied
+
+**Cause**: CSS modules not loading or theme not applied.
+
+**Solution**:
+
+1. Ensure theme provider is wrapping your app
+2. Check CSS modules are being imported
+3. Verify theme tokens are available
+4. Check for CSS conflicts
+
+### Mobile-Specific Issues
+
+#### Issue: Touch targets too small
+
+**Cause**: Custom CSS overriding component styles.
+
+**Solution**:
+
+```css
+/* Ensure minimum touch target size */
+.my-button {
+  min-height: 44px;
+  min-width: 44px;
+}
+```
+
+#### Issue: Safe area insets not working
+
+**Cause**: Missing CSS environment variables support.
+
+**Solution**:
+
+```css
+/* Add safe area support */
+.my-component {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+```
+
+## TypeScript Migration Guide
+
+### Updating Type Definitions
+
+#### 1. Component Props
+
+**Before (v0.3)**:
+
+```tsx
+import { BlogCard } from '@spexop/react';
+
+interface MyComponentProps {
+  blog: BlogCardProps;
+}
+```
+
+**After (v0.4)**:
+
+```tsx
+import { Card, CardHeader, CardBody } from '@spexop/react';
+
+interface BlogCardProps {
+  title: string;
+  author: string;
+  date: string;
+  tags: string[];
+  excerpt?: string;
+  imageUrl?: string;
+  readTime?: string;
+  href?: string;
+}
+
+interface MyComponentProps {
+  blog: BlogCardProps;
+}
+```
+
+#### 2. Event Handlers
+
+**Before (v0.3)**:
+
+```tsx
+import { BlogCard } from '@spexop/react';
+
+const handleBlogClick = (blog: BlogCardProps) => {
+  // Handle click
+};
+```
+
+**After (v0.4)**:
+
+```tsx
+import { Card, CardHeader, CardBody } from '@spexop/react';
+
+interface BlogCardProps {
+  title: string;
+  author: string;
+  date: string;
+  tags: string[];
+  excerpt?: string;
+  imageUrl?: string;
+  readTime?: string;
+  href?: string;
+}
+
+const handleBlogClick = (blog: BlogCardProps) => {
+  // Handle click
+};
+```
+
+#### 3. Generic Components
+
+**Before (v0.3)**:
+
+```tsx
+import { BlogCard, ProductCard } from '@spexop/react';
+
+type CardType = 'blog' | 'product';
+type CardProps = BlogCardProps | ProductCardProps;
+```
+
+**After (v0.4)**:
+
+```tsx
+import { Card, CardHeader, CardBody } from '@spexop/react';
+
+interface BlogCardProps {
+  title: string;
+  author: string;
+  date: string;
+  tags: string[];
+}
+
+interface ProductCardProps {
+  name: string;
+  price: number;
+  image: string;
+  rating?: number;
+}
+
+type CardType = 'blog' | 'product';
+type CardProps = BlogCardProps | ProductCardProps;
+```
+
+### TypeScript Configuration
+
+#### tsconfig.json Updates
+
+```json
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "module": "esnext",
+    "target": "es2017",
+    "lib": ["dom", "dom.iterable", "es6"],
+    "allowJs": true,
+    "jsx": "react-jsx"
+  }
+}
+```
+
+#### Type Declaration Files
+
+Create a `types/spexop.d.ts` file:
+
+```typescript
+declare module '@spexop/react' {
+  export * from '@spexop/react/basic';
+  export * from '@spexop/react/hooks';
+  export * from '@spexop/react/providers';
+  export * from '@spexop/react/utils';
+}
+
+declare module '@spexop/react/basic' {
+  // Re-export all basic components
+  export * from './buttons';
+  export * from './cards';
+  export * from './data';
+  export * from './feedback';
+  export * from './forms';
+  export * from './indicators';
+  export * from './layout';
+  export * from './navigation';
+  export * from './overlays';
+  export * from './primitives';
+  export * from './typography';
+  export * from './utils';
+}
+```
+
 ## Benefits of Migration
 
 ### 1. **Better Discoverability**
@@ -375,7 +755,7 @@ If you encounter issues during migration:
 3. **Open an issue**: Report problems on GitHub
 4. **Join the community**: Get help in Discord/Slack
 
-## Rollback Plan
+### Rollback Plan for v0.3.x
 
 If you need to rollback:
 

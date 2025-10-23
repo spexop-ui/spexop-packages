@@ -33,35 +33,72 @@ export function Heading({
   weight = "bold",
   align = "left",
   size,
+  variant = "default",
+  as,
   noMargin = false,
+  truncate = false,
+  clamp,
+  disabled = false,
   className,
   id,
   "aria-label": ariaLabel,
   "aria-describedby": ariaDescribedBy,
+  "aria-live": ariaLive,
+  "aria-expanded": ariaExpanded,
+  "aria-controls": ariaControls,
   ...props
 }: HeadingProps) {
-  // Create the heading element based on level
-  const Tag = `h${level}` as keyof JSX.IntrinsicElements;
+  // Create the heading element based on level or as prop
+  const Tag = as || (`h${level}` as keyof JSX.IntrinsicElements);
 
   const headingClassName = cn(
     styles.heading,
     styles[`level-${level}`],
     styles[`weight-${weight}`],
     styles[`align-${align}`],
+    styles[`variant-${variant}`],
     size && styles[`size-${size}`],
+    truncate && styles.truncate,
+    clamp != null && styles[`clamp-${clamp}`],
     noMargin && styles["no-margin"],
+    disabled && styles.disabled,
     className,
   );
 
+  // Handle polymorphic rendering with proper typing
+  if (as) {
+    return (
+      <Tag
+        id={id}
+        className={headingClassName}
+        aria-label={ariaLabel}
+        aria-describedby={ariaDescribedBy}
+        aria-live={ariaLive}
+        aria-expanded={ariaExpanded}
+        aria-controls={ariaControls}
+        tabIndex={-1}
+        {...(props as Record<string, unknown>)}
+      >
+        {children}
+      </Tag>
+    );
+  }
+
+  // Standard heading element
+  const HeadingTag = `h${level}` as keyof JSX.IntrinsicElements;
   return (
-    <Tag
+    <HeadingTag
       id={id}
       className={headingClassName}
       aria-label={ariaLabel}
       aria-describedby={ariaDescribedBy}
-      {...props}
+      aria-live={ariaLive}
+      aria-expanded={ariaExpanded}
+      aria-controls={ariaControls}
+      tabIndex={-1}
+      {...(props as Record<string, unknown>)}
     >
       {children}
-    </Tag>
+    </HeadingTag>
   );
 }

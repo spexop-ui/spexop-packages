@@ -48,6 +48,14 @@ export const DashboardCard = forwardRef<HTMLDivElement, DashboardCardProps>(
     },
     ref,
   ) => {
+    // Runtime deprecation warning
+    if (process.env.NODE_ENV === "development") {
+      console.warn(
+        "@spexop/react: DashboardCard is deprecated and will be removed in v0.4.0. " +
+          "Use Card composition instead. See: src/patterns/cards/DashboardCard.example.tsx",
+      );
+    }
+
     return (
       <Card
         ref={ref}

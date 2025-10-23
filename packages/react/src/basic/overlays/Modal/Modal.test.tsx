@@ -10,15 +10,22 @@
  * - Escape key handling
  * - Backdrop click handling
  * - Close button functionality
- * - Size variants
+ * - Size variants and placement
+ * - Animation variants
+ * - Backdrop variants
+ * - Header and footer configurations
+ * - Loading states
+ * - Native dialog support
+ * - Responsive behavior
+ * - Accessibility features
  * - ARIA attributes
- * - Footer rendering
- * - Initial focus management
+ * - Screen reader announcements
+ * - Focus management
  *
  * @author @olmstedian | github.com/olmstedian | @spexop | github.com/spexop-ui
  */
 
-import { render, screen, waitFor } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import React, { type RefObject, useRef } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -53,6 +60,13 @@ describe("Modal", () => {
     vi.clearAllMocks();
     globalWithCallbacks.__escapeKeyCallback = undefined;
     document.body.innerHTML = "";
+
+    // Mock window.innerWidth for responsive tests
+    Object.defineProperty(window, "innerWidth", {
+      writable: true,
+      configurable: true,
+      value: 1024,
+    });
   });
 
   describe("Rendering", () => {
@@ -296,19 +310,19 @@ describe("Modal", () => {
 
   describe("Footer", () => {
     it("renders footer when provided", async () => {
-      const footer = (
-        <div>
-          <button type="button">Cancel</button>
-          <button type="button">Confirm</button>
-        </div>
-      );
-
       render(
         <Modal
           isOpen={true}
           onClose={vi.fn()}
           title="Test Modal"
-          footer={footer}
+          footer={{
+            children: (
+              <div>
+                <button type="button">Cancel</button>
+                <button type="button">Confirm</button>
+              </div>
+            ),
+          }}
         >
           <p>Modal content</p>
         </Modal>,
@@ -472,6 +486,598 @@ describe("Modal", () => {
         const dialog = screen.getByRole("dialog");
         const id = dialog.getAttribute("id");
         expect(id).toMatch(/^modal-/);
+      });
+    });
+  });
+
+  describe("Modern Features", () => {
+    describe("Header Configuration", () => {
+      it("renders header with title and subtitle", async () => {
+        render(
+          <Modal
+            isOpen={true}
+            onClose={vi.fn()}
+            header={{
+              title: "Modal Title",
+              subtitle: "Modal Subtitle",
+            }}
+          >
+            <p>Modal content</p>
+          </Modal>,
+        );
+
+        await waitFor(() => {
+          expect(screen.getByText("Modal Title")).toBeInTheDocument();
+          expect(screen.getByText("Modal Subtitle")).toBeInTheDocument();
+        });
+      });
+
+      it("renders custom header content", async () => {
+        render(
+          <Modal
+            isOpen={true}
+            onClose={vi.fn()}
+            header={{
+              children: <div data-testid="custom-header">Custom Header</div>,
+            }}
+          >
+            <p>Modal content</p>
+          </Modal>,
+        );
+
+        await waitFor(() => {
+          expect(screen.getByTestId("custom-header")).toBeInTheDocument();
+        });
+      });
+
+      it("hides close button when header.showCloseButton is false", async () => {
+        render(
+          <Modal
+            isOpen={true}
+            onClose={vi.fn()}
+            header={{
+              title: "Test Modal",
+              showCloseButton: false,
+            }}
+          >
+            <p>Modal content</p>
+          </Modal>,
+        );
+
+        await waitFor(() => {
+          expect(
+            screen.queryByLabelText("Close modal"),
+          ).not.toBeInTheDocument();
+        });
+      });
+    });
+
+    describe("Footer Configuration", () => {
+      it("renders footer with different alignments", async () => {
+        const { rerender } = render(
+          <Modal
+            isOpen={true}
+            onClose={vi.fn()}
+            title="Test Modal"
+            footer={{
+              children: <button type="button">Action</button>,
+              align: "left",
+            }}
+          >
+            <p>Modal content</p>
+          </Modal>,
+        );
+
+        await waitFor(() => {
+          const footer = screen
+            .getByRole("dialog")
+            .querySelector('[class*="footer"]');
+          expect(footer).toHaveClass("_align-left_f51c5f");
+        });
+
+        rerender(
+          <Modal
+            isOpen={true}
+            onClose={vi.fn()}
+            title="Test Modal"
+            footer={{
+              children: <button type="button">Action</button>,
+              align: "center",
+            }}
+          >
+            <p>Modal content</p>
+          </Modal>,
+        );
+
+        await waitFor(() => {
+          const footer = screen
+            .getByRole("dialog")
+            .querySelector('[class*="footer"]');
+          expect(footer).toHaveClass("_align-center_f51c5f");
+        });
+      });
+
+      it("shows divider when footer.showDivider is true", async () => {
+        render(
+          <Modal
+            isOpen={true}
+            onClose={vi.fn()}
+            title="Test Modal"
+            footer={{
+              children: <button type="button">Action</button>,
+              showDivider: true,
+            }}
+          >
+            <p>Modal content</p>
+          </Modal>,
+        );
+
+        await waitFor(() => {
+          const footer = screen
+            .getByRole("dialog")
+            .querySelector('[class*="footer"]');
+          expect(footer).toHaveClass("_show-divider_f51c5f");
+        });
+      });
+    });
+
+    describe("Animation Variants", () => {
+      it.each(["fade", "slide", "zoom", "scale", "none"] as const)(
+        "applies animation class for type=%s",
+        async (animationType) => {
+          render(
+            <Modal
+              isOpen={true}
+              onClose={vi.fn()}
+              title="Test Modal"
+              animation={{ type: animationType }}
+            >
+              <p>Modal content</p>
+            </Modal>,
+          );
+
+          await waitFor(() => {
+            const dialog = screen.getByRole("dialog");
+            expect(dialog).toHaveClass(`_animation-${animationType}_f51c5f`);
+          });
+        },
+      );
+
+      it("disables animation when animation.disabled is true", async () => {
+        render(
+          <Modal
+            isOpen={true}
+            onClose={vi.fn()}
+            title="Test Modal"
+            animation={{ type: "fade", disabled: true }}
+          >
+            <p>Modal content</p>
+          </Modal>,
+        );
+
+        await waitFor(() => {
+          const dialog = screen.getByRole("dialog");
+          expect(dialog).toHaveClass("_animation-none_f51c5f");
+        });
+      });
+    });
+
+    describe("Backdrop Variants", () => {
+      it.each(["blur", "dark", "light", "transparent"] as const)(
+        "applies backdrop class for variant=%s",
+        async (backdropVariant) => {
+          render(
+            <Modal
+              isOpen={true}
+              onClose={vi.fn()}
+              title="Test Modal"
+              backdrop={backdropVariant}
+            >
+              <p>Modal content</p>
+            </Modal>,
+          );
+
+          await waitFor(() => {
+            const backdrop = screen.getByRole("dialog").parentElement;
+            expect(backdrop).toHaveClass(`_backdrop-${backdropVariant}_f51c5f`);
+          });
+        },
+      );
+    });
+
+    describe("Placement Variants", () => {
+      it.each(["center", "top", "bottom", "left", "right"] as const)(
+        "applies placement class for placement=%s",
+        async (placement) => {
+          render(
+            <Modal
+              isOpen={true}
+              onClose={vi.fn()}
+              title="Test Modal"
+              placement={placement}
+            >
+              <p>Modal content</p>
+            </Modal>,
+          );
+
+          await waitFor(() => {
+            const dialog = screen.getByRole("dialog");
+            expect(dialog).toHaveClass(`_placement-${placement}_f51c5f`);
+          });
+        },
+      );
+    });
+
+    describe("Loading State", () => {
+      it("shows loading indicator when loading is true", async () => {
+        render(
+          <Modal
+            isOpen={true}
+            onClose={vi.fn()}
+            title="Test Modal"
+            loading={true}
+          >
+            <p>Modal content</p>
+          </Modal>,
+        );
+
+        await waitFor(() => {
+          expect(screen.getByRole("dialog")).toHaveClass("_loading_f51c5f");
+          expect(
+            screen
+              .getByRole("dialog")
+              .querySelector('[class*="loading-indicator"]'),
+          ).toBeInTheDocument();
+        });
+      });
+
+      it("shows custom loading indicator", async () => {
+        render(
+          <Modal
+            isOpen={true}
+            onClose={vi.fn()}
+            title="Test Modal"
+            loading={true}
+            loadingIndicator={<div data-testid="custom-loader">Loading...</div>}
+          >
+            <p>Modal content</p>
+          </Modal>,
+        );
+
+        await waitFor(() => {
+          expect(screen.getByTestId("custom-loader")).toBeInTheDocument();
+        });
+      });
+    });
+
+    describe("Native Dialog Support", () => {
+      it("renders as native dialog element when native is true", async () => {
+        render(
+          <Modal
+            isOpen={true}
+            onClose={vi.fn()}
+            title="Test Modal"
+            native={true}
+          >
+            <p>Modal content</p>
+          </Modal>,
+        );
+
+        await waitFor(() => {
+          const dialog = document.querySelector("dialog");
+          expect(dialog).toBeInTheDocument();
+          expect(dialog?.tagName).toBe("DIALOG");
+        });
+      });
+
+      it("supports form method and action for native dialog", async () => {
+        render(
+          <Modal
+            isOpen={true}
+            onClose={vi.fn()}
+            title="Test Modal"
+            native={true}
+            formMethod="post"
+            formAction="/submit"
+          >
+            <p>Modal content</p>
+          </Modal>,
+        );
+
+        await waitFor(() => {
+          const dialog = document.querySelector("dialog");
+          expect(dialog).toBeInTheDocument();
+          expect(dialog).toHaveAttribute("method", "post");
+          expect(dialog).toHaveAttribute("action", "/submit");
+        });
+      });
+    });
+
+    describe("Responsive Behavior", () => {
+      it("applies mobile size when responsive.mobileSize is provided", async () => {
+        // Mock mobile viewport
+        Object.defineProperty(window, "innerWidth", {
+          writable: true,
+          configurable: true,
+          value: 600,
+        });
+
+        render(
+          <Modal
+            isOpen={true}
+            onClose={vi.fn()}
+            title="Test Modal"
+            size="lg"
+            responsive={{ mobileSize: "sm" }}
+          >
+            <p>Modal content</p>
+          </Modal>,
+        );
+
+        await waitFor(() => {
+          const dialog = screen.getByRole("dialog");
+          expect(dialog).toHaveClass("_size-sm_f51c5f");
+        });
+      });
+
+      it("disables backdrop on mobile when responsive.disableBackdropOnMobile is true", async () => {
+        // Mock mobile viewport
+        Object.defineProperty(window, "innerWidth", {
+          writable: true,
+          configurable: true,
+          value: 600,
+        });
+
+        render(
+          <Modal
+            isOpen={true}
+            onClose={vi.fn()}
+            title="Test Modal"
+            backdrop="blur"
+            responsive={{ disableBackdropOnMobile: true }}
+          >
+            <p>Modal content</p>
+          </Modal>,
+        );
+
+        await waitFor(() => {
+          const backdrop = screen.getByRole("dialog").parentElement;
+          expect(backdrop).toHaveClass("_backdrop-transparent_f51c5f");
+        });
+      });
+    });
+
+    describe("Event Handlers", () => {
+      it("calls onOpen when modal opens", async () => {
+        const onOpen = vi.fn();
+        const { rerender } = render(
+          <Modal
+            isOpen={false}
+            onClose={vi.fn()}
+            title="Test Modal"
+            onOpen={onOpen}
+          >
+            <p>Modal content</p>
+          </Modal>,
+        );
+
+        expect(onOpen).not.toHaveBeenCalled();
+
+        rerender(
+          <Modal
+            isOpen={true}
+            onClose={vi.fn()}
+            title="Test Modal"
+            onOpen={onOpen}
+          >
+            <p>Modal content</p>
+          </Modal>,
+        );
+
+        await waitFor(() => {
+          expect(onOpen).toHaveBeenCalledTimes(1);
+        });
+      });
+
+      it("calls onBeforeOpen before modal opens", async () => {
+        const onBeforeOpen = vi.fn();
+        const { rerender } = render(
+          <Modal
+            isOpen={false}
+            onClose={vi.fn()}
+            title="Test Modal"
+            onBeforeOpen={onBeforeOpen}
+          >
+            <p>Modal content</p>
+          </Modal>,
+        );
+
+        expect(onBeforeOpen).not.toHaveBeenCalled();
+
+        rerender(
+          <Modal
+            isOpen={true}
+            onClose={vi.fn()}
+            title="Test Modal"
+            onBeforeOpen={onBeforeOpen}
+          >
+            <p>Modal content</p>
+          </Modal>,
+        );
+
+        await waitFor(() => {
+          expect(onBeforeOpen).toHaveBeenCalledTimes(1);
+        });
+      });
+
+      it("calls onBackdropClick when backdrop is clicked", async () => {
+        const user = userEvent.setup();
+        const onBackdropClick = vi.fn();
+
+        render(
+          <Modal
+            isOpen={true}
+            onClose={vi.fn()}
+            title="Test Modal"
+            onBackdropClick={onBackdropClick}
+          >
+            <p>Modal content</p>
+          </Modal>,
+        );
+
+        await waitFor(() => {
+          expect(screen.getByText("Test Modal")).toBeInTheDocument();
+        });
+
+        const backdrop = screen.getByRole("dialog").parentElement;
+        if (backdrop) {
+          await user.click(backdrop);
+          expect(onBackdropClick).toHaveBeenCalledTimes(1);
+        }
+      });
+    });
+
+    describe("Accessibility Enhancements", () => {
+      it("supports custom ARIA attributes", async () => {
+        render(
+          <Modal
+            isOpen={true}
+            onClose={vi.fn()}
+            title="Test Modal"
+            accessibility={{
+              "aria-label": "Custom modal",
+              "aria-describedby": "custom-description",
+            }}
+          >
+            <p id="custom-description">Modal description</p>
+          </Modal>,
+        );
+
+        await waitFor(() => {
+          const dialog = screen.getByRole("dialog");
+          expect(dialog).toHaveAttribute("aria-label", "Custom modal");
+          expect(dialog).toHaveAttribute(
+            "aria-describedby",
+            "custom-description",
+          );
+        });
+      });
+
+      it("announces modal opening to screen readers", async () => {
+        const { rerender } = render(
+          <Modal
+            isOpen={false}
+            onClose={vi.fn()}
+            title="Test Modal"
+            accessibility={{ announceOpen: true }}
+          >
+            <p>Modal content</p>
+          </Modal>,
+        );
+
+        rerender(
+          <Modal
+            isOpen={true}
+            onClose={vi.fn()}
+            title="Test Modal"
+            accessibility={{ announceOpen: true }}
+          >
+            <p>Modal content</p>
+          </Modal>,
+        );
+
+        await waitFor(() => {
+          // Check if announcement element was created
+          const announcementElements = document.querySelectorAll(
+            '[aria-live="polite"]',
+          );
+          expect(announcementElements.length).toBeGreaterThan(0);
+        });
+      });
+    });
+
+    describe("Focus Management", () => {
+      it("supports custom focus configuration", async () => {
+        const TestComponent = () => {
+          const inputRef = useRef<HTMLInputElement>(null);
+
+          return (
+            <Modal
+              isOpen={true}
+              onClose={vi.fn()}
+              title="Test Modal"
+              focus={{
+                initialFocusRef: inputRef as RefObject<HTMLElement>,
+                restoreFocus: true,
+                trapFocus: true,
+              }}
+            >
+              <input ref={inputRef} type="text" placeholder="Test input" />
+            </Modal>
+          );
+        };
+
+        render(<TestComponent />);
+
+        await waitFor(() => {
+          expect(screen.getByPlaceholderText("Test input")).toBeInTheDocument();
+        });
+      });
+    });
+
+    describe("Legacy Props Compatibility", () => {
+      it("supports legacy title prop", async () => {
+        render(
+          <Modal isOpen={true} onClose={vi.fn()} title="Legacy Title">
+            <p>Modal content</p>
+          </Modal>,
+        );
+
+        await waitFor(() => {
+          expect(screen.getByText("Legacy Title")).toBeInTheDocument();
+        });
+      });
+
+      it("supports legacy showCloseButton prop", async () => {
+        render(
+          <Modal
+            isOpen={true}
+            onClose={vi.fn()}
+            title="Test Modal"
+            showCloseButton={false}
+          >
+            <p>Modal content</p>
+          </Modal>,
+        );
+
+        await waitFor(() => {
+          expect(
+            screen.queryByLabelText("Close modal"),
+          ).not.toBeInTheDocument();
+        });
+      });
+
+      it("supports legacy initialFocusRef prop", async () => {
+        const TestComponent = () => {
+          const inputRef = useRef<HTMLInputElement>(null);
+
+          return (
+            <Modal
+              isOpen={true}
+              onClose={vi.fn()}
+              title="Test Modal"
+              initialFocusRef={inputRef as RefObject<HTMLElement>}
+            >
+              <input ref={inputRef} type="text" placeholder="Test input" />
+            </Modal>
+          );
+        };
+
+        render(<TestComponent />);
+
+        await waitFor(() => {
+          expect(screen.getByPlaceholderText("Test input")).toBeInTheDocument();
+        });
       });
     });
   });

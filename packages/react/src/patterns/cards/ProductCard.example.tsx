@@ -1,13 +1,26 @@
 /**
- * ProductCard Pattern Example
+ * ProductCard Pattern - E-commerce product display
  *
- * Composition example showing how to build an e-commerce product card
- * using Card primitives and other Spexop components.
+ * Replaces the specialized ProductCard component removed in v0.4.0.
+ * This composition pattern uses Card primitives to create a product display.
  *
- * This is NOT an exported component - it's a pattern example
- * that demonstrates composition techniques.
+ * @example
+ * ```tsx
+ * <ProductCard
+ *   name="Wireless Headphones"
+ *   price={99.99}
+ *   originalPrice={129.99}
+ *   imageUrl="/images/headphones.jpg"
+ *   rating={4.5}
+ *   reviewCount={128}
+ *   badge="Sale"
+ *   onAddToCart={() => console.log('Added to cart')}
+ *   onQuickView={() => console.log('Quick view')}
+ * />
+ * ```
  */
 
+import { Eye, ShoppingCart, Star } from "@spexop/icons";
 import {
   Badge,
   Button,
@@ -15,119 +28,146 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
-  Text,
+  Icon,
 } from "@spexop/react";
-import type { ReactNode } from "react";
+import React from "react";
+import styles from "./ProductCard.example.module.css";
 
-interface ProductCardProps {
+export interface ProductCardProps {
+  /** Product name */
   name: string;
+  /** Current price */
   price: number;
+  /** Original price (for showing discount) */
   originalPrice?: number;
-  image: string;
-  rating: number;
-  reviewCount: number;
-  category?: string;
-  onAddToCart: () => void;
-  onViewDetails: () => void;
-  onToggleWishlist?: () => void;
-  isInWishlist?: boolean;
+  /** Product image URL */
+  imageUrl: string;
+  /** Product rating (0-5) */
+  rating?: number;
+  /** Number of reviews */
+  reviewCount?: number;
+  /** Badge text (e.g., "Sale", "New", "Limited") */
+  badge?: string;
+  /** Badge variant */
+  badgeVariant?:
+    | "default"
+    | "success"
+    | "warning"
+    | "error"
+    | "info"
+    | "subtle";
+  /** Add to cart handler */
+  onAddToCart?: () => void;
+  /** Quick view handler */
+  onQuickView?: () => void;
+  /** Card variant */
+  variant?: "basic" | "interactive" | "elevated" | "outlined";
+  /** Card density */
+  density?: "compact" | "normal" | "spacious";
+  /** Additional CSS class */
+  className?: string;
 }
 
 export function ProductCard({
   name,
   price,
   originalPrice,
-  image,
+  imageUrl,
   rating,
   reviewCount,
-  category,
+  badge,
+  badgeVariant = "default",
   onAddToCart,
-  onViewDetails,
-  onToggleWishlist,
-  isInWishlist = false,
+  onQuickView,
+  variant = "interactive",
+  density = "normal",
+  className,
 }: ProductCardProps) {
   const discount = originalPrice
-    ? Math.round((1 - price / originalPrice) * 100)
+    ? Math.round(((originalPrice - price) / originalPrice) * 100)
     : 0;
+  const hasDiscount = originalPrice && originalPrice > price;
 
   return (
-    <Card variant="interactive" density="normal" className="product-card">
+    <Card variant={variant} density={density} className={className}>
       <CardHeader>
-        {discount > 0 && (
-          <Badge variant="error" className="product-discount">
-            -{discount}%
-          </Badge>
-        )}
-
-        {onToggleWishlist && (
-          <button
-            type="button"
-            className={`product-wishlist ${isInWishlist ? "active" : ""}`}
-            onClick={(e) => {
-              e.stopPropagation();
-              onToggleWishlist();
-            }}
-            aria-label={
-              isInWishlist ? "Remove from wishlist" : "Add to wishlist"
-            }
-          >
-            ♥
-          </button>
-        )}
-
-        <img src={image} alt={name} className="product-image" />
+        <div className={styles.imageContainer}>
+          <img
+            src={imageUrl}
+            alt={name}
+            className={styles.image}
+            loading="lazy"
+          />
+          {badge && (
+            <div className={styles.badgeContainer}>
+              <Badge variant={badgeVariant} size="sm">
+                {badge}
+              </Badge>
+            </div>
+          )}
+          {hasDiscount && (
+            <div className={styles.discountBadge}>
+              <Badge variant="error" size="sm">
+                -{discount}%
+              </Badge>
+            </div>
+          )}
+          {onQuickView && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className={styles.quickViewButton}
+              onClick={onQuickView}
+              aria-label={`Quick view ${name}`}
+            >
+              <Icon name="Eye" size="sm" />
+            </Button>
+          )}
+        </div>
       </CardHeader>
 
       <CardBody>
-        {category && (
-          <Text size="sm" color="secondary" className="product-category">
-            {category}
-          </Text>
+        <h3 className={styles.name}>{name}</h3>
+
+        {rating !== undefined && (
+          <div className={styles.rating}>
+            <div className={styles.stars}>
+              {[1, 2, 3, 4, 5].map((star) => (
+                <Icon
+                  key={star}
+                  name="Star"
+                  size="sm"
+                  className={`${styles.star} ${
+                    star <= Math.floor(rating) ? styles.filled : styles.empty
+                  }`}
+                />
+              ))}
+            </div>
+            <span className={styles.ratingText}>
+              {rating.toFixed(1)} ({reviewCount} reviews)
+            </span>
+          </div>
         )}
 
-        <h3 className="product-name">{name}</h3>
-
-        <div className="product-rating">
-          <div className="stars" aria-label={`${rating} out of 5 stars`}>
-            {"★".repeat(Math.floor(rating))}
-            {"☆".repeat(5 - Math.floor(rating))}
-          </div>
-          <Text size="sm" color="secondary">
-            {rating} ({reviewCount} reviews)
-          </Text>
-        </div>
-
-        <div className="product-pricing">
-          <Text size="lg" weight="bold" className="product-price">
-            ${price.toFixed(2)}
-          </Text>
-          {originalPrice && (
-            <Text size="sm" color="secondary" className="original-price">
-              ${originalPrice.toFixed(2)}
-            </Text>
+        <div className={styles.priceContainer}>
+          <span className={styles.price}>${price.toFixed(2)}</span>
+          {hasDiscount && (
+            <span className={styles.originalPrice}>
+              ${originalPrice?.toFixed(2)}
+            </span>
           )}
         </div>
       </CardBody>
 
-      <CardFooter align="between">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={(e) => {
-            e.stopPropagation();
-            onViewDetails();
-          }}
-        >
-          View Details
-        </Button>
+      <CardFooter>
         <Button
           variant="primary"
           size="sm"
-          onClick={(e) => {
-            e.stopPropagation();
-            onAddToCart();
-          }}
+          onClick={onAddToCart}
+          className={styles.addToCartButton}
+          disabled={!onAddToCart}
         >
+          <Icon name="ShoppingCart" size="sm" />
           Add to Cart
         </Button>
       </CardFooter>
@@ -135,114 +175,36 @@ export function ProductCard({
   );
 }
 
-// Usage Example
+// Usage example
 export function ProductCardExample() {
   return (
-    <ProductCard
-      name="Wireless Bluetooth Headphones"
-      price={79.99}
-      originalPrice={99.99}
-      image="/products/headphones.jpg"
-      rating={4.5}
-      reviewCount={128}
-      category="Electronics"
-      onAddToCart={() => console.log("Added to cart")}
-      onViewDetails={() => console.log("View details")}
-      onToggleWishlist={() => console.log("Toggle wishlist")}
-      isInWishlist={false}
-    />
+    <div className={styles.grid}>
+      <ProductCard
+        name="Wireless Headphones"
+        price={99.99}
+        originalPrice={129.99}
+        imageUrl="/images/headphones.jpg"
+        rating={4.5}
+        reviewCount={128}
+        badge="Sale"
+        badgeVariant="error"
+        onAddToCart={() => console.log("Added to cart")}
+        onQuickView={() => console.log("Quick view")}
+        variant="interactive"
+      />
+
+      <ProductCard
+        name="Smart Watch"
+        price={199.99}
+        imageUrl="/images/smartwatch.jpg"
+        rating={4.8}
+        reviewCount={256}
+        badge="New"
+        badgeVariant="success"
+        onAddToCart={() => console.log("Added to cart")}
+        variant="basic"
+        density="compact"
+      />
+    </div>
   );
 }
-
-// CSS for styling (add to your stylesheet)
-/*
-.product-card {
-  position: relative;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.product-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--theme-shadow-lg);
-}
-
-.product-discount {
-  position: absolute;
-  top: var(--theme-spacing-2);
-  left: var(--theme-spacing-2);
-  z-index: 1;
-}
-
-.product-wishlist {
-  position: absolute;
-  top: var(--theme-spacing-2);
-  right: var(--theme-spacing-2);
-  z-index: 1;
-  background: var(--theme-surface);
-  border: 2px solid var(--theme-border);
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.product-wishlist:hover {
-  border-color: var(--theme-primary);
-}
-
-.product-wishlist.active {
-  color: var(--theme-destructive);
-  border-color: var(--theme-destructive);
-}
-
-.product-image {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-radius: var(--theme-radius-sm);
-}
-
-.product-category {
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: var(--theme-spacing-2);
-}
-
-.product-name {
-  font-size: var(--theme-font-size-lg);
-  font-weight: var(--theme-font-weight-semibold);
-  line-height: 1.3;
-  margin: 0 0 var(--theme-spacing-3) 0;
-}
-
-.product-rating {
-  display: flex;
-  align-items: center;
-  gap: var(--theme-spacing-2);
-  margin-bottom: var(--theme-spacing-3);
-}
-
-.stars {
-  color: var(--theme-warning);
-  font-size: var(--theme-font-size-sm);
-}
-
-.product-pricing {
-  display: flex;
-  align-items: center;
-  gap: var(--theme-spacing-2);
-}
-
-.product-price {
-  color: var(--theme-primary);
-}
-
-.original-price {
-  text-decoration: line-through;
-}
-*/

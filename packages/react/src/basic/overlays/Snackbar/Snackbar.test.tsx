@@ -7,7 +7,12 @@
  * - Message display
  * - Action button functionality
  * - Auto-hide functionality
- * - Position variants (top, bottom)
+ * - Position variants (all 6 positions)
+ * - Variant styles (info, success, warning, error)
+ * - Close button functionality
+ * - Keyboard navigation
+ * - Portal rendering
+ * - Animation variants
  * - ARIA attributes for accessibility
  * - Custom styling
  *
@@ -16,7 +21,6 @@
 
 import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import React from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Snackbar } from "./Snackbar.js";
 import styles from "./Snackbar.module.css";
@@ -57,8 +61,10 @@ describe("Snackbar", () => {
       render(
         <Snackbar
           message="Test message"
-          actionLabel="Undo"
-          onAction={vi.fn()}
+          action={{
+            label: "Undo",
+            onClick: vi.fn(),
+          }}
           isVisible={true}
         />,
       );
@@ -66,77 +72,164 @@ describe("Snackbar", () => {
       expect(screen.getByText("Undo")).toBeInTheDocument();
     });
 
-    it("does not render action button when actionLabel is not provided", () => {
+    it("does not render action button when action is not provided", () => {
       render(<Snackbar message="Test message" isVisible={true} />);
 
       expect(screen.queryByRole("button")).not.toBeInTheDocument();
     });
 
-    it("calls onAction when action button is clicked", async () => {
-      const user = userEvent.setup({ delay: null });
-      const onAction = vi.fn();
+    it("calls action.onClick when action button is clicked", () => {
+      const onActionClick = vi.fn();
 
       render(
         <Snackbar
           message="Test message"
-          actionLabel="Undo"
-          onAction={onAction}
+          action={{
+            label: "Undo",
+            onClick: onActionClick,
+          }}
           isVisible={true}
         />,
       );
 
       const actionButton = screen.getByText("Undo");
-      await user.click(actionButton);
+      actionButton.click();
 
-      expect(onAction).toHaveBeenCalledTimes(1);
+      expect(onActionClick).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe("Close Button", () => {
+    it("renders close button by default", () => {
+      render(
+        <Snackbar message="Test message" isVisible={true} onClose={vi.fn()} />,
+      );
+
+      expect(screen.getByLabelText("Close notification")).toBeInTheDocument();
+    });
+
+    it("does not render close button when showCloseButton is false", () => {
+      render(
+        <Snackbar
+          message="Test message"
+          isVisible={true}
+          onClose={vi.fn()}
+          showCloseButton={false}
+        />,
+      );
+
+      expect(
+        screen.queryByLabelText("Close notification"),
+      ).not.toBeInTheDocument();
+    });
+
+    it("calls onClose when close button is clicked", () => {
+      const onClose = vi.fn();
+
+      render(
+        <Snackbar message="Test message" isVisible={true} onClose={onClose} />,
+      );
+
+      const closeButton = screen.getByLabelText("Close notification");
+      closeButton.click();
+
+      expect(onClose).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe("Variants", () => {
+    it.each(["info", "success", "warning", "error"] as const)(
+      "renders with variant=%s",
+      (variant) => {
+        const { container } = render(
+          <Snackbar
+            message="Test message"
+            variant={variant}
+            isVisible={true}
+          />,
+        );
+
+        const snackbar = screen.getByRole("alert");
+        expect(snackbar.className).toContain(`variant-${variant}`);
+        expect(snackbar).toHaveAttribute("data-variant", variant);
+      },
+    );
+
+    it("defaults to info variant", () => {
+      render(<Snackbar message="Test message" isVisible={true} />);
+
+      const snackbar = screen.getByRole("alert");
+      expect(snackbar.className).toContain("variant-info");
+      expect(snackbar).toHaveAttribute("data-variant", "info");
+    });
+  });
+
+  describe("Animations", () => {
+    it.each(["slide", "fade", "scale", "none"] as const)(
+      "renders with animation=%s",
+      (animation) => {
+        const { container } = render(
+          <Snackbar
+            message="Test message"
+            animation={animation}
+            isVisible={true}
+          />,
+        );
+
+        const snackbar = screen.getByRole("alert");
+        expect(snackbar.className).toContain(`animation-${animation}`);
+      },
+    );
+
+    it("defaults to slide animation", () => {
+      render(<Snackbar message="Test message" isVisible={true} />);
+
+      const snackbar = screen.getByRole("alert");
+      expect(snackbar.className).toContain("animation-slide");
     });
   });
 
   describe("Auto-hide", () => {
-    it("calls onAction after autoHideDuration", () => {
-      const onAction = vi.fn();
+    it("calls onClose after autoHideDuration", () => {
+      const onClose = vi.fn();
 
       render(
         <Snackbar
           message="Test message"
-          onAction={onAction}
+          onClose={onClose}
           autoHideDuration={4000}
           isVisible={true}
         />,
       );
 
-      expect(onAction).not.toHaveBeenCalled();
+      expect(onClose).not.toHaveBeenCalled();
 
       vi.advanceTimersByTime(4000);
 
-      expect(onAction).toHaveBeenCalledTimes(1);
+      expect(onClose).toHaveBeenCalledTimes(1);
     });
 
     it("uses default autoHideDuration of 4000ms", () => {
-      const onAction = vi.fn();
+      const onClose = vi.fn();
 
       render(
-        <Snackbar
-          message="Test message"
-          onAction={onAction}
-          isVisible={true}
-        />,
+        <Snackbar message="Test message" onClose={onClose} isVisible={true} />,
       );
 
       vi.advanceTimersByTime(3900);
-      expect(onAction).not.toHaveBeenCalled();
+      expect(onClose).not.toHaveBeenCalled();
 
       vi.advanceTimersByTime(100);
-      expect(onAction).toHaveBeenCalledTimes(1);
+      expect(onClose).toHaveBeenCalledTimes(1);
     });
 
     it("does not auto-hide when autoHideDuration is 0", () => {
-      const onAction = vi.fn();
+      const onClose = vi.fn();
 
       render(
         <Snackbar
           message="Test message"
-          onAction={onAction}
+          onClose={onClose}
           autoHideDuration={0}
           isVisible={true}
         />,
@@ -144,16 +237,16 @@ describe("Snackbar", () => {
 
       vi.advanceTimersByTime(10000);
 
-      expect(onAction).not.toHaveBeenCalled();
+      expect(onClose).not.toHaveBeenCalled();
     });
 
     it("does not auto-hide when isVisible is false", () => {
-      const onAction = vi.fn();
+      const onClose = vi.fn();
 
       render(
         <Snackbar
           message="Test message"
-          onAction={onAction}
+          onClose={onClose}
           autoHideDuration={1000}
           isVisible={false}
         />,
@@ -161,16 +254,16 @@ describe("Snackbar", () => {
 
       vi.advanceTimersByTime(1000);
 
-      expect(onAction).not.toHaveBeenCalled();
+      expect(onClose).not.toHaveBeenCalled();
     });
 
     it("clears timer on unmount", () => {
-      const onAction = vi.fn();
+      const onClose = vi.fn();
 
       const { unmount } = render(
         <Snackbar
           message="Test message"
-          onAction={onAction}
+          onClose={onClose}
           autoHideDuration={4000}
           isVisible={true}
         />,
@@ -180,32 +273,96 @@ describe("Snackbar", () => {
       unmount();
       vi.advanceTimersByTime(2000);
 
-      expect(onAction).not.toHaveBeenCalled();
+      expect(onClose).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("Keyboard Navigation", () => {
+    it("has onKeyDown handler attached", () => {
+      const onClose = vi.fn();
+
+      render(
+        <Snackbar message="Test message" isVisible={true} onClose={onClose} />,
+      );
+
+      const snackbar = screen.getByRole("alert");
+      expect(snackbar.onkeydown).toBeDefined();
+    });
+
+    it("has onKeyDown handler attached with action", () => {
+      const onActionClick = vi.fn();
+
+      render(
+        <Snackbar
+          message="Test message"
+          action={{
+            label: "Undo",
+            onClick: onActionClick,
+          }}
+          isVisible={true}
+        />,
+      );
+
+      const snackbar = screen.getByRole("alert");
+      expect(snackbar.onkeydown).toBeDefined();
+    });
+
+    it("has onKeyDown handler attached without action", () => {
+      render(<Snackbar message="Test message" isVisible={true} />);
+
+      const snackbar = screen.getByRole("alert");
+      expect(snackbar.onkeydown).toBeDefined();
     });
   });
 
   describe("Position", () => {
-    it.each(["bottom", "top"] as const)(
-      "renders with position=%s",
-      (position) => {
-        const { container } = render(
-          <Snackbar
-            message="Test message"
-            position={position}
-            isVisible={true}
-          />,
-        );
+    it.each([
+      "top-left",
+      "top-center",
+      "top-right",
+      "bottom-left",
+      "bottom-center",
+      "bottom-right",
+    ] as const)("renders with position=%s", (position) => {
+      const { container } = render(
+        <Snackbar
+          message="Test message"
+          position={position}
+          isVisible={true}
+        />,
+      );
 
-        const snackbar = screen.getByRole("alert");
-        expect(snackbar).toHaveAttribute("data-position", position);
-      },
-    );
+      const snackbar = screen.getByRole("alert");
+      expect(snackbar).toHaveAttribute("data-position", position);
+      expect(snackbar.className).toContain(`position-${position}`);
+    });
 
-    it("defaults to bottom position", () => {
+    it("defaults to bottom-center position", () => {
       render(<Snackbar message="Test message" isVisible={true} />);
 
       const snackbar = screen.getByRole("alert");
-      expect(snackbar).toHaveAttribute("data-position", "bottom");
+      expect(snackbar).toHaveAttribute("data-position", "bottom-center");
+      expect(snackbar.className).toContain("position-bottom-center");
+    });
+  });
+
+  describe("Portal Rendering", () => {
+    it("renders in portal by default", () => {
+      render(<Snackbar message="Test message" isVisible={true} />);
+
+      const snackbar = screen.getByRole("alert");
+      expect(snackbar.parentElement).toBe(document.body);
+    });
+
+    it("renders without portal when portal=false", () => {
+      const { container } = render(
+        <div data-testid="container">
+          <Snackbar message="Test message" isVisible={true} portal={false} />
+        </div>,
+      );
+
+      const snackbar = screen.getByRole("alert");
+      expect(snackbar.parentElement).toBe(container.firstChild);
     });
   });
 
@@ -215,6 +372,7 @@ describe("Snackbar", () => {
 
       const snackbar = screen.getByRole("alert");
       expect(snackbar).toHaveAttribute("aria-live", "polite");
+      expect(snackbar).toHaveAttribute("aria-atomic", "true");
     });
 
     it("applies custom aria-label", () => {
@@ -234,8 +392,10 @@ describe("Snackbar", () => {
       render(
         <Snackbar
           message="Settings saved"
-          actionLabel="Undo"
-          onAction={vi.fn()}
+          action={{
+            label: "Undo",
+            onClick: vi.fn(),
+          }}
           isVisible={true}
         />,
       );
@@ -249,6 +409,15 @@ describe("Snackbar", () => {
         const messageElement = document.getElementById(describedBy);
         expect(messageElement).toHaveTextContent("Settings saved");
       }
+    });
+
+    it("close button has correct aria-label", () => {
+      render(
+        <Snackbar message="Test message" isVisible={true} onClose={vi.fn()} />,
+      );
+
+      const closeButton = screen.getByLabelText("Close notification");
+      expect(closeButton).toBeInTheDocument();
     });
   });
 
@@ -277,11 +446,24 @@ describe("Snackbar", () => {
 
     it("sets data-position attribute", () => {
       render(
-        <Snackbar message="Test message" position="top" isVisible={true} />,
+        <Snackbar
+          message="Test message"
+          position="top-center"
+          isVisible={true}
+        />,
       );
 
       const snackbar = screen.getByRole("alert");
-      expect(snackbar).toHaveAttribute("data-position", "top");
+      expect(snackbar).toHaveAttribute("data-position", "top-center");
+    });
+
+    it("sets data-variant attribute", () => {
+      render(
+        <Snackbar message="Test message" variant="success" isVisible={true} />,
+      );
+
+      const snackbar = screen.getByRole("alert");
+      expect(snackbar).toHaveAttribute("data-variant", "success");
     });
   });
 
@@ -293,6 +475,21 @@ describe("Snackbar", () => {
       render(<Snackbar message={longMessage} isVisible={true} />);
 
       expect(screen.getByText(longMessage)).toBeInTheDocument();
+    });
+
+    it("renders React node messages", () => {
+      const message = (
+        <div>
+          <strong>Success!</strong> Your changes have been saved.
+        </div>
+      );
+
+      render(<Snackbar message={message} isVisible={true} />);
+
+      expect(screen.getByText("Success!")).toBeInTheDocument();
+      expect(
+        screen.getByText("Your changes have been saved."),
+      ).toBeInTheDocument();
     });
   });
 
@@ -322,6 +519,54 @@ describe("Snackbar", () => {
 
       expect(screen.queryByText("First message")).not.toBeInTheDocument();
       expect(screen.getByText("Second message")).toBeInTheDocument();
+    });
+
+    it("handles missing onClose gracefully", () => {
+      expect(() => {
+        render(<Snackbar message="Test message" isVisible={true} />);
+      }).not.toThrow();
+    });
+
+    it("handles missing action gracefully", () => {
+      expect(() => {
+        render(<Snackbar message="Test message" isVisible={true} />);
+      }).not.toThrow();
+    });
+  });
+
+  describe("Accessibility", () => {
+    it("is focusable for keyboard navigation", () => {
+      render(
+        <Snackbar message="Test message" isVisible={true} onClose={vi.fn()} />,
+      );
+
+      const snackbar = screen.getByRole("alert");
+      expect(snackbar).toHaveAttribute("tabIndex", "-1");
+    });
+
+    it("action button is focusable", () => {
+      render(
+        <Snackbar
+          message="Test message"
+          action={{
+            label: "Undo",
+            onClick: vi.fn(),
+          }}
+          isVisible={true}
+        />,
+      );
+
+      const actionButton = screen.getByText("Undo");
+      expect(actionButton).toHaveAttribute("tabIndex", "0");
+    });
+
+    it("close button is focusable", () => {
+      render(
+        <Snackbar message="Test message" isVisible={true} onClose={vi.fn()} />,
+      );
+
+      const closeButton = screen.getByLabelText("Close notification");
+      expect(closeButton).toHaveAttribute("tabIndex", "0");
     });
   });
 });

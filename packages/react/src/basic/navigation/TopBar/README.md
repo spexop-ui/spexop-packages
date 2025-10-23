@@ -316,20 +316,113 @@ Following "The Spexop Way":
 
 ## Accessibility
 
-- ✅ Semantic HTML (`<nav>` element)
-- ✅ Proper ARIA labels
-- ✅ Keyboard navigation (Tab, Enter)
-- ✅ Focus indicators
-- ✅ Active state indication
-- ✅ Mobile menu accessible
-- ✅ Screen reader support
-- ✅ WCAG AA+ compliant
+### WCAG AAA Compliance
 
-### Keyboard Shortcuts
+The TopBar component meets WCAG AAA standards with:
 
-- `Tab` - Navigate through links
-- `Enter/Space` - Activate link
-- `Escape` - Close mobile menu (when open)
+- **Color Contrast**: Minimum 7:1 ratio for all text
+- **Touch Targets**: Minimum 44×44px on mobile devices
+- **Focus Indicators**: 2px solid outline with 2px offset
+- **Screen Reader Support**: Complete ARIA implementation
+- **Keyboard Navigation**: Full keyboard accessibility
+- **Skip Links**: Built-in navigation shortcuts
+
+### ARIA Support
+
+```tsx
+<TopBar
+  logo={{
+    text: 'MyApp',
+    href: '/',
+    ariaLabel: 'MyApp Home'
+  }}
+  links={[
+    { label: 'Dashboard', href: '/dashboard' },
+    { label: 'Settings', href: '/settings' }
+  ]}
+  currentPath="/dashboard"
+  onNavigate={handleNavigate}
+  aria-label="Main navigation"
+/>
+```
+
+### Skip Links
+
+Built-in skip navigation for keyboard users:
+
+```tsx
+// Automatically includes skip links
+<TopBar
+  logo={logo}
+  links={links}
+  currentPath={currentPath}
+  onNavigate={handleNavigate}
+  skipLinks={[
+    { label: 'Skip to main content', href: '#main' },
+    { label: 'Skip to navigation', href: '#nav' }
+  ]}
+/>
+```
+
+### Keyboard Navigation
+
+- **Tab**: Navigate through links
+- **Enter/Space**: Activate link
+- **Escape**: Close mobile menu (when open)
+- **Arrow Keys**: Navigate within mobile menu
+- **Home/End**: Jump to first/last menu item
+
+### Focus Management
+
+Enhanced focus management for mobile menus:
+
+```tsx
+// Focus is trapped within mobile menu when open
+// Focus returns to trigger button when closed
+// Focus indicators are clearly visible
+```
+
+### Touch Targets
+
+Mobile-optimized touch targets:
+
+- **Desktop**: Minimum 36×36px
+- **Mobile**: Minimum 44×44px (automatically applied)
+- **Logo**: Minimum 44×44px touch area
+- **Menu Items**: Full-width touch targets on mobile
+
+### High Contrast Mode
+
+Automatic enhancements in high contrast mode:
+
+```css
+@media (prefers-contrast: high) {
+  .topBar {
+    border-width: 3px;
+    font-weight: var(--theme-font-weight-bold);
+  }
+}
+```
+
+### Reduced Motion
+
+Respects `prefers-reduced-motion` for smooth or instant transitions:
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  .topBar {
+    transition: none;
+    transform: none;
+  }
+}
+```
+
+### Screen Reader Announcements
+
+- Navigation landmarks are properly identified
+- Active page is announced
+- Mobile menu state is communicated
+- Skip links are available for quick navigation
 
 ## Mobile Behavior
 
@@ -379,6 +472,63 @@ const props: TopBarProps = {
 - [NavLink](../NavLink/README.md) - Individual navigation link
 - [Breadcrumb](../Breadcrumb/README.md) - Navigation hierarchy
 - [Complete Navigation System](../USAGE-GUIDE.md#complete-navigation-system) - Full navigation setup
+
+## Migration from v0.3.0
+
+### Accessibility Improvements (v0.4.0)
+
+#### Enhanced Touch Targets
+
+```tsx
+// Before: Fixed touch target size
+<TopBar logo={logo} links={links} currentPath={currentPath} onNavigate={handleNavigate} />
+
+// After: Responsive touch targets (44px on mobile)
+<TopBar logo={logo} links={links} currentPath={currentPath} onNavigate={handleNavigate} />
+```
+
+#### Skip Links
+
+```tsx
+// Before: No skip navigation
+<TopBar logo={logo} links={links} currentPath={currentPath} onNavigate={handleNavigate} />
+
+// After: Built-in skip links
+<TopBar 
+  logo={logo} 
+  links={links} 
+  currentPath={currentPath} 
+  onNavigate={handleNavigate}
+  skipLinks={[
+    { label: 'Skip to main content', href: '#main' },
+    { label: 'Skip to navigation', href: '#nav' }
+  ]}
+/>
+```
+
+#### Improved Focus Management
+
+```tsx
+// Before: Basic focus indicators
+// After: Enhanced focus with proper contrast and offset
+// Automatically applied - no code changes needed
+```
+
+#### Mobile Menu Enhancements
+
+```tsx
+// Before: Basic mobile menu
+// After: Focus trap, better keyboard navigation, ARIA live regions
+// Automatically applied - no code changes needed
+```
+
+### Migration Checklist
+
+- [ ] Add skip links for better keyboard navigation
+- [ ] Test touch targets on mobile devices
+- [ ] Verify focus indicators in high contrast mode
+- [ ] Test mobile menu with keyboard navigation
+- [ ] Test with screen readers
 
 ## Further Reading
 

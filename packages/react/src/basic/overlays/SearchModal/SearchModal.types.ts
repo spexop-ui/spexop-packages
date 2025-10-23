@@ -99,4 +99,19 @@ export interface SearchModalProps {
    * Additional CSS class
    */
   className?: string;
+
+  /**
+   * Callback when a search is performed
+   */
+  onSearch?: (query: string) => void;
+
+  /**
+   * Callback when a result is selected
+   */
+  onResultSelect?: (result: SearchResult) => void;
+
+  /**
+   * Callback when a quick link is clicked
+   */
+  onQuickLinkClick?: (link: QuickLink) => void;
 }

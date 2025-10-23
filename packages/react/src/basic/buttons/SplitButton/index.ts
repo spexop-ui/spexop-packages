@@ -13,7 +13,12 @@
 
 export { SplitButton } from "./SplitButton.js";
 export type {
-  SplitButtonOption,
+  SplitButtonMenuItem,
+  SplitButtonMenuDivider,
+  SplitButtonMenuGroup,
+  SplitButtonMenuOption,
   SplitButtonProps,
   SplitButtonVariant,
+  SplitButtonSize,
+  SplitButtonCompact,
 } from "./SplitButton.types.js";

@@ -1,8 +1,9 @@
 /**
  * CTACard Component Tests
+ * Modern UI/UX enhanced component testing
  *
  * @packageName @spexop/react
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 import { render, screen } from "@testing-library/react";
@@ -106,6 +107,22 @@ describe("CTACard", () => {
     expect(screen.getByText("Ready to get started?")).toBeDefined();
   });
 
+  it("supports density variants", () => {
+    const { container: compactContainer } = render(
+      <CTACard {...defaultProps} density="compact" />,
+    );
+    const { container: spaciousContainer } = render(
+      <CTACard {...defaultProps} density="spacious" />,
+    );
+
+    expect(
+      compactContainer.querySelector('[class*="density--compact"]'),
+    ).toBeDefined();
+    expect(
+      spaciousContainer.querySelector('[class*="density--spacious"]'),
+    ).toBeDefined();
+  });
+
   it("applies custom className", () => {
     const { container } = render(
       <CTACard {...defaultProps} className="custom-class" />,
@@ -138,5 +155,169 @@ describe("CTACard", () => {
 
     // Component should render successfully with default density
     expect(screen.getByText("Ready to get started?")).toBeDefined();
+  });
+
+  it("supports loading state", () => {
+    render(
+      <CTACard {...defaultProps} state="loading" loadingText="Processing..." />,
+    );
+
+    expect(screen.getByText("Processing...")).toBeDefined();
+  });
+
+  it("supports error state", () => {
+    render(
+      <CTACard
+        {...defaultProps}
+        state="error"
+        errorMessage="Something went wrong"
+      />,
+    );
+
+    expect(screen.getByText("Something went wrong")).toBeDefined();
+  });
+
+  it("supports success state", () => {
+    render(
+      <CTACard
+        {...defaultProps}
+        state="success"
+        successMessage="Operation completed"
+      />,
+    );
+
+    expect(screen.getByText("Operation completed")).toBeDefined();
+  });
+
+  it("disables actions when disabled", () => {
+    render(<CTACard {...defaultProps} disabled />);
+
+    const primaryButton = screen.getByRole("button", {
+      name: "Start Free Trial",
+    });
+    expect(primaryButton).toBeDisabled();
+  });
+
+  it("disables actions when loading", () => {
+    render(<CTACard {...defaultProps} state="loading" />);
+
+    const primaryButton = screen.getByRole("button", {
+      name: "Start Free Trial",
+    });
+    expect(primaryButton).toBeDisabled();
+  });
+
+  it("supports action button variants", () => {
+    const primaryAction = {
+      label: "Primary",
+      onClick: vi.fn(),
+      variant: "secondary" as const,
+    };
+
+    const secondaryAction = {
+      label: "Secondary",
+      onClick: vi.fn(),
+      variant: "outline" as const,
+    };
+
+    render(
+      <CTACard
+        {...defaultProps}
+        primaryAction={primaryAction}
+        secondaryAction={secondaryAction}
+      />,
+    );
+
+    expect(screen.getByText("Primary")).toBeDefined();
+    expect(screen.getByText("Secondary")).toBeDefined();
+  });
+
+  it("supports action button loading states", () => {
+    const primaryAction = {
+      label: "Loading Action",
+      onClick: vi.fn(),
+      loading: true,
+    };
+
+    render(<CTACard {...defaultProps} primaryAction={primaryAction} />);
+
+    const button = screen.getByRole("button", { name: "Loading Action" });
+    expect(button).toBeDisabled();
+  });
+
+  it("supports action button disabled states", () => {
+    const primaryAction = {
+      label: "Disabled Action",
+      onClick: vi.fn(),
+      disabled: true,
+    };
+
+    render(<CTACard {...defaultProps} primaryAction={primaryAction} />);
+
+    const button = screen.getByRole("button", { name: "Disabled Action" });
+    expect(button).toBeDisabled();
+  });
+
+  it("has proper accessibility attributes", () => {
+    const { container } = render(
+      <CTACard
+        {...defaultProps}
+        aria-label="Custom CTA"
+        aria-describedby="cta-description"
+      />,
+    );
+
+    const card = container.firstChild as HTMLElement;
+    expect(card).toHaveAttribute("aria-label", "Custom CTA");
+    expect(card).toHaveAttribute("aria-describedby", "cta-description");
+  });
+
+  it("generates default aria-label when not provided", () => {
+    const { container } = render(<CTACard {...defaultProps} />);
+
+    const card = container.firstChild as HTMLElement;
+    expect(card).toHaveAttribute(
+      "aria-label",
+      "Call to action: Ready to get started?",
+    );
+  });
+
+  it("supports feedback levels", () => {
+    const { container: subtleContainer } = render(
+      <CTACard {...defaultProps} feedback="subtle" />,
+    );
+    const { container: prominentContainer } = render(
+      <CTACard {...defaultProps} feedback="prominent" />,
+    );
+
+    expect(
+      subtleContainer.querySelector('[class*="feedback-subtle"]'),
+    ).toBeDefined();
+    expect(
+      prominentContainer.querySelector('[class*="feedback-prominent"]'),
+    ).toBeDefined();
+  });
+
+  it("handles keyboard navigation", async () => {
+    const user = userEvent.setup();
+    const handleClick = vi.fn();
+
+    render(
+      <CTACard
+        {...defaultProps}
+        primaryAction={{ label: "Start Free Trial", onClick: handleClick }}
+      />,
+    );
+
+    const button = screen.getByRole("button", { name: "Start Free Trial" });
+
+    // Focus the button first
+    button.focus();
+
+    await user.keyboard("{Enter}");
+    expect(handleClick).toHaveBeenCalledTimes(1);
+
+    await user.keyboard(" ");
+    expect(handleClick).toHaveBeenCalledTimes(2);
   });
 });

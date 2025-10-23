@@ -1,7 +1,7 @@
 # SegmentedButton Component - Complete Usage Guide
 
-**Component Version**: v0.1.0
-**Last Updated**: October 20, 2025
+**Component Version**: v0.3.0
+**Last Updated**: January 20, 2025
 **Package**: @spexop/react
 **Status**: Production Ready
 
@@ -51,14 +51,18 @@ Consider alternatives when you need:
 ### Key Features
 
 - Radio group pattern (single selection)
-- Full keyboard navigation (Arrow Left/Right)
+- Enhanced keyboard navigation (Arrow Left/Right, Home/End)
 - Wrap-around navigation
 - Skip disabled options
-- Icon support
-- Visual active state
+- Icon support with proper ARIA labels
+- Size variants (sm, md, lg)
+- Full width mode
+- Visual active state with border-first design
 - WCAG AA+ accessible
+- High contrast mode support
 - Theme-aware styling
-- Smooth transitions
+- Smooth transitions with reduced motion support
+- Mobile-optimized touch targets
 
 ## Quick Start
 
@@ -149,6 +153,77 @@ yarn add @spexop/react @spexop/theme
 
 ```tsx
 import '@spexop/react/dist/index.css';
+```
+
+## Size Variants
+
+### Small Size
+
+Perfect for compact interfaces, toolbars, and secondary controls.
+
+```tsx
+<SegmentedButton
+  size="sm"
+  value={view}
+  onChange={setView}
+  options={[
+    { value: 'list', label: 'List' },
+    { value: 'grid', label: 'Grid' }
+  ]}
+  aria-label="Compact view"
+/>
+```
+
+### Medium Size (Default)
+
+Ideal for most use cases with balanced proportions.
+
+```tsx
+<SegmentedButton
+  size="md"
+  value={view}
+  onChange={setView}
+  options={[
+    { value: 'list', label: 'List' },
+    { value: 'grid', label: 'Grid' }
+  ]}
+  aria-label="View mode"
+/>
+```
+
+### Large Size
+
+Great for prominent controls and mobile interfaces.
+
+```tsx
+<SegmentedButton
+  size="lg"
+  value={view}
+  onChange={setView}
+  options={[
+    { value: 'list', label: 'List' },
+    { value: 'grid', label: 'Grid' }
+  ]}
+  aria-label="View mode"
+/>
+```
+
+## Full Width Mode
+
+Use full width mode when you want the segmented button to fill its container.
+
+```tsx
+<SegmentedButton
+  fullWidth
+  value={filter}
+  onChange={setFilter}
+  options={[
+    { value: 'all', label: 'All Items' },
+    { value: 'active', label: 'Active' },
+    { value: 'archived', label: 'Archived' }
+  ]}
+  aria-label="Filter items"
+/>
 ```
 
 ## Basic Usage
@@ -583,14 +658,15 @@ function PersistedViewSwitcher() {
 
 ### Navigation Keys
 
-SegmentedButton implements full keyboard navigation:
+SegmentedButton implements enhanced keyboard navigation:
 
 - **Tab**: Focus the active option
 - **Shift + Tab**: Focus previous element
 - **Arrow Right**: Move to next option
 - **Arrow Left**: Move to previous option
-- **Home**: Focus first option (optional custom)
-- **End**: Focus last option (optional custom)
+- **Home**: Move to first option
+- **End**: Move to last option
+- **Space/Enter**: Select focused option (when focused)
 
 ### Wrap-Around Navigation
 
@@ -905,6 +981,12 @@ interface SegmentedButtonProps {
   
   /** Array of options */
   options: SegmentedButtonOption[];
+  
+  /** Size variant */
+  size?: "sm" | "md" | "lg";
+  
+  /** Full width mode */
+  fullWidth?: boolean;
   
   /** Additional CSS class */
   className?: string;

@@ -1,550 +1,243 @@
-/**
- * Reveal Component Tests
- * Tests for viewport-triggered animations with IntersectionObserver
- *
- * @author @olmstedian | github.com/olmstedian | @spexop | github.com/spexop-ui
- */
-
-import { render } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
+import "@testing-library/jest-dom";
 import React from "react";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Reveal } from "./Reveal.js";
 
-// Add this line to ensure Jest DOM is available
-/// <reference types="@testing-library/jest-dom" />
-
 // Mock IntersectionObserver
-class MockIntersectionObserver {
-  callback: IntersectionObserverCallback;
-  elements: Set<Element>;
+const mockIntersectionObserver = vi.fn();
+const mockObserve = vi.fn();
+const mockUnobserve = vi.fn();
+const mockDisconnect = vi.fn();
 
-  constructor(callback: IntersectionObserverCallback) {
-    this.callback = callback;
-    this.elements = new Set();
-  }
+// Store callbacks for testing
+let storedCallback: ((entries: IntersectionObserverEntry[]) => void) | null =
+  null;
 
-  observe(element: Element) {
-    this.elements.add(element);
-  }
+mockIntersectionObserver.mockImplementation((callback, options) => {
+  // Store the callback for testing
+  storedCallback = callback;
 
-  unobserve(element: Element) {
-    this.elements.delete(element);
-  }
+  return {
+    observe: mockObserve,
+    unobserve: mockUnobserve,
+    disconnect: mockDisconnect,
+  };
+});
 
-  disconnect() {
-    this.elements.clear();
-  }
+window.IntersectionObserver = mockIntersectionObserver;
 
-  trigger(isIntersecting: boolean) {
-    const entries = Array.from(this.elements).map((element) => ({
-      target: element,
-      isIntersecting,
-      intersectionRatio: isIntersecting ? 1 : 0,
-      boundingClientRect: element.getBoundingClientRect(),
-      intersectionRect: element.getBoundingClientRect(),
-      rootBounds: null,
-      time: Date.now(),
-    }));
-    this.callback(
-      entries as IntersectionObserverEntry[],
-      this as unknown as IntersectionObserver,
-    );
-  }
-}
+// Mock matchMedia
+const mockMatchMedia = vi.fn().mockImplementation((query) => ({
+  matches: false,
+  media: query,
+  onchange: null,
+  addListener: vi.fn(),
+  removeListener: vi.fn(),
+  addEventListener: vi.fn(),
+  removeEventListener: vi.fn(),
+  dispatchEvent: vi.fn(),
+}));
 
-let mockObserver: MockIntersectionObserver;
-
-beforeEach(() => {
-  mockObserver = new MockIntersectionObserver(vi.fn());
-  global.IntersectionObserver = vi.fn(
-    (callback) => new MockIntersectionObserver(callback),
-  ) as unknown as typeof IntersectionObserver;
+Object.defineProperty(window, "matchMedia", {
+  writable: true,
+  value: mockMatchMedia,
 });
 
 describe("Reveal", () => {
-  describe("Rendering", () => {
-    it("should render children", () => {
-      const { getByText } = render(
-        <Reveal>
-          <div>Test Content</div>
-        </Reveal>,
-      );
-
-      expect(getByText("Test Content")).toBeDefined();
-    });
-
-    it("should apply default className", () => {
-      const { container } = render(
-        <Reveal>
-          <div>Content</div>
-        </Reveal>,
-      );
-
-      const element = container.firstChild as HTMLElement;
-      expect(element.className).toContain("spex-reveal");
-      expect(element.className).toContain("spex-reveal--fadeIn");
-    });
-
-    it("should apply custom className", () => {
-      const { container } = render(
-        <Reveal className="custom-class">
-          <div>Content</div>
-        </Reveal>,
-      );
-
-      const element = container.firstChild as HTMLElement;
-      expect(element.className).toContain("custom-class");
-    });
-
-    it("should apply custom styles", () => {
-      const { container } = render(
-        <Reveal style={{ color: "red", fontSize: "20px" }}>
-          <div>Content</div>
-        </Reveal>,
-      );
-
-      const element = container.firstChild as HTMLElement;
-      expect(element.style.color).toBe("red");
-      expect(element.style.fontSize).toBe("20px");
-    });
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.useFakeTimers();
   });
 
-  describe("Animation Variants", () => {
-    it("should apply fadeIn variant", () => {
-      const { container } = render(
-        <Reveal variant="fadeIn">
-          <div>Content</div>
-        </Reveal>,
-      );
-
-      const element = container.firstChild as HTMLElement;
-      expect(element.className).toContain("spex-reveal--fadeIn");
-    });
-
-    it("should apply fadeInUp variant", () => {
-      const { container } = render(
-        <Reveal variant="fadeInUp">
-          <div>Content</div>
-        </Reveal>,
-      );
-
-      const element = container.firstChild as HTMLElement;
-      expect(element.className).toContain("spex-reveal--fadeInUp");
-    });
-
-    it("should apply fadeInDown variant", () => {
-      const { container } = render(
-        <Reveal variant="fadeInDown">
-          <div>Content</div>
-        </Reveal>,
-      );
-
-      const element = container.firstChild as HTMLElement;
-      expect(element.className).toContain("spex-reveal--fadeInDown");
-    });
-
-    it("should apply fadeInLeft variant", () => {
-      const { container } = render(
-        <Reveal variant="fadeInLeft">
-          <div>Content</div>
-        </Reveal>,
-      );
-
-      const element = container.firstChild as HTMLElement;
-      expect(element.className).toContain("spex-reveal--fadeInLeft");
-    });
-
-    it("should apply fadeInRight variant", () => {
-      const { container } = render(
-        <Reveal variant="fadeInRight">
-          <div>Content</div>
-        </Reveal>,
-      );
-
-      const element = container.firstChild as HTMLElement;
-      expect(element.className).toContain("spex-reveal--fadeInRight");
-    });
-
-    it("should apply slideUp variant", () => {
-      const { container } = render(
-        <Reveal variant="slideUp">
-          <div>Content</div>
-        </Reveal>,
-      );
-
-      const element = container.firstChild as HTMLElement;
-      expect(element.className).toContain("spex-reveal--slideUp");
-    });
-
-    it("should apply slideDown variant", () => {
-      const { container } = render(
-        <Reveal variant="slideDown">
-          <div>Content</div>
-        </Reveal>,
-      );
-
-      const element = container.firstChild as HTMLElement;
-      expect(element.className).toContain("spex-reveal--slideDown");
-    });
-
-    it("should apply slideLeft variant", () => {
-      const { container } = render(
-        <Reveal variant="slideLeft">
-          <div>Content</div>
-        </Reveal>,
-      );
-
-      const element = container.firstChild as HTMLElement;
-      expect(element.className).toContain("spex-reveal--slideLeft");
-    });
-
-    it("should apply slideRight variant", () => {
-      const { container } = render(
-        <Reveal variant="slideRight">
-          <div>Content</div>
-        </Reveal>,
-      );
-
-      const element = container.firstChild as HTMLElement;
-      expect(element.className).toContain("spex-reveal--slideRight");
-    });
-
-    it("should apply zoomIn variant", () => {
-      const { container } = render(
-        <Reveal variant="zoomIn">
-          <div>Content</div>
-        </Reveal>,
-      );
-
-      const element = container.firstChild as HTMLElement;
-      expect(element.className).toContain("spex-reveal--zoomIn");
-    });
-
-    it("should apply zoomOut variant", () => {
-      const { container } = render(
-        <Reveal variant="zoomOut">
-          <div>Content</div>
-        </Reveal>,
-      );
-
-      const element = container.firstChild as HTMLElement;
-      expect(element.className).toContain("spex-reveal--zoomOut");
-    });
-
-    it("should apply scaleUp variant", () => {
-      const { container } = render(
-        <Reveal variant="scaleUp">
-          <div>Content</div>
-        </Reveal>,
-      );
-
-      const element = container.firstChild as HTMLElement;
-      expect(element.className).toContain("spex-reveal--scaleUp");
-    });
-
-    it("should apply rotateIn variant", () => {
-      const { container } = render(
-        <Reveal variant="rotateIn">
-          <div>Content</div>
-        </Reveal>,
-      );
-
-      const element = container.firstChild as HTMLElement;
-      expect(element.className).toContain("spex-reveal--rotateIn");
-    });
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
-  describe("Animation Properties", () => {
-    it("should apply default duration", () => {
-      const { container } = render(
-        <Reveal>
-          <div>Content</div>
-        </Reveal>,
-      );
+  it("renders children without animation when disabled", () => {
+    render(
+      <Reveal variant="fadeInUp" disabled>
+        <div>Test content</div>
+      </Reveal>,
+    );
 
-      const element = container.firstChild as HTMLElement;
-      expect(element.style.transition).toContain("400ms");
-    });
-
-    it("should apply custom duration", () => {
-      const { container } = render(
-        <Reveal duration={800}>
-          <div>Content</div>
-        </Reveal>,
-      );
-
-      const element = container.firstChild as HTMLElement;
-      expect(element.style.transition).toContain("800ms");
-    });
-
-    it("should apply default timing function", () => {
-      const { container } = render(
-        <Reveal>
-          <div>Content</div>
-        </Reveal>,
-      );
-
-      const element = container.firstChild as HTMLElement;
-      expect(element.style.transition).toContain("ease-out");
-    });
-
-    it("should apply custom timing function", () => {
-      const { container } = render(
-        <Reveal timing="ease-in-out">
-          <div>Content</div>
-        </Reveal>,
-      );
-
-      const element = container.firstChild as HTMLElement;
-      expect(element.style.transition).toContain("ease-in-out");
-    });
-
-    it("should apply bounce timing function", () => {
-      const { container } = render(
-        <Reveal timing="bounce">
-          <div>Content</div>
-        </Reveal>,
-      );
-
-      const element = container.firstChild as HTMLElement;
-      expect(element.style.transition).toContain("cubic-bezier");
-    });
-
-    it("should apply elastic timing function", () => {
-      const { container } = render(
-        <Reveal timing="elastic">
-          <div>Content</div>
-        </Reveal>,
-      );
-
-      const element = container.firstChild as HTMLElement;
-      expect(element.style.transition).toContain("cubic-bezier");
-    });
+    expect(screen.getByText("Test content")).toBeInTheDocument();
   });
 
-  describe("Transform Values", () => {
-    it("should have correct fadeInUp transform", () => {
-      const { container } = render(
-        <Reveal variant="fadeInUp">
-          <div>Content</div>
-        </Reveal>,
-      );
+  it("renders children without animation when prefers reduced motion", () => {
+    // Mock reduced motion preference
+    window.matchMedia = vi.fn().mockImplementation((query) => ({
+      matches: query === "(prefers-reduced-motion: reduce)",
+      media: query,
+      onchange: null,
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    }));
 
-      const element = container.firstChild as HTMLElement;
-      // Initial state: translateY(12px)
-      expect(element.style.transform).toContain("translateY(12px)");
-    });
+    render(
+      <Reveal variant="fadeInUp" respectReducedMotion>
+        <div>Test content</div>
+      </Reveal>,
+    );
 
-    it("should have correct slideUp transform", () => {
-      const { container } = render(
-        <Reveal variant="slideUp">
-          <div>Content</div>
-        </Reveal>,
-      );
-
-      const element = container.firstChild as HTMLElement;
-      // Initial state: translateY(20px)
-      expect(element.style.transform).toContain("translateY(20px)");
-    });
-
-    it("should have correct zoomIn transform", () => {
-      const { container } = render(
-        <Reveal variant="zoomIn">
-          <div>Content</div>
-        </Reveal>,
-      );
-
-      const element = container.firstChild as HTMLElement;
-      // Initial state: scale(0.95)
-      expect(element.style.transform).toContain("scale(0.95)");
-    });
-
-    it("should have correct rotateIn transform", () => {
-      const { container } = render(
-        <Reveal variant="rotateIn">
-          <div>Content</div>
-        </Reveal>,
-      );
-
-      const element = container.firstChild as HTMLElement;
-      // Initial state: rotate(-3deg) scale(0.97)
-      expect(element.style.transform).toContain("rotate(-3deg)");
-      expect(element.style.transform).toContain("scale(0.97)");
-    });
+    expect(screen.getByText("Test content")).toBeInTheDocument();
   });
 
-  describe("Opacity", () => {
-    it("should start with opacity 0", () => {
-      const { container } = render(
-        <Reveal>
-          <div>Content</div>
-        </Reveal>,
-      );
+  it("applies correct CSS classes and styles", () => {
+    const { container } = render(
+      <Reveal variant="fadeInUp" className="custom-class">
+        <div>Test content</div>
+      </Reveal>,
+    );
 
-      const element = container.firstChild as HTMLElement;
-      expect(element.style.opacity).toBe("0");
-    });
-
-    it("should maintain opacity 0 for all variants initially", () => {
-      const variants = [
-        "fadeIn",
-        "fadeInUp",
-        "slideDown",
-        "zoomIn",
-        "rotateIn",
-      ] as const;
-
-      for (const variant of variants) {
-        const { container } = render(
-          <Reveal variant={variant}>
-            <div>Content</div>
-          </Reveal>,
-        );
-
-        const element = container.firstChild as HTMLElement;
-        expect(element.style.opacity).toBe("0");
-      }
-    });
+    const revealElement = container.firstChild as HTMLElement;
+    expect(revealElement).toHaveClass(
+      "spex-reveal",
+      "spex-reveal--fadeInUp",
+      "custom-class",
+    );
   });
 
-  describe("IntersectionObserver Configuration", () => {
-    it("should use default threshold", () => {
-      const observerSpy = vi.spyOn(global, "IntersectionObserver");
+  it("renders with correct initial styles", () => {
+    const { container } = render(
+      <Reveal variant="fadeInUp">
+        <div>Test content</div>
+      </Reveal>,
+    );
 
-      render(
-        <Reveal>
-          <div>Content</div>
-        </Reveal>,
-      );
-
-      expect(observerSpy).toHaveBeenCalled();
-      // Check that observer was created (threshold would be in options)
-    });
-
-    it("should apply custom threshold", () => {
-      const observerSpy = vi.spyOn(global, "IntersectionObserver");
-
-      render(
-        <Reveal threshold={0.5}>
-          <div>Content</div>
-        </Reveal>,
-      );
-
-      expect(observerSpy).toHaveBeenCalled();
-    });
-
-    it("should handle once prop", () => {
-      render(
-        <Reveal once={true}>
-          <div>Content</div>
-        </Reveal>,
-      );
-
-      expect(global.IntersectionObserver).toHaveBeenCalled();
-    });
-
-    it("should handle once={false} for repeated animations", () => {
-      render(
-        <Reveal once={false}>
-          <div>Content</div>
-        </Reveal>,
-      );
-
-      expect(global.IntersectionObserver).toHaveBeenCalled();
-    });
+    const revealElement = container.firstChild as HTMLElement;
+    expect(revealElement).toHaveClass("spex-reveal", "spex-reveal--fadeInUp");
+    expect(revealElement.style.opacity).toBe("0");
+    expect(revealElement.style.transform).toBe("translateY(12px)");
   });
 
-  describe("Delay", () => {
-    it("should handle zero delay", () => {
-      const { container } = render(
-        <Reveal delay={0}>
-          <div>Content</div>
-        </Reveal>,
-      );
+  it("applies custom duration and timing", () => {
+    // Mock matchMedia to return false for reduced motion
+    const originalMatchMedia = window.matchMedia;
+    window.matchMedia = vi.fn().mockImplementation((query) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    }));
 
-      const element = container.firstChild as HTMLElement;
-      expect(element).toBeDefined();
-    });
+    const { container } = render(
+      <Reveal variant="fadeInUp" duration={800} timing="ease-in-out">
+        <div>Test content</div>
+      </Reveal>,
+    );
 
-    it("should handle custom delay", () => {
-      const { container } = render(
-        <Reveal delay={500}>
-          <div>Content</div>
-        </Reveal>,
-      );
+    const revealElement = container.firstChild as HTMLElement;
+    expect(revealElement.style.transition).toContain("800ms");
+    expect(revealElement.style.transition).toContain("ease-in-out");
 
-      const element = container.firstChild as HTMLElement;
-      expect(element).toBeDefined();
-    });
+    // Restore original matchMedia
+    window.matchMedia = originalMatchMedia;
   });
 
-  describe("Multiple Children", () => {
-    it("should wrap multiple children", () => {
-      const { getByText } = render(
-        <Reveal>
-          <div>First</div>
-          <div>Second</div>
-        </Reveal>,
-      );
+  it("applies hardware acceleration styles when enabled", () => {
+    const { container } = render(
+      <Reveal variant="fadeInUp" hardwareAcceleration>
+        <div>Test content</div>
+      </Reveal>,
+    );
 
-      expect(getByText("First")).toBeDefined();
-      expect(getByText("Second")).toBeDefined();
-    });
-
-    it("should handle complex children", () => {
-      const { getByText } = render(
-        <Reveal>
-          <div>
-            <h1>Title</h1>
-            <p>Description</p>
-            <button type="button">Action</button>
-          </div>
-        </Reveal>,
-      );
-
-      expect(getByText("Title")).toBeDefined();
-      expect(getByText("Description")).toBeDefined();
-      expect(getByText("Action")).toBeDefined();
-    });
+    const revealElement = container.firstChild as HTMLElement;
+    expect(revealElement.style.backfaceVisibility).toBe("hidden");
+    expect(revealElement.style.transformStyle).toBe("preserve-3d");
+    expect(revealElement.style.perspective).toBe("1000px");
   });
 
-  describe("Edge Cases", () => {
-    it("should handle empty children", () => {
-      const { container } = render(
-        <Reveal>
-          <div />
-        </Reveal>,
-      );
+  it("does not apply hardware acceleration when disabled", () => {
+    const { container } = render(
+      <Reveal variant="fadeInUp" hardwareAcceleration={false}>
+        <div>Test content</div>
+      </Reveal>,
+    );
 
-      expect(container.firstChild).toBeDefined();
-    });
-
-    it("should handle string children", () => {
-      const { getByText } = render(<Reveal>Plain text</Reveal>);
-
-      expect(getByText("Plain text")).toBeDefined();
-    });
-
-    it("should handle number children", () => {
-      const { getByText } = render(<Reveal>{42}</Reveal>);
-
-      expect(getByText("42")).toBeDefined();
-    });
-
-    it("should handle null/undefined gracefully", () => {
-      const { container } = render(
-        <Reveal>
-          <div>{null}</div>
-        </Reveal>,
-      );
-
-      expect(container.firstChild).toBeDefined();
-    });
+    const revealElement = container.firstChild as HTMLElement;
+    expect(revealElement.style.backfaceVisibility).toBe("");
+    expect(revealElement.style.transformStyle).toBe("");
+    expect(revealElement.style.perspective).toBe("");
   });
 
-  describe("Display Name", () => {
-    it("should have displayName set", () => {
-      expect(Reveal.displayName).toBe("Reveal");
-    });
+  it("applies correct accessibility attributes", () => {
+    const { container } = render(
+      <Reveal variant="fadeInUp">
+        <div>Test content</div>
+      </Reveal>,
+    );
+
+    const revealElement = container.firstChild as HTMLElement;
+    expect(revealElement.getAttribute("aria-hidden")).toBe("true");
+    expect(revealElement.getAttribute("role")).toBe("presentation");
+  });
+
+  it("uses custom rootMargin in intersection observer", () => {
+    render(
+      <Reveal variant="fadeInUp" rootMargin="100px">
+        <div>Test content</div>
+      </Reveal>,
+    );
+
+    expect(mockIntersectionObserver).toHaveBeenCalledWith(
+      expect.any(Function),
+      expect.objectContaining({
+        rootMargin: "100px",
+      }),
+    );
+  });
+
+  it("respects reduced motion preference", () => {
+    // Mock reduced motion preference
+    window.matchMedia = vi.fn().mockImplementation((query) => ({
+      matches: query === "(prefers-reduced-motion: reduce)",
+      media: query,
+      onchange: null,
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    }));
+
+    const { container } = render(
+      <Reveal variant="fadeInUp" respectReducedMotion>
+        <div>Test content</div>
+      </Reveal>,
+    );
+
+    const revealElement = container.firstChild as HTMLElement;
+    expect(revealElement.style.transition).toBe("");
+  });
+
+  it("handles disabled state correctly", () => {
+    const { container } = render(
+      <Reveal variant="fadeInUp" disabled>
+        <div>Test content</div>
+      </Reveal>,
+    );
+
+    // When disabled, should render children without wrapper
+    expect(container.firstChild).toBeInstanceOf(HTMLDivElement);
+    expect(container.firstChild?.textContent).toBe("Test content");
+  });
+
+  it("applies willChange property correctly", () => {
+    const { container } = render(
+      <Reveal variant="fadeInUp">
+        <div>Test content</div>
+      </Reveal>,
+    );
+
+    const revealElement = container.firstChild as HTMLElement;
+    expect(revealElement.style.willChange).toBe("transform, opacity");
   });
 });

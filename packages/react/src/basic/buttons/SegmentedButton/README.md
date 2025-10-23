@@ -1,23 +1,26 @@
 # SegmentedButton Component
 
-**Version**: 0.1.0  
+**Version**: 0.3.0  
 **Package**: `@spexop/react`  
 **Status**: Production Ready
 
 ## Overview
 
-A radio-style button group with exclusive selection, perfect for view modes, filters, and option selection. Features smooth animations and full keyboard navigation.
+A radio-style button group with exclusive selection, perfect for view modes, filters, and option selection. Features modern UI/UX design following "The Spexop Way" with enhanced accessibility and smooth interactions.
 
 ## Features
 
 - ✅ Exclusive selection (radio behavior)
-- ✅ Icon support
-- ✅ Horizontal layout
-- ✅ Keyboard navigation (Arrow keys)
-- ✅ Smooth animations
-- ✅ Disabled options
+- ✅ Icon support with proper ARIA labels
+- ✅ Size variants (sm, md, lg)
+- ✅ Full width mode
+- ✅ Enhanced keyboard navigation (Arrow, Home, End keys)
+- ✅ Smooth animations with reduced motion support
+- ✅ Disabled options with screen reader support
 - ✅ WCAG AA+ accessible
+- ✅ High contrast mode support
 - ✅ TypeScript support
+- ✅ Mobile-optimized touch targets
 
 ## Installation
 
@@ -49,6 +52,49 @@ function App() {
     />
   );
 }
+```
+
+## Size Variants
+
+```tsx
+// Small size for compact interfaces
+<SegmentedButton
+  size="sm"
+  value={value}
+  onChange={setValue}
+  options={options}
+  aria-label="Compact view"
+/>
+
+// Medium size (default)
+<SegmentedButton
+  size="md"
+  value={value}
+  onChange={setValue}
+  options={options}
+  aria-label="View mode"
+/>
+
+// Large size for prominent controls
+<SegmentedButton
+  size="lg"
+  value={value}
+  onChange={setValue}
+  options={options}
+  aria-label="View mode"
+/>
+```
+
+## Full Width Mode
+
+```tsx
+<SegmentedButton
+  fullWidth
+  value={value}
+  onChange={setValue}
+  options={options}
+  aria-label="Full width view"
+/>
 ```
 
 ## With Icons
@@ -262,6 +308,10 @@ interface SegmentedButtonProps {
   onChange: (value: string) => void;
   /** Button options */
   options: SegmentedButtonOption[];
+  /** Size variant */
+  size?: "sm" | "md" | "lg";
+  /** Full width mode */
+  fullWidth?: boolean;
   /** Additional CSS class */
   className?: string;
   /** ARIA label for accessibility */
@@ -283,10 +333,12 @@ interface SegmentedButtonOption {
 
 Following "The Spexop Way":
 
-1. **Borders before shadows** - Clean button borders
-2. **Typography before decoration** - Clear labels
-3. **Tokens before magic numbers** - Uses design tokens
-4. **Accessibility before aesthetics** - Full ARIA support
+1. **Borders before shadows** - Strong 2-3px borders instead of heavy shadows
+2. **Typography before decoration** - Font weight (600/700) for hierarchy, not lighter colors
+3. **Tokens before magic numbers** - All values from @spexop/theme design tokens
+4. **Composition before complexity** - Simple, focused design
+5. **Standards before frameworks** - Web platform fundamentals
+6. **Accessibility before aesthetics** - WCAG AA+ compliance by default
 
 ## Accessibility
 
@@ -302,6 +354,8 @@ Following "The Spexop Way":
 
 - `Arrow Left` - Select previous option
 - `Arrow Right` - Select next option
+- `Home` - Select first option
+- `End` - Select last option
 - `Tab` - Move focus to/from control
 - `Space/Enter` - Select focused option
 

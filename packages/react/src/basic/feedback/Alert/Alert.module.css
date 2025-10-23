@@ -62,8 +62,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  min-height: 32px;
   padding: 0;
   background: transparent;
   border: 1px solid transparent;
@@ -71,6 +73,8 @@
   color: currentColor;
   cursor: pointer;
   transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .dismiss-button:hover {
@@ -91,6 +95,8 @@
 
 .dismiss-button:active {
   background: rgba(0, 0, 0, 0.1);
+  transform: scale(0.95);
+  transition-duration: 100ms;
 }
 
 /* Info variant */
@@ -143,6 +149,55 @@
 
   .icon {
     padding-top: 0;
+  }
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .alert {
+    padding: var(--theme-spacing-4, 16px);
+    gap: var(--theme-spacing-3, 12px);
+    font-size: var(--theme-font-size-base, 16px);
+    /* Better mobile spacing */
+    margin: var(--theme-spacing-2, 8px);
+  }
+  
+  .dismiss-button {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+  }
+  
+  .dismiss-button:active {
+    transform: scale(0.92);
+    transition-duration: 80ms;
+  }
+  
+  .title {
+    font-size: var(--theme-font-size-base, 16px);
+    margin-bottom: var(--theme-spacing-2, 8px);
+  }
+  
+  .message {
+    font-size: var(--theme-font-size-sm, 14px);
+    line-height: 1.6;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .alert {
+    animation: none;
+    transition: none;
+  }
+  
+  .dismiss-button {
+    transition: none;
+  }
+  
+  .dismiss-button:active {
+    transform: none;
   }
 }
 

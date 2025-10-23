@@ -40,3 +40,54 @@
 .horizontal9 { width: var(--theme-spacing-9); }
 .horizontal10 { width: var(--theme-spacing-10); }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   MOBILE OPTIMIZATIONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  .spacer {
+    /* Better mobile performance */
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+  
+  /* Mobile-specific spacing adjustments */
+  .vertical4 { height: var(--theme-spacing-3, 12px); }
+  .vertical5 { height: var(--theme-spacing-3, 12px); }
+  .vertical6 { height: var(--theme-spacing-4, 16px); }
+  .vertical7 { height: var(--theme-spacing-4, 16px); }
+  .vertical8 { height: var(--theme-spacing-5, 20px); }
+  .vertical9 { height: var(--theme-spacing-5, 20px); }
+  .vertical10 { height: var(--theme-spacing-6, 24px); }
+  
+  .horizontal4 { width: var(--theme-spacing-3, 12px); }
+  .horizontal5 { width: var(--theme-spacing-3, 12px); }
+  .horizontal6 { width: var(--theme-spacing-4, 16px); }
+  .horizontal7 { width: var(--theme-spacing-4, 16px); }
+  .horizontal8 { width: var(--theme-spacing-5, 20px); }
+  .horizontal9 { width: var(--theme-spacing-5, 20px); }
+  .horizontal10 { width: var(--theme-spacing-6, 24px); }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PERFORMANCE OPTIMIZATIONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Hardware acceleration for smooth scrolling */
+.spacer {
+  will-change: scroll-position;
+  transform: translateZ(0);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ACCESSIBILITY
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  .spacer {
+    scroll-behavior: auto;
+    will-change: auto;
+    transform: none;
+  }
+}
+

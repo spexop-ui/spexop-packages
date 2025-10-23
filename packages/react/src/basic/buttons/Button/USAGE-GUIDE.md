@@ -1,7 +1,7 @@
 # Button Component - Complete Usage Guide
 
 **Component Version**: v0.4.0
-**Last Updated**: October 20, 2025
+**Last Updated**: October 23, 2025
 **Package**: @spexop/react
 **Status**: Production Ready
 
@@ -51,18 +51,21 @@ Consider alternatives when you need:
 
 ### Key Features
 
-- 12 comprehensive variants (7 base + 5 semantic)
-- 3 size options + 2 compact modes
-- Icon-only mode with accessibility validation
-- Loading and disabled states
-- Full-width layout option
-- Border customization (weight and style)
-- Text color override
-- Polymorphic component (renders as button or custom element)
-- Complete ARIA support
-- Keyboard navigation (Enter, Space)
-- WCAG AA+ compliant
-- Theme-aware with design tokens
+- **12 comprehensive variants** (7 base + 5 semantic)
+- **3 size options + 2 compact modes**
+- **Icon-only mode** with accessibility validation
+- **Modern interactions** with ripple effects and press states
+- **Loading and disabled states** with visual feedback
+- **Full-width layout option**
+- **Border customization** (weight and style)
+- **Text color override** for theme flexibility
+- **Polymorphic component** (renders as button or custom element)
+- **Enhanced accessibility** with comprehensive ARIA support
+- **Advanced keyboard navigation** (Enter, Space, Escape)
+- **WCAG AA+ compliant** with focus management
+- **Theme-aware** with design tokens
+- **Performance optimized** with GPU acceleration
+- **Reduced motion support** for accessibility
 
 ## Quick Start
 
@@ -460,6 +463,85 @@ function SubmitButton() {
 - Not keyboard focusable
 - Cursor: not-allowed
 
+## Modern Interactions
+
+### Ripple Effects
+
+The Button component includes modern ripple effects that provide visual feedback on click:
+
+```tsx
+<Button variant="primary" onClick={handleClick}>
+  Click for Ripple Effect
+</Button>
+```
+
+**Features**:
+
+- **Material Design inspired** ripple animation
+- **Position-aware** - ripple originates from click point
+- **Accessible** - hidden from screen readers
+- **Performance optimized** - GPU accelerated
+
+### Press States
+
+Visual feedback for mouse interactions:
+
+```tsx
+<Button variant="secondary">
+  Press Me
+</Button>
+```
+
+**Behavior**:
+
+- **Mouse down**: Visual press state
+- **Mouse up**: Returns to normal
+- **Mouse leave**: Cancels press state
+- **Disabled/Loading**: No press feedback
+
+### Focus Management
+
+Enhanced focus handling for better accessibility:
+
+```tsx
+<Button 
+  variant="outline"
+  onFocus={() => console.log('Focused')}
+  onBlur={() => console.log('Blurred')}
+>
+  Focus Management
+</Button>
+```
+
+**Features**:
+
+- **Focus-visible**: Only shows focus ring on keyboard navigation
+- **Focus tracking**: Internal state management
+- **Escape handling**: Blurs focus for dismissible actions
+- **Tab order**: Proper tabIndex management
+
+### Advanced Keyboard Navigation
+
+```tsx
+<Button 
+  variant="ghost"
+  onKeyDown={(e) => {
+    if (e.key === 'Escape') {
+      // Handle escape
+    }
+  }}
+>
+  Advanced Keyboard
+</Button>
+```
+
+**Supported Keys**:
+
+- **Enter/Space**: Activates button
+- **Escape**: Blurs focus (for dismissible actions)
+- **Tab**: Standard tab navigation
+- **Arrow keys**: Context-dependent behavior
+
 ## Form Integration
 
 ### Submit Button
@@ -854,6 +936,64 @@ All button variants use theme tokens:
 </div>
 ```
 
+### 8. Modern Interaction Patterns
+
+```tsx
+// ✅ GOOD - Enhanced accessibility
+<Button 
+  variant="primary"
+  aria-describedby="submit-help"
+  aria-live="polite"
+  data-testid="submit-button"
+>
+  Submit
+</Button>
+
+// ✅ GOOD - Loading state with proper feedback
+<Button 
+  variant="primary" 
+  loading={isSubmitting}
+  aria-live={isSubmitting ? "polite" : undefined}
+>
+  {isSubmitting ? "Submitting..." : "Submit"}
+</Button>
+
+// ✅ GOOD - Dismissible action with escape handling
+<Button 
+  variant="ghost"
+  aria-haspopup="dialog"
+  onKeyDown={(e) => {
+    if (e.key === 'Escape') {
+      onClose();
+    }
+  }}
+>
+  Close Dialog
+</Button>
+```
+
+### 9. Performance Considerations
+
+```tsx
+// ✅ GOOD - Efficient event handling
+const handleClick = useCallback((event) => {
+  // Handle click
+}, [dependency]);
+
+<Button onClick={handleClick}>
+  Click Me
+</Button>
+
+// ✅ GOOD - Proper loading state management
+<Button 
+  loading={isLoading}
+  disabled={isLoading}
+  onClick={handleClick}
+>
+  {isLoading ? "Processing..." : "Submit"}
+</Button>
+```
+
 ## Common Patterns
 
 ### Action Button Group
@@ -1072,6 +1212,12 @@ interface ButtonProps {
   
   /** ARIA has popup */
   "aria-haspopup"?: boolean | "menu" | "dialog" | "listbox" | "tree" | "grid";
+  
+  /** ARIA live region */
+  "aria-live"?: "off" | "polite" | "assertive";
+  
+  /** Test ID for testing */
+  "data-testid"?: string;
 }
 ```
 
@@ -1109,9 +1255,14 @@ type ButtonVariant =
 
 ## Performance
 
-- **Bundle Size**: ~2KB gzipped
+- **Bundle Size**: ~2.5KB gzipped
 - **CSS Modules**: Scoped styles, zero runtime overhead
 - **Tree-shakeable**: Import only what you use
+- **GPU Accelerated**: Transform-based animations with `translateZ(0)`
+- **Modern Easing**: Cubic-bezier transitions for smoother animations
+- **Ripple Optimization**: Efficient DOM manipulation for ripple effects
+- **Reduced Motion**: Respects `prefers-reduced-motion` user preference
+- **Memory Management**: Proper cleanup of event listeners and animations
 - **Hardware-accelerated**: Transform-based hover effects
 
 ## License

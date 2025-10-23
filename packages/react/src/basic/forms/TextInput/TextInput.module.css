@@ -21,6 +21,14 @@
   color: var(--theme-text);
   line-height: var(--theme-line-height-tight);
   margin-bottom: var(--theme-spacing-1);
+  display: flex;
+  align-items: center;
+  gap: var(--theme-spacing-1);
+}
+
+.requiredIndicator {
+  color: var(--theme-danger);
+  font-weight: var(--theme-font-weight-bold);
 }
 
 html[data-theme="dark"] .label {
@@ -46,16 +54,73 @@ html[data-theme="dark"] .label {
   transition: border-color 150ms ease, 
               box-shadow 150ms ease;
   font-family: var(--theme-font-family);
+  /* Accessibility - Minimum touch target */
+  min-height: 44px;
 }
 
 .input:focus {
-  outline: none;
+  outline: 2px solid var(--theme-primary);
+  outline-offset: 2px;
   border-color: var(--theme-primary);
   background: var(--theme-surface);
 }
 
 .input::placeholder {
   color: var(--theme-text-muted);
+  opacity: 0.8;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .input {
+    /* Ensure minimum touch target on mobile */
+    min-height: 48px;
+    /* Better mobile keyboard handling */
+    font-size: 16px; /* Prevents zoom on iOS */
+    /* Better touch feedback */
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  
+  .inputSizeSm {
+    min-height: 48px;
+    font-size: 16px;
+    padding: var(--theme-spacing-3) var(--theme-spacing-4);
+  }
+  
+  .inputSizeLg {
+    min-height: 52px;
+    font-size: 16px;
+    padding: var(--theme-spacing-5) var(--theme-spacing-6);
+  }
+  
+  /* Improve label spacing on mobile */
+  .label {
+    margin-bottom: var(--theme-spacing-2);
+  }
+  
+  /* Better error message spacing */
+  .errorMessage {
+    margin-top: var(--theme-spacing-2);
+    font-size: var(--theme-font-size-base);
+  }
+  
+  .helpText {
+    margin-top: var(--theme-spacing-2);
+    font-size: var(--theme-font-size-base);
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .input:focus {
+    outline: 3px solid var(--theme-primary);
+    outline-offset: 3px;
+  }
+  
+  .input::placeholder {
+    opacity: 1;
+  }
 }
 
 .input:disabled {
@@ -173,12 +238,14 @@ html[data-theme="dark"] .helpText {
   margin-top: var(--theme-spacing-1);
   display: flex;
   align-items: center;
-  gap: var(--theme-spacing-1);
+  gap: var(--theme-spacing-2);
+  font-weight: var(--theme-font-weight-medium);
 }
 
 .errorMessage::before {
   content: "⚠";
-  font-size: 12px;
+  font-size: 14px;
+  flex-shrink: 0;
 }
 
 /* Focus within for icon color changes */

@@ -1,23 +1,28 @@
 # SplitButton Component
 
-**Version**: 0.1.0  
+**Version**: 0.2.0  
 **Package**: `@spexop/react`  
 **Status**: Production Ready
 
 ## Overview
 
-A button with a primary action and a dropdown menu for additional related actions. Perfect for providing default action with alternatives.
+A button with a primary action and a dropdown menu for additional related actions. Perfect for providing default action with alternatives. Enhanced with comprehensive variants, sizes, loading states, and advanced menu features.
 
 ## Features
 
-- ✅ Primary action button
-- ✅ Dropdown menu for alternatives
-- ✅ 3 variants (primary, secondary, outline)
-- ✅ 3 sizes (sm, md, lg)
-- ✅ Keyboard navigation
-- ✅ Disabled state
+- ✅ Primary action button with dropdown menu
+- ✅ 12 comprehensive variants (7 base + 5 semantic)
+- ✅ 3 sizes (sm, md, lg) + 2 compact modes
+- ✅ Loading state with spinner
+- ✅ Full width support
+- ✅ Advanced menu items (descriptions, badges, shortcuts)
+- ✅ Menu dividers and groups
+- ✅ Keyboard navigation (Arrow keys, Enter, Escape)
+- ✅ Click outside to close
+- ✅ Disabled state support
 - ✅ WCAG AA+ accessible
 - ✅ TypeScript support
+- ✅ Theme-aware styling
 
 ## Installation
 
@@ -38,9 +43,9 @@ function App() {
       label="Save"
       onClick={handleSave}
       menuItems={[
-        { label: 'Save and Close', onClick: handleSaveAndClose },
-        { label: 'Save as Draft', onClick: handleSaveDraft },
-        { label: 'Save as Template', onClick: handleSaveTemplate },
+        { label: 'Save and Close', value: 'save-close', onClick: handleSaveAndClose },
+        { label: 'Save as Draft', value: 'draft', onClick: handleSaveDraft },
+        { label: 'Save as Template', value: 'template', onClick: handleSaveTemplate },
       ]}
     />
   );
@@ -49,7 +54,9 @@ function App() {
 
 ## Variants
 
-### Primary
+### Base Variants (7)
+
+#### Primary (Default)
 
 ```tsx
 <SplitButton
@@ -57,14 +64,14 @@ function App() {
   variant="primary"
   onClick={handlePublish}
   menuItems={[
-    { label: 'Publish Now', onClick: handlePublishNow },
-    { label: 'Schedule', onClick: handleSchedule },
-    { label: 'Save as Draft', onClick: handleDraft },
+    { label: 'Publish Now', value: 'now', onClick: handlePublishNow },
+    { label: 'Schedule', value: 'schedule', onClick: handleSchedule },
+    { label: 'Save as Draft', value: 'draft', onClick: handleDraft },
   ]}
 />
 ```
 
-### Secondary
+#### Secondary
 
 ```tsx
 <SplitButton
@@ -72,14 +79,14 @@ function App() {
   variant="secondary"
   onClick={handleExport}
   menuItems={[
-    { label: 'Export as PDF', onClick: () => handleExport('pdf') },
-    { label: 'Export as CSV', onClick: () => handleExport('csv') },
-    { label: 'Export as JSON', onClick: () => handleExport('json') },
+    { label: 'Export as PDF', value: 'pdf', onClick: () => handleExport('pdf') },
+    { label: 'Export as CSV', value: 'csv', onClick: () => handleExport('csv') },
+    { label: 'Export as JSON', value: 'json', onClick: () => handleExport('json') },
   ]}
 />
 ```
 
-### Outline
+#### Outline
 
 ```tsx
 <SplitButton
@@ -87,9 +94,137 @@ function App() {
   variant="outline"
   onClick={handleShare}
   menuItems={[
-    { label: 'Copy Link', onClick: handleCopyLink },
-    { label: 'Email', onClick: handleEmail },
-    { label: 'Social Media', onClick: handleSocial },
+    { label: 'Copy Link', value: 'copy', onClick: handleCopyLink },
+    { label: 'Email', value: 'email', onClick: handleEmail },
+    { label: 'Social Media', value: 'social', onClick: handleSocial },
+  ]}
+/>
+```
+
+#### Ghost
+
+```tsx
+<SplitButton
+  label="More"
+  variant="ghost"
+  onClick={handleMore}
+  menuItems={[
+    { label: 'Settings', value: 'settings', onClick: handleSettings },
+    { label: 'Help', value: 'help', onClick: handleHelp },
+  ]}
+/>
+```
+
+#### Text
+
+```tsx
+<SplitButton
+  label="Read More"
+  variant="text"
+  onClick={handleReadMore}
+  menuItems={[
+    { label: 'Full Article', value: 'full', onClick: handleFullArticle },
+    { label: 'Summary', value: 'summary', onClick: handleSummary },
+  ]}
+/>
+```
+
+#### Pill
+
+```tsx
+<SplitButton
+  label="Filter"
+  variant="pill"
+  onClick={handleFilter}
+  menuItems={[
+    { label: 'All Items', value: 'all', onClick: handleAllItems },
+    { label: 'Recent', value: 'recent', onClick: handleRecent },
+  ]}
+/>
+```
+
+#### Border Emphasis
+
+```tsx
+<SplitButton
+  label="Featured Action"
+  variant="border-emphasis"
+  onClick={handleFeatured}
+  menuItems={[
+    { label: 'Premium Feature', value: 'premium', onClick: handlePremium },
+    { label: 'Upgrade', value: 'upgrade', onClick: handleUpgrade },
+  ]}
+/>
+```
+
+### Semantic Variants (5)
+
+#### Danger
+
+```tsx
+<SplitButton
+  label="Delete"
+  variant="danger"
+  onClick={handleDelete}
+  menuItems={[
+    { label: 'Delete Permanently', value: 'permanent', onClick: handlePermanentDelete },
+    { label: 'Move to Trash', value: 'trash', onClick: handleMoveToTrash },
+  ]}
+/>
+```
+
+#### Success
+
+```tsx
+<SplitButton
+  label="Publish"
+  variant="success"
+  onClick={handlePublish}
+  menuItems={[
+    { label: 'Publish & Notify', value: 'notify', onClick: handlePublishNotify },
+    { label: 'Publish Quietly', value: 'quiet', onClick: handlePublishQuietly },
+  ]}
+/>
+```
+
+#### Warning
+
+```tsx
+<SplitButton
+  label="Proceed"
+  variant="warning"
+  onClick={handleProceed}
+  menuItems={[
+    { label: 'Proceed with Caution', value: 'caution', onClick: handleCaution },
+    { label: 'Skip Warning', value: 'skip', onClick: handleSkip },
+  ]}
+/>
+```
+
+#### Info
+
+```tsx
+<SplitButton
+  label="View Info"
+  variant="info"
+  onClick={handleViewInfo}
+  menuItems={[
+    { label: 'Detailed Info', value: 'detailed', onClick: handleDetailedInfo },
+    { label: 'Quick Summary', value: 'summary', onClick: handleQuickSummary },
+  ]}
+/>
+```
+
+#### Neutral
+
+```tsx
+<SplitButton
+  label="Cancel"
+  variant="neutral"
+  onClick={handleCancel}
+  menuItems={[
+    { label: 'Save & Cancel', value: 'save-cancel', onClick: handleSaveCancel },
+    { label: 'Discard Changes', value: 'discard', onClick: handleDiscard },
   ]}
 />
 ```
@@ -126,6 +261,111 @@ function App() {
   size="lg"
   onClick={handleDefault}
   menuItems={menuItems}
+/>
+```
+
+## Advanced Features
+
+### Loading State
+
+```tsx
+<SplitButton
+  label="Save"
+  loading={isSaving}
+  onClick={handleSave}
+  menuItems={[
+    { label: 'Save as Draft', value: 'draft', onClick: handleDraft },
+    { label: 'Save as Template', value: 'template', onClick: handleTemplate },
+  ]}
+/>
+```
+
+### Compact Mode
+
+```tsx
+<SplitButton
+  label="Settings"
+  compact="sm"
+  icon={<Settings size={16} />}
+  onClick={handleSettings}
+  menuItems={[
+    { label: 'Preferences', value: 'prefs', onClick: handlePrefs },
+    { label: 'Account', value: 'account', onClick: handleAccount },
+  ]}
+/>
+```
+
+### Full Width
+
+```tsx
+<SplitButton
+  label="Export Data"
+  fullWidth
+  onClick={handleExport}
+  menuItems={[
+    { label: 'Export as CSV', value: 'csv', onClick: () => handleExport('csv') },
+    { label: 'Export as JSON', value: 'json', onClick: () => handleExport('json') },
+  ]}
+/>
+```
+
+### Advanced Menu Items
+
+```tsx
+<SplitButton
+  label="Actions"
+  onClick={handleDefault}
+  menuItems={[
+    {
+      label: 'Save as Draft',
+      value: 'draft',
+      description: 'Save without publishing',
+      badge: 'NEW',
+      shortcut: 'Ctrl+D',
+      onClick: handleDraft,
+    },
+    {
+      label: 'Publish',
+      value: 'publish',
+      description: 'Make visible to everyone',
+      onClick: handlePublish,
+    },
+    { type: 'divider' },
+    {
+      label: 'Delete',
+      value: 'delete',
+      description: 'Permanently remove',
+      onClick: handleDelete,
+      disabled: !canDelete,
+    },
+  ]}
+/>
+```
+
+### Menu Groups
+
+```tsx
+<SplitButton
+  label="File"
+  onClick={handleNew}
+  menuItems={[
+    {
+      type: 'group',
+      label: 'Create',
+      items: [
+        { label: 'New Document', value: 'doc', onClick: handleNewDoc },
+        { label: 'New Spreadsheet', value: 'sheet', onClick: handleNewSheet },
+      ],
+    },
+    {
+      type: 'group',
+      label: 'Import',
+      items: [
+        { label: 'From File', value: 'file', onClick: handleImportFile },
+        { label: 'From URL', value: 'url', onClick: handleImportUrl },
+      ],
+    },
+  ]}
 />
 ```
 
@@ -280,26 +520,72 @@ interface SplitButtonProps {
   /** Primary button click handler */
   onClick: () => void;
   /** Menu items for dropdown */
-  menuItems: MenuItem[];
+  menuItems: SplitButtonMenuOption[];
   /** Visual variant */
-  variant?: "primary" | "secondary" | "outline";
+  variant?: SplitButtonVariant;
   /** Size */
-  size?: "sm" | "md" | "lg";
+  size?: SplitButtonSize;
+  /** Compact mode for dense UIs */
+  compact?: SplitButtonCompact;
   /** Disabled state */
   disabled?: boolean;
   /** Loading state */
   loading?: boolean;
+  /** Full width button */
+  fullWidth?: boolean;
   /** Additional CSS class */
   className?: string;
+  /** Main button icon */
+  icon?: React.ReactNode;
+  /** Loading icon (overrides default spinner) */
+  loadingIcon?: React.ReactNode;
+  /** ARIA label for main button */
+  "aria-label"?: string;
+  /** ARIA label for dropdown toggle */
+  "aria-label-toggle"?: string;
+  /** ARIA described by */
+  "aria-describedby"?: string;
+  /** ARIA expanded state (controlled) */
+  "aria-expanded"?: boolean;
+  /** ARIA controls for menu */
+  "aria-controls"?: string;
+  /** ARIA live region */
+  "aria-live"?: "off" | "polite" | "assertive";
 }
 
-interface MenuItem {
+interface SplitButtonMenuItem {
   label: string;
+  value: string;
   onClick: () => void;
   icon?: React.ReactNode;
   disabled?: boolean;
-  divider?: boolean;
+  description?: string;
+  badge?: string | number;
+  shortcut?: string;
+  "aria-label"?: string;
 }
+
+interface SplitButtonMenuDivider {
+  type: "divider";
+}
+
+interface SplitButtonMenuGroup {
+  type: "group";
+  label: string;
+  items: SplitButtonMenuItem[];
+}
+
+type SplitButtonMenuOption = 
+  | SplitButtonMenuItem 
+  | SplitButtonMenuDivider 
+  | SplitButtonMenuGroup;
+
+type SplitButtonVariant =
+  | "primary" | "secondary" | "outline" | "ghost" | "text" | "pill" | "border-emphasis"
+  | "danger" | "success" | "warning" | "info" | "neutral";
+
+type SplitButtonSize = "sm" | "md" | "lg";
+type SplitButtonCompact = "sm" | "md";
 ```
 
 ## Design Principles

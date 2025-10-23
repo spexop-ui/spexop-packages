@@ -21,6 +21,53 @@ describe("Card", () => {
     expect(screen.getByText("Test content")).toBeDefined();
   });
 
+  it("renders with modern state management", () => {
+    render(
+      <Card state="loading" loadingText="Loading content...">
+        Content
+      </Card>,
+    );
+
+    expect(screen.getByText("Loading content...")).toBeDefined();
+    expect(screen.getByRole("status")).toBeDefined();
+  });
+
+  it("renders error state", () => {
+    render(
+      <Card state="error" errorMessage="Something went wrong">
+        Content
+      </Card>,
+    );
+
+    expect(screen.getByText("Something went wrong")).toBeDefined();
+    expect(screen.getByRole("alert")).toBeDefined();
+  });
+
+  it("renders success state", () => {
+    render(
+      <Card state="success" successMessage="Operation completed">
+        Content
+      </Card>,
+    );
+
+    expect(screen.getByText("Operation completed")).toBeDefined();
+    expect(screen.getByRole("status")).toBeDefined();
+  });
+
+  it("renders with feedback levels", () => {
+    const { container } = render(<Card feedback="prominent">Content</Card>);
+
+    const card = container.querySelector('[class*="feedback-prominent"]');
+    expect(card).toBeDefined();
+  });
+
+  it("renders disabled state", () => {
+    render(<Card disabled>Content</Card>);
+
+    const card = screen.getByText("Content").closest('[aria-disabled="true"]');
+    expect(card).toBeDefined();
+  });
+
   it("renders as div by default", () => {
     const { container } = render(<Card>Content</Card>);
 
@@ -254,11 +301,40 @@ describe("CardHeader", () => {
     expect(header).toBeDefined();
   });
 
-  it("uses h3 for title", () => {
+  it("uses h3 for title by default", () => {
     const { container } = render(<CardHeader title="Title" />);
 
     const title = container.querySelector("h3");
     expect(title?.textContent).toBe("Title");
+  });
+
+  it("uses custom heading level", () => {
+    const { container } = render(<CardHeader title="Title" headingLevel={2} />);
+
+    const title = container.querySelector("h2");
+    expect(title?.textContent).toBe("Title");
+  });
+
+  it("renders with proper ARIA attributes", () => {
+    render(<CardHeader title="Title" aria-label="Card header" />);
+
+    const header = screen.getByRole("banner");
+    expect(header).toBeDefined();
+    expect(header.getAttribute("aria-label")).toBe("Card header");
+  });
+
+  it("generates proper IDs for accessibility", () => {
+    const { container } = render(
+      <CardHeader title="Test Title" subtitle="Test Subtitle" />,
+    );
+
+    const title = container.querySelector("h3");
+    const subtitle = container.querySelector("p");
+
+    expect(title?.id).toBe("card-title-test-title");
+    expect(subtitle?.getAttribute("aria-describedby")).toBe(
+      "card-title-test-title",
+    );
   });
 });
 
@@ -290,6 +366,21 @@ describe("CardBody", () => {
 
     expect(screen.getByText("Paragraph 1")).toBeDefined();
     expect(screen.getByText("Paragraph 2")).toBeDefined();
+  });
+
+  it("renders with proper ARIA attributes", () => {
+    render(<CardBody aria-label="Card body content">Content</CardBody>);
+
+    const body = screen.getByRole("main");
+    expect(body).toBeDefined();
+    expect(body.getAttribute("aria-label")).toBe("Card body content");
+  });
+
+  it("renders with aria-describedby", () => {
+    render(<CardBody aria-describedby="description">Content</CardBody>);
+
+    const body = screen.getByRole("main");
+    expect(body.getAttribute("aria-describedby")).toBe("description");
   });
 });
 
@@ -346,6 +437,14 @@ describe("CardFooter", () => {
 
     const footer = container.querySelector(".custom-footer");
     expect(footer).toBeDefined();
+  });
+
+  it("renders with proper ARIA attributes", () => {
+    render(<CardFooter aria-label="Card actions">Content</CardFooter>);
+
+    const footer = screen.getByRole("toolbar");
+    expect(footer).toBeDefined();
+    expect(footer.getAttribute("aria-label")).toBe("Card actions");
   });
 });
 
@@ -462,5 +561,58 @@ describe("Accessibility", () => {
     await user.keyboard("{Enter}");
 
     expect(handleClick).toHaveBeenCalled();
+  });
+
+  it("has proper ARIA attributes for state management", () => {
+    render(
+      <Card
+        state="loading"
+        loadingText="Loading..."
+        aria-label="Loading card"
+        aria-describedby="card-description"
+      >
+        Content
+      </Card>,
+    );
+
+    const card = screen.getByText("Content").closest('[aria-busy="true"]');
+    expect(card).toBeDefined();
+    expect(card?.getAttribute("aria-label")).toBe("Loading card");
+    expect(card?.getAttribute("aria-describedby")).toBe("card-description");
+  });
+
+  it("has proper ARIA live regions for state changes", () => {
+    render(
+      <Card state="error" errorMessage="Error occurred">
+        Content
+      </Card>,
+    );
+
+    const alert = screen.getByRole("alert");
+    expect(alert).toBeDefined();
+    expect(alert.getAttribute("aria-live")).toBe("assertive");
+  });
+
+  it("handles disabled state properly", () => {
+    render(
+      <Card clickable disabled onClick={vi.fn()}>
+        Disabled
+      </Card>,
+    );
+
+    const button = screen.getByRole("button");
+    expect(button).toBeDisabled();
+    expect(button.getAttribute("tabIndex")).toBe("-1");
+  });
+
+  it("has proper focus management", () => {
+    render(
+      <Card clickable onClick={vi.fn()}>
+        Focusable
+      </Card>,
+    );
+
+    const button = screen.getByRole("button");
+    expect(button.getAttribute("tabIndex")).toBe("0");
   });
 });

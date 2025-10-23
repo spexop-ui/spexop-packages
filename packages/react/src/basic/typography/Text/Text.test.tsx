@@ -14,6 +14,9 @@ import { describe, expect, it } from "vitest";
 import { Text } from "./Text.js";
 import styles from "./Text.module.css";
 
+// Ensure Jest DOM matchers are available
+import "@testing-library/jest-dom";
+
 describe("Text", () => {
   it("renders with correct text", () => {
     render(<Text>Test content</Text>);
@@ -44,6 +47,9 @@ describe("Text", () => {
   it("applies weight classes", () => {
     const { rerender } = render(<Text weight="regular">Regular</Text>);
     expect(screen.getByText("Regular")).toHaveClass(styles["weight-regular"]);
+
+    rerender(<Text weight="medium">Medium</Text>);
+    expect(screen.getByText("Medium")).toHaveClass(styles["weight-medium"]);
 
     rerender(<Text weight="semibold">Semibold</Text>);
     expect(screen.getByText("Semibold")).toHaveClass(styles["weight-semibold"]);
@@ -83,6 +89,9 @@ describe("Text", () => {
 
     rerender(<Text variant="warning">Warning</Text>);
     expect(screen.getByText("Warning")).toHaveClass(styles["variant-warning"]);
+
+    rerender(<Text variant="info">Info</Text>);
+    expect(screen.getByText("Info")).toHaveClass(styles["variant-info"]);
   });
 
   it("applies truncate class", () => {
@@ -129,9 +138,155 @@ describe("Text", () => {
     );
   });
 
+  it("applies text decoration classes", () => {
+    const { rerender } = render(<Text decoration="underline">Underlined</Text>);
+    expect(screen.getByText("Underlined")).toHaveClass(
+      styles["decoration-underline"],
+    );
+
+    rerender(<Text decoration="line-through">Strikethrough</Text>);
+    expect(screen.getByText("Strikethrough")).toHaveClass(
+      styles["decoration-line-through"],
+    );
+
+    rerender(<Text decoration="none">No decoration</Text>);
+    expect(screen.getByText("No decoration")).not.toHaveClass(
+      styles["decoration-underline"],
+    );
+  });
+
+  it("applies text transform classes", () => {
+    const { rerender } = render(<Text transform="uppercase">Uppercase</Text>);
+    expect(screen.getByText("Uppercase")).toHaveClass(
+      styles["transform-uppercase"],
+    );
+
+    rerender(<Text transform="lowercase">Lowercase</Text>);
+    expect(screen.getByText("Lowercase")).toHaveClass(
+      styles["transform-lowercase"],
+    );
+
+    rerender(<Text transform="capitalize">Capitalize</Text>);
+    expect(screen.getByText("Capitalize")).toHaveClass(
+      styles["transform-capitalize"],
+    );
+  });
+
+  it("applies text overflow classes", () => {
+    const { rerender } = render(<Text overflow="ellipsis">Ellipsis</Text>);
+    expect(screen.getByText("Ellipsis")).toHaveClass(
+      styles["overflow-ellipsis"],
+    );
+
+    rerender(<Text overflow="clip">Clip</Text>);
+    // overflow="clip" is the default, so it doesn't add a class
+    expect(screen.getByText("Clip")).not.toHaveClass(
+      styles["overflow-ellipsis"],
+    );
+  });
+
+  it("applies white space classes", () => {
+    const { rerender } = render(<Text whiteSpace="nowrap">No wrap</Text>);
+    expect(screen.getByText("No wrap")).toHaveClass(
+      styles["whitespace-nowrap"],
+    );
+
+    rerender(<Text whiteSpace="pre">Pre</Text>);
+    expect(screen.getByText("Pre")).toHaveClass(styles["whitespace-pre"]);
+
+    rerender(<Text whiteSpace="pre-line">Pre line</Text>);
+    expect(screen.getByText("Pre line")).toHaveClass(
+      styles["whitespace-pre-line"],
+    );
+  });
+
+  it("applies custom inline styles", () => {
+    render(
+      <Text
+        lineHeight={1.8}
+        letterSpacing={2}
+        wordSpacing={4}
+        style={{ color: "red" }}
+      >
+        Styled text
+      </Text>,
+    );
+    const text = screen.getByText("Styled text");
+    expect(text).toHaveStyle({
+      lineHeight: "1.8",
+      letterSpacing: "2px",
+      wordSpacing: "4px",
+      color: "rgb(255, 0, 0)",
+    });
+  });
+
+  it("renders as different semantic elements", () => {
+    const { rerender, container } = render(<Text as="strong">Strong</Text>);
+    expect(container.querySelector("strong")).toBeInTheDocument();
+
+    rerender(<Text as="em">Emphasis</Text>);
+    expect(container.querySelector("em")).toBeInTheDocument();
+
+    rerender(<Text as="small">Small</Text>);
+    expect(container.querySelector("small")).toBeInTheDocument();
+
+    rerender(<Text as="mark">Mark</Text>);
+    expect(container.querySelector("mark")).toBeInTheDocument();
+  });
+
+  it("applies accessibility attributes", () => {
+    render(
+      <Text
+        aria-label="Descriptive label"
+        aria-live="polite"
+        aria-describedby="description"
+        aria-atomic={true}
+        aria-relevant="additions"
+        role="status"
+        tabIndex={0}
+      >
+        Accessible text
+      </Text>,
+    );
+    const text = screen.getByText("Accessible text");
+    expect(text).toHaveAttribute("aria-label", "Descriptive label");
+    expect(text).toHaveAttribute("aria-live", "polite");
+    expect(text).toHaveAttribute("aria-describedby", "description");
+    expect(text).toHaveAttribute("aria-atomic", "true");
+    expect(text).toHaveAttribute("aria-relevant", "additions");
+    expect(text).toHaveAttribute("role", "status");
+    expect(text).toHaveAttribute("tabIndex", "0");
+  });
+
+  it("forwards ref correctly", () => {
+    const ref = React.createRef<HTMLParagraphElement>();
+    render(<Text ref={ref}>Ref text</Text>);
+    expect(ref.current).toBeInstanceOf(HTMLParagraphElement);
+    expect(ref.current).toHaveTextContent("Ref text");
+  });
+
+  it("handles clamp values correctly", () => {
+    const { rerender } = render(<Text clamp={1}>Clamp 1</Text>);
+    expect(screen.getByText("Clamp 1")).toHaveClass(styles["clamp-1"]);
+
+    rerender(<Text clamp={3}>Clamp 3</Text>);
+    expect(screen.getByText("Clamp 3")).toHaveClass(styles["clamp-3"]);
+
+    rerender(<Text clamp={5}>Clamp 5</Text>);
+    expect(screen.getByText("Clamp 5")).toHaveClass(styles["clamp-5"]);
+  });
+
   it("combines multiple classes correctly", () => {
     render(
-      <Text size="lg" weight="bold" align="center" variant="success">
+      <Text
+        size="lg"
+        weight="bold"
+        align="center"
+        variant="success"
+        decoration="underline"
+        transform="uppercase"
+        whiteSpace="nowrap"
+      >
         Combined
       </Text>,
     );
@@ -140,5 +295,12 @@ describe("Text", () => {
     expect(text).toHaveClass(styles["weight-bold"]);
     expect(text).toHaveClass(styles["align-center"]);
     expect(text).toHaveClass(styles["variant-success"]);
+    expect(text).toHaveClass(styles["decoration-underline"]);
+    expect(text).toHaveClass(styles["transform-uppercase"]);
+    expect(text).toHaveClass(styles["whitespace-nowrap"]);
+  });
+
+  it("has correct display name", () => {
+    expect(Text.displayName).toBe("Text");
   });
 });

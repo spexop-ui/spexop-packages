@@ -151,9 +151,110 @@ describe("Heading", () => {
     expect(screen.getByRole("heading", { level: 2 })).toBeInTheDocument();
   });
 
+  it("applies variant classes", () => {
+    const { rerender } = render(
+      <Heading level={2} variant="secondary">
+        Secondary
+      </Heading>,
+    );
+    expect(screen.getByRole("heading")).toHaveClass(
+      styles["variant-secondary"],
+    );
+
+    rerender(
+      <Heading level={2} variant="success">
+        Success
+      </Heading>,
+    );
+    expect(screen.getByRole("heading")).toHaveClass(styles["variant-success"]);
+
+    rerender(
+      <Heading level={2} variant="error">
+        Error
+      </Heading>,
+    );
+    expect(screen.getByRole("heading")).toHaveClass(styles["variant-error"]);
+
+    rerender(
+      <Heading level={2} variant="warning">
+        Warning
+      </Heading>,
+    );
+    expect(screen.getByRole("heading")).toHaveClass(styles["variant-warning"]);
+  });
+
+  it("applies truncate class", () => {
+    render(
+      <Heading level={2} truncate>
+        Truncated
+      </Heading>,
+    );
+    expect(screen.getByRole("heading")).toHaveClass(styles.truncate);
+  });
+
+  it("applies clamp classes", () => {
+    const { rerender } = render(
+      <Heading level={2} clamp={2}>
+        Clamped
+      </Heading>,
+    );
+    expect(screen.getByRole("heading")).toHaveClass(styles["clamp-2"]);
+
+    rerender(
+      <Heading level={2} clamp={3}>
+        Clamped
+      </Heading>,
+    );
+    expect(screen.getByRole("heading")).toHaveClass(styles["clamp-3"]);
+  });
+
+  it("applies disabled class", () => {
+    render(
+      <Heading level={2} disabled>
+        Disabled
+      </Heading>,
+    );
+    expect(screen.getByRole("heading")).toHaveClass(styles.disabled);
+  });
+
+  it("renders as different element with as prop", () => {
+    render(
+      <Heading level={2} as="div">
+        Div Heading
+      </Heading>,
+    );
+    expect(screen.getByText("Div Heading")).toBeInTheDocument();
+    expect(screen.getByText("Div Heading").tagName).toBe("DIV");
+  });
+
+  it("applies additional ARIA attributes", () => {
+    render(
+      <Heading
+        level={2}
+        aria-live="polite"
+        aria-expanded={true}
+        aria-controls="content"
+      >
+        ARIA Heading
+      </Heading>,
+    );
+    const heading = screen.getByRole("heading");
+    expect(heading).toHaveAttribute("aria-live", "polite");
+    expect(heading).toHaveAttribute("aria-expanded", "true");
+    expect(heading).toHaveAttribute("aria-controls", "content");
+  });
+
   it("combines multiple classes correctly", () => {
     render(
-      <Heading level={1} weight="bold" align="center" size="4xl">
+      <Heading
+        level={1}
+        weight="bold"
+        align="center"
+        size="4xl"
+        variant="success"
+        truncate
+        disabled
+      >
         Combined
       </Heading>,
     );
@@ -162,5 +263,8 @@ describe("Heading", () => {
     expect(heading).toHaveClass(styles["weight-bold"]);
     expect(heading).toHaveClass(styles["align-center"]);
     expect(heading).toHaveClass(styles["size-4xl"]);
+    expect(heading).toHaveClass(styles["variant-success"]);
+    expect(heading).toHaveClass(styles.truncate);
+    expect(heading).toHaveClass(styles.disabled);
   });
 });

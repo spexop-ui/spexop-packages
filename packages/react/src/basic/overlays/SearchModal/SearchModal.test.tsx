@@ -95,7 +95,7 @@ describe("SearchModal", () => {
 
       await waitFor(() => {
         const dialog = screen.getByRole("dialog");
-        expect(dialog.parentElement?.parentElement).toBe(document.body);
+        expect(dialog.closest("body")).toBe(document.body);
       });
     });
 
@@ -161,7 +161,11 @@ describe("SearchModal", () => {
       await user.type(searchInput, "settings");
 
       await waitFor(() => {
-        expect(screen.getByText("User Settings")).toBeInTheDocument();
+        expect(
+          screen.getByText((content, element) => {
+            return element?.textContent === "User Settings";
+          }),
+        ).toBeInTheDocument();
         expect(screen.queryByText("Getting Started")).not.toBeInTheDocument();
       });
     });
@@ -186,6 +190,7 @@ describe("SearchModal", () => {
 
       await waitFor(() => {
         expect(screen.getByText("User Settings")).toBeInTheDocument();
+        expect(screen.queryByText("Getting Started")).not.toBeInTheDocument();
       });
     });
 
@@ -210,6 +215,7 @@ describe("SearchModal", () => {
       await waitFor(() => {
         expect(screen.getByText("Getting Started")).toBeInTheDocument();
         expect(screen.getByText("API Reference")).toBeInTheDocument();
+        expect(screen.queryByText("User Settings")).not.toBeInTheDocument();
       });
     });
   });
@@ -453,10 +459,18 @@ describe("SearchModal", () => {
       await user.type(searchInput, "test");
 
       await waitFor(() => {
-        expect(screen.getByText("Test Result")).toBeInTheDocument();
+        expect(
+          screen.getByText((content, element) => {
+            return element?.textContent === "Test Result";
+          }),
+        ).toBeInTheDocument();
       });
 
-      await user.click(screen.getByText("Test Result"));
+      await user.click(
+        screen.getByText((content, element) => {
+          return element?.textContent === "Test Result";
+        }),
+      );
 
       expect(onClose).toHaveBeenCalledTimes(1);
     });
@@ -488,10 +502,18 @@ describe("SearchModal", () => {
       await user.type(searchInput, "test");
 
       await waitFor(() => {
-        expect(screen.getByText("Test Result")).toBeInTheDocument();
+        expect(
+          screen.getByText((content, element) => {
+            return element?.textContent === "Test Result";
+          }),
+        ).toBeInTheDocument();
       });
 
-      await user.click(screen.getByText("Test Result"));
+      await user.click(
+        screen.getByText((content, element) => {
+          return element?.textContent === "Test Result";
+        }),
+      );
 
       expect(onClose).toHaveBeenCalledTimes(1);
     });
@@ -517,12 +539,20 @@ describe("SearchModal", () => {
       await user.type(searchInput, "a");
 
       await waitFor(() => {
-        expect(screen.getByText("Getting Started")).toBeInTheDocument();
+        expect(
+          screen.getByText((content, element) => {
+            return element?.textContent === "Getting Started";
+          }),
+        ).toBeInTheDocument();
       });
 
       await user.keyboard("{ArrowDown}");
 
-      const firstResult = screen.getByText("Getting Started").closest("button");
+      const firstResult = screen
+        .getByText((content, element) => {
+          return element?.textContent === "Getting Started";
+        })
+        .closest("button");
       expect(firstResult).toHaveAttribute("data-active", "true");
     });
 
@@ -545,13 +575,17 @@ describe("SearchModal", () => {
       await user.type(searchInput, "a");
 
       await waitFor(() => {
-        expect(screen.getByText("Getting Started")).toBeInTheDocument();
+        expect(
+          screen.getByText((content, element) => {
+            return element?.textContent === "Getting Started";
+          }),
+        ).toBeInTheDocument();
       });
 
       await user.keyboard("{ArrowUp}");
 
       // Should wrap to last result
-      const lastResult = screen.getByText("User Settings").closest("button");
+      const lastResult = screen.getByRole("option", { name: /User Settings/i });
       expect(lastResult).toHaveAttribute("data-active", "true");
     });
 
@@ -582,7 +616,11 @@ describe("SearchModal", () => {
       await user.type(searchInput, "test");
 
       await waitFor(() => {
-        expect(screen.getByText("Test Result")).toBeInTheDocument();
+        expect(
+          screen.getByText((content, element) => {
+            return element?.textContent === "Test Result";
+          }),
+        ).toBeInTheDocument();
       });
 
       await user.keyboard("{ArrowDown}");
@@ -602,11 +640,13 @@ describe("SearchModal", () => {
       );
 
       await waitFor(() => {
-        expect(screen.getByLabelText("Close search")).toBeInTheDocument();
+        expect(
+          screen.getByLabelText("Close search button"),
+        ).toBeInTheDocument();
       });
 
       // Get the X button, not the backdrop button
-      const closeButtons = screen.getAllByLabelText("Close search");
+      const closeButtons = screen.getAllByLabelText("Close search button");
       const xButton = closeButtons.find(
         (btn) =>
           btn.tagName === "BUTTON" && btn.className.includes("closeButton"),
@@ -647,7 +687,7 @@ describe("SearchModal", () => {
         expect(screen.getByRole("dialog")).toBeInTheDocument();
       });
 
-      const backdrop = screen.getByLabelText("Close search");
+      const backdrop = screen.getByLabelText("Close search modal");
       await user.click(backdrop);
 
       expect(onClose).toHaveBeenCalledTimes(1);

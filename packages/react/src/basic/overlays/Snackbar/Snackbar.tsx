@@ -1,125 +1,147 @@
-import React, { useId } from "react";
+import { X } from "@spexop/icons";
+import { useEffect, useId } from "react";
+import { createPortal } from "react-dom";
+import { cn } from "../../../utils/index.js";
 import styles from "./Snackbar.module.css";
-
-export interface SnackbarProps {
-  /**
-   * Message text to display
-   */
-  message: string;
-
-  /**
-   * Action button text
-   */
-  actionLabel?: string;
-
-  /**
-   * Action button click handler
-   */
-  onAction?: () => void;
-
-  /**
-   * Whether the snackbar is visible
-   */
-  isVisible?: boolean;
-
-  /**
-   * Auto-hide duration in milliseconds (0 = no auto-hide)
-   */
-  autoHideDuration?: number;
-
-  /**
-   * Position of the snackbar
-   */
-  position?: "bottom" | "top";
-
-  /**
-   * Custom className
-   */
-  className?: string;
-
-  /**
-   * ARIA label for accessibility
-   */
-  "aria-label"?: string;
-}
+import type { SnackbarProps } from "./Snackbar.types.js";
 
 /**
- * Snackbar - Brief message with optional action
+ * Snackbar - Accessible snackbar notification component
  *
- * A minimal snackbar component for displaying brief messages with optional actions.
- * Matches Sidebar/AppBar design system with clean typography and subtle interactions.
+ * A snackbar component for brief messages following "The Spexop Way":
+ * - Principle 2: Borders before shadows - strong borders with subtle shadow
+ * - Principle 3: Typography before decoration - clear messaging
+ * - Principle 4: Tokens before magic numbers - uses design tokens
+ * - Principle 7: Accessibility before aesthetics - WCAG AA+ compliant
  *
  * Features:
- * - Clean, minimal design
+ * - Semantic variants (info, success, warning, error)
+ * - Auto-dismiss with configurable duration
+ * - Manual dismiss button
  * - Optional action button
- * - Auto-hide functionality
- * - Position variants (top/bottom)
- * - Hover effects matching Sidebar
- * - Full accessibility support
- * - Theme-aware styling
+ * - Multiple position options
+ * - Screen reader accessible
+ * - Smooth animations
+ * - Portal rendering for proper z-index
+ *
+ * @author @olmstedian | github.com/olmstedian | @spexop | github.com/spexop-ui
  *
  * @example
  * ```tsx
+ * const [isVisible, setIsVisible] = useState(false);
+ *
  * <Snackbar
- *   message="Settings saved successfully"
- *   actionLabel="Undo"
- *   onAction={() => undoAction()}
- *   isVisible={showSnackbar}
- *   position="bottom"
+ *   message="Changes saved successfully"
+ *   variant="success"
+ *   isVisible={isVisible}
+ *   onClose={() => setIsVisible(false)}
+ *   action={{
+ *     label: "Undo",
+ *     onClick: () => handleUndo()
+ *   }}
  * />
  * ```
  */
 export function Snackbar({
   message,
-  actionLabel,
-  onAction,
+  variant = "info",
+  action,
   isVisible = true,
   autoHideDuration = 4000,
-  position = "bottom",
+  position = "bottom-center",
+  onClose,
   className,
   "aria-label": ariaLabel,
+  showCloseButton = true,
+  animation = "slide",
+  portal = true,
 }: SnackbarProps) {
   const id = useId();
 
   // Auto-hide functionality
-  React.useEffect(() => {
-    if (autoHideDuration > 0 && isVisible && onAction) {
+  useEffect(() => {
+    if (autoHideDuration > 0 && isVisible && onClose) {
       const timer = setTimeout(() => {
-        onAction();
+        onClose();
       }, autoHideDuration);
 
       return () => clearTimeout(timer);
     }
-  }, [autoHideDuration, isVisible, onAction]);
+  }, [autoHideDuration, isVisible, onClose]);
+
+  // Keyboard navigation
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    switch (event.key) {
+      case "Escape":
+        onClose?.();
+        break;
+      case "Enter":
+      case " ":
+        if (action) {
+          event.preventDefault();
+          action.onClick();
+        }
+        break;
+    }
+  };
+
+  const snackbarClassName = cn(
+    styles.snackbar,
+    styles[`variant-${variant}`],
+    styles[`position-${position}`],
+    styles[`animation-${animation}`],
+    isVisible && styles.visible,
+    className,
+  );
 
   if (!isVisible) {
     return null;
   }
 
-  return (
+  const content = (
     <div
       role="alert"
       aria-live="polite"
+      aria-atomic="true"
       aria-label={ariaLabel}
-      className={`${styles.snackbar} ${styles[position]} ${className || ""}`}
+      className={snackbarClassName}
       data-position={position}
       data-visible={isVisible}
+      data-variant={variant}
+      onKeyDown={handleKeyDown}
+      tabIndex={-1}
     >
       <div className={styles.content}>
-        <span id={`${id}-message`} className={styles.message}>
+        <div className={styles.message} id={`${id}-message`}>
           {message}
-        </span>
-        {actionLabel && onAction && (
+        </div>
+
+        {action && (
           <button
             type="button"
             className={styles.action}
-            onClick={onAction}
+            onClick={action.onClick}
             aria-describedby={`${id}-message`}
+            tabIndex={0}
           >
-            {actionLabel}
+            {action.label}
           </button>
         )}
       </div>
+
+      {showCloseButton && onClose && (
+        <button
+          type="button"
+          onClick={onClose}
+          className={styles.closeButton}
+          aria-label="Close notification"
+          tabIndex={0}
+        >
+          <X size={16} strokeWidth={2} />
+        </button>
+      )}
     </div>
   );
+
+  return portal ? createPortal(content, document.body) : content;
 }

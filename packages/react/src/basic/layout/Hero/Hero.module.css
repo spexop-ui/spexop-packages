@@ -9,12 +9,16 @@
   position: relative;
   width: 100%;
   min-height: 60vh;
+  min-height: 60dvh; /* Dynamic viewport height for mobile */
   display: flex;
   align-items: center;
   justify-content: center;
   padding: var(--theme-spacing-16) var(--theme-spacing-4);
   overflow: hidden;
   border-bottom: 2px solid var(--theme-border);
+  /* Safe area insets for mobile devices */
+  padding-left: calc(var(--theme-spacing-4) + env(safe-area-inset-left));
+  padding-right: calc(var(--theme-spacing-4) + env(safe-area-inset-right));
 }
 
 .heroInner {
@@ -552,22 +556,28 @@
 /* Mobile (< 768px) */
 @media (max-width: 768px) {
   .hero {
-    padding: var(--theme-spacing-2) var(--theme-spacing-2);
-    height: 50vh;
+    padding: var(--theme-spacing-8) var(--theme-spacing-4);
+    min-height: 70vh;
+    min-height: 70dvh; /* Dynamic viewport height for mobile */
+    /* Better mobile safe area handling */
+    padding-top: calc(var(--theme-spacing-8) + env(safe-area-inset-top));
+    padding-bottom: calc(var(--theme-spacing-8) + env(safe-area-inset-bottom));
+    padding-left: calc(var(--theme-spacing-4) + env(safe-area-inset-left));
+    padding-right: calc(var(--theme-spacing-4) + env(safe-area-inset-right));
   }
 
   .heroInner {
-    gap: 64px;
+    gap: var(--theme-spacing-6);
   }
 
   .heroContent {
-    gap: var(--theme-spacing-8);
+    gap: var(--theme-spacing-6);
   }
 
   /* Stack all variants vertically on mobile */
   .hero--split .heroInner {
     flex-direction: column;
-    gap: 64px;
+    gap: var(--theme-spacing-6);
   }
 
   .hero--split .heroContent,
@@ -578,42 +588,41 @@
   .heroActions {
     flex-direction: column;
     width: 100%;
-    gap: var(--theme-spacing-8);
+    gap: var(--theme-spacing-4);
+    margin-top: var(--theme-spacing-6);
   }
 
   .heroActions button {
     width: 100%;
-  }
-
-  .heroContent {
-    gap: var(--theme-spacing-4);
+    min-height: 48px; /* Better mobile touch targets */
   }
 
   .heroStats {
     flex-direction: column;
-    gap: var(--theme-spacing-6);
-    margin-top: 48px;
+    gap: var(--theme-spacing-4);
+    margin-top: var(--theme-spacing-8);
   }
 
   .heroStat {
     width: 100%;
     min-width: auto;
     justify-content: flex-start;
-    padding: var(--theme-spacing-6) var(--theme-spacing-8);
-  }
-
-  .heroActions {
-    margin-top: 64px;
+    padding: var(--theme-spacing-5) var(--theme-spacing-6);
+    min-height: 48px; /* Better mobile touch targets */
   }
 
   /* Full-bleed adjustments */
   .hero--full-bleed {
     min-height: 100vh;
+    min-height: 100dvh; /* Dynamic viewport height for mobile */
   }
 
   .hero--full-bleed .heroInner {
     min-height: 100vh;
-    padding: 128px var(--theme-spacing-6);
+    min-height: 100dvh; /* Dynamic viewport height for mobile */
+    padding: var(--theme-spacing-16) var(--theme-spacing-6);
+    padding-top: calc(var(--theme-spacing-16) + env(safe-area-inset-top));
+    padding-bottom: calc(var(--theme-spacing-16) + env(safe-area-inset-bottom));
   }
 }
 

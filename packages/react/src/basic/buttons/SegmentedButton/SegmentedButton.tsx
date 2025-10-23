@@ -38,33 +38,46 @@ export function SegmentedButton({
   value,
   onChange,
   options,
+  size = "md",
+  fullWidth = false,
   className = "",
   "aria-label": ariaLabel,
   "aria-labelledby": ariaLabelledby,
 }: SegmentedButtonProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLFieldSetElement>(null);
 
-  // Handle keyboard navigation (arrow keys)
+  // Enhanced keyboard navigation with Home/End support
   const handleKeyDown = useCallback(
-    (event: React.KeyboardEvent<HTMLDivElement>) => {
-      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+    (event: React.KeyboardEvent<HTMLFieldSetElement>) => {
+      const { key } = event;
+
+      // Handle arrow keys, Home, and End
+      if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(key)) return;
 
       event.preventDefault();
 
       const currentIndex = options.findIndex((opt) => opt.value === value);
       let nextIndex: number;
 
-      if (event.key === "ArrowRight") {
+      if (key === "ArrowRight") {
         // Move to next option (wrap around)
         nextIndex = (currentIndex + 1) % options.length;
-      } else {
+      } else if (key === "ArrowLeft") {
         // Move to previous option (wrap around)
         nextIndex = currentIndex === 0 ? options.length - 1 : currentIndex - 1;
+      } else if (key === "Home") {
+        // Move to first option
+        nextIndex = 0;
+      } else if (key === "End") {
+        // Move to last option
+        nextIndex = options.length - 1;
+      } else {
+        return;
       }
 
       // Skip disabled options
       while (options[nextIndex]?.disabled && nextIndex !== currentIndex) {
-        if (event.key === "ArrowRight") {
+        if (key === "ArrowRight" || key === "Home") {
           nextIndex = (nextIndex + 1) % options.length;
         } else {
           nextIndex = nextIndex === 0 ? options.length - 1 : nextIndex - 1;
@@ -78,21 +91,28 @@ export function SegmentedButton({
     [value, options, onChange],
   );
 
-  // Compose className
-  const containerClassName = [styles.segmentedButton, className]
+  // Compose className with size and fullWidth variants
+  const containerClassName = [
+    styles.segmentedButton,
+    styles[`size${size.charAt(0).toUpperCase() + size.slice(1)}`],
+    fullWidth ? styles.fullWidth : "",
+    className,
+  ]
     .filter(Boolean)
     .join(" ");
 
   return (
-    <div
+    <fieldset
       ref={containerRef}
       className={containerClassName}
       role="radiogroup"
       aria-label={ariaLabel}
       aria-labelledby={ariaLabelledby}
       onKeyDown={handleKeyDown}
+      // biome-ignore lint/a11y/noNoninteractiveTabindex: tabIndex required for keyboard navigation in radiogroup pattern
+      tabIndex={0}
     >
-      {options.map((option) => {
+      {options.map((option, index) => {
         const isActive = value === option.value;
 
         return (
@@ -102,20 +122,31 @@ export function SegmentedButton({
             role="radio"
             aria-checked={isActive}
             aria-label={option["aria-label"] || option.label}
+            aria-describedby={
+              option.disabled ? `${option.value}-disabled` : undefined
+            }
             disabled={option.disabled}
             className={`${styles.option} ${isActive ? styles.optionActive : ""} ${
               option.disabled ? styles.optionDisabled : ""
             }`}
             onClick={() => !option.disabled && onChange(option.value)}
             tabIndex={isActive ? 0 : -1}
+            data-testid={`segmented-button-option-${option.value}`}
           >
             {option.icon && (
-              <span className={styles.optionIcon}>{option.icon}</span>
+              <span className={styles.optionIcon} aria-hidden="true">
+                {option.icon}
+              </span>
             )}
             <span className={styles.optionLabel}>{option.label}</span>
+            {option.disabled && (
+              <span id={`${option.value}-disabled`} className="sr-only">
+                This option is currently disabled
+              </span>
+            )}
           </button>
         );
       })}
-    </div>
+    </fieldset>
   );
 }

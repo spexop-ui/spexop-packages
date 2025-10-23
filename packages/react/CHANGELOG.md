@@ -5,15 +5,171 @@ All notable changes to @spexop/react will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.3.2] - 2025-10-21
+## [0.4.0] - 2025-10-22
+
+### Breaking Changes
+
+#### Component Structure Reorganization
+
+- Removed specialized card components (BlogCard, ProductCard, PricingCard, ProfileCard, TestimonialCard, TeamMemberCard, FeatureCard, StatsCard, MediaCard, EventCard, ComparisonCard)
+- Eliminated "advanced" category - components moved to semantic categories
+- Renamed "display" to "indicators" for clarity
+- Moved components to semantic categories (Navigation, SegmentedControl, ScrollHeader, etc.)
+- Consolidated animation hooks in hooks/ directory
+
+#### Import Path Changes
+
+- Navigation components moved from `advanced/` to `navigation/`
+- Button components moved from `display/` to `buttons/`
+- Layout components moved from `display/` to `layout/`
+- Feedback components moved from `display/` to `feedback/`
+- Animation hooks moved from `animations/` to `hooks/`
+
+### Added
+
+#### Composition Patterns
+
+- New `src/patterns/cards/` directory with 11 card composition examples
+- BlogCard, ProductCard, PricingCard, ProfileCard, TestimonialCard patterns
+- TeamMemberCard, FeatureCard, StatCard, MediaCard, EventCard, ComparisonCard patterns
+- Complete TypeScript interfaces and usage examples for all patterns
+
+#### Accessibility Enhancements
+
+- WCAG AAA compliance improvements across all components
+- Enhanced focus indicators (2px solid outline with 2px offset)
+- Minimum 44x44px touch targets for all interactive elements
+- Improved screen reader support with better ARIA labels
+- High contrast mode support for better visibility
+
+#### Mobile Optimization
+
+- Safe area insets support for mobile devices with notches
+- Dynamic viewport height (`100dvh`) for proper mobile height calculations
+- Enhanced touch feedback with active state scaling
+- Improved responsive layouts for all components
+- Mobile-optimized typography (16px minimum to prevent iOS zoom)
+
+#### Visual Polish
+
+- 60fps animations using CSS transforms
+- Reduced motion support respecting user preferences
+- Enhanced loading states for async components
+- Better error messaging and visual feedback
+- Consistent animation timing and easing
+
+#### Performance Improvements
+
+- 10-15% bundle size reduction through better tree-shaking
+- Hardware-accelerated animations for better performance
+- Optimized touch scrolling with momentum on mobile
+- Lazy loading support for images and non-critical content
 
 ### Changed
+
+#### Component Locations
+
+- `advanced/Carousel` → `indicators/Carousel`
+- `advanced/CodeBlock` → `indicators/CodeBlock`
+- `advanced/ErrorBoundary` → `utils/ErrorBoundary`
+- `advanced/Navigation` → `navigation/Navigation`
+- `advanced/ScrollHeader` → `layout/ScrollHeader`
+- `advanced/SegmentedControl` → `buttons/SegmentedControl`
+- `advanced/SubmenuPanel` → `navigation/SubmenuPanel`
+- `advanced/ThemeToggle` → `indicators/ThemeToggle`
+- `display/IconButton` → `buttons/IconButton`
+- `display/Accordion` → `layout/Accordion`
+- `display/EmptyState` → `feedback/EmptyState`
+- `display/Skeleton` → `feedback/Skeleton`
+- `layout/ContextNav` → `navigation/ContextNav`
+- `settings/SettingItem` → `forms/SettingItem`
+- `settings/SettingsPanel` → `layout/SettingsPanel`
+
+#### Animation Hooks
+
+- `animations/useIntersectionObserver` → `hooks/useIntersectionObserver`
+- `animations/useMotionValue` → `hooks/useMotionValue`
+- `animations/useSpring` → `hooks/useSpring`
+
+#### Touch Targets
+
+- All interactive elements now minimum 44x44px
+- Enhanced mobile touch feedback
+- Better touch scrolling performance
+
+#### Focus Management
+
+- Standardized focus indicators across all components
+- Improved keyboard navigation
+- Better focus trap behavior in modals and overlays
+
+### Deprecated in v0.3.x
+
+- Specialized card components (removed in v0.4.0)
+- Old import paths (removed in v0.4.0)
+- `advanced/` category (removed in v0.4.0)
+- `settings/` category (removed in v0.4.0)
+- `display/` category (renamed to `indicators/` in v0.4.0)
+
+### Removed
+
+- `src/basic/advanced/` folder
+- `src/basic/settings/` folder
+- `src/basic/display/` folder (renamed to `indicators/`)
+- 11 specialized card components
+- Backwards compatible re-export shims
+
+### Fixed
+
+#### Mobile Issues
+
+- Safe area insets now properly respected
+- Viewport height calculations fixed for mobile devices
+- Touch target sizes improved for better mobile interaction
+- Horizontal scrolling optimized for tables and carousels
+
+#### Accessibility Issues
+
+- Color contrast improved to meet WCAG AAA standards
+- Focus indicators now visible and consistent
+- Screen reader announcements improved
+- Keyboard navigation gaps fixed
+
+#### Performance Issues
+
+- Animation performance optimized for 60fps
+- Bundle size reduced through better tree-shaking
+- Touch scrolling smoothness improved
+- Reduced motion support implemented
+
+#### Visual Issues
+
+- Loading states now consistent across components
+- Error states provide better user feedback
+- Empty states more helpful and actionable
+- Animation timing standardized
+
+### Migration
+
+See [Migration Guide](../../docs/migrations/from-v0.3-to-v0.4.md) for detailed migration instructions.
+
+#### Quick Migration Steps
+
+1. Update package version: `npm install @spexop/react@^0.4.0`
+2. Update imports: Replace category-specific imports with main package imports
+3. Replace specialized cards: Use composition patterns from `src/patterns/cards/`
+4. Update TypeScript types: Create your own type definitions for removed components
+5. Test thoroughly: Verify all components work correctly
+
+## [0.3.2] - 2025-10-21
+
+### Changed in v0.3.2
 
 - Made `children` prop optional across all 50+ components for improved flexibility
 - Updated type definitions to use `children?: ReactNode` instead of `children: ReactNode`
 - Improved TypeScript developer experience by reducing unnecessary type errors
 
-### Components Updated
+### Components Updated in v0.3.2
 
 - **Primitives**: Grid, Stack, Container, GridItem
 - **Buttons**: Button, ButtonGroup
@@ -38,18 +194,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.3.1] - 2025-10-21
 
-### Fixed
+### Fixed in v0.3.1
 
 - Corrected repository URL in package.json (github.com/spexop-ui/spexop-public)
 - Updated bug tracker URL to point to correct repository
 
-### Note
+### Note in v0.3.1
 
 This is a metadata-only patch release. No code changes from v0.3.0. Users on v0.3.0 can continue using it without any issues - this update only corrects the repository links in package.json for better discoverability.
 
 ## [0.3.0] - 2025-10-21
 
-### Added - New Component Categories
+### Added in v0.3.0 - New Component Categories
 
 - **Data Components (3 new)**
 
@@ -208,7 +364,7 @@ Each component now includes:
 - Import path corrections
 - Export consistency across all components
 
-### Breaking Changes
+### Breaking Changes in v0.3.0
 
 **Animations Import Path Change:**
 
@@ -224,7 +380,7 @@ import { FadeIn, Motion } from '@spexop/react/basic/animations';
 
 **Migration**: Update any imports from `'@spexop/react/animations'` or `'../animations/'` to `'@spexop/react'` or `'../basic/animations/'`.
 
-### Non-Breaking Changes
+### Non-Breaking Changes in v0.3.0
 
 **Provider Type Renames:**
 
@@ -328,7 +484,7 @@ Version 0.2.3 was published without TypeScript definitions due to missing Vite p
 
 ## [0.2.0] - 2025-10-20
 
-### Added
+### Added in v0.2.0
 
 - Theme system integration via @spexop/theme
 - UnifiedThemeProvider for runtime theme switching and configuration

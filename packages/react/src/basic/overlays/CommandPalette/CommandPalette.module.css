@@ -37,8 +37,9 @@
   width: 100%;
   max-width: 768px;
   background: var(--theme-surface);
-  border-radius: var(--theme-radius-relaxed);
-  border: var(--theme-border-width) solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--theme-radius-lg);
+  border: 2px solid var(--theme-border);
+  box-shadow: var(--theme-shadow-lg);
   display: flex;
   flex-direction: column;
   max-height: 80vh;
@@ -52,7 +53,7 @@
 
 .searchContainer {
   padding: var(--theme-spacing-6) var(--theme-spacing-6);
-  border-bottom: var(--theme-border-width) solid rgba(255, 255, 255, 0.1);
+  border-bottom: 2px solid var(--theme-border);
   display: flex;
   align-items: center;
   gap: var(--theme-spacing-4);
@@ -70,8 +71,8 @@
   background: transparent;
   border: none;
   outline: none;
-  font-size: 24px;
-  font-weight: var(--theme-font-weight-medium);
+  font-size: var(--theme-font-size-xl);
+  font-weight: var(--theme-font-weight-semibold);
   color: var(--theme-text);
   line-height: 1.5;
   padding: 0;
@@ -93,11 +94,11 @@
    ============================================ */
 
 .kbd {
-  background: rgba(255, 255, 255, 0.12);
-  border: var(--theme-border-width) solid rgba(255, 255, 255, 0.1);
-  border-radius: var(--theme-radius-relaxed);
-  padding: var(--theme-spacing-3) var(--theme-spacing-4);
-  font-size: 18px;
+  background: var(--theme-surface-hover);
+  border: 1px solid var(--theme-border);
+  border-radius: var(--theme-radius-sm);
+  padding: var(--theme-spacing-2) var(--theme-spacing-3);
+  font-size: var(--theme-font-size-sm);
   font-weight: var(--theme-font-weight-semibold);
   color: var(--theme-text-secondary);
   line-height: 1;
@@ -155,7 +156,7 @@
 }
 
 .categoryHeader {
-  font-size: 16px;
+  font-size: var(--theme-font-size-sm);
   font-weight: var(--theme-font-weight-bold);
   color: var(--theme-text-secondary);
   text-transform: uppercase;
@@ -176,7 +177,7 @@
   padding: var(--theme-spacing-5) var(--theme-spacing-5);
   background: transparent;
   border: none;
-  border-radius: var(--theme-radius-relaxed);
+  border-radius: var(--theme-radius-md);
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: left;
@@ -185,11 +186,12 @@
 }
 
 .commandButton[aria-selected="true"] {
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--theme-surface-hover);
+  border: 1px solid var(--theme-border);
 }
 
 .commandButton:hover:not([aria-disabled="true"]) {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--theme-surface-hover);
 }
 
 .commandButton[aria-disabled="true"] {
@@ -213,7 +215,7 @@
 }
 
 .commandLabel {
-  font-size: 20px;
+  font-size: var(--theme-font-size-lg);
   font-weight: var(--theme-font-weight-semibold);
   color: var(--theme-text);
   line-height: 1.375;
@@ -224,7 +226,7 @@
 }
 
 .commandDescription {
-  font-size: 16px;
+  font-size: var(--theme-font-size-sm);
   color: var(--theme-text-secondary);
   line-height: 1.375;
   white-space: nowrap;
@@ -242,11 +244,11 @@
 
 .footer {
   padding: var(--theme-spacing-5) var(--theme-spacing-6);
-  border-top: var(--theme-border-width) solid rgba(255, 255, 255, 0.1);
+  border-top: 2px solid var(--theme-border);
   display: flex;
   align-items: center;
   gap: var(--theme-spacing-5);
-  font-size: 16px;
+  font-size: var(--theme-font-size-sm);
   color: var(--theme-text-secondary);
   flex-wrap: wrap;
 }
@@ -258,7 +260,7 @@
 }
 
 .footerLabel {
-  font-size: 16px;
+  font-size: var(--theme-font-size-sm);
 }
 
 /* ============================================

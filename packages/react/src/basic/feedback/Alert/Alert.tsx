@@ -82,6 +82,7 @@ export function Alert({
           onClick={onDismiss}
           className={styles["dismiss-button"]}
           aria-label="Dismiss alert"
+          tabIndex={0}
         >
           <X size={16} strokeWidth={2} />
         </button>

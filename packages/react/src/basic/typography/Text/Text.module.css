@@ -27,48 +27,52 @@
 
 .size-xs {
   font-size: var(--theme-font-size-xs);
-  line-height: 1.5;
+  line-height: var(--theme-line-height-normal);
 }
 
 .size-sm {
   font-size: var(--theme-font-size-sm);
-  line-height: 1.5;
+  line-height: var(--theme-line-height-normal);
 }
 
 .size-base {
   font-size: var(--theme-font-size-base);
-  line-height: 1.6;
+  line-height: var(--theme-line-height-relaxed);
 }
 
 .size-lg {
   font-size: var(--theme-font-size-lg);
-  line-height: 1.6;
+  line-height: var(--theme-line-height-relaxed);
 }
 
 .size-xl {
   font-size: var(--theme-font-size-xl);
-  line-height: 1.5;
+  line-height: var(--theme-line-height-normal);
 }
 
 .size-2xl {
   font-size: var(--theme-font-size-2xl);
-  line-height: 1.4;
+  line-height: var(--theme-line-height-snug);
 }
 
 .size-3xl {
   font-size: var(--theme-font-size-3xl);
-  line-height: 1.3;
+  line-height: var(--theme-line-height-tight);
 }
 
 .size-4xl {
   font-size: var(--theme-font-size-4xl);
-  line-height: 1.2;
+  line-height: var(--theme-line-height-tight);
 }
 
 /* ========== WEIGHTS ========== */
 
 .weight-regular {
   font-weight: var(--theme-font-weight-regular);
+}
+
+.weight-medium {
+  font-weight: var(--theme-font-weight-medium);
 }
 
 .weight-semibold {
@@ -119,6 +123,10 @@
   color: var(--theme-warning);
 }
 
+.variant-info {
+  color: var(--theme-info);
+}
+
 /* ========== TEXT UTILITIES ========== */
 
 /* Truncate with ellipsis */
@@ -126,6 +134,68 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* Text decoration */
+.decoration-none {
+  text-decoration: none;
+}
+
+.decoration-underline {
+  text-decoration: underline;
+}
+
+.decoration-line-through {
+  text-decoration: line-through;
+}
+
+/* Text transform */
+.transform-none {
+  text-transform: none;
+}
+
+.transform-uppercase {
+  text-transform: uppercase;
+}
+
+.transform-lowercase {
+  text-transform: lowercase;
+}
+
+.transform-capitalize {
+  text-transform: capitalize;
+}
+
+/* Text overflow */
+.overflow-clip {
+  overflow: hidden;
+  text-overflow: clip;
+}
+
+.overflow-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* White space */
+.whitespace-normal {
+  white-space: normal;
+}
+
+.whitespace-nowrap {
+  white-space: nowrap;
+}
+
+.whitespace-pre {
+  white-space: pre;
+}
+
+.whitespace-pre-line {
+  white-space: pre-line;
+}
+
+.whitespace-pre-wrap {
+  white-space: pre-wrap;
 }
 
 /* Multi-line clamp */
@@ -167,5 +237,112 @@
   line-clamp: 5;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* ========================================
+   Mobile Responsive Design
+   ======================================== */
+
+@media (max-width: 768px) {
+  .text {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    /* Improve text rendering on mobile */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  .size-xs {
+    font-size: var(--theme-font-size-xs, 12px);
+    line-height: var(--theme-line-height-normal, 1.5);
+  }
+  
+  .size-sm {
+    font-size: var(--theme-font-size-sm, 14px);
+    line-height: var(--theme-line-height-normal, 1.5);
+  }
+  
+  .size-base {
+    font-size: var(--theme-font-size-base, 16px);
+    line-height: var(--theme-line-height-relaxed, 1.6);
+  }
+  
+  .size-lg {
+    font-size: var(--theme-font-size-lg, 18px);
+    line-height: var(--theme-line-height-relaxed, 1.6);
+  }
+  
+  .size-xl {
+    font-size: var(--theme-font-size-xl, 20px);
+    line-height: var(--theme-line-height-normal, 1.5);
+  }
+  
+  .size-2xl {
+    font-size: var(--theme-font-size-2xl, 24px);
+    line-height: var(--theme-line-height-snug, 1.4);
+  }
+  
+  .size-3xl {
+    font-size: var(--theme-font-size-3xl, 30px);
+    line-height: var(--theme-line-height-tight, 1.3);
+  }
+  
+  .size-4xl {
+    font-size: var(--theme-font-size-4xl, 36px);
+    line-height: var(--theme-line-height-tight, 1.2);
+  }
+  
+  /* Mobile margin adjustments */
+  .text:not(.no-margin) {
+    margin-bottom: var(--theme-spacing-2, 8px);
+  }
+  
+  /* Improve touch targets for interactive text */
+  .text[tabindex]:not([tabindex="-1"]) {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+}
+
+/* ========================================
+   High Contrast Mode Support
+   ======================================== */
+
+@media (prefers-contrast: high) {
+  .text {
+    color: var(--theme-text, #000000);
+  }
+  
+  .variant-secondary {
+    color: var(--theme-text-secondary, #404040);
+  }
+  
+  .variant-error {
+    color: var(--theme-error, #dc2626);
+  }
+  
+  .variant-success {
+    color: var(--theme-success, #16a34a);
+  }
+  
+  .variant-warning {
+    color: var(--theme-warning, #d97706);
+  }
+  
+  .variant-info {
+    color: var(--theme-info, #2563eb);
+  }
+}
+
+/* ========================================
+   Reduced Motion Support
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .text {
+    transition: none;
+  }
 }
 

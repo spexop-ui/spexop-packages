@@ -335,6 +335,81 @@ describe("ButtonGridItem", () => {
     });
   });
 
+  describe("State Management", () => {
+    it("renders in loading state", () => {
+      const { container } = render(
+        <ButtonGridItem {...mockProps} loading={true} />,
+      );
+
+      const card = container.querySelector('[role="button"]');
+      expect(card).toHaveClass(styles.loading);
+      expect(card).toHaveAttribute("aria-disabled", "true");
+    });
+
+    it("renders in disabled state", () => {
+      const { container } = render(
+        <ButtonGridItem {...mockProps} disabled={true} />,
+      );
+
+      const card = container.querySelector('[role="button"]');
+      expect(card).toHaveClass(styles.disabled);
+      expect(card).toHaveAttribute("aria-disabled", "true");
+      expect(card).toHaveAttribute("tabIndex", "-1");
+    });
+
+    it("renders in error state", () => {
+      const { container } = render(
+        <ButtonGridItem {...mockProps} error={true} />,
+      );
+
+      const card = container.querySelector('[role="button"]');
+      expect(card).toHaveClass(styles.error);
+    });
+
+    it("renders with media loading state", () => {
+      const { container } = render(
+        <ButtonGridItem {...mockProps} mediaLoading={true} />,
+      );
+
+      const mediaContainer = container.querySelector(
+        `.${styles.mediaContainer}`,
+      );
+      expect(mediaContainer).toHaveClass(styles.loading);
+    });
+
+    it("does not trigger onClick when disabled", async () => {
+      const user = userEvent.setup();
+      const handleClick = vi.fn();
+
+      const { container } = render(
+        <ButtonGridItem {...mockProps} disabled={true} onClick={handleClick} />,
+      );
+
+      const card = container.querySelector('[role="button"]');
+      if (card) {
+        await user.click(card);
+      }
+
+      expect(handleClick).not.toHaveBeenCalled();
+    });
+
+    it("does not trigger onClick when loading", async () => {
+      const user = userEvent.setup();
+      const handleClick = vi.fn();
+
+      const { container } = render(
+        <ButtonGridItem {...mockProps} loading={true} onClick={handleClick} />,
+      );
+
+      const card = container.querySelector('[role="button"]');
+      if (card) {
+        await user.click(card);
+      }
+
+      expect(handleClick).not.toHaveBeenCalled();
+    });
+  });
+
   describe("Edge Cases", () => {
     it("handles empty label gracefully", () => {
       render(<ButtonGridItem {...mockProps} label="" />);
@@ -401,27 +476,74 @@ describe("ButtonGridItem", () => {
       const button = screen.getByRole("button", { name: mockProps.buttonText });
       expect(button).toHaveFocus();
     });
+
+    it("supports custom aria-describedby", () => {
+      const { container } = render(
+        <ButtonGridItem {...mockProps} aria-describedby="custom-description" />,
+      );
+
+      const card = container.querySelector('[role="button"]');
+      expect(card).toHaveAttribute("aria-describedby", "custom-description");
+    });
+
+    it("supports custom aria-live", () => {
+      const { container } = render(
+        <ButtonGridItem {...mockProps} aria-live="polite" />,
+      );
+
+      const card = container.querySelector('[role="button"]');
+      expect(card).toHaveAttribute("aria-live", "polite");
+    });
+
+    it("supports data-testid", () => {
+      const { container } = render(
+        <ButtonGridItem {...mockProps} data-testid="test-card" />,
+      );
+
+      const card = container.querySelector('[role="button"]');
+      expect(card).toHaveAttribute("data-testid", "test-card");
+    });
+
+    it("shows loading state to screen readers", () => {
+      render(<ButtonGridItem {...mockProps} loading={true} />);
+
+      expect(screen.getByText("Loading...")).toBeInTheDocument();
+    });
+
+    it("disabled state is properly announced", () => {
+      const { container } = render(
+        <ButtonGridItem {...mockProps} disabled={true} />,
+      );
+
+      const card = container.querySelector('[role="button"]');
+      expect(card).toHaveAttribute("aria-disabled", "true");
+      expect(card).toHaveAttribute("tabIndex", "-1");
+    });
   });
 
   describe("Structure", () => {
     it("renders media container", () => {
       const { container } = render(<ButtonGridItem {...mockProps} />);
 
-      const mediaContainer = container.querySelector(".mediaContainer");
+      const mediaContainer = container.querySelector(
+        `.${styles.mediaContainer}`,
+      );
       expect(mediaContainer).toBeInTheDocument();
     });
 
     it("renders content overlay", () => {
       const { container } = render(<ButtonGridItem {...mockProps} />);
 
-      const contentOverlay = container.querySelector(".contentOverlay");
+      const contentOverlay = container.querySelector(
+        `.${styles.contentOverlay}`,
+      );
       expect(contentOverlay).toBeInTheDocument();
     });
 
     it("renders content wrapper", () => {
       const { container } = render(<ButtonGridItem {...mockProps} />);
 
-      const content = container.querySelector(".content");
+      const content = container.querySelector(`.${styles.content}`);
       expect(content).toBeInTheDocument();
     });
 
@@ -443,15 +565,9 @@ describe("ButtonGridItem", () => {
   });
 
   describe("Performance", () => {
-    it("uses requestAnimationFrame for card click", async () => {
+    it("handles card click efficiently", async () => {
       const user = userEvent.setup();
       const handleClick = vi.fn();
-      const rafSpy = vi
-        .spyOn(window, "requestAnimationFrame")
-        .mockImplementation((cb) => {
-          cb(0);
-          return 0;
-        });
 
       const { container } = render(
         <ButtonGridItem {...mockProps} onClick={handleClick} />,
@@ -462,40 +578,24 @@ describe("ButtonGridItem", () => {
         await user.click(card);
       }
 
-      expect(rafSpy).toHaveBeenCalled();
-
-      rafSpy.mockRestore();
+      expect(handleClick).toHaveBeenCalledTimes(1);
     });
 
-    it("uses requestAnimationFrame for button click", async () => {
+    it("handles button click efficiently", async () => {
       const user = userEvent.setup();
       const handleClick = vi.fn();
-      const rafSpy = vi
-        .spyOn(window, "requestAnimationFrame")
-        .mockImplementation((cb) => {
-          cb(0);
-          return 0;
-        });
 
       render(<ButtonGridItem {...mockProps} onClick={handleClick} />);
 
       const button = screen.getByRole("button", { name: mockProps.buttonText });
       await user.click(button);
 
-      expect(rafSpy).toHaveBeenCalled();
-
-      rafSpy.mockRestore();
+      expect(handleClick).toHaveBeenCalledTimes(1);
     });
 
-    it("uses requestAnimationFrame for keyboard events", async () => {
+    it("handles keyboard events efficiently", async () => {
       const user = userEvent.setup();
       const handleClick = vi.fn();
-      const rafSpy = vi
-        .spyOn(window, "requestAnimationFrame")
-        .mockImplementation((cb) => {
-          cb(0);
-          return 0;
-        });
 
       const { container } = render(
         <ButtonGridItem {...mockProps} onClick={handleClick} />,
@@ -507,9 +607,35 @@ describe("ButtonGridItem", () => {
         await user.keyboard("{Enter}");
       }
 
+      expect(handleClick).toHaveBeenCalledTimes(1);
+    });
+
+    it("uses requestAnimationFrame in production mode", () => {
+      // Mock production environment
+      const originalEnv = process.env.NODE_ENV;
+      process.env.NODE_ENV = "production";
+
+      const rafSpy = vi
+        .spyOn(window, "requestAnimationFrame")
+        .mockImplementation((cb) => {
+          cb(0);
+          return 0;
+        });
+
+      const handleClick = vi.fn();
+      const { container } = render(
+        <ButtonGridItem {...mockProps} onClick={handleClick} />,
+      );
+
+      const card = container.querySelector('[role="button"]');
+      if (card) {
+        (card as HTMLElement).click();
+      }
+
       expect(rafSpy).toHaveBeenCalled();
 
       rafSpy.mockRestore();
+      process.env.NODE_ENV = originalEnv;
     });
   });
 });

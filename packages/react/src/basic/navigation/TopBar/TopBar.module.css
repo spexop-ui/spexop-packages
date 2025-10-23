@@ -9,6 +9,39 @@
  * @updated 2025-10-18 - Migrated to theme system
  */
 
+/* Skip Navigation Links */
+.skipLinks {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  z-index: 1000;
+}
+
+.skipLink {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: var(--theme-primary);
+  color: var(--theme-surface);
+  padding: var(--theme-spacing-3) var(--theme-spacing-4);
+  text-decoration: none;
+  font-weight: var(--theme-font-weight-semibold);
+  border-radius: 0 0 var(--theme-radius-md) 0;
+  transform: translateY(-100%);
+  transition: transform 0.2s ease;
+  font-size: var(--theme-font-size-sm);
+}
+
+.skipLink:focus {
+  transform: translateY(0);
+  outline: 2px solid var(--theme-surface);
+  outline-offset: 2px;
+}
+
+.skipLink + .skipLink {
+  top: 48px;
+}
+
 /* Main Container */
 .topBar {
   position: fixed;
@@ -97,6 +130,8 @@
   transition: all 150ms ease;
   color: var(--theme-text);
   text-decoration: none;
+  min-width: 40px;
+  min-height: 40px;
 }
 
 .button:hover {
@@ -111,6 +146,7 @@
 
 .button:active {
   background: var(--theme-surface-hover);
+  transform: scale(0.95);
 }
 
 /* Mobile Menu Button */
@@ -124,10 +160,17 @@
 @media (max-width: 767px) {
   .topBar {
     padding: 0 var(--theme-spacing-4);
+    /* Safe area insets for mobile devices */
+    padding-top: env(safe-area-inset-top);
+    height: calc(64px + env(safe-area-inset-top));
   }
 
   .mobileMenuButton {
     display: flex;
+    min-width: 48px;
+    min-height: 48px;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
 
   .logoText {
@@ -135,12 +178,34 @@
   }
 
   .button {
-    width: 40px;
-    height: 40px;
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    min-height: 48px;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  
+  .button:active {
+    transform: scale(0.92);
+    transition-duration: 80ms;
   }
 
   .rightSection {
     gap: var(--theme-spacing-2);
+  }
+  
+  /* Mobile logo adjustments */
+  .logo {
+    font-size: var(--theme-font-size-base);
+    min-height: 48px;
+    padding: var(--theme-spacing-2) 0;
+  }
+  
+  /* Mobile navigation items */
+  .navItem {
+    min-height: 48px;
+    padding: var(--theme-spacing-3) var(--theme-spacing-4);
   }
 }
 

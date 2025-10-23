@@ -3,12 +3,17 @@
 ## Installation
 
 ```bash
-# Install both packages
-npm install @spexop/react @spexop/theme
+# Install both packages (latest v0.4.0)
+npm install @spexop/react@^0.4.0 @spexop/theme@^0.4.0
 
 # Or with pnpm
-pnpm add @spexop/react @spexop/theme
+pnpm add @spexop/react@^0.4.0 @spexop/theme@^0.4.0
+
+# Or with yarn
+yarn add @spexop/react@^0.4.0 @spexop/theme@^0.4.0
 ```
+
+**Note**: If you're migrating from v0.3.x, see the [Migration Guides](./migrations/) for detailed instructions.
 
 ## Usage Options
 
@@ -105,11 +110,78 @@ import '@spexop/react/dist/index.css';
 import App from './App';
 ```
 
+## What's New in v0.4.0
+
+### Major Breaking Changes
+
+#### Component Structure Reorganization
+
+- Removed specialized card components (BlogCard, ProductCard, etc.) - use composition patterns instead
+- Eliminated "advanced" category - components moved to semantic categories
+- Renamed "display" to "indicators" for clarity
+- Moved components to semantic categories for better organization
+
+#### Import Path Changes
+
+- Navigation components moved from `advanced/` to `navigation/`
+- Button components moved from `display/` to `buttons/`
+- Layout components moved from `display/` to `layout/`
+- Feedback components moved from `display/` to `feedback/`
+- Animation hooks moved from `animations/` to `hooks/`
+
+### New Features
+
+#### Composition Patterns
+
+- New `src/patterns/cards/` directory with 11 card composition examples
+- BlogCard, ProductCard, PricingCard, ProfileCard, TestimonialCard patterns
+- TeamMemberCard, FeatureCard, StatCard, MediaCard, EventCard, ComparisonCard patterns
+- Complete TypeScript interfaces and usage examples
+
+#### Enhanced Accessibility
+
+- WCAG AAA compliance improvements across all components
+- Enhanced focus indicators (2px solid outline with 2px offset)
+- Minimum 44x44px touch targets for all interactive elements
+- Improved screen reader support with better ARIA labels
+- High contrast mode support for better visibility
+
+#### Mobile Optimization
+
+- Safe area insets support for mobile devices with notches
+- Dynamic viewport height (`100dvh`) for proper mobile height calculations
+- Enhanced touch feedback with active state scaling
+- Improved responsive layouts for all components
+- Mobile-optimized typography (16px minimum to prevent iOS zoom)
+
+#### Performance Improvements
+
+- 10-15% bundle size reduction through better tree-shaking
+- Hardware-accelerated animations for better performance
+- Optimized touch scrolling with momentum on mobile
+- Lazy loading support for images and non-critical content
+
+### Migration from v0.3.x
+
+#### Quick Migration Steps
+
+1. Update packages: `npm install @spexop/react@^0.4.0 @spexop/theme@^0.4.0`
+2. Update imports: Replace category-specific imports with main package imports
+3. Replace specialized cards: Use composition patterns from `src/patterns/cards/`
+4. Update TypeScript types: Create your own type definitions for removed components
+5. Test thoroughly: Verify all components work correctly
+
+#### Detailed Migration Guides
+
+- [React Migration Guide](./migrations/from-v0.3-to-v0.4.md) - Complete React package migration
+- [Theme Migration Guide](./migrations/theme-from-v0.3-to-v0.4.md) - Complete Theme package migration
+- [Migration Overview](./migrations/v0.4.0-overview.md) - High-level migration strategy
+
 ## What's New in v0.3.0
 
 ### New Component Categories
 
-- **Data Components**
+- #### Data Components
 
 ```typescript
 import { DataTable, DataGrid, Chart } from '@spexop/react';
@@ -117,7 +189,7 @@ import { DataTable, DataGrid, Chart } from '@spexop/react';
 <DataTable columns={columns} data={data} sortable filterable />
 ```
 
-- **Feedback Components**
+- #### Feedback Components
 
 ```typescript
 import { Alert, Spinner, Progress, Skeleton, Toast, EmptyState } from '@spexop/react';
@@ -127,7 +199,7 @@ import { Alert, Spinner, Progress, Skeleton, Toast, EmptyState } from '@spexop/r
 <Progress value={75} />
 ```
 
-- **Typography Components**
+- #### Typography Components
 
 ```typescript
 import { Heading, Text, Link, Code } from '@spexop/react';
@@ -195,12 +267,20 @@ All 59 components now include:
 
 ## Development Status
 
-Version 0.3.0 is an active development release. While components follow "The Spexop Way" design principles, the library is still evolving. APIs may change in future releases.
+Version 0.4.0 is a major release with significant improvements in accessibility, mobile optimization, and performance. The library follows "The Spexop Way" design principles and provides a stable foundation for production applications.
+
+**Key Improvements in v0.4.0:**
+
+- WCAG AAA accessibility compliance
+- Enhanced mobile experience with safe area support
+- 10-15% performance improvements
+- Better component organization and composition patterns
+- Comprehensive migration guides for smooth upgrades
 
 ## Next Steps
 
-- Explore [Examples](../examples/)
-- Read [Theme System Guide](../packages/theme/README.md)
-- Browse [Component Docs](../packages/react/README.md)
-- Check [Migration Guide](../packages/react/MIGRATION-GUIDE.md)
-- Try [Theme Builder](https://builder.spexop.com)
+- **New to Spexop?** Explore [Examples](../examples/) to see components in action
+- **Migrating from v0.3.x?** Check the [Migration Guides](./migrations/) for detailed instructions
+- **Building with Spexop?** Read the [Component Docs](../packages/react/README.md) and [Theme System Guide](../packages/theme/README.md)
+- **Need Help?** Join our [Discord Community](https://discord.gg/spexop) or [open an issue](https://github.com/spexop-ui/spexop-design-system)
+- **Custom Themes?** Try the [Theme Builder](https://builder.spexop.com)

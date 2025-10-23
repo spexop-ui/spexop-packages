@@ -269,8 +269,13 @@
 	}
 
 	.arrowButton {
-		width: 44px;
-		height: 44px;
+		width: 48px;
+		height: 48px;
+		min-width: 48px;
+		min-height: 48px;
+		/* Better mobile touch feedback */
+		-webkit-tap-highlight-color: transparent;
+		touch-action: manipulation;
 	}
 
 	.arrowPrevious {
@@ -279,6 +284,57 @@
 
 	.arrowNext {
 		right: var(--theme-spacing-2);
+	}
+	
+	/* Better mobile viewport */
+	.viewport {
+		border-width: 2px;
+		/* Better mobile touch handling */
+		-webkit-tap-highlight-color: transparent;
+		touch-action: pan-y pinch-zoom;
+	}
+	
+	/* Mobile dots */
+	.dots {
+		gap: var(--theme-spacing-3);
+		padding: var(--theme-spacing-2);
+	}
+	
+	.dot {
+		min-width: 48px;
+		min-height: 48px;
+		padding: 18px;
+		/* Better mobile touch feedback */
+		-webkit-tap-highlight-color: transparent;
+		touch-action: manipulation;
+	}
+	
+	/* Mobile thumbnails */
+	.thumbnails {
+		gap: var(--theme-spacing-2);
+		padding: var(--theme-spacing-2);
+		/* Better mobile scrolling */
+		-webkit-overflow-scrolling: touch;
+	}
+	
+	.thumbnail {
+		min-width: 64px;
+		min-height: 64px;
+		/* Better mobile touch feedback */
+		-webkit-tap-highlight-color: transparent;
+		touch-action: manipulation;
+	}
+	
+	/* Mobile counter */
+	.counter {
+		font-size: var(--theme-font-size-sm);
+		padding: var(--theme-spacing-2) var(--theme-spacing-3);
+	}
+	
+	/* Better mobile controls spacing */
+	.controls {
+		gap: var(--theme-spacing-4);
+		margin-top: var(--theme-spacing-6);
 	}
 }
 

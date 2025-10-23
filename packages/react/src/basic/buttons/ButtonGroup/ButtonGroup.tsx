@@ -1,21 +1,23 @@
 /**
  * ButtonGroup Component
- * Container for grouped buttons with shared borders
+ * Modern container for grouped buttons with enhanced UX
  *
  * @component ButtonGroup
  * @packageName @spexop/react
- * @description Primitives-first button grouping with horizontal/vertical direction
+ * @description Primitives-first button grouping with modern UI/UX patterns
  * @author @spexop-ui | github.com/spexop-ui | @olmstedian | github.com/olmstedian
- * @version 0.1.0
+ * @version 0.3.0
  * @since 2025-10-13
+ * @updated 2025-01-20 - Modern UI/UX improvements
  *
  */
 
+import { forwardRef, useCallback, useRef } from "react";
 import styles from "./ButtonGroup.module.css";
 import type { ButtonGroupProps } from "./ButtonGroup.types.js";
 
 /**
- * ButtonGroup component
+ * ButtonGroup component with enhanced accessibility and modern interactions
  *
  * @example
  * ```tsx
@@ -25,33 +27,91 @@ import type { ButtonGroupProps } from "./ButtonGroup.types.js";
  * </ButtonGroup>
  * ```
  */
-export function ButtonGroup({
-  children,
-  direction = "horizontal",
-  compact = false,
-  className = "",
-  role = "group",
-  "aria-label": ariaLabel,
-  "aria-labelledby": ariaLabelledby,
-}: ButtonGroupProps) {
-  // Compose className
-  const groupClassName = [
-    styles.buttonGroup,
-    styles[direction],
-    compact && styles.compact,
-    className,
-  ]
-    .filter(Boolean)
-    .join(" ");
+export const ButtonGroup = forwardRef<HTMLDivElement, ButtonGroupProps>(
+  function ButtonGroup(
+    {
+      children,
+      direction = "horizontal",
+      compact = false,
+      className = "",
+      role = "group",
+      "aria-label": ariaLabel,
+      "aria-labelledby": ariaLabelledby,
+      "aria-describedby": ariaDescribedby,
+      "aria-orientation": ariaOrientation,
+      onKeyDown,
+      ...rest
+    },
+    ref,
+  ) {
+    const groupRef = useRef<HTMLDivElement>(null);
 
-  return (
-    <div
-      className={groupClassName}
-      role={role}
-      aria-label={ariaLabel}
-      aria-labelledby={ariaLabelledby}
-    >
-      {children}
-    </div>
-  );
-}
+    // Enhanced keyboard navigation
+    const handleKeyDown = useCallback(
+      (event: React.KeyboardEvent<HTMLDivElement>) => {
+        if (onKeyDown) {
+          onKeyDown(event);
+          return;
+        }
+
+        // Arrow key navigation for better UX
+        if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
+          event.preventDefault();
+
+          const buttons = groupRef.current?.querySelectorAll(
+            'button:not([disabled]), [role="button"]:not([disabled])',
+          );
+
+          if (!buttons || buttons.length === 0) return;
+
+          const currentIndex = Array.from(buttons).indexOf(
+            document.activeElement as Element,
+          );
+
+          if (currentIndex === -1) return;
+
+          const nextIndex =
+            event.key === "ArrowRight"
+              ? (currentIndex + 1) % buttons.length
+              : (currentIndex - 1 + buttons.length) % buttons.length;
+
+          (buttons[nextIndex] as HTMLElement).focus();
+        }
+      },
+      [onKeyDown],
+    );
+
+    // Compose className with modern patterns
+    const groupClassName = [
+      styles.buttonGroup,
+      styles[direction],
+      compact && styles.compact,
+      className,
+    ]
+      .filter(Boolean)
+      .join(" ");
+
+    // Enhanced ARIA attributes
+    const ariaAttributes = {
+      role,
+      "aria-label": ariaLabel,
+      "aria-labelledby": ariaLabelledby,
+      "aria-describedby": ariaDescribedby,
+      "aria-orientation":
+        ariaOrientation ||
+        (direction === "vertical" ? "vertical" : "horizontal"),
+    };
+
+    return (
+      <div
+        ref={ref || groupRef}
+        className={groupClassName}
+        onKeyDown={handleKeyDown}
+        {...ariaAttributes}
+        {...rest}
+      >
+        {children}
+      </div>
+    );
+  },
+);

@@ -5,7 +5,7 @@ import styles from "./Card.module.css";
 import type { CardProps } from "./Card.types.js";
 
 /**
- * Card - Flexible container component following Refined Minimalism
+ * Card - Enhanced flexible container component following Modern UI/UX principles
  *
  * Features:
  * - Border-based separation (no heavy shadows)
@@ -18,6 +18,9 @@ import type { CardProps } from "./Card.types.js";
  * - WCAG 2.1 AA compliant
  * - Theme-aware (light/dark)
  * - Responsive by default
+ * - Modern state management (loading, error, success)
+ * - Enhanced accessibility
+ * - Micro-interactions and feedback
  *
  * @example
  * ```tsx
@@ -33,9 +36,23 @@ import type { CardProps } from "./Card.types.js";
  *
  * @example
  * ```tsx
- * // Clickable card
- * <Card clickable onClick={handleClick} variant="interactive">
+ * // Clickable card with modern interactions
+ * <Card
+ *   clickable
+ *   onClick={handleClick}
+ *   variant="interactive"
+ *   feedback="prominent"
+ * >
  *   Interactive content
+ * </Card>
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Card with state management
+ * <Card state="loading" loadingText="Loading content...">
+ *   <CardHeader title="Loading Card" />
+ *   <CardBody>This card is loading</CardBody>
  * </Card>
  * ```
  */
@@ -49,6 +66,14 @@ export const Card = forwardRef<HTMLDivElement | HTMLButtonElement, CardProps>(
       children,
       className,
       onClick,
+      state = "idle",
+      feedback = "subtle",
+      disabled = false,
+      loadingText = "Loading...",
+      errorMessage,
+      successMessage,
+      "aria-label": ariaLabel,
+      "aria-describedby": ariaDescribedBy,
       size, // deprecated, fallback to density
       icon, // deprecated
       title, // deprecated
@@ -108,21 +133,75 @@ export const Card = forwardRef<HTMLDivElement | HTMLButtonElement, CardProps>(
       );
     };
 
+    // Render state-specific content
+    const renderStateContent = () => {
+      if (state === "loading") {
+        return (
+          <div className={styles.card__state} role="status" aria-live="polite">
+            <div className={styles.card__state__spinner} aria-hidden="true" />
+            <span className={styles.card__state__text}>{loadingText}</span>
+          </div>
+        );
+      }
+
+      if (state === "error" && errorMessage) {
+        return (
+          <div
+            className={styles.card__state}
+            role="alert"
+            aria-live="assertive"
+          >
+            <div className={styles.card__state__icon} aria-hidden="true">
+              ⚠️
+            </div>
+            <span className={styles.card__state__text}>{errorMessage}</span>
+          </div>
+        );
+      }
+
+      if (state === "success" && successMessage) {
+        return (
+          <div className={styles.card__state} role="status" aria-live="polite">
+            <div className={styles.card__state__icon} aria-hidden="true">
+              ✅
+            </div>
+            <span className={styles.card__state__text}>{successMessage}</span>
+          </div>
+        );
+      }
+
+      return null;
+    };
+
     const classNames = cn(
       styles.card,
       styles[`density--${actualDensity}`],
       normalizedVariant !== "basic" && styles[`variant--${normalizedVariant}`],
       clickable && styles.clickable,
       fullHeight && styles.fullHeight,
+      disabled && styles["card--disabled"],
+      state !== "idle" && styles[`card--${state}`],
+      feedback !== "none" && styles[`card--feedback-${feedback}`],
       className,
     );
 
     const content = (
       <>
         {renderLegacyContent()}
+        {renderStateContent()}
         {children}
       </>
     );
+
+    // Enhanced accessibility attributes
+    const accessibilityProps = {
+      "aria-label": ariaLabel,
+      "aria-describedby": ariaDescribedBy,
+      "aria-disabled": disabled,
+      "aria-busy": state === "loading",
+      ...(state === "loading" && { "aria-live": "polite" as const }),
+      ...(state === "error" && { "aria-live": "assertive" as const }),
+    };
 
     // Render as button if clickable
     if (clickable) {
@@ -132,6 +211,9 @@ export const Card = forwardRef<HTMLDivElement | HTMLButtonElement, CardProps>(
           className={classNames}
           onClick={onClick}
           type="button"
+          tabIndex={disabled ? -1 : 0}
+          disabled={disabled}
+          {...accessibilityProps}
           {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}
         >
           {content}
@@ -144,6 +226,7 @@ export const Card = forwardRef<HTMLDivElement | HTMLButtonElement, CardProps>(
       <div
         ref={ref as React.ForwardedRef<HTMLDivElement>}
         className={classNames}
+        {...accessibilityProps}
         {...props}
       >
         {content}

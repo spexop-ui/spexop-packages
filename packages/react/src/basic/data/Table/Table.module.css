@@ -335,3 +335,63 @@
   }
 }
 
+/* ========================================
+   Mobile Responsive Design
+   ======================================== */
+
+@media (max-width: 768px) {
+  .wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border: 2px solid var(--theme-border, #d4d4d4);
+    border-radius: var(--theme-radius-md, 8px);
+  }
+  
+  .table {
+    min-width: 600px; /* Ensure table doesn't get too cramped */
+    font-size: var(--theme-font-size-sm, 14px);
+  }
+  
+  .cell {
+    padding: var(--theme-spacing-3, 12px) var(--theme-spacing-2, 8px);
+    font-size: var(--theme-font-size-sm, 14px);
+    line-height: 1.4;
+  }
+  
+  .cellHeader {
+    padding: var(--theme-spacing-3, 12px) var(--theme-spacing-2, 8px);
+    font-size: var(--theme-font-size-sm, 14px);
+    font-weight: var(--theme-font-weight-bold, 700);
+  }
+  
+  /* Better mobile row interactions */
+  .rowClickable {
+    min-height: 44px; /* Ensure touch target size */
+  }
+  
+  .rowClickable:active {
+    background: var(--theme-surface-hover, #fafafa);
+    transform: scale(0.98);
+    transition-duration: 100ms;
+  }
+}
+
+/* ========================================
+   Reduced Motion Support
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .rowClickable {
+    transition: none;
+  }
+  
+  .rowClickable:active {
+    transform: none;
+  }
+  
+  .cell,
+  .cellHeader {
+    transition: none;
+  }
+}
+

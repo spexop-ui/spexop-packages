@@ -10,16 +10,18 @@ A powerful command palette for quick actions and navigation. Features fuzzy sear
 
 ## Features
 
-- ✅ Fuzzy search filtering
+- ✅ Advanced fuzzy search with scoring algorithm
 - ✅ Keyboard shortcuts display
-- ✅ Grouped commands
-- ✅ Recent actions
-- ✅ Icon support
-- ✅ Keyboard navigation (Arrow keys)
+- ✅ Grouped commands by category
+- ✅ Recent commands section
+- ✅ Icon support with @spexop/icons
+- ✅ Keyboard navigation (Arrow keys, Enter, Escape)
 - ✅ Global keyboard shortcut (⌘K)
-- ✅ Focus trap
+- ✅ Focus trap and management
 - ✅ WCAG AA+ accessible
 - ✅ TypeScript support
+- ✅ Portal rendering
+- ✅ Body scroll lock
 
 ## Installation
 
@@ -33,6 +35,8 @@ pnpm add @spexop/react @spexop/icons @spexop/theme
 
 ```tsx
 import { CommandPalette } from '@spexop/react';
+import { Icon } from '@spexop/react';
+import { Home, Settings } from '@spexop/icons';
 import { useState } from 'react';
 
 function App() {
@@ -42,14 +46,14 @@ function App() {
     {
       id: 'home',
       label: 'Go to Dashboard',
-      icon: Home,
+      icon: <Icon name="Home" />,
       onSelect: () => navigate('/'),
       keywords: ['dashboard', 'home'],
     },
     {
       id: 'settings',
       label: 'Open Settings',
-      icon: Settings,
+      icon: <Icon name="Settings" />,
       onSelect: () => navigate('/settings'),
       keywords: ['settings', 'preferences'],
     },
@@ -57,7 +61,7 @@ function App() {
   
   return (
     <CommandPalette
-      isOpen={isOpen}
+      open={isOpen}
       onClose={() => setIsOpen(false)}
       commands={commands}
       placeholder="Search for actions..."
@@ -73,51 +77,72 @@ const commands = [
   {
     id: 'new-doc',
     label: 'Create New Document',
-    icon: FilePlus,
+    icon: <Icon name="FilePlus" />,
     onSelect: handleNewDoc,
-    shortcut: ['cmd', 'n'],
+    shortcut: '⌘N',
   },
   {
     id: 'save',
     label: 'Save',
-    icon: Save,
+    icon: <Icon name="Save" />,
     onSelect: handleSave,
-    shortcut: ['cmd', 's'],
+    shortcut: '⌘S',
   },
 ];
 
 <CommandPalette
-  isOpen={isOpen}
+  open={isOpen}
   onClose={handleClose}
   commands={commands}
 />
 ```
 
-## Grouped Commands
+## With Recent Commands
 
 ```tsx
-const commandGroups = [
-  {
-    title: 'Navigation',
-    commands: [
-      { id: 'home', label: 'Go to Dashboard', icon: Home, onSelect: () => navigate('/') },
-      { id: 'projects', label: 'Go to Projects', icon: Folder, onSelect: () => navigate('/projects') },
-    ],
-  },
-  {
-    title: 'Actions',
-    commands: [
-      { id: 'new', label: 'Create New', icon: Plus, onSelect: handleCreate },
-      { id: 'search', label: 'Search', icon: Search, onSelect: handleSearch },
-    ],
-  },
-];
+function AppWithRecentCommands() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [recentCommands, setRecentCommands] = useState([]);
 
-<CommandPalette
-  isOpen={isOpen}
-  onClose={handleClose}
-  commandGroups={commandGroups}
-/>
+  const commands = [
+    {
+      id: 'home',
+      label: 'Go to Dashboard',
+      icon: <Icon name="Home" />,
+      onSelect: () => navigate('/'),
+      category: 'Navigation',
+    },
+    {
+      id: 'settings',
+      label: 'Open Settings',
+      icon: <Icon name="Settings" />,
+      onSelect: () => navigate('/settings'),
+      category: 'Navigation',
+    },
+  ];
+
+  const handleCommandSelect = (command) => {
+    // Execute command
+    command.onSelect();
+    
+    // Add to recent commands (max 5)
+    setRecentCommands(prev => {
+      const filtered = prev.filter(cmd => cmd.id !== command.id);
+      return [command, ...filtered].slice(0, 5);
+    });
+  };
+
+  return (
+    <CommandPalette
+      open={isOpen}
+      onClose={() => setIsOpen(false)}
+      commands={commands}
+      recentCommands={recentCommands}
+      onCommandSelect={handleCommandSelect}
+      showRecent={true}
+    />
+  );
+}
 ```
 
 ## Common Patterns
@@ -288,36 +313,54 @@ function ContextualCommands() {
 ```typescript
 interface CommandPaletteProps {
   /** Whether palette is open */
-  isOpen: boolean;
+  open: boolean;
   /** Close handler */
   onClose: () => void;
-  /** Flat command list */
-  commands?: Command[];
-  /** Grouped commands */
-  commandGroups?: CommandGroup[];
-  /** Recent commands */
-  recentCommands?: Command[];
-  /** Search placeholder */
+  /** List of available commands */
+  commands: CommandPaletteCommand[];
+  /** Recent commands to show at the top */
+  recentCommands?: CommandPaletteCommand[];
+  /** Placeholder text for search input */
   placeholder?: string;
-  /** Custom command select handler */
-  onCommandSelect?: (command: Command) => void;
-  /** Additional CSS class */
+  /** Whether to show category headers */
+  showCategories?: boolean;
+  /** Whether to show keyboard shortcuts */
+  showShortcuts?: boolean;
+  /** Whether to show recent commands section */
+  showRecent?: boolean;
+  /** Custom class name */
   className?: string;
+  /** Custom styles */
+  style?: React.CSSProperties;
+  /** ARIA label for accessibility */
+  ariaLabel?: string;
+  /** Maximum number of results to show */
+  maxResults?: number;
+  /** Empty state message */
+  emptyMessage?: string;
+  /** Callback when a command is selected */
+  onCommandSelect?: (command: CommandPaletteCommand) => void;
 }
 
-interface Command {
+interface CommandPaletteCommand {
+  /** Unique identifier for the command */
   id: string;
+  /** Command label */
   label: string;
-  icon?: IconComponent;
+  /** Optional description */
+  description?: string;
+  /** Optional icon element */
+  icon?: React.ReactNode;
+  /** Optional category for grouping */
+  category?: string;
+  /** Keyboard shortcut hint (e.g., "⌘K", "Ctrl+K") */
+  shortcut?: string;
+  /** Callback when command is selected */
   onSelect: () => void;
-  shortcut?: string[];
-  keywords?: string[];
+  /** Whether the command is disabled */
   disabled?: boolean;
-}
-
-interface CommandGroup {
-  title: string;
-  commands: Command[];
+  /** Search keywords for better matching */
+  keywords?: string[];
 }
 ```
 
@@ -325,29 +368,54 @@ interface CommandGroup {
 
 Following "The Spexop Way":
 
-1. **Borders before shadows** - Clean modal design
-2. **Typography before decoration** - Clear command labels
-3. **Tokens before magic numbers** - Uses design tokens
-4. **Accessibility before aesthetics** - Full keyboard navigation
+1. **Primitives before patterns** - Built with foundational layout components
+2. **Borders before shadows** - Clean 2px borders instead of heavy shadows
+3. **Typography before decoration** - Font weight (600/700) for hierarchy
+4. **Tokens before magic numbers** - Uses design tokens from @spexop/theme
+5. **Composition before complexity** - Built up from simple parts
+6. **Standards before frameworks** - Web platform fundamentals
+7. **Accessibility before aesthetics** - WCAG AA+ compliance by default
 
 ## Accessibility
 
 - ✅ Focus trap when open
 - ✅ Keyboard navigation (Arrow keys, Enter, Escape)
-- ✅ Screen reader support
-- ✅ ARIA labels and roles
-- ✅ Highlighted selection visible
-- ✅ Search input accessible
-- ✅ WCAG AA+ compliant
+- ✅ Screen reader support with proper ARIA roles
+- ✅ ARIA labels and descriptions
+- ✅ Highlighted selection visible with high contrast
+- ✅ Search input accessible with proper labeling
+- ✅ WCAG AA+ compliant contrast ratios
+- ✅ Reduced motion support
+- ✅ Portal rendering for proper focus management
+- ✅ Body scroll lock to prevent background interaction
 
 ### Keyboard Shortcuts
 
-- `⌘K` / `Ctrl+K` - Open palette (global)
+- `⌘K` / `Ctrl+K` - Open palette (global - implement in your app)
 - `Arrow Up/Down` - Navigate commands
 - `Enter` - Execute selected command
 - `Escape` - Close palette
 - `Backspace` - Clear search (when empty)
 - `Tab` - Cycle through commands
+
+## Fuzzy Search Algorithm
+
+The CommandPalette uses an advanced fuzzy search algorithm that scores commands based on:
+
+1. **Exact matches** (1000 points) - Perfect match gets highest priority
+2. **Prefix matches** (900 points) - Commands starting with query
+3. **Contains matches** (500 points) - Commands containing query
+4. **Fuzzy matches** (300+ points) - Characters appear in order
+5. **Character matches** (10+ points) - Individual character matches
+
+The algorithm also weights different fields:
+
+- **Label** (3x multiplier) - Most important for matching
+- **Description** (2x multiplier) - Secondary importance
+- **Keywords** (1.5x multiplier) - Custom search terms
+- **Category** (1x multiplier) - Basic matching
+
+Recent commands get a 1.2x boost to appear higher in results.
 
 ## Browser Support
 

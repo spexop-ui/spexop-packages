@@ -145,6 +145,7 @@ export function Tabs({
               className={tabClassName}
               onClick={() => handleTabClick(tab.id)}
               onKeyDown={(e) => handleKeyDown(e, index)}
+              onTouchStart={() => {}} // Enable touch events
             >
               {tab.icon && <span className={styles.icon}>{tab.icon}</span>}
               <span className={styles.label}>{tab.label}</span>

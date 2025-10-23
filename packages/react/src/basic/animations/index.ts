@@ -7,6 +7,8 @@
 
 export * from "./FadeIn.js";
 export * from "./Motion.js";
+export * from "./GestureMotion.js";
+export * from "./useGestureMotion.js";
 export * from "./Reveal.js";
 export * from "./RotateIn.js";
 export * from "./ScaleUp.js";

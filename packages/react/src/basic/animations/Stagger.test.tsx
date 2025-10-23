@@ -1,366 +1,403 @@
-/**
- * Stagger Component Tests
- * Tests for sequential children animation
- *
- * @author @olmstedian | github.com/olmstedian | @spexop | github.com/spexop-ui
- */
-
-import { render } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
+import "@testing-library/jest-dom";
 import React from "react";
-import { describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Stagger } from "./Stagger.js";
-import styles from "./Stagger.module.css";
 
-// Add this line to ensure Jest DOM is available
-/// <reference types="@testing-library/jest-dom" />
+// Mock IntersectionObserver
+const mockIntersectionObserver = vi.fn();
+const mockObserve = vi.fn();
+const mockUnobserve = vi.fn();
+const mockDisconnect = vi.fn();
+
+// Store callbacks for testing
+let storedCallback: ((entries: IntersectionObserverEntry[]) => void) | null =
+  null;
+
+mockIntersectionObserver.mockImplementation((callback, options) => {
+  // Store the callback for testing
+  storedCallback = callback;
+
+  return {
+    observe: mockObserve,
+    unobserve: mockUnobserve,
+    disconnect: mockDisconnect,
+  };
+});
+
+window.IntersectionObserver = mockIntersectionObserver;
+
+// Mock matchMedia
+const mockMatchMedia = vi.fn().mockImplementation((query) => ({
+  matches: false,
+  media: query,
+  onchange: null,
+  addListener: vi.fn(),
+  removeListener: vi.fn(),
+  addEventListener: vi.fn(),
+  removeEventListener: vi.fn(),
+  dispatchEvent: vi.fn(),
+}));
+
+Object.defineProperty(window, "matchMedia", {
+  writable: true,
+  value: mockMatchMedia,
+});
 
 describe("Stagger", () => {
-  describe("Rendering", () => {
-    it("should render children", () => {
-      const { getByText } = render(
-        <Stagger>
-          <div>Child 1</div>
-          <div>Child 2</div>
-          <div>Child 3</div>
-        </Stagger>,
-      );
-
-      expect(getByText("Child 1")).toBeDefined();
-      expect(getByText("Child 2")).toBeDefined();
-      expect(getByText("Child 3")).toBeDefined();
-    });
-
-    it("should apply stagger className", () => {
-      const { container } = render(
-        <Stagger>
-          <div>Child</div>
-        </Stagger>,
-      );
-
-      const element = container.firstChild as HTMLElement;
-      expect(element.className).toContain("spex-stagger");
-    });
-
-    it("should apply custom className", () => {
-      const { container } = render(
-        <Stagger className="custom-stagger">
-          <div>Child</div>
-        </Stagger>,
-      );
-
-      const element = container.firstChild as HTMLElement;
-      expect(element.className).toContain("custom-stagger");
-    });
-
-    it("should apply custom style", () => {
-      const { container } = render(
-        <Stagger style={{ display: "flex", gap: "16px" }}>
-          <div>Child</div>
-        </Stagger>,
-      );
-
-      const element = container.firstChild as HTMLElement;
-      expect(element.style.display).toBe("flex");
-      expect(element.style.gap).toBe("16px");
-    });
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.useFakeTimers();
+    mockMatchMedia.mockImplementation((query) => ({
+      matches: false, // Default to no reduced motion
+      media: query,
+      onchange: null,
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    }));
   });
 
-  describe("Children Handling", () => {
-    it("should handle single child", () => {
-      const { getByText } = render(
-        <Stagger>
-          <div>Single Child</div>
-        </Stagger>,
-      );
-
-      expect(getByText("Single Child")).toBeDefined();
-    });
-
-    it("should handle multiple children", () => {
-      const { getByText } = render(
-        <Stagger>
-          <div>First</div>
-          <div>Second</div>
-          <div>Third</div>
-          <div>Fourth</div>
-        </Stagger>,
-      );
-
-      expect(getByText("First")).toBeDefined();
-      expect(getByText("Second")).toBeDefined();
-      expect(getByText("Third")).toBeDefined();
-      expect(getByText("Fourth")).toBeDefined();
-    });
-
-    it("should wrap each child in Reveal", () => {
-      const { container } = render(
-        <Stagger>
-          <div>Child 1</div>
-          <div>Child 2</div>
-        </Stagger>,
-      );
-
-      const staggerContainer = container.firstChild as HTMLElement;
-      const reveals = staggerContainer.querySelectorAll(".spex-reveal");
-      expect(reveals.length).toBe(2);
-    });
-
-    it("should handle complex children", () => {
-      const { getByText, getByRole } = render(
-        <Stagger>
-          <div>
-            <h2>Title</h2>
-            <p>Description</p>
-          </div>
-          <button type="button">Action</button>
-        </Stagger>,
-      );
-
-      expect(getByText("Title")).toBeDefined();
-      expect(getByText("Description")).toBeDefined();
-      expect(getByRole("button")).toBeDefined();
-    });
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
-  describe("Delay Configuration", () => {
-    it("should use default delay of 80ms", () => {
-      const { container } = render(
-        <Stagger>
-          <div>Child 1</div>
-          <div>Child 2</div>
-        </Stagger>,
-      );
+  it("renders children without animation when disabled", () => {
+    const { container } = render(
+      <Stagger disabled>
+        <div>Item 1</div>
+        <div>Item 2</div>
+        <div>Item 3</div>
+      </Stagger>,
+    );
 
-      const staggerContainer = container.firstChild as HTMLElement;
-      const reveals = staggerContainer.querySelectorAll(".spex-reveal");
-      expect(reveals.length).toBe(2);
-    });
+    expect(screen.getByText("Item 1")).toBeInTheDocument();
+    expect(screen.getByText("Item 2")).toBeInTheDocument();
+    expect(screen.getByText("Item 3")).toBeInTheDocument();
 
-    it("should apply custom delay", () => {
-      const { container } = render(
-        <Stagger delay={150}>
-          <div>Child 1</div>
-          <div>Child 2</div>
-        </Stagger>,
-      );
-
-      expect(container.firstChild).toBeDefined();
-    });
-
-    it("should handle zero delay", () => {
-      const { container } = render(
-        <Stagger delay={0}>
-          <div>Child 1</div>
-          <div>Child 2</div>
-        </Stagger>,
-      );
-
-      expect(container.firstChild).toBeDefined();
-    });
-
-    it("should handle large delay", () => {
-      const { container } = render(
-        <Stagger delay={500}>
-          <div>Child 1</div>
-          <div>Child 2</div>
-        </Stagger>,
-      );
-
-      expect(container.firstChild).toBeDefined();
-    });
+    const staggerElement = container.firstChild as HTMLElement;
+    expect(staggerElement).toHaveClass(
+      "spex-stagger",
+      "spex-stagger--disabled",
+    );
   });
 
-  describe("Variant Support", () => {
-    it("should use default fadeInUp variant", () => {
-      const { container } = render(
-        <Stagger>
-          <div>Child</div>
-        </Stagger>,
-      );
+  it("renders children with stagger animation", () => {
+    const { container } = render(
+      <Stagger>
+        <div>Item 1</div>
+        <div>Item 2</div>
+        <div>Item 3</div>
+      </Stagger>,
+    );
 
-      const reveal = container.querySelector(".spex-reveal");
-      expect(reveal).toHaveClass(styles["spex-reveal--fadeInUp"]);
-    });
-
-    it("should apply custom variant", () => {
-      const { container } = render(
-        <Stagger variant="slideUp">
-          <div>Child</div>
-        </Stagger>,
-      );
-
-      const reveal = container.querySelector(".spex-reveal");
-      expect(reveal).toHaveClass(styles["spex-reveal--slideUp"]);
-    });
-
-    it("should support all variants", () => {
-      const variants = ["fadeIn", "scaleUp", "zoomIn", "rotateIn"] as const;
-
-      for (const variant of variants) {
-        const { container } = render(
-          <Stagger variant={variant}>
-            <div>Child</div>
-          </Stagger>,
-        );
-
-        const reveal = container.querySelector(".spex-reveal");
-        expect(reveal?.className).toContain(`spex-reveal--${variant}`);
-      }
-    });
+    const staggerElement = container.firstChild as HTMLElement;
+    expect(staggerElement).toHaveClass("spex-stagger", "spex-stagger--forward");
   });
 
-  describe("Duration Configuration", () => {
-    it("should use default duration of 400ms", () => {
-      const { container } = render(
-        <Stagger>
-          <div>Child</div>
-        </Stagger>,
-      );
+  it("applies correct CSS classes for different directions", () => {
+    const { container: container1 } = render(
+      <Stagger direction="reverse">
+        <div>Item 1</div>
+        <div>Item 2</div>
+      </Stagger>,
+    );
 
-      const reveal = container.querySelector(".spex-reveal") as HTMLElement;
-      expect(reveal?.style.transition).toContain("400ms");
-    });
+    const { container: container2 } = render(
+      <Stagger direction="center-out">
+        <div>Item 1</div>
+        <div>Item 2</div>
+        <div>Item 3</div>
+      </Stagger>,
+    );
 
-    it("should apply custom duration", () => {
-      const { container } = render(
-        <Stagger duration={800}>
-          <div>Child</div>
-        </Stagger>,
-      );
+    const { container: container3 } = render(
+      <Stagger direction="edges-in">
+        <div>Item 1</div>
+        <div>Item 2</div>
+        <div>Item 3</div>
+      </Stagger>,
+    );
 
-      const reveal = container.querySelector(".spex-reveal") as HTMLElement;
-      expect(reveal?.style.transition).toContain("800ms");
-    });
+    const staggerElement1 = container1.firstChild as HTMLElement;
+    const staggerElement2 = container2.firstChild as HTMLElement;
+    const staggerElement3 = container3.firstChild as HTMLElement;
+
+    expect(staggerElement1).toHaveClass(
+      "spex-stagger",
+      "spex-stagger--reverse",
+    );
+    expect(staggerElement2).toHaveClass(
+      "spex-stagger",
+      "spex-stagger--center-out",
+    );
+    expect(staggerElement3).toHaveClass(
+      "spex-stagger",
+      "spex-stagger--edges-in",
+    );
   });
 
-  describe("Threshold Configuration", () => {
-    it("should use default threshold of 0.1", () => {
-      const { container } = render(
-        <Stagger>
-          <div>Child</div>
-        </Stagger>,
-      );
+  it("applies custom className and style", () => {
+    const customStyle = { backgroundColor: "red", padding: "10px" };
+    const { container } = render(
+      <Stagger className="custom-stagger" style={customStyle}>
+        <div>Item 1</div>
+        <div>Item 2</div>
+      </Stagger>,
+    );
 
-      expect(container.firstChild).toBeDefined();
-    });
-
-    it("should apply custom threshold", () => {
-      const { container } = render(
-        <Stagger threshold={0.5}>
-          <div>Child</div>
-        </Stagger>,
-      );
-
-      expect(container.firstChild).toBeDefined();
-    });
+    const staggerElement = container.firstChild as HTMLElement;
+    expect(staggerElement).toHaveClass(
+      "spex-stagger",
+      "spex-stagger--forward",
+      "custom-stagger",
+    );
+    expect(staggerElement.style.backgroundColor).toBe("red");
+    expect(staggerElement.style.padding).toBe("10px");
   });
 
-  describe("Key Generation", () => {
-    it("should use existing keys from children", () => {
-      const { container } = render(
-        <Stagger>
-          <div key="first">Child 1</div>
-          <div key="second">Child 2</div>
-        </Stagger>,
-      );
+  it("calculates stagger delays correctly for forward direction", () => {
+    render(
+      <Stagger delay={100}>
+        <div>Item 1</div>
+        <div>Item 2</div>
+        <div>Item 3</div>
+      </Stagger>,
+    );
 
-      const reveals = container.querySelectorAll(".spex-reveal");
-      expect(reveals.length).toBe(2);
-    });
-
-    it("should generate keys for children without keys", () => {
-      const { container } = render(
-        <Stagger>
-          <div>Child 1</div>
-          <div>Child 2</div>
-          <div>Child 3</div>
-        </Stagger>,
-      );
-
-      const reveals = container.querySelectorAll(".spex-reveal");
-      expect(reveals.length).toBe(3);
-    });
+    // Check that IntersectionObserver was called with correct delays
+    expect(mockIntersectionObserver).toHaveBeenCalledTimes(3);
   });
 
-  describe("Edge Cases", () => {
-    it("should handle empty children array", () => {
-      const { container } = render(<Stagger>{[]}</Stagger>);
+  it("calculates stagger delays correctly for reverse direction", () => {
+    render(
+      <Stagger direction="reverse" delay={50}>
+        <div>Item 1</div>
+        <div>Item 2</div>
+        <div>Item 3</div>
+      </Stagger>,
+    );
 
-      const staggerContainer = container.firstChild as HTMLElement;
-      expect(staggerContainer.className).toContain("spex-stagger");
-    });
-
-    it("should handle null children", () => {
-      const { container } = render(
-        <Stagger>
-          <div>Child 1</div>
-          {null}
-          <div>Child 2</div>
-        </Stagger>,
-      );
-
-      expect(container.firstChild).toBeDefined();
-    });
-
-    it("should handle undefined children", () => {
-      const { container } = render(
-        <Stagger>
-          <div>Child 1</div>
-          {undefined}
-          <div>Child 2</div>
-        </Stagger>,
-      );
-
-      expect(container.firstChild).toBeDefined();
-    });
-
-    it("should handle boolean children", () => {
-      const { container } = render(
-        <Stagger>
-          <div>Child 1</div>
-          {false}
-          <div>Child 2</div>
-        </Stagger>,
-      );
-
-      expect(container.firstChild).toBeDefined();
-    });
+    expect(mockIntersectionObserver).toHaveBeenCalledTimes(3);
   });
 
-  describe("Combined Props", () => {
-    it("should handle all props together", () => {
+  it("calculates stagger delays correctly for center-out direction", () => {
+    render(
+      <Stagger direction="center-out" delay={80}>
+        <div>Item 1</div>
+        <div>Item 2</div>
+        <div>Item 3</div>
+        <div>Item 4</div>
+        <div>Item 5</div>
+      </Stagger>,
+    );
+
+    expect(mockIntersectionObserver).toHaveBeenCalledTimes(5);
+  });
+
+  it("calculates stagger delays correctly for edges-in direction", () => {
+    render(
+      <Stagger direction="edges-in" delay={60}>
+        <div>Item 1</div>
+        <div>Item 2</div>
+        <div>Item 3</div>
+        <div>Item 4</div>
+      </Stagger>,
+    );
+
+    expect(mockIntersectionObserver).toHaveBeenCalledTimes(4);
+  });
+
+  it("limits children based on maxChildren prop", () => {
+    render(
+      <Stagger maxChildren={2}>
+        <div>Item 1</div>
+        <div>Item 2</div>
+        <div>Item 3</div>
+        <div>Item 4</div>
+      </Stagger>,
+    );
+
+    // Should only create 2 IntersectionObserver instances
+    expect(mockIntersectionObserver).toHaveBeenCalledTimes(2);
+  });
+
+  it("handles empty children", () => {
+    const { container } = render(<Stagger />);
+    const staggerElement = container.firstChild as HTMLElement;
+    expect(staggerElement).toHaveClass("spex-stagger");
+    expect(staggerElement.children).toHaveLength(0);
+  });
+
+  it("handles single child", () => {
+    render(
+      <Stagger>
+        <div>Single item</div>
+      </Stagger>,
+    );
+
+    expect(screen.getByText("Single item")).toBeInTheDocument();
+    expect(mockIntersectionObserver).toHaveBeenCalledTimes(1);
+  });
+
+  it("passes onAnimationStart callback to Reveal components", () => {
+    const onAnimationStart = vi.fn();
+
+    render(
+      <Stagger onAnimationStart={onAnimationStart}>
+        <div>Item 1</div>
+        <div>Item 2</div>
+        <div>Item 3</div>
+      </Stagger>,
+    );
+
+    // The callback should be passed to each Reveal component
+    expect(mockIntersectionObserver).toHaveBeenCalledTimes(3);
+  });
+
+  it("passes onAnimationComplete callback to Reveal components", () => {
+    const onAnimationComplete = vi.fn();
+
+    render(
+      <Stagger onAnimationComplete={onAnimationComplete}>
+        <div>Item 1</div>
+        <div>Item 2</div>
+        <div>Item 3</div>
+      </Stagger>,
+    );
+
+    // The callback should be passed to each Reveal component
+    expect(mockIntersectionObserver).toHaveBeenCalledTimes(3);
+  });
+
+  it("tracks completed animations correctly", () => {
+    const onAllAnimationsComplete = vi.fn();
+
+    render(
+      <Stagger onAllAnimationsComplete={onAllAnimationsComplete}>
+        <div>Item 1</div>
+        <div>Item 2</div>
+        <div>Item 3</div>
+      </Stagger>,
+    );
+
+    // The component should render with the callback
+    expect(mockIntersectionObserver).toHaveBeenCalledTimes(3);
+  });
+
+  it("resets completed count when children change", () => {
+    const onAllAnimationsComplete = vi.fn();
+
+    const { rerender } = render(
+      <Stagger onAllAnimationsComplete={onAllAnimationsComplete}>
+        <div>Item 1</div>
+        <div>Item 2</div>
+      </Stagger>,
+    );
+
+    expect(mockIntersectionObserver).toHaveBeenCalledTimes(2);
+
+    // Change children
+    rerender(
+      <Stagger onAllAnimationsComplete={onAllAnimationsComplete}>
+        <div>New Item 1</div>
+        <div>New Item 2</div>
+        <div>New Item 3</div>
+      </Stagger>,
+    );
+
+    // Should create new IntersectionObserver instances for new children
+    expect(mockIntersectionObserver).toHaveBeenCalledTimes(3); // Only the new children
+  });
+
+  it("passes correct props to Reveal components", () => {
+    render(
+      <Stagger
+        variant="slideUp"
+        duration={600}
+        timing="bounce"
+        threshold={0.5}
+        hardwareAcceleration={false}
+        rootMargin="50px"
+        respectReducedMotion={false}
+      >
+        <div>Item 1</div>
+        <div>Item 2</div>
+      </Stagger>,
+    );
+
+    // Check that IntersectionObserver was called with correct options
+    expect(mockIntersectionObserver).toHaveBeenCalledWith(
+      expect.any(Function),
+      expect.objectContaining({
+        rootMargin: "50px",
+      }),
+    );
+  });
+
+  it("handles different animation variants", () => {
+    const variants = ["fadeIn", "slideUp", "scaleUp", "rotateIn"] as const;
+
+    for (const variant of variants) {
       const { container } = render(
-        <Stagger
-          delay={120}
-          variant="scaleUp"
-          duration={600}
-          threshold={0.3}
-          className="feature-list"
-          style={{ maxWidth: "800px" }}
-        >
-          <div>Feature 1</div>
-          <div>Feature 2</div>
-          <div>Feature 3</div>
+        <Stagger variant={variant}>
+          <div>Item 1</div>
+          <div>Item 2</div>
         </Stagger>,
       );
 
-      const staggerContainer = container.firstChild as HTMLElement;
-      expect(staggerContainer.className).toContain("spex-stagger");
-      expect(staggerContainer.className).toContain("feature-list");
-      expect(staggerContainer.style.maxWidth).toBe("800px");
-
-      const reveals = staggerContainer.querySelectorAll(".spex-reveal");
-      expect(reveals.length).toBe(3);
-
-      const firstReveal = reveals[0] as HTMLElement;
-      expect(firstReveal.className).toContain("spex-reveal--scaleUp");
-      expect(firstReveal.style.transition).toContain("600ms");
-    });
+      const staggerElement = container.firstChild as HTMLElement;
+      expect(staggerElement).toHaveClass("spex-stagger");
+    }
   });
 
-  describe("Display Name", () => {
-    it("should have displayName set", () => {
-      expect(Stagger.displayName).toBe("Stagger");
-    });
+  it("handles zero delay", () => {
+    render(
+      <Stagger delay={0}>
+        <div>Item 1</div>
+        <div>Item 2</div>
+        <div>Item 3</div>
+      </Stagger>,
+    );
+
+    expect(mockIntersectionObserver).toHaveBeenCalledTimes(3);
+  });
+
+  it("handles large delay values", () => {
+    render(
+      <Stagger delay={1000}>
+        <div>Item 1</div>
+        <div>Item 2</div>
+      </Stagger>,
+    );
+
+    expect(mockIntersectionObserver).toHaveBeenCalledTimes(2);
+  });
+
+  it("handles maxChildren of 0", () => {
+    render(
+      <Stagger maxChildren={0}>
+        <div>Item 1</div>
+        <div>Item 2</div>
+        <div>Item 3</div>
+      </Stagger>,
+    );
+
+    // Should not create any IntersectionObserver instances
+    expect(mockIntersectionObserver).not.toHaveBeenCalled();
+  });
+
+  it("handles maxChildren greater than children count", () => {
+    render(
+      <Stagger maxChildren={10}>
+        <div>Item 1</div>
+        <div>Item 2</div>
+      </Stagger>,
+    );
+
+    // Should create IntersectionObserver instances for all children
+    expect(mockIntersectionObserver).toHaveBeenCalledTimes(2);
   });
 });

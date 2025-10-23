@@ -15,4 +15,5 @@ export { SegmentedButton } from "./SegmentedButton.js";
 export type {
   SegmentedButtonOption,
   SegmentedButtonProps,
+  SegmentedButtonSize,
 } from "./SegmentedButton.types.js";

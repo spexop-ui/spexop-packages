@@ -1,13 +1,25 @@
 /**
- * PricingCard Pattern Example
+ * PricingCard Pattern - Pricing plan comparison
  *
- * Composition example showing how to build a pricing tier card
- * using Card primitives and other Spexop components.
+ * Replaces the specialized PricingCard component removed in v0.4.0.
+ * This composition pattern uses Card primitives to create a pricing plan display.
  *
- * This is NOT an exported component - it's a pattern example
- * that demonstrates composition techniques.
+ * @example
+ * ```tsx
+ * <PricingCard
+ *   name="Pro Plan"
+ *   price={29}
+ *   period="month"
+ *   description="Perfect for growing businesses"
+ *   features={["Feature 1", "Feature 2", "Feature 3"]}
+ *   isPopular={true}
+ *   ctaText="Get Started"
+ *   onSelect={() => console.log('Selected Pro Plan')}
+ * />
+ * ```
  */
 
+import { Check, Star } from "@spexop/icons";
 import {
   Badge,
   Button,
@@ -15,20 +27,34 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
-  Text,
+  Icon,
 } from "@spexop/react";
-import type { ReactNode } from "react";
+import React from "react";
+import styles from "./PricingCard.example.module.css";
 
-interface PricingCardProps {
+export interface PricingCardProps {
+  /** Plan name */
   name: string;
+  /** Plan price */
   price: number;
-  period: string;
+  /** Billing period */
+  period: "month" | "year" | "one-time";
+  /** Plan description */
   description: string;
+  /** List of features */
   features: string[];
+  /** Whether this is the popular/recommended plan */
   isPopular?: boolean;
+  /** Call-to-action button text */
   ctaText: string;
-  onSelect: () => void;
-  onLearnMore?: () => void;
+  /** Select plan handler */
+  onSelect?: () => void;
+  /** Card variant */
+  variant?: "basic" | "interactive" | "elevated" | "outlined";
+  /** Card density */
+  density?: "compact" | "normal" | "spacious";
+  /** Additional CSS class */
+  className?: string;
 }
 
 export function PricingCard({
@@ -40,177 +66,134 @@ export function PricingCard({
   isPopular = false,
   ctaText,
   onSelect,
-  onLearnMore,
+  variant = "basic",
+  density = "normal",
+  className,
 }: PricingCardProps) {
+  const formatPrice = (price: number) => {
+    if (price === 0) return "Free";
+    return `$${price}`;
+  };
+
+  const formatPeriod = (period: string) => {
+    switch (period) {
+      case "month":
+        return "/month";
+      case "year":
+        return "/year";
+      case "one-time":
+        return " one-time";
+      default:
+        return "";
+    }
+  };
+
   return (
     <Card
-      variant={isPopular ? "highlighted" : "basic"}
-      density="spacious"
-      className={`pricing-card ${isPopular ? "pricing-popular" : ""}`}
+      variant={isPopular ? "elevated" : variant}
+      density={density}
+      className={`${className} ${isPopular ? styles.popular : ""}`}
     >
-      <CardHeader>
-        {isPopular && (
-          <Badge variant="success" className="pricing-badge">
+      {isPopular && (
+        <div className={styles.popularBadge}>
+          <Badge variant="success" size="sm">
+            <Icon name="Star" size="sm" />
             Most Popular
           </Badge>
-        )}
-
-        <h3 className="pricing-name">{name}</h3>
-
-        <div className="pricing-price">
-          <Text size="4xl" weight="bold" className="pricing-amount">
-            ${price}
-          </Text>
-          <Text size="lg" color="secondary" className="pricing-period">
-            /{period}
-          </Text>
         </div>
+      )}
 
-        <Text color="secondary" className="pricing-description">
-          {description}
-        </Text>
+      <CardHeader>
+        <h3 className={styles.name}>{name}</h3>
+        <div className={styles.priceContainer}>
+          <span className={styles.price}>{formatPrice(price)}</span>
+          <span className={styles.period}>{formatPeriod(period)}</span>
+        </div>
+        <p className={styles.description}>{description}</p>
       </CardHeader>
 
       <CardBody>
-        <ul className="pricing-features">
+        <ul className={styles.features}>
           {features.map((feature) => (
-            <li key={feature} className="pricing-feature">
-              <Text size="sm">✓ {feature}</Text>
+            <li key={feature} className={styles.feature}>
+              <Icon name="Check" size="sm" className={styles.checkIcon} />
+              <span>{feature}</span>
             </li>
           ))}
         </ul>
       </CardBody>
 
-      <CardFooter align="center">
-        <div className="pricing-actions">
-          <Button
-            variant={isPopular ? "primary" : "outline"}
-            size="lg"
-            onClick={onSelect}
-            className="pricing-cta"
-          >
-            {ctaText}
-          </Button>
-
-          {onLearnMore && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onLearnMore}
-              className="pricing-learn-more"
-            >
-              Learn More
-            </Button>
-          )}
-        </div>
+      <CardFooter>
+        <Button
+          variant={isPopular ? "primary" : "outline"}
+          size="md"
+          onClick={onSelect}
+          className={styles.ctaButton}
+          disabled={!onSelect}
+          fullWidth
+        >
+          {ctaText}
+        </Button>
       </CardFooter>
     </Card>
   );
 }
 
-// Usage Example
+// Usage example
 export function PricingCardExample() {
   return (
-    <PricingCard
-      name="Pro Plan"
-      price={29}
-      period="month"
-      description="Perfect for growing businesses and teams"
-      features={[
-        "Up to 10 team members",
-        "Advanced analytics",
-        "Priority support",
-        "Custom integrations",
-        "API access",
-        "Advanced security",
-      ]}
-      isPopular={true}
-      ctaText="Start Free Trial"
-      onSelect={() => console.log("Selected Pro Plan")}
-      onLearnMore={() => console.log("Learn more about Pro Plan")}
-    />
+    <div className={styles.grid}>
+      <PricingCard
+        name="Starter"
+        price={0}
+        period="month"
+        description="Perfect for individuals getting started"
+        features={[
+          "Up to 5 projects",
+          "Basic support",
+          "1GB storage",
+          "Email notifications",
+        ]}
+        ctaText="Get Started"
+        onSelect={() => console.log("Selected Starter")}
+        variant="outlined"
+      />
+
+      <PricingCard
+        name="Pro"
+        price={29}
+        period="month"
+        description="Perfect for growing businesses"
+        features={[
+          "Unlimited projects",
+          "Priority support",
+          "10GB storage",
+          "Advanced analytics",
+          "Team collaboration",
+          "API access",
+        ]}
+        isPopular={true}
+        ctaText="Start Free Trial"
+        onSelect={() => console.log("Selected Pro")}
+      />
+
+      <PricingCard
+        name="Enterprise"
+        price={99}
+        period="month"
+        description="For large organizations"
+        features={[
+          "Everything in Pro",
+          "Custom integrations",
+          "Dedicated support",
+          "Unlimited storage",
+          "Advanced security",
+          "Custom branding",
+        ]}
+        ctaText="Contact Sales"
+        onSelect={() => console.log("Selected Enterprise")}
+        variant="outlined"
+      />
+    </div>
   );
 }
-
-// CSS for styling (add to your stylesheet)
-/*
-.pricing-card {
-  position: relative;
-  transition: all 0.2s ease;
-}
-
-.pricing-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--theme-shadow-lg);
-}
-
-.pricing-popular {
-  border-color: var(--theme-primary);
-  box-shadow: 0 0 0 1px var(--theme-primary);
-}
-
-.pricing-badge {
-  position: absolute;
-  top: -12px;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.pricing-name {
-  font-size: var(--theme-font-size-xl);
-  font-weight: var(--theme-font-weight-bold);
-  text-align: center;
-  margin: 0 0 var(--theme-spacing-4) 0;
-}
-
-.pricing-price {
-  display: flex;
-  align-items: baseline;
-  justify-content: center;
-  gap: var(--theme-spacing-1);
-  margin-bottom: var(--theme-spacing-4);
-}
-
-.pricing-amount {
-  color: var(--theme-primary);
-}
-
-.pricing-period {
-  font-weight: var(--theme-font-weight-normal);
-}
-
-.pricing-description {
-  text-align: center;
-  margin-bottom: var(--theme-spacing-6);
-}
-
-.pricing-features {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.pricing-feature {
-  padding: var(--theme-spacing-2) 0;
-  border-bottom: 1px solid var(--theme-border);
-}
-
-.pricing-feature:last-child {
-  border-bottom: none;
-}
-
-.pricing-actions {
-  display: flex;
-  flex-direction: column;
-  gap: var(--theme-spacing-3);
-  width: 100%;
-}
-
-.pricing-cta {
-  width: 100%;
-}
-
-.pricing-learn-more {
-  width: 100%;
-}
-*/

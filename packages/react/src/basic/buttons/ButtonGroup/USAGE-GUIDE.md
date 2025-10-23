@@ -1,9 +1,10 @@
 # ButtonGroup Component - Complete Usage Guide
 
-**Component Version**: v0.1.0
-**Last Updated**: October 20, 2025
+**Component Version**: v0.3.0
+**Last Updated**: January 20, 2025
 **Package**: @spexop/react
 **Status**: Production Ready
+**Recent Updates**: Modern UI/UX improvements, enhanced accessibility, performance optimizations
 
 ## Table of Contents
 
@@ -47,14 +48,18 @@ Consider alternatives when you need:
 
 ### Key Features
 
-- Horizontal and vertical directions
-- Compact mode for dense UIs
-- Shared borders between buttons
-- Consistent spacing
-- ARIA group pattern support
-- Keyboard navigation ready
-- Theme-aware styling
-- Composition-based (accepts any children)
+- **Modern UI/UX**: Ripple effects, micro-interactions, smooth animations
+- **Enhanced Accessibility**: WCAG AAA compliance, arrow key navigation
+- **Performance Optimized**: GPU acceleration, reduced motion support
+- **Flexible Layout**: Horizontal and vertical directions
+- **Compact Mode**: Smaller padding for dense UIs
+- **Shared Borders**: Connected buttons with internal borders
+- **Consistent Spacing**: Theme-driven spacing system
+- **ARIA Support**: Complete group pattern implementation
+- **Keyboard Navigation**: Advanced arrow key navigation with wrapping
+- **Theme Integration**: Full Spexop design system alignment
+- **Forward Ref**: Complete ref forwarding support
+- **Composition**: Accepts any children (buttons, custom elements)
 
 ## Quick Start
 
@@ -549,6 +554,88 @@ function KeyboardNavGroup() {
 }
 ```
 
+## Modern Features
+
+### Enhanced Keyboard Navigation
+
+The ButtonGroup now supports advanced keyboard navigation with arrow keys:
+
+```tsx
+import { Button, ButtonGroup } from '@spexop/react';
+
+function KeyboardNavExample() {
+  return (
+    <ButtonGroup aria-label="Navigation controls">
+      <Button>Previous</Button>
+      <Button>Play</Button>
+      <Button>Next</Button>
+    </ButtonGroup>
+  );
+}
+```
+
+**Keyboard Controls**:
+
+- **Tab**: Focus the button group
+- **Arrow Left/Right**: Navigate between buttons (horizontal)
+- **Arrow Up/Down**: Navigate between buttons (vertical)
+- **Enter/Space**: Activate focused button
+- **Wrapping**: Arrow keys wrap around at boundaries
+- **Disabled Skip**: Automatically skips disabled buttons
+
+### Ripple Effects
+
+Modern ripple effects provide visual feedback:
+
+```tsx
+<ButtonGroup aria-label="Actions">
+  <Button onClick={handleAction}>Click for Ripple</Button>
+</ButtonGroup>
+```
+
+**Features**:
+
+- **Position-aware**: Ripple originates from click point
+- **Smooth animation**: 300ms ease transition
+- **Accessible**: Hidden from screen readers
+- **Performance optimized**: GPU accelerated
+
+### Micro-Interactions
+
+Subtle animations enhance user experience:
+
+- **Hover**: Subtle lift effect with enhanced shadow
+- **Active**: Press feedback with scale animation
+- **Focus**: Enhanced focus indicators with box-shadow
+- **Transitions**: Smooth 200ms cubic-bezier easing
+
+### Forward Ref Support
+
+Complete ref forwarding for advanced use cases:
+
+```tsx
+import { useRef, useEffect } from 'react';
+import { ButtonGroup } from '@spexop/react';
+
+function RefExample() {
+  const groupRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Access the DOM element directly
+    if (groupRef.current) {
+      groupRef.current.scrollIntoView();
+    }
+  }, []);
+
+  return (
+    <ButtonGroup ref={groupRef} aria-label="Scrollable group">
+      <Button>Button 1</Button>
+      <Button>Button 2</Button>
+    </ButtonGroup>
+  );
+}
+```
+
 ## Advanced Patterns
 
 ### Responsive Button Group
@@ -742,7 +829,7 @@ function SplitActions() {
 ### ButtonGroupProps
 
 ```typescript
-interface ButtonGroupProps {
+interface ButtonGroupProps extends Omit<HTMLAttributes<HTMLDivElement>, 'role' | 'aria-label' | 'aria-labelledby' | 'aria-describedby' | 'aria-orientation'> {
   /** Button children */
   children: React.ReactNode;
   
@@ -758,11 +845,20 @@ interface ButtonGroupProps {
   /** ARIA role */
   role?: "group" | "radiogroup" | "toolbar";
   
-  /** ARIA label */
-  "aria-label"?: string;
+  /** ARIA label (required) */
+  "aria-label": string;
   
   /** ARIA labelled by */
   "aria-labelledby"?: string;
+  
+  /** ARIA described by */
+  "aria-describedby"?: string;
+  
+  /** ARIA orientation */
+  "aria-orientation"?: "horizontal" | "vertical";
+  
+  /** Enhanced keyboard handler */
+  onKeyDown?: (event: KeyboardEvent<HTMLDivElement>) => void;
 }
 ```
 
@@ -788,10 +884,14 @@ interface ButtonGroupProps {
 
 ## Performance
 
-- **Bundle Size**: ~1KB gzipped
+- **Bundle Size**: ~1.2KB gzipped
 - **CSS Modules**: Scoped styles, zero runtime
 - **Composition**: No wrapper overhead
 - **Accessible**: Built-in ARIA support
+- **GPU Acceleration**: Hardware-accelerated animations
+- **Reduced Motion**: Respects user preferences
+- **Memory Efficient**: Optimized event handlers and refs
+- **Modern CSS**: Uses will-change and transform3d for performance
 
 ## License
 

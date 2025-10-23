@@ -60,6 +60,30 @@ export interface ButtonGridItemProps {
    */
   minHeight?: number;
 
+  /**
+   * Loading state
+   * @default false
+   */
+  loading?: boolean;
+
+  /**
+   * Disabled state
+   * @default false
+   */
+  disabled?: boolean;
+
+  /**
+   * Error state
+   * @default false
+   */
+  error?: boolean;
+
+  /**
+   * Media loading state
+   * @default false
+   */
+  mediaLoading?: boolean;
+
   // Accessibility props
 
   /**
@@ -71,4 +95,19 @@ export interface ButtonGridItemProps {
    * ARIA label for the internal button
    */
   "aria-label-button"?: string;
+
+  /**
+   * ARIA described by for additional description
+   */
+  "aria-describedby"?: string;
+
+  /**
+   * ARIA live region for dynamic content
+   */
+  "aria-live"?: "polite" | "assertive" | "off";
+
+  /**
+   * Test ID for testing
+   */
+  "data-testid"?: string;
 }

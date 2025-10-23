@@ -17,22 +17,33 @@
 	font-family: var(--theme-font-family);
 	font-weight: var(--theme-font-weight-semibold);
 	cursor: pointer;
-	transition: all 150ms ease-out;
+	transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
 	border: var(--theme-border-width) solid transparent;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
 	gap: var(--theme-spacing-2);
 	text-decoration: none; /* For links rendered as buttons */
+	position: relative;
+	overflow: hidden;
+	/* Accessibility - Minimum touch target size */
+	min-height: 44px;
+	min-width: 44px;
 	/* Performance optimization */
-	will-change: transform;
+	will-change: transform, box-shadow;
 	transform: translateZ(0);
 	backface-visibility: hidden;
+	/* Modern UI patterns */
+	user-select: none;
+	-webkit-tap-highlight-color: transparent;
 }
 
 .button:disabled {
 	cursor: not-allowed;
-	opacity: 0.5;
+	opacity: 0.4;
+	background: var(--theme-surface-secondary);
+	color: var(--theme-text-muted);
+	border-color: var(--theme-border-subtle);
 }
 
 /* Accessibility - Enhanced focus indicators */
@@ -42,20 +53,148 @@
 }
 
 .button:focus-visible {
-	outline: var(--theme-spacing-1) solid var(--theme-primary);
-	outline-offset: var(--theme-spacing-1);
+	outline: 2px solid var(--theme-primary);
+	outline-offset: 2px;
 	border-radius: var(--theme-radius-subtle);
 }
 
 /* High contrast mode support */
 @media (prefers-contrast: high) {
+	.button:focus,
+	.button:focus-visible {
+		outline: 3px solid var(--theme-primary);
+		outline-offset: 3px;
+	}
+	
 	.button {
 		border-width: var(--theme-border-thin);
 	}
+}
 
-	.button:focus-visible {
-		outline-width: var(--theme-spacing-1);
-		outline-offset: var(--theme-spacing-1);
+/* Mobile optimizations */
+@media (max-width: 768px) {
+	.button {
+		/* Ensure minimum touch target on mobile */
+		min-height: 48px;
+		min-width: 48px;
+		/* Better touch feedback */
+		-webkit-tap-highlight-color: transparent;
+		/* Improved touch response */
+		touch-action: manipulation;
+	}
+	
+	/* Increase padding on mobile for better touch targets */
+	.button:not(.iconOnly) {
+		padding: var(--theme-spacing-4) var(--theme-spacing-6);
+	}
+	
+	/* Ensure icon-only buttons meet touch target requirements */
+	.button.iconOnly {
+		min-width: 48px;
+		min-height: 48px;
+	}
+	
+	/* Compact buttons still meet touch targets */
+	.button.compactSm {
+		min-width: 48px;
+		min-height: 48px;
+	}
+	
+	.button.compactMd {
+		min-width: 48px;
+		min-height: 48px;
+	}
+}
+
+/* Touch feedback */
+.button:active:not(:disabled) {
+	transform: scale(0.96);
+	transition-duration: 100ms;
+}
+
+/* Modern press state */
+.pressed {
+	transform: scale(0.98);
+	transition-duration: 100ms;
+}
+
+/* Enhanced focus state */
+.focused {
+	box-shadow: 0 0 0 3px var(--theme-primary-alpha-20);
+}
+
+/* Ripple effect */
+.ripple {
+	position: absolute;
+	border-radius: 50%;
+	background: rgba(255, 255, 255, 0.3);
+	transform: scale(0);
+	pointer-events: none;
+	z-index: 1;
+}
+
+.rippleActive {
+	animation: ripple 600ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes ripple {
+	0% {
+		transform: scale(0);
+		opacity: 1;
+	}
+	100% {
+		transform: scale(1);
+		opacity: 0;
+	}
+}
+
+/* Enhanced loading state */
+.loadingSpinner {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 2;
+}
+
+.spinner {
+	width: 16px;
+	height: 16px;
+	border: 2px solid transparent;
+	border-top: 2px solid currentColor;
+	border-radius: 50%;
+	animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+/* Button content wrapper */
+.buttonContent {
+	position: relative;
+	z-index: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--theme-spacing-2);
+	transition: opacity 150ms ease;
+}
+
+.loading .buttonContent {
+	opacity: 0.3;
+}
+
+/* Enhanced touch feedback for mobile */
+@media (max-width: 768px) {
+	.button:active:not(:disabled) {
+		transform: scale(0.94);
+		transition-duration: 80ms;
 	}
 }
 
@@ -63,6 +202,16 @@
 @media (prefers-reduced-motion: reduce) {
 	.button {
 		transition-duration: 0.01ms;
+	}
+	
+	.button:active {
+		transform: none;
+	}
+	
+	.loading::after {
+		animation: none;
+		border: 2px solid currentColor;
+		border-radius: 50%;
 	}
 }
 
@@ -457,7 +606,6 @@
 }
 
 .loading {
-	position: relative;
 	pointer-events: none;
 	opacity: 0.7;
 }

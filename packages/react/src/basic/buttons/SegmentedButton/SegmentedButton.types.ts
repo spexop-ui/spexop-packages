@@ -45,6 +45,11 @@ export interface SegmentedButtonOption {
 }
 
 /**
+ * SegmentedButton size variants
+ */
+export type SegmentedButtonSize = "sm" | "md" | "lg";
+
+/**
  * SegmentedButton component props (controlled component)
  */
 export interface SegmentedButtonProps {
@@ -62,6 +67,18 @@ export interface SegmentedButtonProps {
    * Array of button options
    */
   options: SegmentedButtonOption[];
+
+  /**
+   * Size variant
+   * @default "md"
+   */
+  size?: SegmentedButtonSize;
+
+  /**
+   * Full width mode
+   * @default false
+   */
+  fullWidth?: boolean;
 
   /**
    * Additional CSS class

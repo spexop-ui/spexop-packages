@@ -1,8 +1,8 @@
 # Animation Components - Usage Guide
 
-**Component Version**: v0.2.0
-**Last Updated**: October 20, 2025
-**Compatibility**: Stable API
+**Component Version**: v0.3.0
+**Last Updated**: December 2024
+**Compatibility**: Enhanced API with new features
 
 ## Quick Start
 
@@ -58,6 +58,79 @@ All animations are:
 - Accessibility-friendly (respects prefers-reduced-motion)
 - Performance-optimized (60fps)
 - Highly configurable
+
+## What's New in v0.3.0
+
+### Enhanced FadeIn Component
+
+- **Custom distance control** - Adjust movement distance beyond the default 12px
+- **Opacity range customization** - Define custom from/to opacity values
+- **Animation callbacks** - `onAnimationStart` and `onAnimationComplete` events
+- **Conditional rendering** - `disabled` prop for conditional animations
+- **Enhanced customization** - More granular control over animation behavior
+
+### Enhanced Motion Component
+
+- **New animation types** - `bounce`, `shake`, `flipX`, `flipY`, `zoom`
+- **Expanded spring presets** - 5 new presets: `molasses`, `bouncy`, `crisp`, `smooth`, `elastic`
+- **Hardware acceleration control** - Toggle GPU acceleration on/off
+- **Custom distance support** - Adjust movement distance for slide animations
+- **Enhanced spring configuration** - More physics options including `precision` and `maxDuration`
+
+### Enhanced Reveal Component
+
+- **Animation callbacks** - `onAnimationStart` and `onAnimationComplete` events
+- **Conditional rendering** - `disabled` prop for conditional animations
+- **Hardware acceleration control** - Toggle GPU acceleration on/off
+- **Custom root margin** - Adjust intersection observer root margin
+- **Reduced motion support** - Enhanced `prefers-reduced-motion` handling
+- **Performance optimizations** - Better GPU acceleration and cleanup
+
+### Enhanced RotateIn Component
+
+- **Custom angle control** - Adjust rotation angle beyond the default -3deg
+- **Custom scale control** - Adjust scale factor beyond the default 0.97
+- **Animation callbacks** - `onAnimationStart` and `onAnimationComplete` events
+- **Conditional rendering** - `disabled` prop for conditional animations
+- **Enhanced customization** - More granular control over rotation behavior
+
+### Enhanced ScaleUp Component
+
+- **Custom scale range** - Define custom `fromScale` and `toScale` values
+- **Animation callbacks** - `onAnimationStart` and `onAnimationComplete` events
+- **Conditional rendering** - `disabled` prop for conditional animations
+- **Enhanced customization** - More granular control over scaling behavior
+
+### Enhanced SlideIn Component
+
+- **Custom distance control** - Adjust slide distance beyond the default 20px
+- **Direction control** - Choose from up, down, left, right directions
+- **Animation callbacks** - `onAnimationStart` and `onAnimationComplete` events
+- **Conditional rendering** - `disabled` prop for conditional animations
+- **Enhanced customization** - More granular control over slide behavior
+
+### Enhanced Stagger Component
+
+- **Multiple stagger directions** - `forward`, `reverse`, `center-out`, `edges-in`
+- **Animation callbacks** - Individual and batch completion callbacks
+- **Performance control** - `maxChildren` prop to limit simultaneous animations
+- **Conditional rendering** - `disabled` prop for conditional animations
+- **Enhanced customization** - More granular control over stagger behavior
+
+### Enhanced ZoomIn Component
+
+- **Zoom type control** - Choose between "in" and "out" zoom effects
+- **Custom scale range** - Define custom `fromScale` and `toScale` values
+- **Animation callbacks** - `onAnimationStart` and `onAnimationComplete` events
+- **Conditional rendering** - `disabled` prop for conditional animations
+- **Enhanced customization** - More granular control over zoom behavior
+
+### Improved Spring Physics
+
+- **Better stability** - Enhanced Verlet integration for smoother animations
+- **More presets** - 10 total spring presets for different use cases
+- **Performance optimizations** - Improved frame rate capping and settling detection
+- **Custom precision** - Configurable precision thresholds for animation completion
 
 ## Reveal Component
 
@@ -143,7 +216,7 @@ function Section() {
 
 ## FadeIn Component
 
-Convenient wrapper for fade animations with directional movement.
+Convenient wrapper for fade animations with enhanced customization options including custom distance, opacity ranges, animation callbacks, and conditional rendering.
 
 ### Page Load Sequence
 
@@ -207,11 +280,98 @@ function Features() {
 </FadeIn>
 ```
 
+### Custom Distance and Opacity
+
+```tsx
+// Custom movement distance (default is 12px)
+<FadeIn direction="up" distance={30}>
+  <Card>Larger movement animation</Card>
+</FadeIn>
+
+// Custom opacity range
+<FadeIn 
+  direction="left" 
+  opacity={{ from: 0.3, to: 1 }}
+  duration={800}
+>
+  <Card>Fades from 30% to 100% opacity</Card>
+</FadeIn>
+```
+
+### SlideIn Animation Callbacks
+
+```tsx
+function AnimatedCard() {
+  const handleAnimationStart = () => {
+    console.log('Animation started');
+  };
+
+  const handleAnimationComplete = () => {
+    console.log('Animation finished');
+  };
+
+  return (
+    <FadeIn
+      direction="up"
+      duration={600}
+      onAnimationStart={handleAnimationStart}
+      onAnimationComplete={handleAnimationComplete}
+    >
+      <Card>Card with callbacks</Card>
+    </FadeIn>
+  );
+}
+```
+
+### SlideIn Conditional Animation
+
+```tsx
+function ConditionalFade({ shouldAnimate, children }) {
+  return (
+    <FadeIn 
+      direction="up" 
+      disabled={!shouldAnimate}
+      duration={400}
+    >
+      {children}
+    </FadeIn>
+  );
+}
+
+// Usage
+<ConditionalFade shouldAnimate={user.prefersAnimation}>
+  <Card>Only animates when enabled</Card>
+</ConditionalFade>
+```
+
+### SlideIn Advanced Customization
+
+```tsx
+<FadeIn
+  direction="right"
+  distance={50}
+  opacity={{ from: 0, to: 0.9 }}
+  duration={1000}
+  delay={300}
+  timing="bounce"
+  threshold={0.2}
+  onAnimationStart={() => console.log('Starting...')}
+  onAnimationComplete={() => console.log('Complete!')}
+  style={{ 
+    willChange: 'transform, opacity',
+    backfaceVisibility: 'hidden'
+  }}
+  className="custom-fade"
+>
+  <Card>Highly customized animation</Card>
+</FadeIn>
+```
+
 ## SlideIn Component
 
-Slide animations from any direction with larger movement (20px vs 12px for FadeIn).
+Enhanced slide animations from any direction with custom distance control, animation callbacks, and conditional rendering.
 
-### Navigation Panel
+### SlideIn Basic Usage
 
 ```tsx
 function Sidebar({ isOpen }) {
@@ -227,12 +387,83 @@ function Sidebar({ isOpen }) {
 }
 ```
 
-### Notification Banner
+### Custom Distance Control
+
+```tsx
+// Dramatic slide effect
+<SlideIn direction="up" distance={50} duration={600}>
+  <Card>Dramatic slide up</Card>
+</SlideIn>
+
+// Subtle slide effect
+<SlideIn direction="left" distance={10} duration={300}>
+  <Card>Subtle slide left</Card>
+</SlideIn>
+
+// Custom distance for each direction
+<SlideIn direction="right" distance={30} duration={500}>
+  <Card>Custom distance slide</Card>
+</SlideIn>
+```
+
+### SlideIn Animation Callbacks Basic Usage
+
+```tsx
+function AnimatedSection({ title, children, direction }) {
+  const handleAnimationStart = () => {
+    console.log(`${title} sliding started`);
+  };
+
+  const handleAnimationComplete = () => {
+    console.log(`${title} sliding completed`);
+  };
+
+  return (
+    <SlideIn
+      direction={direction}
+      distance={25}
+      duration={500}
+      timing="ease-out"
+      onAnimationStart={handleAnimationStart}
+      onAnimationComplete={handleAnimationComplete}
+    >
+      <section>
+        <h2>{title}</h2>
+        {children}
+      </section>
+    </SlideIn>
+  );
+}
+```
+
+### SlideIn Conditional Animation Basic Usage
+
+```tsx
+function ConditionalSlide({ shouldAnimate, children, direction }) {
+  return (
+    <SlideIn 
+      direction={direction}
+      distance={20}
+      disabled={!shouldAnimate}
+      duration={400}
+    >
+      {children}
+    </SlideIn>
+  );
+}
+
+// Usage
+<ConditionalSlide shouldAnimate={user.prefersAnimation} direction="up">
+  <Card>Only slides when enabled</Card>
+</ConditionalSlide>
+```
+
+### Notification Banner Basic Usage
 
 ```tsx
 function NotificationBanner({ message }) {
   return (
-    <SlideIn direction="down" duration={300}>
+    <SlideIn direction="down" distance={30} duration={300}>
       <div className="banner">
         {message}
       </div>
@@ -241,29 +472,29 @@ function NotificationBanner({ message }) {
 }
 ```
 
-### Footer Reveal
+### Footer Reveal Basic Usage
 
 ```tsx
-<SlideIn direction="up" threshold={0.3}>
+<SlideIn direction="up" distance={40} threshold={0.3}>
   <footer>
     <p>© 2025 Your Company</p>
   </footer>
 </SlideIn>
 ```
 
-### Alternating Slides
+### Alternating Slides Basic Usage
 
 ```tsx
 function AlternatingContent() {
   return (
     <>
-      <SlideIn direction="left">
+      <SlideIn direction="left" distance={35}>
         <Section>Content from left</Section>
       </SlideIn>
-      <SlideIn direction="right">
+      <SlideIn direction="right" distance={35}>
         <Section>Content from right</Section>
       </SlideIn>
-      <SlideIn direction="left">
+      <SlideIn direction="left" distance={35}>
         <Section>Content from left again</Section>
       </SlideIn>
     </>
@@ -271,11 +502,31 @@ function AlternatingContent() {
 }
 ```
 
+### SlideIn Advanced Customization Basic Usage
+
+```tsx
+<SlideIn
+  direction="up"
+  distance={60}
+  duration={800}
+  delay={200}
+  timing="elastic"
+  threshold={0.3}
+  once={false}
+  onAnimationStart={() => console.log('Starting slide')}
+  onAnimationComplete={() => console.log('Slide complete')}
+  className="custom-slide"
+  style={{ marginTop: '20px' }}
+>
+  <Card>Highly customized slide</Card>
+</SlideIn>
+```
+
 ## ZoomIn Component
 
-Scale-based zoom effects for emphasis.
+Enhanced scale-based zoom effects for emphasis, featuring custom scale ranges, zoom types, animation callbacks, and conditional rendering.
 
-### Modal Entrance
+### ZoomInBasic Usage
 
 ```tsx
 function Modal({ isOpen, onClose }) {
@@ -295,10 +546,93 @@ function Modal({ isOpen, onClose }) {
 }
 ```
 
+### Custom Scale Range
+
+```tsx
+// Dramatic zoom in effect
+<ZoomIn type="in" fromScale={0.7} toScale={1.1} duration={600}>
+  <Card>Dramatic zoom in</Card>
+</ZoomIn>
+
+// Subtle zoom in effect
+<ZoomIn type="in" fromScale={0.95} toScale={1.02} duration={300}>
+  <Card>Subtle zoom in</Card>
+</ZoomIn>
+
+// Custom zoom out effect
+<ZoomIn type="out" fromScale={1.2} toScale={0.9} duration={500}>
+  <Card>Custom zoom out</Card>
+</ZoomIn>
+```
+
+### ZoomIn Animation Callbacks
+
+```tsx
+function AnimatedModal({ isOpen, onClose, title }) {
+  const handleAnimationStart = () => {
+    console.log(`${title} zoom started`);
+  };
+
+  const handleAnimationComplete = () => {
+    console.log(`${title} zoom completed`);
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="modal-overlay">
+      <ZoomIn
+        type="in"
+        fromScale={0.8}
+        toScale={1.05}
+        duration={400}
+        timing="ease-out"
+        onAnimationStart={handleAnimationStart}
+        onAnimationComplete={handleAnimationComplete}
+      >
+        <div className="modal">
+          <h2>{title}</h2>
+          <button onClick={onClose}>Close</button>
+        </div>
+      </ZoomIn>
+    </div>
+  );
+}
+```
+
+### ZoomIn Conditional Animation
+
+```tsx
+function ConditionalZoom({ shouldAnimate, children, type }) {
+  return (
+    <ZoomIn 
+      type={type}
+      fromScale={type === "in" ? 0.95 : 1.05}
+      toScale={1}
+      disabled={!shouldAnimate}
+      duration={400}
+    >
+      {children}
+    </ZoomIn>
+  );
+}
+
+// Usage
+<ConditionalZoom shouldAnimate={user.prefersAnimation} type="in">
+  <Card>Only zooms when enabled</Card>
+</ConditionalZoom>
+```
+
 ### Call-to-Action Emphasis
 
 ```tsx
-<ZoomIn type="in" duration={500} delay={600}>
+<ZoomIn 
+  type="in" 
+  fromScale={0.9}
+  toScale={1.08}
+  duration={500} 
+  delay={600}
+>
   <button className="cta-button">
     Get Started Now
   </button>
@@ -312,7 +646,13 @@ function Gallery({ images }) {
   return (
     <div className="gallery">
       {images.map((image, index) => (
-        <ZoomIn key={image.id} type="in" delay={index * 100}>
+        <ZoomIn 
+          key={image.id} 
+          type="in" 
+          fromScale={0.8}
+          toScale={1.02}
+          delay={index * 100}
+        >
           <img src={image.url} alt={image.alt} />
         </ZoomIn>
       ))}
@@ -324,18 +664,44 @@ function Gallery({ images }) {
 ### Zoom Out Effect
 
 ```tsx
-<ZoomIn type="out" duration={400}>
+<ZoomIn 
+  type="out" 
+  fromScale={1.15}
+  toScale={0.95}
+  duration={400}
+>
   <div className="highlighted-card">
     Starts larger and zooms to normal size
   </div>
 </ZoomIn>
 ```
 
+### ZoomIn Advanced Customization
+
+```tsx
+<ZoomIn
+  type="in"
+  fromScale={0.6}
+  toScale={1.1}
+  duration={800}
+  delay={200}
+  timing="elastic"
+  threshold={0.3}
+  once={false}
+  onAnimationStart={() => console.log('Starting zoom')}
+  onAnimationComplete={() => console.log('Zoom complete')}
+  className="custom-zoom"
+  style={{ marginTop: '20px' }}
+>
+  <Card>Highly customized zoom</Card>
+</ZoomIn>
+```
+
 ## RotateIn Component
 
-Subtle rotation with fade for creative flourishes.
+Enhanced rotation with fade for creative flourishes, featuring custom angle and scale control, animation callbacks, and conditional rendering.
 
-### Badge Reveal
+### RotateIn Basic Usage
 
 ```tsx
 function Badge({ label }) {
@@ -347,22 +713,99 @@ function Badge({ label }) {
 }
 ```
 
-### Feature Icons
+### Custom Angle and Scale
 
 ```tsx
-<RotateIn timing="bounce">
+// Custom rotation angle (negative values rotate counter-clockwise)
+<RotateIn angle={-5} scale={0.95} duration={600}>
+  <div className="feature-card">Dramatic rotation</div>
+</RotateIn>
+
+// Subtle rotation
+<RotateIn angle={-1} scale={0.99} duration={300}>
+  <div className="subtle-card">Gentle rotation</div>
+</RotateIn>
+
+// Clockwise rotation
+<RotateIn angle={3} scale={0.98} duration={500}>
+  <div className="clockwise-card">Clockwise rotation</div>
+</RotateIn>
+```
+
+### RotateIn Animation Callbacks Basic Usage
+
+```tsx
+function AnimatedIcon({ icon, label }) {
+  const handleAnimationStart = () => {
+    console.log(`${label} rotation started`);
+  };
+
+  const handleAnimationComplete = () => {
+    console.log(`${label} rotation completed`);
+  };
+
+  return (
+    <RotateIn
+      angle={-4}
+      scale={0.96}
+      duration={600}
+      timing="bounce"
+      onAnimationStart={handleAnimationStart}
+      onAnimationComplete={handleAnimationComplete}
+    >
+      <div className="icon-wrapper">
+        <Icon name={icon} size={48} />
+        <span>{label}</span>
+      </div>
+    </RotateIn>
+  );
+}
+```
+
+### RotateIn Conditional Animation Basic Usage
+
+```tsx
+function ConditionalRotate({ shouldAnimate, children }) {
+  return (
+    <RotateIn 
+      angle={-3}
+      scale={0.97}
+      disabled={!shouldAnimate}
+      duration={400}
+    >
+      {children}
+    </RotateIn>
+  );
+}
+
+// Usage
+<ConditionalRotate shouldAnimate={user.prefersAnimation}>
+  <Card>Only rotates when enabled</Card>
+</ConditionalRotate>
+```
+
+### Feature Icons Basic Usage
+
+```tsx
+<RotateIn timing="bounce" angle={-2} scale={0.98}>
   <div className="icon-wrapper">
     <Icon name="star" size={48} />
   </div>
 </RotateIn>
 ```
 
-### Price Cards
+### Price Cards Basic Usage
 
 ```tsx
 function PricingCard({ plan }) {
   return (
-    <RotateIn delay={plan.order * 150}>
+    <RotateIn 
+      delay={plan.order * 150}
+      angle={-3}
+      scale={0.97}
+      duration={500}
+      timing="ease-out"
+    >
       <div className="pricing-card">
         <h3>{plan.name}</h3>
         <p className="price">${plan.price}/mo</p>
@@ -373,11 +816,31 @@ function PricingCard({ plan }) {
 }
 ```
 
+### RotateIn Advanced Customization Basic Usage
+
+```tsx
+<RotateIn
+  angle={-6}
+  scale={0.94}
+  duration={800}
+  delay={200}
+  timing="elastic"
+  threshold={0.3}
+  once={false}
+  onAnimationStart={() => console.log('Starting rotation')}
+  onAnimationComplete={() => console.log('Rotation complete')}
+  className="custom-rotate"
+  style={{ marginTop: '20px' }}
+>
+  <Card>Highly customized rotation</Card>
+</RotateIn>
+```
+
 ## ScaleUp Component
 
-Subtle scale animation for interactive elements.
+Enhanced scale animation for interactive elements, featuring custom scale ranges, animation callbacks, and conditional rendering.
 
-### Button Hover States
+### ScaleUp Basic Usage
 
 ```tsx
 function InteractiveButton() {
@@ -391,6 +854,77 @@ function InteractiveButton() {
 }
 ```
 
+### Stagger Custom Scale Range
+
+```tsx
+// Dramatic scale effect
+<ScaleUp fromScale={0.8} toScale={1.1} duration={600}>
+  <Card>Dramatic scale effect</Card>
+</ScaleUp>
+
+// Subtle scale effect
+<ScaleUp fromScale={0.95} toScale={1.02} duration={300}>
+  <Card>Subtle scale effect</Card>
+</ScaleUp>
+
+// Scale down effect
+<ScaleUp fromScale={1.1} toScale={0.9} duration={500}>
+  <Card>Scale down effect</Card>
+</ScaleUp>
+```
+
+### Stagger Animation Callbacks Basic Usage
+
+```tsx
+function AnimatedCard({ title, description }) {
+  const handleAnimationStart = () => {
+    console.log(`${title} scaling started`);
+  };
+
+  const handleAnimationComplete = () => {
+    console.log(`${title} scaling completed`);
+  };
+
+  return (
+    <ScaleUp
+      fromScale={0.9}
+      toScale={1.05}
+      duration={500}
+      timing="elastic"
+      onAnimationStart={handleAnimationStart}
+      onAnimationComplete={handleAnimationComplete}
+    >
+      <Card>
+        <h3>{title}</h3>
+        <p>{description}</p>
+      </Card>
+    </ScaleUp>
+  );
+}
+```
+
+### Stagger Conditional Animation
+
+```tsx
+function ConditionalScale({ shouldAnimate, children }) {
+  return (
+    <ScaleUp 
+      fromScale={0.92}
+      toScale={1}
+      disabled={!shouldAnimate}
+      duration={400}
+    >
+      {children}
+    </ScaleUp>
+  );
+}
+
+// Usage
+<ConditionalScale shouldAnimate={user.prefersAnimation}>
+  <Card>Only scales when enabled</Card>
+</ConditionalScale>
+```
+
 ### Card Grid
 
 ```tsx
@@ -398,7 +932,12 @@ function CardGrid({ items }) {
   return (
     <div className="grid">
       {items.map((item, index) => (
-        <ScaleUp key={item.id} delay={index * 80}>
+        <ScaleUp 
+          key={item.id} 
+          delay={index * 80}
+          fromScale={0.9}
+          toScale={1.02}
+        >
           <Card>
             <h3>{item.title}</h3>
             <p>{item.description}</p>
@@ -413,7 +952,12 @@ function CardGrid({ items }) {
 ### Testimonial Reveal
 
 ```tsx
-<ScaleUp duration={600} timing="elastic">
+<ScaleUp 
+  fromScale={0.88}
+  toScale={1.03}
+  duration={600} 
+  timing="elastic"
+>
   <blockquote className="testimonial">
     <p>"This product changed my life!"</p>
     <cite>— Happy Customer</cite>
@@ -421,11 +965,31 @@ function CardGrid({ items }) {
 </ScaleUp>
 ```
 
+### Stagger Advanced Customization
+
+```tsx
+<ScaleUp
+  fromScale={0.7}
+  toScale={1.1}
+  duration={800}
+  delay={200}
+  timing="bounce"
+  threshold={0.3}
+  once={false}
+  onAnimationStart={() => console.log('Starting scale')}
+  onAnimationComplete={() => console.log('Scale complete')}
+  className="custom-scale"
+  style={{ marginTop: '20px' }}
+>
+  <Card>Highly customized scale</Card>
+</ScaleUp>
+```
+
 ## Stagger Component
 
-Animate children sequentially with customizable delay.
+Enhanced sequential animation component with multiple stagger directions, animation callbacks, performance control, and conditional rendering.
 
-### Feature List
+### Stagger Basic Usage
 
 ```tsx
 function FeatureList() {
@@ -440,13 +1004,119 @@ function FeatureList() {
 }
 ```
 
+### Multiple Stagger Directions
+
+```tsx
+// Forward direction (default) - animates from first to last
+<Stagger delay={100} direction="forward" variant="fadeInUp">
+  <Card>Item 1</Card>
+  <Card>Item 2</Card>
+  <Card>Item 3</Card>
+</Stagger>
+
+// Reverse direction - animates from last to first
+<Stagger delay={100} direction="reverse" variant="fadeInUp">
+  <Card>Item 1</Card>
+  <Card>Item 2</Card>
+  <Card>Item 3</Card>
+</Stagger>
+
+// Center-out direction - animates from center outward
+<Stagger delay={100} direction="center-out" variant="scaleUp">
+  <Card>Item 1</Card>
+  <Card>Item 2</Card> {/* Center item animates first */}
+  <Card>Item 3</Card>
+</Stagger>
+
+// Edges-in direction - animates from edges toward center
+<Stagger delay={100} direction="edges-in" variant="slideUp">
+  <Card>Item 1</Card> {/* Edge items animate first */}
+  <Card>Item 2</Card>
+  <Card>Item 3</Card> {/* Edge items animate first */}
+</Stagger>
+```
+
+### Stagger Multiple Directions
+
+```tsx
+function AnimatedFeatureList({ features }) {
+  const handleAnimationStart = (index) => {
+    console.log(`Feature ${index + 1} animation started`);
+  };
+
+  const handleAnimationComplete = (index) => {
+    console.log(`Feature ${index + 1} animation completed`);
+  };
+
+  const handleAllAnimationsComplete = () => {
+    console.log('All features have been animated!');
+  };
+
+  return (
+    <Stagger
+      delay={120}
+      variant="fadeInUp"
+      direction="center-out"
+      onAnimationStart={handleAnimationStart}
+      onAnimationComplete={handleAnimationComplete}
+      onAllAnimationsComplete={handleAllAnimationsComplete}
+    >
+      {features.map((feature, index) => (
+        <FeatureCard key={feature.id} {...feature} />
+      ))}
+    </Stagger>
+  );
+}
+```
+
+### Performance Control
+
+```tsx
+// Limit to 5 children for performance
+<Stagger delay={100} maxChildren={5} variant="fadeInUp">
+  {largeArray.map(item => (
+    <Card key={item.id}>{item.name}</Card>
+  ))}
+</Stagger>
+
+// No limit (default)
+<Stagger delay={100} maxChildren={Infinity} variant="fadeInUp">
+  {items.map(item => (
+    <Card key={item.id}>{item.name}</Card>
+  ))}
+</Stagger>
+```
+
+### Stagger Performance Control
+
+```tsx
+function ConditionalStagger({ shouldAnimate, children }) {
+  return (
+    <Stagger 
+      delay={100}
+      variant="fadeInUp"
+      disabled={!shouldAnimate}
+    >
+      {children}
+    </Stagger>
+  );
+}
+
+// Usage
+<ConditionalStagger shouldAnimate={user.prefersAnimation}>
+  <Card>Item 1</Card>
+  <Card>Item 2</Card>
+  <Card>Item 3</Card>
+</ConditionalStagger>
+```
+
 ### Navigation Menu
 
 ```tsx
 function NavigationMenu() {
   return (
     <nav>
-      <Stagger delay={80} variant="fadeInLeft">
+      <Stagger delay={80} variant="fadeInLeft" direction="forward">
         <Link to="/">Home</Link>
         <Link to="/products">Products</Link>
         <Link to="/about">About</Link>
@@ -462,7 +1132,13 @@ function NavigationMenu() {
 ```tsx
 function ImageGrid({ images }) {
   return (
-    <Stagger delay={120} variant="scaleUp" threshold={0.3}>
+    <Stagger 
+      delay={120} 
+      variant="scaleUp" 
+      direction="center-out"
+      threshold={0.3}
+      maxChildren={10}
+    >
       {images.map(image => (
         <img key={image.id} src={image.url} alt={image.alt} />
       ))}
@@ -475,14 +1151,14 @@ function ImageGrid({ images }) {
 
 ```tsx
 // Slower stagger for dramatic effect
-<Stagger delay={200} variant="fadeInUp" duration={800}>
+<Stagger delay={200} variant="fadeInUp" duration={800} direction="reverse">
   <Section>Section 1</Section>
   <Section>Section 2</Section>
   <Section>Section 3</Section>
 </Stagger>
 
 // Fast stagger for subtle effect
-<Stagger delay={40} variant="fadeIn" duration={300}>
+<Stagger delay={40} variant="fadeIn" duration={300} direction="edges-in">
   <ListItem>Item 1</ListItem>
   <ListItem>Item 2</ListItem>
   <ListItem>Item 3</ListItem>
@@ -494,17 +1170,17 @@ function ImageGrid({ images }) {
 ```tsx
 function NestedStagger() {
   return (
-    <Stagger delay={150} variant="fadeInUp">
+    <Stagger delay={150} variant="fadeInUp" direction="center-out">
       <section>
         <h2>Section 1</h2>
-        <Stagger delay={80} variant="fadeInLeft">
+        <Stagger delay={80} variant="fadeInLeft" direction="forward">
           <p>Paragraph 1</p>
           <p>Paragraph 2</p>
         </Stagger>
       </section>
       <section>
         <h2>Section 2</h2>
-        <Stagger delay={80} variant="fadeInLeft">
+        <Stagger delay={80} variant="fadeInLeft" direction="reverse">
           <p>Paragraph 3</p>
           <p>Paragraph 4</p>
         </Stagger>
@@ -514,9 +1190,32 @@ function NestedStagger() {
 }
 ```
 
+### Stagger Advanced Customization Basic Usage
+
+```tsx
+<Stagger
+  delay={150}
+  variant="slideUp"
+  direction="center-out"
+  duration={600}
+  timing="elastic"
+  threshold={0.3}
+  maxChildren={8}
+  onAnimationStart={(index) => console.log(`Item ${index} started`)}
+  onAnimationComplete={(index) => console.log(`Item ${index} completed`)}
+  onAllAnimationsComplete={() => console.log('All done!')}
+  className="custom-stagger"
+  style={{ marginTop: '20px' }}
+>
+  {items.map(item => (
+    <Card key={item.id}>{item.name}</Card>
+  ))}
+</Stagger>
+```
+
 ## Motion Component
 
-State-based animations using spring physics.
+State-based animations using enhanced spring physics with new animation types including bounce, shake, flip effects, and expanded spring presets.
 
 ### Dropdown Menu
 
@@ -583,7 +1282,45 @@ function Sidebar() {
 }
 ```
 
-### Spring Presets Comparison
+### New Animation Types
+
+```tsx
+function AnimationTypesDemo() {
+  const [active, setActive] = useState(false);
+
+  return (
+    <div>
+      <button onClick={() => setActive(!active)}>Toggle All</button>
+
+      {/* Bounce effect with scale and translate */}
+      <Motion isActive={active} type="bounce" spring="wobbly">
+        <div>Bounce - Playful bounce effect</div>
+      </Motion>
+
+      {/* Shake effect for attention */}
+      <Motion isActive={active} type="shake" spring="crisp">
+        <div>Shake - Attention-grabbing shake</div>
+      </Motion>
+
+      {/* 3D flip effects */}
+      <Motion isActive={active} type="flipX" spring="smooth">
+        <div>Flip X - Horizontal flip</div>
+      </Motion>
+
+      <Motion isActive={active} type="flipY" spring="smooth">
+        <div>Flip Y - Vertical flip</div>
+      </Motion>
+
+      {/* Enhanced zoom with larger scale range */}
+      <Motion isActive={active} type="zoom" spring="elastic">
+        <div>Zoom - Enhanced scale effect</div>
+      </Motion>
+    </div>
+  );
+}
+```
+
+### Enhanced Spring Presets
 
 ```tsx
 function SpringDemo() {
@@ -593,8 +1330,9 @@ function SpringDemo() {
     <div>
       <button onClick={() => setActive(!active)}>Toggle</button>
 
+      {/* Original presets */}
       <Motion isActive={active} spring="default">
-        <div>Default - Balanced</div>
+        <div>Default - Balanced and versatile</div>
       </Motion>
 
       <Motion isActive={active} spring="gentle">
@@ -602,17 +1340,138 @@ function SpringDemo() {
       </Motion>
 
       <Motion isActive={active} spring="wobbly">
-        <div>Wobbly - Bouncy</div>
+        <div>Wobbly - Bouncy with overshoot</div>
       </Motion>
 
       <Motion isActive={active} spring="stiff">
-        <div>Stiff - Quick and firm</div>
+        <div>Stiff - Quick and snappy</div>
       </Motion>
 
       <Motion isActive={active} spring="slow">
-        <div>Slow - Deliberate</div>
+        <div>Slow - Deliberate and smooth</div>
+      </Motion>
+
+      {/* New enhanced presets */}
+      <Motion isActive={active} spring="molasses">
+        <div>Molasses - Very slow and heavy</div>
+      </Motion>
+
+      <Motion isActive={active} spring="bouncy">
+        <div>Bouncy - Highly elastic with multiple bounces</div>
+      </Motion>
+
+      <Motion isActive={active} spring="crisp">
+        <div>Crisp - Sharp and precise</div>
+      </Motion>
+
+      <Motion isActive={active} spring="smooth">
+        <div>Smooth - Fluid and elegant</div>
+      </Motion>
+
+      <Motion isActive={active} spring="elastic">
+        <div>Elastic - Rubber-like with stretch</div>
       </Motion>
     </div>
+  );
+}
+```
+
+### Advanced Motion Features
+
+```tsx
+// Custom distance for slide animations
+<Motion 
+  isActive={isOpen} 
+  type="slideDown" 
+  distance={100}
+  spring="bouncy"
+>
+  <div>Custom slide distance</div>
+</Motion>
+
+// Hardware acceleration control
+<Motion 
+  isActive={isVisible} 
+  type="flipX" 
+  hardwareAcceleration={false}
+  spring="smooth"
+>
+  <div>Software-rendered flip</div>
+</Motion>
+
+// Custom spring configuration with enhanced options
+<Motion
+  isActive={isActive}
+  type="bounce"
+  spring={{
+    stiffness: 200,
+    damping: 15,
+    mass: 1,
+    velocity: 0,
+    precision: 0.001,
+    maxDuration: 2000
+  }}
+  distance={50}
+>
+  <div>Custom physics with limits</div>
+</Motion>
+```
+
+### Practical Use Cases
+
+```tsx
+// Notification with shake effect
+function ErrorNotification({ message, isVisible }) {
+  return (
+    <Motion 
+      isActive={isVisible} 
+      type="shake" 
+      spring="crisp"
+      distance={10}
+    >
+      <div className="error-notification">
+        {message}
+      </div>
+    </Motion>
+  );
+}
+
+// Card flip on hover
+function FlipCard({ children }) {
+  const [isFlipped, setIsFlipped] = useState(false);
+  
+  return (
+    <Motion 
+      isActive={isFlipped} 
+      type="flipY" 
+      spring="smooth"
+      onMouseEnter={() => setIsFlipped(true)}
+      onMouseLeave={() => setIsFlipped(false)}
+    >
+      <div className="flip-card">
+        {children}
+      </div>
+    </Motion>
+  );
+}
+
+// Bouncing call-to-action
+function BouncingCTA({ children }) {
+  const [isHovered, setIsHovered] = useState(false);
+  
+  return (
+    <Motion 
+      isActive={isHovered} 
+      type="bounce" 
+      spring="bouncy"
+      distance={20}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <button className="cta-button">
+        {children}
+      </button>
+    </Motion>
   );
 }
 ```
@@ -627,7 +1486,9 @@ function SpringDemo() {
     stiffness: 200,
     damping: 15,
     mass: 1,
-    velocity: 0
+    velocity: 0,
+    precision: 0.001,
+    maxDuration: 0
   }}
 >
   <div>Custom physics</div>
@@ -1011,7 +1872,7 @@ function ParallaxSection() {
 }
 ```
 
-### Conditional Animation
+### Conditional Reveal Animation
 
 ```tsx
 function ConditionalReveal({ shouldAnimate, children }) {
@@ -1384,16 +2245,57 @@ All modern browsers supported:
 
 ## Migration Guide
 
-### From v0.1.x to v0.2.0
+### From v0.2.x to v0.3.0
 
-No breaking changes. All APIs remain compatible.
+No breaking changes. All existing APIs remain compatible. New features are additive.
 
-### New Features in v0.2.0
+### New Features in v0.3.0
 
-- Improved TypeScript types
-- Better performance
-- Enhanced accessibility
-- Comprehensive test coverage
+- Enhanced FadeIn with custom distance, opacity, and callbacks
+- New Motion animation types (bounce, shake, flipX, flipY, zoom)
+- 5 new spring presets (molasses, bouncy, crisp, smooth, elastic)
+- Hardware acceleration control for Motion component
+- Improved spring physics with better stability
+- Enhanced TypeScript types for all new features
+
+### Migration Examples
+
+```tsx
+// v0.2.x - Basic FadeIn
+<FadeIn direction="up">
+  <Card>Content</Card>
+</FadeIn>
+
+// v0.3.0 - Enhanced FadeIn (backward compatible)
+<FadeIn direction="up">
+  <Card>Content</Card>
+</FadeIn>
+
+// v0.3.0 - New features
+<FadeIn 
+  direction="up" 
+  distance={30}
+  opacity={{ from: 0.3, to: 1 }}
+  onAnimationComplete={() => console.log('Done!')}
+>
+  <Card>Enhanced content</Card>
+</FadeIn>
+
+// v0.2.x - Basic Motion
+<Motion isActive={isOpen} type="slideDown">
+  <div>Content</div>
+</Motion>
+
+// v0.3.0 - Enhanced Motion (backward compatible)
+<Motion isActive={isOpen} type="slideDown">
+  <div>Content</div>
+</Motion>
+
+// v0.3.0 - New animation types
+<Motion isActive={isOpen} type="bounce" spring="bouncy">
+  <div>Bouncing content</div>
+</Motion>
+```
 
 ## Related Components
 

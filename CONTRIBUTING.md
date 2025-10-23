@@ -39,15 +39,6 @@ pnpm test # Run tests
 pnpm build # Build for production
 ```
 
-### Tokens Package
-
-```bash
-cd packages/tokens
-pnpm dev  # Watch mode
-pnpm test # Run tests
-pnpm build # Build for production
-```
-
 ## Running Examples
 
 ```bash

@@ -9,6 +9,9 @@
   width: 100%;
   box-sizing: border-box;
   overflow-x: auto; /* Allow horizontal scrolling instead of hiding content */
+  overflow-y: visible;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 /* ───────────────────────────────────────────────────────────────────────────
@@ -126,5 +129,63 @@
    RESPONSIVE DESIGN
    ═══════════════════════════════════════════════════════════════════════════ */
 
-/* Removed hardcoded mobile padding - use responsive padding prop instead */
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .container {
+    /* Better mobile scrolling */
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    
+    /* Prevent horizontal overflow on mobile */
+    min-width: 0;
+    max-width: 100vw;
+  }
+  
+  /* Mobile-specific max-width adjustments */
+  .maxWidthXs {
+    max-width: calc(100vw - var(--theme-spacing-4, 16px));
+  }
+  
+  .maxWidthSm {
+    max-width: calc(100vw - var(--theme-spacing-4, 16px));
+  }
+  
+  .maxWidthMd {
+    max-width: calc(100vw - var(--theme-spacing-4, 16px));
+  }
+  
+  .maxWidthLg {
+    max-width: calc(100vw - var(--theme-spacing-4, 16px));
+  }
+  
+  .maxWidthXl {
+    max-width: calc(100vw - var(--theme-spacing-4, 16px));
+  }
+  
+  .maxWidth2xl {
+    max-width: calc(100vw - var(--theme-spacing-4, 16px));
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PERFORMANCE OPTIMIZATIONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Hardware acceleration for smooth scrolling */
+.container {
+  will-change: scroll-position;
+  transform: translateZ(0);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   REDUCED MOTION SUPPORT
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  .container {
+    scroll-behavior: auto;
+    will-change: auto;
+    transform: none;
+  }
+}
 

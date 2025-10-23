@@ -1,22 +1,38 @@
 /**
  * ButtonGroup Component Styles
- * Primitives-first with horizontal/vertical direction support
- * Migrated to theme system
+ * Modern UI/UX with Spexop design system principles
+ * Enhanced accessibility and micro-interactions
  * 
  * @component ButtonGroup
  * @packageName @spexop/react
  * @description Container for grouped buttons with shared borders
  * @author @spexop-ui | github.com/spexop-ui | @olmstedian | github.com/olmstedian
- * @version 0.2.0
+ * @version 0.3.0
  * @since 2025-10-13
+ * @updated 2025-01-20 - Modern UI/UX improvements
  */
 
 /* Base ButtonGroup Container */
 .buttonGroup {
 	display: inline-flex;
 	border: var(--theme-border-width) solid var(--theme-border-strong);
-	border-radius: var(--theme-radius-relaxed);
+	border-radius: var(--theme-radius-md);
 	overflow: hidden;
+	position: relative;
+	/* Modern UI enhancements */
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+	background: var(--theme-surface);
+	/* Performance optimizations */
+	will-change: transform;
+	transform: translateZ(0);
+	backface-visibility: hidden;
+	/* Smooth transitions */
+	transition: box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Enhanced hover state for container */
+.buttonGroup:hover {
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Horizontal Direction (default) */
@@ -33,9 +49,24 @@
 	background: var(--theme-surface);
 	color: var(--theme-text-secondary);
 	padding: var(--theme-spacing-3) var(--theme-spacing-4);
-	font-size: 16px;
+	font-size: var(--theme-font-size-base);
+	font-weight: var(--theme-font-weight-medium);
+	font-family: var(--theme-font-family);
 	margin: 0;
-	transition: all 0.15s ease;
+	/* Enhanced transitions with modern easing */
+	transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+	min-height: 44px;
+	min-width: 44px;
+	/* Modern UI enhancements */
+	position: relative;
+	overflow: hidden;
+	cursor: pointer;
+	user-select: none;
+	-webkit-tap-highlight-color: transparent;
+	/* Performance optimizations */
+	will-change: transform, background-color, color;
+	transform: translateZ(0);
+	backface-visibility: hidden;
 }
 
 /* Last button in horizontal group - no border */
@@ -47,10 +78,13 @@
 /* Hover state for horizontal buttons */
 .horizontal > button:hover:not(:disabled):not([aria-pressed="true"]),
 .horizontal > :global(*:hover:not(:disabled):not([aria-pressed="true"])) {
-	background: var(--theme-surface-secondary);
+	background: var(--theme-surface-hover);
 	color: var(--theme-text);
-	border-right-color: var(--theme-text);
+	border-right-color: var(--theme-border-strong);
 	z-index: 1;
+	/* Subtle scale effect for modern feel */
+	transform: translateY(-1px);
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Active state for horizontal buttons */
@@ -62,6 +96,16 @@
 	color: var(--theme-surface);
 	border-color: var(--theme-primary);
 	z-index: 2;
+	/* Enhanced active state */
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+	transform: translateY(-1px);
+}
+
+/* Press state for better feedback */
+.horizontal > button:active:not(:disabled):not([aria-pressed="true"]),
+.horizontal > :global(*:active:not(:disabled):not([aria-pressed="true"])) {
+	transform: translateY(0);
+	transition-duration: 100ms;
 }
 
 /* Vertical Direction */
@@ -78,9 +122,24 @@
 	background: var(--theme-surface);
 	color: var(--theme-text-secondary);
 	padding: var(--theme-spacing-3) var(--theme-spacing-4);
-	font-size: 16px;
+	font-size: var(--theme-font-size-base);
+	font-weight: var(--theme-font-weight-medium);
+	font-family: var(--theme-font-family);
 	margin: 0;
-	transition: all 0.15s ease;
+	/* Enhanced transitions with modern easing */
+	transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+	min-height: 44px;
+	min-width: 44px;
+	/* Modern UI enhancements */
+	position: relative;
+	overflow: hidden;
+	cursor: pointer;
+	user-select: none;
+	-webkit-tap-highlight-color: transparent;
+	/* Performance optimizations */
+	will-change: transform, background-color, color;
+	transform: translateZ(0);
+	backface-visibility: hidden;
 }
 
 /* Last button in vertical group - no border */
@@ -92,10 +151,13 @@
 /* Hover state for vertical buttons */
 .vertical > button:hover:not(:disabled):not([aria-pressed="true"]),
 .vertical > :global(*:hover:not(:disabled):not([aria-pressed="true"])) {
-	background: var(--theme-surface-secondary);
+	background: var(--theme-surface-hover);
 	color: var(--theme-text);
-	border-bottom-color: var(--theme-text);
+	border-bottom-color: var(--theme-border-strong);
 	z-index: 1;
+	/* Subtle scale effect for modern feel */
+	transform: translateX(-1px);
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Active state for vertical buttons */
@@ -107,43 +169,156 @@
 	color: var(--theme-surface);
 	border-color: var(--theme-primary);
 	z-index: 2;
+	/* Enhanced active state */
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+	transform: translateX(-1px);
+}
+
+/* Press state for better feedback */
+.vertical > button:active:not(:disabled):not([aria-pressed="true"]),
+.vertical > :global(*:active:not(:disabled):not([aria-pressed="true"])) {
+	transform: translateX(0);
+	transition-duration: 100ms;
 }
 
 /* Compact Mode */
 .compact > button,
 .compact > :global(*) {
 	padding: var(--theme-spacing-2) var(--theme-spacing-3);
-	font-size: 14px;
+	font-size: var(--theme-font-size-sm);
+	min-height: 36px;
+	min-width: 36px;
 }
 
-/* Focus indicators */
+/* Enhanced Focus indicators */
 .buttonGroup > button:focus-visible,
 .buttonGroup > :global(*:focus-visible) {
 	outline: 2px solid var(--theme-primary);
 	outline-offset: -2px;
 	z-index: 10;
 	position: relative;
+	/* Enhanced focus state */
+	box-shadow: 0 0 0 2px var(--theme-primary);
+	border-radius: var(--theme-radius-sm);
 }
 
-/* Disabled state */
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+	.buttonGroup > button:focus-visible,
+	.buttonGroup > :global(*:focus-visible) {
+		outline: 3px solid var(--theme-primary);
+		outline-offset: -3px;
+		box-shadow: 0 0 0 3px var(--theme-primary);
+	}
+}
+
+/* Enhanced Disabled state */
 .buttonGroup > button:disabled,
 .buttonGroup > :global(*:disabled) {
 	cursor: not-allowed;
 	opacity: 0.5;
+	background: var(--theme-surface-secondary);
+	color: var(--theme-text-muted);
+	/* Prevent all interactions */
+	pointer-events: none;
+	/* Remove hover effects */
+	transform: none !important;
+	box-shadow: none !important;
 }
 
-/* Reduced motion support */
+/* Modern Press state for better touch feedback */
+.buttonGroup > button:active:not(:disabled),
+.buttonGroup > :global(*:active:not(:disabled)) {
+	transform: scale(0.98);
+	transition-duration: 100ms;
+	/* Enhanced press feedback */
+	box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Ripple effect for modern interactions */
+.buttonGroup > button::before,
+.buttonGroup > :global(*)::before {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 0;
+	height: 0;
+	background: rgba(255, 255, 255, 0.3);
+	border-radius: 50%;
+	transform: translate(-50%, -50%);
+	transition: width 0.3s ease, height 0.3s ease;
+	pointer-events: none;
+	z-index: 1;
+}
+
+.buttonGroup > button:active::before,
+.buttonGroup > :global(*:active)::before {
+	width: 200px;
+	height: 200px;
+}
+
+/* Enhanced Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
 	.buttonGroup > button,
 	.buttonGroup > :global(*) {
 		transition-duration: 0.01ms;
+		transform: none !important;
+	}
+	
+	.buttonGroup > button::before,
+	.buttonGroup > :global(*)::before {
+		display: none;
 	}
 }
 
-/* Mobile: Allow horizontal scroll if overflow */
+/* Modern Mobile optimizations */
 @media (max-width: 768px) {
 	.horizontal {
 		overflow-x: auto;
 		-webkit-overflow-scrolling: touch;
+		/* Modern scrollbar styling */
+		scrollbar-width: thin;
+		scrollbar-color: var(--theme-border-strong) transparent;
+	}
+	
+	.horizontal::-webkit-scrollbar {
+		height: 4px;
+	}
+	
+	.horizontal::-webkit-scrollbar-track {
+		background: transparent;
+	}
+	
+	.horizontal::-webkit-scrollbar-thumb {
+		background: var(--theme-border-strong);
+		border-radius: 2px;
+	}
+	
+	/* Enhanced touch targets for mobile */
+	.buttonGroup > button,
+	.buttonGroup > :global(*) {
+		min-height: 48px;
+		min-width: 48px;
+		padding: var(--theme-spacing-4) var(--theme-spacing-5);
+		-webkit-tap-highlight-color: transparent;
+		touch-action: manipulation;
+		/* Better touch feedback */
+		-webkit-user-select: none;
+		user-select: none;
+	}
+	
+	.buttonGroup > button:active:not(:disabled),
+	.buttonGroup > :global(*:active:not(:disabled)) {
+		transform: scale(0.96);
+		transition-duration: 80ms;
+	}
+	
+	/* Compact mode mobile adjustments */
+	.compact > button,
+	.compact > :global(*) {
+		min-height: 40px;
+		min-width: 40px;
+		padding: var(--theme-spacing-3) var(--theme-spacing-4);
 	}
 }

@@ -59,12 +59,7 @@ export function TextInput({
       <label htmlFor={inputId} className={styles.label}>
         {label}
         {required && (
-          <span
-            style={{
-              color: "var(--s-color-red-500)",
-              marginLeft: "var(--s-spacing-1)",
-            }}
-          >
+          <span className={styles.requiredIndicator} aria-label="required">
             *
           </span>
         )}
@@ -87,6 +82,14 @@ export function TextInput({
           onChange={onChange}
           onBlur={onBlur}
           onFocus={onFocus}
+          aria-invalid={error ? "true" : "false"}
+          aria-describedby={
+            error
+              ? `${inputId}-error`
+              : helpText
+                ? `${inputId}-help`
+                : undefined
+          }
           {...props}
         />
 
@@ -94,12 +97,21 @@ export function TextInput({
       </div>
 
       {error && (
-        <div className={styles.errorMessage} role="alert">
+        <div
+          id={`${inputId}-error`}
+          className={styles.errorMessage}
+          role="alert"
+          aria-live="polite"
+        >
           {error}
         </div>
       )}
 
-      {helpText && !error && <div className={styles.helpText}>{helpText}</div>}
+      {helpText && !error && (
+        <div id={`${inputId}-help`} className={styles.helpText}>
+          {helpText}
+        </div>
+      )}
     </div>
   );
 }

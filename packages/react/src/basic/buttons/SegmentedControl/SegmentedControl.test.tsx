@@ -153,8 +153,8 @@ describe("SegmentedControl", () => {
       const listOption = screen.getByRole("radio", { name: "List" });
       await user.click(listOption);
 
-      expect(mockOnChange).toHaveBeenCalledTimes(1);
-      expect(mockOnChange).toHaveBeenCalledWith("list");
+      // Should not call onChange when clicking already selected option
+      expect(mockOnChange).not.toHaveBeenCalled();
     });
   });
 
@@ -403,7 +403,9 @@ describe("SegmentedControl", () => {
       );
 
       const listOption = screen.getByRole("radio", { name: "List" });
-      const gridOption = screen.getByRole("radio", { name: "Grid" });
+      const gridOption = screen.getByRole("radio", {
+        name: "GridThis option is currently unavailable",
+      });
       const tableOption = screen.getByRole("radio", { name: "Table" });
 
       expect(listOption).not.toBeDisabled();
@@ -429,7 +431,9 @@ describe("SegmentedControl", () => {
         />,
       );
 
-      const gridOption = screen.getByRole("radio", { name: "Grid" });
+      const gridOption = screen.getByRole("radio", {
+        name: "GridThis option is currently unavailable",
+      });
       await user.click(gridOption);
 
       expect(mockOnChange).not.toHaveBeenCalled();

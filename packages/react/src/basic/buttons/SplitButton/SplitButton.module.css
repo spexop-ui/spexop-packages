@@ -12,6 +12,17 @@
 .splitButton {
 	position: relative;
 	display: inline-flex;
+	align-items: stretch;
+}
+
+/* Full width variant */
+.fullWidth {
+	width: 100%;
+}
+
+.fullWidth .mainButton,
+.fullWidth .toggleButton {
+	flex: 1;
 }
 
 /* Main Action Button */
@@ -32,6 +43,8 @@
 	justify-content: center;
 	gap: var(--theme-spacing-2);
 	white-space: nowrap;
+	min-height: 44px;
+	min-width: 44px;
 	/* Performance */
 	will-change: transform, background-color;
 }
@@ -52,6 +65,8 @@
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
+	min-height: 44px;
+	min-width: 44px;
 	/* Performance */
 	will-change: transform, background-color;
 }
@@ -72,7 +87,10 @@
 /* Button Disabled State */
 .buttonDisabled {
 	cursor: not-allowed;
-	opacity: 0.5;
+	opacity: 0.4;
+	background: var(--theme-surface-secondary);
+	color: var(--theme-text-muted);
+	border-color: var(--theme-border-subtle);
 }
 
 /* Focus Indicators */
@@ -176,12 +194,63 @@
 	opacity: 0.5;
 }
 
+/* Menu Item Content */
+.menuItemContent {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	flex: 1;
+	min-width: 0;
+}
+
+.menuItemLabel {
+	display: block;
+	font-weight: var(--theme-font-weight-medium);
+	line-height: 1.4;
+}
+
+.menuItemDescription {
+	display: block;
+	font-size: var(--theme-font-size-sm);
+	color: var(--theme-text-secondary);
+	margin-top: var(--theme-spacing-1);
+	line-height: 1.3;
+}
+
+.menuItemBadge {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	background: var(--theme-primary);
+	color: var(--theme-surface);
+	font-size: var(--theme-font-size-xs);
+	font-weight: var(--theme-font-weight-semibold);
+	padding: var(--theme-spacing-1) var(--theme-spacing-2);
+	border-radius: var(--theme-radius-sm);
+	min-width: 20px;
+	height: 20px;
+	margin-left: var(--theme-spacing-2);
+}
+
+.menuItemShortcut {
+	display: inline-flex;
+	align-items: center;
+	font-size: var(--theme-font-size-xs);
+	color: var(--theme-text-muted);
+	background: var(--theme-surface-secondary);
+	padding: var(--theme-spacing-1) var(--theme-spacing-2);
+	border-radius: var(--theme-radius-sm);
+	margin-left: var(--theme-spacing-2);
+	font-family: var(--theme-font-family-mono);
+}
+
 /* Menu Item Icon & Label */
 .menuItemIcon {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
 	flex-shrink: 0;
+	margin-right: var(--theme-spacing-2);
 }
 
 .menuItemIcon svg {
@@ -189,8 +258,91 @@
 	height: var(--theme-spacing-5);
 }
 
-.menuItemLabel {
-	display: inline-block;
+/* Menu Divider */
+.menuDivider {
+	height: 1px;
+	background: var(--theme-border);
+	margin: var(--theme-spacing-2) 0;
+}
+
+/* Menu Group */
+.menuGroup {
+	margin-bottom: var(--theme-spacing-2);
+}
+
+.menuGroup:last-child {
+	margin-bottom: 0;
+}
+
+.menuGroupLabel {
+	font-size: var(--theme-font-size-xs);
+	font-weight: var(--theme-font-weight-semibold);
+	color: var(--theme-text-muted);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	padding: var(--theme-spacing-2) var(--theme-spacing-3) var(--theme-spacing-1);
+	margin-bottom: var(--theme-spacing-1);
+}
+
+.menuGroupItems {
+	display: flex;
+	flex-direction: column;
+}
+
+/* Size Variants */
+.size-sm .mainButton,
+.size-sm .toggleButton {
+	padding: var(--theme-spacing-2) var(--theme-spacing-4);
+	font-size: var(--theme-font-size-sm);
+	min-height: 36px;
+}
+
+.size-md .mainButton,
+.size-md .toggleButton {
+	padding: var(--theme-spacing-3) var(--theme-spacing-5);
+	font-size: var(--theme-font-size-base);
+	min-height: 44px;
+}
+
+.size-lg .mainButton,
+.size-lg .toggleButton {
+	padding: var(--theme-spacing-4) var(--theme-spacing-6);
+	font-size: var(--theme-font-size-lg);
+	min-height: 52px;
+}
+
+/* Compact Mode */
+.compact-sm .mainButton,
+.compact-sm .toggleButton {
+	padding: var(--theme-spacing-2);
+	min-height: 32px;
+	min-width: 32px;
+}
+
+.compact-md .mainButton,
+.compact-md .toggleButton {
+	padding: var(--theme-spacing-3);
+	min-height: 36px;
+	min-width: 36px;
+}
+
+/* Loading State */
+.loadingIcon {
+	animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+	from { transform: rotate(0deg); }
+	to { transform: rotate(360deg); }
+}
+
+/* Toggle Icon Animation */
+.toggleIcon {
+	transition: transform 0.2s ease;
+}
+
+.toggleIconOpen {
+	transform: rotate(180deg);
 }
 
 /* Primary Variant */
@@ -203,16 +355,16 @@
 
 .variant-primary .mainButton:hover:not(:disabled),
 .variant-primary .toggleButton:hover:not(:disabled) {
-	background: var(--theme-primary-active);
-	border-color: var(--theme-primary-active);
+	background: var(--theme-primary-hover);
+	border-color: var(--theme-primary-hover);
 }
 
 .variant-primary .mainButton {
-	border-right-color: var(--theme-primary-active);
+	border-right-color: var(--theme-primary-hover);
 }
 
 .variant-primary .toggleButton {
-	border-left-color: var(--theme-primary-active);
+	border-left-color: var(--theme-primary-hover);
 }
 
 /* Secondary Variant */
@@ -221,6 +373,132 @@
 	background: var(--theme-surface);
 	color: var(--theme-text);
 	border-color: var(--theme-border-strong);
+}
+
+/* Outline Variant */
+.variant-outline .mainButton,
+.variant-outline .toggleButton {
+	background: transparent;
+	color: var(--theme-primary);
+	border-color: var(--theme-primary);
+}
+
+.variant-outline .mainButton:hover:not(:disabled),
+.variant-outline .toggleButton:hover:not(:disabled) {
+	background: var(--theme-primary);
+	color: var(--theme-surface);
+}
+
+/* Ghost Variant */
+.variant-ghost .mainButton,
+.variant-ghost .toggleButton {
+	background: transparent;
+	color: var(--theme-text);
+	border-color: transparent;
+}
+
+.variant-ghost .mainButton:hover:not(:disabled),
+.variant-ghost .toggleButton:hover:not(:disabled) {
+	background: var(--theme-surface-secondary);
+	border-color: var(--theme-border);
+}
+
+/* Text Variant */
+.variant-text .mainButton,
+.variant-text .toggleButton {
+	background: transparent;
+	color: var(--theme-primary);
+	border-color: transparent;
+	text-decoration: underline;
+}
+
+.variant-text .mainButton:hover:not(:disabled),
+.variant-text .toggleButton:hover:not(:disabled) {
+	background: var(--theme-surface-secondary);
+	text-decoration: none;
+}
+
+/* Pill Variant */
+.variant-pill .mainButton,
+.variant-pill .toggleButton {
+	border-radius: 9999px;
+}
+
+/* Border Emphasis Variant */
+.variant-border-emphasis .mainButton,
+.variant-border-emphasis .toggleButton {
+	border-width: 3px;
+	border-color: var(--theme-primary);
+}
+
+/* Danger Variant */
+.variant-danger .mainButton,
+.variant-danger .toggleButton {
+	background: var(--theme-danger);
+	color: var(--theme-surface);
+	border-color: var(--theme-danger);
+}
+
+.variant-danger .mainButton:hover:not(:disabled),
+.variant-danger .toggleButton:hover:not(:disabled) {
+	background: var(--theme-danger-hover);
+	border-color: var(--theme-danger-hover);
+}
+
+/* Success Variant */
+.variant-success .mainButton,
+.variant-success .toggleButton {
+	background: var(--theme-success);
+	color: var(--theme-surface);
+	border-color: var(--theme-success);
+}
+
+.variant-success .mainButton:hover:not(:disabled),
+.variant-success .toggleButton:hover:not(:disabled) {
+	background: var(--theme-success-hover);
+	border-color: var(--theme-success-hover);
+}
+
+/* Warning Variant */
+.variant-warning .mainButton,
+.variant-warning .toggleButton {
+	background: var(--theme-warning);
+	color: var(--theme-surface);
+	border-color: var(--theme-warning);
+}
+
+.variant-warning .mainButton:hover:not(:disabled),
+.variant-warning .toggleButton:hover:not(:disabled) {
+	background: var(--theme-warning-hover);
+	border-color: var(--theme-warning-hover);
+}
+
+/* Info Variant */
+.variant-info .mainButton,
+.variant-info .toggleButton {
+	background: var(--theme-info);
+	color: var(--theme-surface);
+	border-color: var(--theme-info);
+}
+
+.variant-info .mainButton:hover:not(:disabled),
+.variant-info .toggleButton:hover:not(:disabled) {
+	background: var(--theme-info-hover);
+	border-color: var(--theme-info-hover);
+}
+
+/* Neutral Variant */
+.variant-neutral .mainButton,
+.variant-neutral .toggleButton {
+	background: var(--theme-neutral);
+	color: var(--theme-surface);
+	border-color: var(--theme-neutral);
+}
+
+.variant-neutral .mainButton:hover:not(:disabled),
+.variant-neutral .toggleButton:hover:not(:disabled) {
+	background: var(--theme-neutral-hover);
+	border-color: var(--theme-neutral-hover);
 }
 
 /* Dark Theme Adjustments */
@@ -272,6 +550,10 @@ html[data-theme="dark"] .menu {
 		border-radius: var(--theme-radius-relaxed) var(--theme-radius-relaxed) 0 0;
 		border-right: var(--theme-border-width) solid var(--theme-border-strong);
 		border-bottom: 1px solid var(--theme-border-strong);
+		min-height: 48px;
+		padding: var(--theme-spacing-4) var(--theme-spacing-6);
+		-webkit-tap-highlight-color: transparent;
+		touch-action: manipulation;
 	}
 
 	.toggleButton {
@@ -279,6 +561,16 @@ html[data-theme="dark"] .menu {
 		border-radius: 0 0 var(--theme-radius-relaxed) var(--theme-radius-relaxed);
 		border-left: var(--theme-border-width) solid var(--theme-border-strong);
 		border-top: none;
+		min-height: 48px;
+		padding: var(--theme-spacing-4);
+		-webkit-tap-highlight-color: transparent;
+		touch-action: manipulation;
+	}
+	
+	.mainButton:active:not(:disabled),
+	.toggleButton:active:not(:disabled) {
+		transform: scale(0.96);
+		transition-duration: 80ms;
 	}
 
 	.variant-primary .mainButton {

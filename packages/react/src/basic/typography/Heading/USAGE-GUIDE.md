@@ -11,7 +11,7 @@ function Hero() {
   return (
     <Container maxWidth="2xl" padding="lg">
       <Stack direction="vertical" gap="md" align="center">
-        <Heading level={1} weight="bold" align="center">
+        <Heading level={1} weight="bold" align="center" variant="default">
           Build Beautiful Interfaces
         </Heading>
         <Text size="lg" align="center" weight="regular">
@@ -22,6 +22,95 @@ function Hero() {
         </Button>
       </Stack>
     </Container>
+  );
+}
+```
+
+### Status Messages
+
+```tsx
+import { Stack, Heading, Text } from '@spexop/react';
+
+function StatusMessages() {
+  return (
+    <Stack direction="vertical" gap="md">
+      <Heading level={2} variant="success">
+        ✅ Success! Your changes have been saved.
+      </Heading>
+      
+      <Heading level={2} variant="error">
+        ❌ Error: Please check your input and try again.
+      </Heading>
+      
+      <Heading level={2} variant="warning">
+        ⚠️ Warning: This action cannot be undone.
+      </Heading>
+    </Stack>
+  );
+}
+```
+
+### Truncated Headings
+
+```tsx
+import { Container, Heading } from '@spexop/react';
+
+function CardGrid() {
+  return (
+    <Container maxWidth="lg">
+      <Heading 
+        level={3} 
+        truncate
+        title="This is a very long heading that will be truncated with ellipsis"
+      >
+        This is a very long heading that will be truncated with ellipsis
+      </Heading>
+    </Container>
+  );
+}
+```
+
+### Clamped Headings
+
+```tsx
+import { Container, Heading } from '@spexop/react';
+
+function ArticlePreview() {
+  return (
+    <Container maxWidth="md">
+      <Heading 
+        level={2} 
+        clamp={2}
+        weight="semibold"
+      >
+        This is a very long article title that will be clamped to exactly 2 lines with ellipsis at the end for better layout consistency
+      </Heading>
+    </Container>
+  );
+}
+```
+
+### Polymorphic Headings
+
+```tsx
+import { Heading } from '@spexop/react';
+
+function FlexibleHeading() {
+  return (
+    <div>
+      {/* Renders as h2 */}
+      <Heading level={2}>Standard Heading</Heading>
+      
+      {/* Renders as div with heading styles */}
+      <Heading level={2} as="div">
+        Div with Heading Styles
+      </Heading>
+      
+      {/* Renders as span for inline use */}
+      <Heading level={3} as="span" weight="semibold">
+        Inline Heading
+      </Heading>
+    </div>
   );
 }
 ```

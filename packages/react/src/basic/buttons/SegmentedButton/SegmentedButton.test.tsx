@@ -42,7 +42,7 @@ describe("SegmentedButton", () => {
         />,
       );
 
-      const group = container.querySelector('[role="radiogroup"]');
+      const group = container.querySelector('fieldset[role="radiogroup"]');
       expect(group).toBeInTheDocument();
     });
 
@@ -235,13 +235,57 @@ describe("SegmentedButton", () => {
         />,
       );
 
-      const group = container.querySelector('[role="radiogroup"]');
-      if (group) {
-        (group as HTMLElement).focus();
-        await user.keyboard("{ArrowRight}");
-      }
+      const group = container.querySelector(
+        'fieldset[role="radiogroup"]',
+      ) as HTMLElement;
+      group.focus();
+      await user.keyboard("{ArrowRight}");
 
       expect(handleChange).toHaveBeenCalledWith("grid");
+    });
+
+    it("moves to first option on Home key", async () => {
+      const user = userEvent.setup();
+      const handleChange = vi.fn();
+
+      const { container } = render(
+        <SegmentedButton
+          aria-label="View mode"
+          value="table"
+          onChange={handleChange}
+          options={mockOptions}
+        />,
+      );
+
+      const group = container.querySelector(
+        'fieldset[role="radiogroup"]',
+      ) as HTMLElement;
+      group.focus();
+      await user.keyboard("{Home}");
+
+      expect(handleChange).toHaveBeenCalledWith("list");
+    });
+
+    it("moves to last option on End key", async () => {
+      const user = userEvent.setup();
+      const handleChange = vi.fn();
+
+      const { container } = render(
+        <SegmentedButton
+          aria-label="View mode"
+          value="list"
+          onChange={handleChange}
+          options={mockOptions}
+        />,
+      );
+
+      const group = container.querySelector(
+        'fieldset[role="radiogroup"]',
+      ) as HTMLElement;
+      group.focus();
+      await user.keyboard("{End}");
+
+      expect(handleChange).toHaveBeenCalledWith("table");
     });
 
     it("moves to previous option on Arrow Left", async () => {
@@ -257,11 +301,11 @@ describe("SegmentedButton", () => {
         />,
       );
 
-      const group = container.querySelector('[role="radiogroup"]');
-      if (group) {
-        (group as HTMLElement).focus();
-        await user.keyboard("{ArrowLeft}");
-      }
+      const group = container.querySelector(
+        'fieldset[role="radiogroup"]',
+      ) as HTMLElement;
+      group.focus();
+      await user.keyboard("{ArrowLeft}");
 
       expect(handleChange).toHaveBeenCalledWith("list");
     });
@@ -279,11 +323,11 @@ describe("SegmentedButton", () => {
         />,
       );
 
-      const group = container.querySelector('[role="radiogroup"]');
-      if (group) {
-        (group as HTMLElement).focus();
-        await user.keyboard("{ArrowRight}");
-      }
+      const group = container.querySelector(
+        'fieldset[role="radiogroup"]',
+      ) as HTMLElement;
+      group.focus();
+      await user.keyboard("{ArrowRight}");
 
       expect(handleChange).toHaveBeenCalledWith("list");
     });
@@ -301,11 +345,11 @@ describe("SegmentedButton", () => {
         />,
       );
 
-      const group = container.querySelector('[role="radiogroup"]');
-      if (group) {
-        (group as HTMLElement).focus();
-        await user.keyboard("{ArrowLeft}");
-      }
+      const group = container.querySelector(
+        'fieldset[role="radiogroup"]',
+      ) as HTMLElement;
+      group.focus();
+      await user.keyboard("{ArrowLeft}");
 
       expect(handleChange).toHaveBeenCalledWith("table");
     });
@@ -329,11 +373,11 @@ describe("SegmentedButton", () => {
         />,
       );
 
-      const group = container.querySelector('[role="radiogroup"]');
-      if (group) {
-        (group as HTMLElement).focus();
-        await user.keyboard("{ArrowRight}");
-      }
+      const group = container.querySelector(
+        'fieldset[role="radiogroup"]',
+      ) as HTMLElement;
+      group.focus();
+      await user.keyboard("{ArrowRight}");
 
       // Should skip grid and go to table
       expect(handleChange).toHaveBeenCalledWith("table");
@@ -431,7 +475,7 @@ describe("SegmentedButton", () => {
         />,
       );
 
-      const group = container.querySelector('[role="radiogroup"]');
+      const group = container.querySelector('fieldset[role="radiogroup"]');
       expect(group).toBeInTheDocument();
     });
 
@@ -445,7 +489,7 @@ describe("SegmentedButton", () => {
         />,
       );
 
-      const group = container.querySelector('[role="radiogroup"]');
+      const group = container.querySelector('fieldset[role="radiogroup"]');
       expect(group).toHaveAttribute("aria-label", "View mode");
     });
 
@@ -460,7 +504,7 @@ describe("SegmentedButton", () => {
         />,
       );
 
-      const group = container.querySelector('[role="radiogroup"]');
+      const group = container.querySelector('fieldset[role="radiogroup"]');
       expect(group).toHaveAttribute("aria-labelledby", "view-label");
     });
 
@@ -553,7 +597,7 @@ describe("SegmentedButton", () => {
       );
 
       // Keyboard navigation should not change anything
-      const group = container.querySelector('[role="radiogroup"]');
+      const group = container.querySelector('fieldset[role="radiogroup"]');
       if (group) {
         (group as HTMLElement).focus();
       }
@@ -562,6 +606,83 @@ describe("SegmentedButton", () => {
       for (const radio of radios) {
         expect(radio).toBeDisabled();
       }
+    });
+  });
+
+  describe("Size Variants", () => {
+    it("renders small size variant", () => {
+      const { container } = render(
+        <SegmentedButton
+          aria-label="View mode"
+          value="list"
+          onChange={vi.fn()}
+          options={mockOptions}
+          size="sm"
+        />,
+      );
+
+      const group = container.querySelector(`.${styles.segmentedButton}`);
+      expect(group).toHaveClass(styles.sizeSm);
+    });
+
+    it("renders medium size variant by default", () => {
+      const { container } = render(
+        <SegmentedButton
+          aria-label="View mode"
+          value="list"
+          onChange={vi.fn()}
+          options={mockOptions}
+        />,
+      );
+
+      const group = container.querySelector(`.${styles.segmentedButton}`);
+      expect(group).toHaveClass(styles.sizeMd);
+    });
+
+    it("renders large size variant", () => {
+      const { container } = render(
+        <SegmentedButton
+          aria-label="View mode"
+          value="list"
+          onChange={vi.fn()}
+          options={mockOptions}
+          size="lg"
+        />,
+      );
+
+      const group = container.querySelector(`.${styles.segmentedButton}`);
+      expect(group).toHaveClass(styles.sizeLg);
+    });
+  });
+
+  describe("Full Width", () => {
+    it("renders full width when enabled", () => {
+      const { container } = render(
+        <SegmentedButton
+          aria-label="View mode"
+          value="list"
+          onChange={vi.fn()}
+          options={mockOptions}
+          fullWidth
+        />,
+      );
+
+      const group = container.querySelector(`.${styles.segmentedButton}`);
+      expect(group).toHaveClass(styles.fullWidth);
+    });
+
+    it("does not render full width by default", () => {
+      const { container } = render(
+        <SegmentedButton
+          aria-label="View mode"
+          value="list"
+          onChange={vi.fn()}
+          options={mockOptions}
+        />,
+      );
+
+      const group = container.querySelector(`.${styles.segmentedButton}`);
+      expect(group).not.toHaveClass(styles.fullWidth);
     });
   });
 
@@ -620,7 +741,7 @@ describe("SegmentedButton", () => {
         />,
       );
 
-      const group = container.querySelector('[role="radiogroup"]');
+      const group = container.querySelector('fieldset[role="radiogroup"]');
       expect(group).toHaveAttribute("aria-label", "View mode");
 
       const radios = screen.getAllByRole("radio");

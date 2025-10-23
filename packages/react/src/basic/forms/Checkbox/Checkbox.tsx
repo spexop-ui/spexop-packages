@@ -44,6 +44,11 @@ export interface CheckboxProps {
   disabled?: boolean;
 
   /**
+   * Whether the checkbox is required
+   */
+  required?: boolean;
+
+  /**
    * Density variant for different contexts
    * - compact: Dashboard context (smaller checkbox)
    * - normal: Default (balanced sizing)
@@ -108,6 +113,7 @@ export function Checkbox({
   checked,
   onChange,
   disabled = false,
+  required = false,
   density = "normal",
   label,
   description,
@@ -162,7 +168,19 @@ export function Checkbox({
         </span>
         {(label || description) && (
           <span className={styles.content}>
-            {label && <span className={styles.labelText}>{label}</span>}
+            {label && (
+              <span className={styles.labelText}>
+                {label}
+                {required && (
+                  <span
+                    className={styles.requiredIndicator}
+                    aria-label="required"
+                  >
+                    *
+                  </span>
+                )}
+              </span>
+            )}
             {description && (
               <span id={`${id}-desc`} className={styles.description}>
                 {description}

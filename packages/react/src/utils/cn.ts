@@ -3,7 +3,18 @@
  * @internal
  */
 export function cn(
-  ...classes: (string | boolean | undefined | null)[]
+  ...classes: (string | boolean | undefined | null | Record<string, boolean>)[]
 ): string {
-  return classes.filter(Boolean).join(" ");
+  return classes
+    .map((cls) => {
+      if (typeof cls === "string") return cls;
+      if (typeof cls === "object" && cls !== null) {
+        return Object.keys(cls)
+          .filter((key) => cls[key])
+          .join(" ");
+      }
+      return "";
+    })
+    .filter(Boolean)
+    .join(" ");
 }

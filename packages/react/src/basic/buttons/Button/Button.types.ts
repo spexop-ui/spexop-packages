@@ -160,6 +160,11 @@ export interface ButtonProps {
   onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
 
   /**
+   * Keyboard event handler
+   */
+  onKeyDown?: (event: React.KeyboardEvent<HTMLButtonElement>) => void;
+
+  /**
    * Button content (text, icons, or both)
    */
   children?: ReactNode;
@@ -168,6 +173,11 @@ export interface ButtonProps {
    * Additional CSS class
    */
   className?: string;
+
+  /**
+   * Test ID for testing
+   */
+  "data-testid"?: string;
 
   // Accessibility props
 
@@ -200,4 +210,9 @@ export interface ButtonProps {
    * ARIA has popup (for buttons that open menus/dialogs)
    */
   "aria-haspopup"?: boolean | "menu" | "listbox" | "tree" | "grid" | "dialog";
+
+  /**
+   * ARIA live region (for dynamic content announcements)
+   */
+  "aria-live"?: "off" | "polite" | "assertive";
 }

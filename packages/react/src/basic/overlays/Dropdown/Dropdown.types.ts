@@ -23,6 +23,19 @@ export interface DropdownMenuItem {
   onClick?: () => void;
   /** Divider after item */
   divider?: boolean;
+  /** Search keywords for filtering */
+  keywords?: string[];
+  /** Group identifier for grouping items */
+  group?: string;
+}
+
+export interface DropdownGroup {
+  /** Group identifier */
+  id: string;
+  /** Group label */
+  label: string;
+  /** Items in this group */
+  items: DropdownMenuItem[];
 }
 
 export interface DropdownProps {
@@ -49,4 +62,37 @@ export interface DropdownProps {
 
   /** Whether to close on item click */
   closeOnItemClick?: boolean;
+
+  /** Enable search functionality */
+  searchable?: boolean;
+
+  /** Search placeholder text */
+  searchPlaceholder?: string;
+
+  /** Custom search filter function */
+  onSearch?: (query: string, items: DropdownMenuItem[]) => DropdownMenuItem[];
+
+  /** Group items by group property */
+  grouped?: boolean;
+
+  /** Loading state */
+  loading?: boolean;
+
+  /** Empty state content */
+  emptyState?: React.ReactNode;
+
+  /** Maximum height of dropdown */
+  maxHeight?: number;
+
+  /** Whether to show dividers between groups */
+  showGroupDividers?: boolean;
+
+  /** Custom item renderer */
+  renderItem?: (item: DropdownMenuItem, index: number) => React.ReactNode;
+
+  /** Callback when search query changes */
+  onSearchChange?: (query: string) => void;
+
+  /** Whether to highlight search matches */
+  highlightMatches?: boolean;
 }

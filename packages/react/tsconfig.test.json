@@ -2,8 +2,11 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "types": ["vitest/globals", "@testing-library/jest-dom", "node"],
-    "rootDir": ".",
-    "noEmit": true
+    "rootDir": "../../",
+    "noEmit": true,
+    "moduleResolution": "Node16",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true
   },
   "include": [
     "src/**/*.test.ts",
@@ -12,6 +15,8 @@
     "src/**/*.spec.tsx",
     "src/vitest.d.ts",
     "src/css-modules.d.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx",
     "../../tests/**/*.ts"
   ],
   "exclude": ["node_modules", "dist"]

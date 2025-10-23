@@ -24,6 +24,10 @@
 .avatar.clickable {
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  min-width: 44px;
+  min-height: 44px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .avatar.clickable:hover {
@@ -37,7 +41,8 @@
 }
 
 .avatar.clickable:active {
-  transform: scale(0.98);
+  transform: scale(0.95);
+  transition-duration: 100ms;
 }
 
 /* Image */
@@ -193,6 +198,81 @@
   .avatar.size-xl {
     width: 56px;
     height: 56px;
+  }
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .avatar.clickable {
+    min-width: 48px;
+    min-height: 48px;
+  }
+  
+  .avatar.clickable:active {
+    transform: scale(0.92);
+    transition-duration: 80ms;
+  }
+  
+  /* Better mobile status indicators */
+  .status {
+    width: 30%;
+    height: 30%;
+    border-width: 3px;
+  }
+  
+  /* Better mobile avatar sizes */
+  .avatar.size-xs {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    min-height: 28px;
+  }
+  
+  .avatar.size-sm {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    min-height: 36px;
+  }
+  
+  .avatar.size-md {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+  }
+  
+  .avatar.size-lg {
+    width: 52px;
+    height: 52px;
+    min-width: 52px;
+    min-height: 52px;
+  }
+  
+  .avatar.size-xl {
+    width: 60px;
+    height: 60px;
+    min-width: 60px;
+    min-height: 60px;
+  }
+  
+  .avatar.size-2xl {
+    width: 80px;
+    height: 80px;
+    min-width: 80px;
+    min-height: 80px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .avatar.clickable {
+    transition: none;
+  }
+  
+  .avatar.clickable:hover,
+  .avatar.clickable:active {
+    transform: none;
   }
 }
 

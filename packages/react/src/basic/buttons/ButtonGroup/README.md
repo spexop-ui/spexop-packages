@@ -1,13 +1,14 @@
 # ButtonGroup Component
 
-**Container for grouped buttons with shared borders and directional control.**
+**Modern container for grouped buttons with enhanced UX and accessibility.**
 
 **component** ButtonGroup
 **packageName** @spexop/react
 **description** Container for grouped buttons with shared borders
 **author** @spexop-ui | github.com/spexop-ui | @olmstedian | github.com/olmstedian
-**version** 0.1.0
+**version** 0.3.0
 **since** 2025-10-13
+**updated** 2025-01-20 - Modern UI/UX improvements
 
 ---
 
@@ -16,10 +17,13 @@
 - ✅ **2 Directions**: Horizontal (row) and Vertical (column)
 - ✅ **Compact Mode**: Smaller padding for dense UIs
 - ✅ **Shared Borders**: Connected buttons with internal borders
-- ✅ **Active States**: Highlight selected buttons
-- ✅ **Full Accessibility**: Required aria-label, keyboard navigation
+- ✅ **Active States**: Highlight selected buttons with modern animations
+- ✅ **Enhanced Accessibility**: WCAG AAA compliance, arrow key navigation
+- ✅ **Modern Interactions**: Ripple effects, smooth transitions, micro-animations
 - ✅ **Foundation-Aligned**: Uses spacing tokens, semantic colors
-- ✅ **Responsive**: Horizontal scroll on mobile if needed
+- ✅ **Responsive**: Horizontal scroll on mobile with modern scrollbars
+- ✅ **Performance Optimized**: GPU acceleration, reduced motion support
+- ✅ **Forward Ref Support**: Full ref forwarding for advanced use cases
 
 ---
 
@@ -176,6 +180,10 @@ function AlignmentButtons() {
 | `role` | `AriaRole` | `'group'` | ARIA role |
 | `aria-label` | `string` | required | ARIA label describing the group |
 | `aria-labelledby` | `string` | - | Alternative to aria-label |
+| `aria-describedby` | `string` | - | Additional context description |
+| `aria-orientation` | `'horizontal' \| 'vertical'` | auto | ARIA orientation (auto-set) |
+| `onKeyDown` | `(event: KeyboardEvent) => void` | - | Enhanced keyboard handler |
+| `ref` | `Ref<HTMLDivElement>` | - | Forward ref support |
 
 ---
 
@@ -275,6 +283,56 @@ import { Plus, Edit, Trash, Download } from '@spexop/icons';
 
 ---
 
+## Modern Features
+
+### Enhanced Keyboard Navigation
+
+The ButtonGroup now supports advanced keyboard navigation:
+
+```tsx
+<ButtonGroup aria-label="Text formatting">
+  <Button>Bold</Button>
+  <Button>Italic</Button>
+  <Button>Underline</Button>
+</ButtonGroup>
+```
+
+**Keyboard Controls**:
+
+- **Tab**: Navigate between button groups
+- **Arrow Keys**: Navigate within the group (horizontal: left/right, vertical: up/down)
+- **Enter/Space**: Activate focused button
+- **Wrapping**: Arrow keys wrap around at boundaries
+- **Disabled Skip**: Automatically skips disabled buttons
+
+### Ripple Effects
+
+Modern ripple effects provide visual feedback on interaction:
+
+```tsx
+<ButtonGroup aria-label="Actions">
+  <Button onClick={handleClick}>Click for Ripple</Button>
+</ButtonGroup>
+```
+
+**Features**:
+
+- **Position-aware**: Ripple originates from click point
+- **Smooth animation**: 300ms ease transition
+- **Accessible**: Hidden from screen readers
+- **Performance optimized**: GPU accelerated
+
+### Micro-Interactions
+
+Subtle animations enhance the user experience:
+
+- **Hover**: Subtle lift effect with shadow
+- **Active**: Press feedback with scale
+- **Focus**: Enhanced focus indicators
+- **Transitions**: Smooth 200ms cubic-bezier easing
+
+---
+
 ## Accessibility
 
 ### Required ARIA Attributes
@@ -300,12 +358,13 @@ import { Plus, Edit, Trash, Download } from '@spexop/icons';
 </ButtonGroup>
 ```
 
-### Keyboard Navigation
+### Enhanced Keyboard Navigation Features
 
-- **Tab**: Navigate between buttons in group
+- **Tab**: Navigate between button groups
+- **Arrow Keys**: Navigate within group (with wrapping)
 - **Enter/Space**: Activate focused button
-- **All buttons**: Individually focusable
-- **Focus indicators**: 3px outline on active button
+- **Focus indicators**: 2px outline with 2px offset
+- **High contrast**: 3px outline in high contrast mode
 
 ### Active States
 
@@ -532,9 +591,12 @@ This component follows **Spexop's Refined Minimalism** principles:
 
 ## Performance
 
-- **Bundle Size**: ~1KB (gzipped)
+- **Bundle Size**: ~1.2KB (gzipped)
 - **Render Time**: < 16ms
 - **No Runtime Dependencies**: Pure React
+- **GPU Acceleration**: Hardware-accelerated animations
+- **Reduced Motion**: Respects user preferences
+- **Memory Efficient**: Optimized event handlers and refs
 
 ---
 

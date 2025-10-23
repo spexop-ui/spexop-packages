@@ -1,6 +1,6 @@
 {
   "name": "@spexop/react",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "React component library with TypeScript and accessibility. 59 components following the Primitives-First philosophy. Grid primitives, navigation, forms, buttons, cards, data, feedback, and more.",
   "keywords": [
     "react",
@@ -70,7 +70,10 @@
       "import": "./dist/src/templates/renderers.js"
     }
   },
-  "files": ["dist", "src"],
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
     "build": "vite build",
     "dev": "vite build --watch",
@@ -82,7 +85,7 @@
   },
   "dependencies": {
     "@spexop/icons": "^0.1.1",
-    "@spexop/theme": "^0.3.0",
+    "@spexop/theme": "^0.4.0",
     "@tiptap/extension-link": "^3.6.3",
     "@tiptap/extension-placeholder": "^3.6.3",
     "@tiptap/extension-underline": "^3.6.3",
@@ -104,6 +107,7 @@
     "@types/react": "^19.1.14",
     "@types/react-dom": "^19.1.9",
     "@vitejs/plugin-react": "^4.0.0",
+    "@vitest/coverage-v8": "^4.0.1",
     "esbuild-css-modules-plugin": "^3.1.5",
     "jsdom": "^27.0.1",
     "rimraf": "^5.0.0",

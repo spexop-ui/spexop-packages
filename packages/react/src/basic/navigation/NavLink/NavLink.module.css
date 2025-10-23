@@ -32,9 +32,23 @@
 /* Active */
 .navLink.active {
   color: var(--theme-primary);
-  font-weight: var(--theme-font-weight-semibold);
+  font-weight: var(--theme-font-weight-bold);
   border-left-color: var(--theme-primary);
   background: var(--theme-surface-secondary);
+  border-left-width: 4px;
+}
+
+/* Disabled */
+.navLink.disabled {
+  color: var(--theme-text-muted);
+  cursor: not-allowed;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.navLink.disabled:hover {
+  background: transparent;
+  color: var(--theme-text-muted);
 }
 
 /* Focus */
@@ -74,9 +88,34 @@
   background: var(--theme-surface-hover);
 }
 
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .navLink {
+    min-height: 48px;
+    padding: var(--theme-spacing-4) var(--theme-spacing-6) var(--theme-spacing-4) var(--theme-spacing-8);
+    font-size: var(--theme-font-size-base);
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  
+  .navLink:active {
+    background: var(--theme-surface-hover);
+    transform: scale(0.98);
+    transition-duration: 80ms;
+  }
+  
+  .navLink.active {
+    border-left-width: 6px;
+  }
+}
+
 /* Accessibility */
 @media (prefers-reduced-motion: reduce) {
   .navLink {
     transition: none;
+  }
+  
+  .navLink:active {
+    transform: none;
   }
 }

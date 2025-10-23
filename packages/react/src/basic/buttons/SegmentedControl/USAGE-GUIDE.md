@@ -1,25 +1,27 @@
 # SegmentedControl Component - Complete Usage Guide
 
-**Component Version**: v0.1.0
-**Last Updated**: October 20, 2025
+**Component Version**: v0.2.0
+**Last Updated**: October 22, 2025
 **Package**: @spexop/react
 **Status**: Production Ready
 
 ## Table of Contents
 
 1. [Overview](#overview)
-2. [Quick Start](#quick-start)
-3. [Installation](#installation)
-4. [Basic Usage](#basic-usage)
-5. [Advanced Patterns](#advanced-patterns)
-6. [Icon Integration](#icon-integration)
-7. [State Management](#state-management)
-8. [Styling and Theming](#styling-and-theming)
-9. [Accessibility](#accessibility)
-10. [Best Practices](#best-practices)
-11. [Performance Optimization](#performance-optimization)
-12. [Troubleshooting](#troubleshooting)
-13. [API Reference](#api-reference)
+2. [What's New in v0.2.0](#whats-new-in-v020)
+3. [Quick Start](#quick-start)
+4. [Installation](#installation)
+5. [Basic Usage](#basic-usage)
+6. [Advanced Patterns](#advanced-patterns)
+7. [Modern UI/UX Features](#modern-uiux-features)
+8. [Icon Integration](#icon-integration)
+9. [State Management](#state-management)
+10. [Styling and Theming](#styling-and-theming)
+11. [Accessibility](#accessibility)
+12. [Best Practices](#best-practices)
+13. [Performance Optimization](#performance-optimization)
+14. [Troubleshooting](#troubleshooting)
+15. [API Reference](#api-reference)
 
 ## Overview
 
@@ -58,6 +60,56 @@ Consider alternatives when you need:
 - Smooth animations with reduced motion support
 - Theme-aware styling using design tokens
 - TypeScript support with full type safety
+
+## What's New in v0.2.0
+
+### Modern UI/UX Enhancements
+
+#### Smooth Micro-interactions
+
+- **Spring animations** - Natural, physics-based transitions using cubic-bezier timing
+- **Hover effects** - Subtle lift and scale effects on hover
+- **Icon animations** - Icons scale and transform smoothly
+- **Label animations** - Text moves slightly for better feedback
+
+#### Enhanced Visual Hierarchy
+
+- **Better contrast** - Improved color contrast ratios for accessibility
+- **Typography-driven states** - Font weight changes for clear selection
+- **Subtle elevation** - Clean borders with minimal shadows
+- **Modern spacing** - Consistent use of theme tokens
+
+#### Improved Focus States
+
+- **Enhanced focus indicators** - Better visibility with proper contrast
+- **Focus-within support** - Container highlights when any option is focused
+- **Keyboard navigation** - Smooth transitions between options
+
+### Accessibility Improvements
+
+#### Enhanced ARIA Support
+
+- **Better screen reader announcements** - Improved aria-live regions
+- **Descriptive disabled states** - Clear feedback for unavailable options
+- **Enhanced focus management** - Better focus handling and announcements
+
+#### High Contrast Support
+
+- **High contrast mode** - Special styles for users with visual impairments
+- **Print-friendly styles** - Clean appearance when printed
+- **Reduced motion support** - Respects user motion preferences
+
+### Design System Alignment
+
+#### Spexop Principles Applied
+
+- **Borders before shadows** - Clean 2-3px borders with subtle elevation
+- **Typography before decoration** - Font weight (600/700) for hierarchy
+- **Tokens before magic numbers** - All values from theme system
+- **Accessibility before aesthetics** - WCAG AA+ compliance
+- **Composition before complexity** - Built from simple, reusable parts
+- **Standards before frameworks** - Web platform fundamentals
+- **Primitives before patterns** - Simple button group composition
 
 ## Quick Start
 
@@ -475,6 +527,91 @@ function Toolbar() {
       />
     </div>
   );
+}
+```
+
+## Modern UI/UX Features
+
+### Enhanced Animations
+
+The SegmentedControl now includes smooth micro-interactions that provide better user feedback:
+
+```tsx
+// Hover effects with subtle lift
+.option:hover {
+  transform: translateY(-1px);
+  background: var(--theme-surface-hover);
+}
+
+// Icon scaling on hover and selection
+.option:hover .icon {
+  transform: scale(1.05);
+}
+
+.option.selected .icon {
+  transform: scale(1.1);
+}
+
+// Label animation for better feedback
+.option:hover .label {
+  transform: translateY(-0.5px);
+}
+```
+
+### Enhanced Focus Management
+
+Enhanced focus states provide better accessibility:
+
+```tsx
+// Container focus-within support
+.control:focus-within {
+  border-color: var(--theme-primary);
+  box-shadow: 
+    0 1px 3px rgba(0, 0, 0, 0.1),
+    0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+// Individual option focus
+.option:focus-visible {
+  outline: 2px solid var(--theme-primary);
+  outline-offset: 2px;
+  background: var(--theme-surface-hover);
+}
+```
+
+### High Contrast Mode Support
+
+Automatic support for high contrast mode:
+
+```css
+@media (prefers-contrast: high) {
+  .control {
+    border-width: 3px;
+    border-color: var(--theme-text);
+  }
+  
+  .option.selected {
+    background: var(--theme-text);
+    color: var(--theme-surface);
+  }
+}
+```
+
+### Print-Friendly Styles
+
+Clean appearance when printed:
+
+```css
+@media print {
+  .control {
+    box-shadow: none;
+    border: 1px solid #000;
+  }
+  
+  .option.selected {
+    background: #f0f0f0 !important;
+    font-weight: bold;
+  }
 }
 ```
 
@@ -1412,6 +1549,21 @@ interface SegmentedControlProps {
   
   /** ARIA labelledby for accessibility (required if aria-label not provided) */
   "aria-labelledby"?: string;
+  
+  /** Size variant for the control */
+  size?: "sm" | "md" | "lg";
+  
+  /** Visual variant for the control */
+  variant?: "default" | "outline" | "ghost";
+  
+  /** Whether to show icons only (hide labels) */
+  iconOnly?: boolean;
+  
+  /** Whether to show badges if provided in options */
+  showBadges?: boolean;
+  
+  /** Custom data attributes for testing */
+  "data-testid"?: string;
 }
 ```
 
@@ -1430,6 +1582,12 @@ interface SegmentedControlOption {
   
   /** Whether this specific option is disabled */
   disabled?: boolean;
+  
+  /** Optional description for accessibility */
+  description?: string;
+  
+  /** Optional badge or count to display */
+  badge?: string | number;
 }
 ```
 
@@ -1444,6 +1602,7 @@ interface SegmentedControlOption {
 - `Arrow Right` / `Arrow Down` - Select next option
 - `Home` - Select first option
 - `End` - Select last option
+- `Enter` / `Space` - Activate focused option (same as click)
 
 ### CSS Custom Properties
 

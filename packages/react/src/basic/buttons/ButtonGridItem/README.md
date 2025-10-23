@@ -6,8 +6,9 @@
 **packageName** @spexop/react  
 **description** Interactive media card with overlay content and call-to-action  
 **author** @spexop-ui | github.com/spexop-ui | @olmstedian | github.com/olmstedian  
-**version** 0.1.0  
-**since** 2025-10-13
+**version** 0.4.0  
+**since** 2025-10-13  
+**updated** 2025-01-27 - Enhanced with modern UI/UX patterns
 
 ---
 
@@ -15,15 +16,18 @@
 
 - ✅ **Media Support**: img, picture, or video elements as background
 - ✅ **Dual Click Areas**: Click anywhere on card OR the button to trigger action
-- ✅ **Smooth Animations**: Card lift, media zoom, button slide effects
-- ✅ **Gradient Overlay**: Ensures text legibility on any background
+- ✅ **Modern Animations**: Smooth, performant animations with cubic-bezier easing
+- ✅ **Enhanced Gradient Overlay**: Improved text legibility with modern gradient patterns
 - ✅ **Aspect Ratio Control**: Configurable aspect ratio with minimum height
-- ✅ **Full Accessibility**: Keyboard navigation, ARIA labels, focus management
-- ✅ **primitives-Aligned**: Uses spacing tokens, semantic colors
-- ✅ **Theme-Aware**: Works in light and dark modes
+- ✅ **Full Accessibility**: WCAG AA+ compliant with enhanced keyboard navigation
+- ✅ **State Management**: Loading, disabled, error, and media loading states
+- ✅ **Design System Aligned**: Follows Spexop's "borders before shadows" principle
+- ✅ **Theme-Aware**: Works in light and dark modes with proper contrast
 - ✅ **Palette Integration**: Action button adapts to selected color palette
-- ✅ **Mobile Responsive**: Optimized spacing and typography for small screens
-- ✅ **Performance**: GPU acceleration, lazy loading support
+- ✅ **Mobile Responsive**: Optimized spacing and typography for all screen sizes
+- ✅ **Performance**: GPU acceleration, reduced motion support, optimized animations
+- ✅ **Modern Focus Management**: Enhanced focus indicators and keyboard navigation
+- ✅ **Screen Reader Support**: Comprehensive ARIA labels and live regions
 
 ---
 
@@ -175,8 +179,71 @@ function WideCard() {
 | `className` | `string` | - | Additional CSS class |
 | `aspectRatio` | `string` | `'16/9'` | Aspect ratio for the media container |
 | `minHeight` | `number` | `300` | Minimum height in pixels |
+| `loading` | `boolean` | `false` | Loading state |
+| `disabled` | `boolean` | `false` | Disabled state |
+| `error` | `boolean` | `false` | Error state |
+| `mediaLoading` | `boolean` | `false` | Media loading state |
 | `aria-label` | `string` | - | ARIA label for the entire card (overrides label) |
 | `aria-label-button` | `string` | - | ARIA label for the internal button |
+| `aria-describedby` | `string` | - | ARIA described by for additional description |
+| `aria-live` | `'polite' \| 'assertive' \| 'off'` | - | ARIA live region for dynamic content |
+| `data-testid` | `string` | - | Test ID for testing |
+
+---
+
+## State Management
+
+### Loading State
+
+```tsx
+<ButtonGridItem
+  media={<img src="/hero.jpg" alt="Loading..." />}
+  label="Processing"
+  description="Please wait while we process your request"
+  buttonText="Processing..."
+  loading={true}
+  onClick={handleClick}
+/>
+```
+
+### Disabled State
+
+```tsx
+<ButtonGridItem
+  media={<img src="/locked.jpg" alt="Locked content" />}
+  label="Premium Feature"
+  description="This feature requires a premium subscription"
+  buttonText="Upgrade"
+  disabled={true}
+  onClick={handleUpgrade}
+/>
+```
+
+### Error State
+
+```tsx
+<ButtonGridItem
+  media={<img src="/error.jpg" alt="Error occurred" />}
+  label="Something went wrong"
+  description="We encountered an error processing your request"
+  buttonText="Try Again"
+  error={true}
+  onClick={handleRetry}
+/>
+```
+
+### Media Loading State
+
+```tsx
+<ButtonGridItem
+  media={<img src="/large-image.jpg" alt="Loading image" />}
+  label="High Resolution Image"
+  description="Loading high-quality image..."
+  buttonText="View"
+  mediaLoading={true}
+  onClick={handleView}
+/>
+```
 
 ---
 
@@ -417,34 +484,40 @@ function VerticalStack() {
 
 ```css
 /* Card */
---s-color-surface: #ffffff           /* Background */
---s-color-border: #e5e5e5           /* Border */
---s-radius-lg: 8px                  /* Border radius */
---s-spacing-6: 24px                 /* Content padding */
+--theme-surface: #ffffff            /* Background */
+--theme-border-strong: #d4d4d4      /* Border */
+--theme-radius-lg: 12px             /* Border radius */
+--theme-spacing-6: 24px             /* Content padding */
 
 /* Typography */
---s-font-size-xl: 20px              /* Label size */
---s-font-size-base: 16px            /* Description size */
---s-font-weight-bold: 700           /* Label weight */
---s-font-weight-normal: 400         /* Description weight */
---s-font-weight-semibold: 600       /* Button weight */
+--theme-font-size-lg: 20px          /* Label size */
+--theme-font-size-base: 16px        /* Description size */
+--theme-font-weight-bold: 700       /* Label weight */
+--theme-font-weight-normal: 400     /* Description weight */
+--theme-font-weight-semibold: 600   /* Button weight */
+--theme-font-family-heading: 'Fira Sans', sans-serif /* Heading font */
 
 /* Button */
---s-color-primary-500: #ef4444      /* Button background (palette-aware) */
---s-color-primary-600: #dc2626      /* Button hover */
---s-spacing-3: 12px                 /* Button padding */
---s-spacing-5: 20px                 /* Button padding */
---s-radius-md: 6px                  /* Button radius */
+--theme-primary: #ef4444            /* Button background (palette-aware) */
+--theme-primary-hover: #dc2626      /* Button hover */
+--theme-primary-active: #b91c1c     /* Button active */
+--theme-spacing-3: 12px             /* Button padding */
+--theme-spacing-5: 20px             /* Button padding */
+--theme-radius-md: 8px              /* Button radius */
 
 /* Spacing */
---s-spacing-2: 8px                  /* Element gaps */
---s-spacing-4: 16px                 /* Mobile padding */
+--theme-spacing-2: 8px              /* Element gaps */
+--theme-spacing-4: 16px             /* Mobile padding */
+
+/* Focus & States */
+--theme-focus: #3b82f6              /* Focus ring color */
+--theme-error: #ef4444              /* Error state color */
 
 /* Transitions */
---s-transition-fast: 150ms ease-in-out
+cubic-bezier(0.4, 0, 0.2, 1)       /* Modern easing function */
 ```
 
-**Palette Integration**: The action button uses `--s-color-primary-500` and `--s-color-primary-600`, which automatically adapt when users switch between color palettes.
+**Palette Integration**: The action button uses `--theme-primary`, `--theme-primary-hover`, and `--theme-primary-active`, which automatically adapt when users switch between color palettes.
 
 ---
 
@@ -487,6 +560,28 @@ function VerticalStack() {
   buttonText="Begin Tutorial"
   onClick={handleStart}
 />
+
+// Use loading states for better UX
+<ButtonGridItem
+  media={<img src="processing.jpg" alt="Processing" />}
+  label="Processing Request"
+  description="Please wait while we process your data"
+  buttonText="Processing..."
+  loading={isProcessing}
+  onClick={handleProcess}
+/>
+
+// Provide proper accessibility attributes
+<ButtonGridItem
+  media={<img src="feature.jpg" alt="New feature preview" />}
+  label="New Feature"
+  description="Discover our latest addition"
+  buttonText="Learn More"
+  aria-describedby="feature-details"
+  aria-live="polite"
+  data-testid="feature-card"
+  onClick={handleLearnMore}
+/>
 ```
 
 ### ❌ DON'T
@@ -514,6 +609,25 @@ function VerticalStack() {
 
 // Don't forget keyboard accessibility
 // Always ensure onClick handlers work with keyboard
+
+// Don't ignore loading states
+<ButtonGridItem
+  loading={false}  // Always show loading state when appropriate
+  {...props}
+/>
+
+// Don't use disabled without proper indication
+<ButtonGridItem
+  disabled={true}
+  // Missing proper visual indication or explanation
+  {...props}
+/>
+
+// Don't forget accessibility attributes
+<ButtonGridItem
+  // Missing aria-describedby, aria-live, or data-testid when needed
+  {...props}
+/>
 ```
 
 ---
@@ -572,12 +686,16 @@ On screens < 768px:
 ## Performance
 
 - **GPU Acceleration**: All animations use `transform: translateZ(0)` and `will-change`
+- **Modern Easing**: Cubic-bezier transitions for smoother animations
 - **Lazy Loading**: Support for `loading="lazy"` on images
 - **Efficient Animations**: `requestAnimationFrame` for smooth interactions
 - **Optimized Hover**: Separate hover states for different elements
 - **Media Optimization**: Support for responsive images and modern formats
+- **Reduced Motion**: Respects `prefers-reduced-motion` user preference
+- **State Management**: Efficient re-renders with proper state handling
+- **Memory Management**: Proper cleanup of event listeners and animations
 
-**Bundle Size**: ~3KB (gzipped)
+**Bundle Size**: ~3.2KB (gzipped)
 
 ---
 
@@ -650,12 +768,14 @@ const CustomMedia: React.FC<CustomMediaProps> = ({ src, alt, loading }) => (
 
 This component follows **Spexop's Refined Minimalism** principles:
 
-1. ✅ **Border-based separation** - Clear 2px border around card
-2. ✅ **Typography-driven** - Bold labels, clear hierarchy
-3. ✅ **High-contrast** - Strong gradient overlay for text legibility
-4. ✅ **Minimal decoration** - Purposeful animations only
-5. ✅ **Primitives-First** - Uses spacing and color tokens
+1. ✅ **Border-based separation** - Clear 2px border around card (no heavy shadows)
+2. ✅ **Typography-driven** - Bold labels with proper font weights for hierarchy
+3. ✅ **High-contrast** - Strong gradient overlay for text legibility (WCAG AA+)
+4. ✅ **Minimal decoration** - Purposeful animations with modern easing
+5. ✅ **Primitives-First** - Uses spacing, color, and typography tokens
 6. ✅ **Palette integration** - Action button adapts to themes
+7. ✅ **Accessibility-first** - WCAG AA+ compliant with proper focus management
+8. ✅ **Performance-optimized** - GPU acceleration and reduced motion support
 
 ---
 

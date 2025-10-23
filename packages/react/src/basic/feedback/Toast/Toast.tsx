@@ -95,6 +95,7 @@ export function Toast({
         onClick={onClose}
         className={styles["close-button"]}
         aria-label="Close notification"
+        tabIndex={0}
       >
         <X size={16} strokeWidth={2} />
       </button>

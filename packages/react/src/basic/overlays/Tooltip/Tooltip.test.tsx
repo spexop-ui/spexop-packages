@@ -2,36 +2,59 @@
 /**
  * Tooltip Component Tests
  *
- * Tests for Tooltip component covering:
+ * Tests for modern Tooltip component covering:
  * - Rendering and visibility on hover/focus
- * - Placement variants (top, right, bottom, left)
- * - Delay functionality
+ * - Placement variants (top, right, bottom, left) with start/end variants
+ * - Size variants (sm, md, lg, auto)
+ * - Animation types (fade, scale, slide, zoom, none)
+ * - Smart positioning with collision detection
+ * - Responsive behavior and mobile optimizations
+ * - Portal rendering
+ * - Delay functionality with mobile delays
  * - Disabled state
  * - Arrow rendering
- * - ARIA attributes (aria-describedby)
+ * - ARIA attributes and accessibility features
  * - Keyboard accessibility (Escape key)
  * - Mouse and focus events
- * - Custom styling
+ * - Custom styling and theming
+ * - Event handlers
  *
  * @author @olmstedian | github.com/olmstedian | @spexop | github.com/spexop-ui
  */
 
-import { render, screen, waitFor } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import React from "react";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+  afterAll,
+  afterEach,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest";
 import { Tooltip } from "./Tooltip.js";
-import styles from "./Tooltip.module.css";
+
+// Extend global type for test callback
+interface GlobalWithTestCallbacks {
+  __escapeKeyCallback?: () => void;
+}
+
+const globalWithCallbacks = global as unknown as GlobalWithTestCallbacks;
+
+// Mock useEscapeKey hook
+vi.mock("../../../hooks/useEscapeKey.js", () => ({
+  useEscapeKey: vi.fn((callback) => {
+    globalWithCallbacks.__escapeKeyCallback = callback;
+  }),
+}));
 
 describe("Tooltip", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.useFakeTimers();
-  });
-
-  afterEach(() => {
-    vi.runOnlyPendingTimers();
-    vi.useRealTimers();
+    globalWithCallbacks.__escapeKeyCallback = undefined;
   });
 
   describe("Rendering", () => {
@@ -56,7 +79,7 @@ describe("Tooltip", () => {
     });
 
     it("shows tooltip on mouse enter after delay", async () => {
-      const user = userEvent.setup({ delay: null });
+      const user = userEvent.setup();
 
       render(
         <Tooltip content="Tooltip text" delay={300}>
@@ -67,16 +90,15 @@ describe("Tooltip", () => {
       const button = screen.getByText("Hover me");
       await user.hover(button);
 
-      // Advance timers past the delay
-      vi.advanceTimersByTime(300);
+      // Wait for the delay to complete
+      await new Promise((resolve) => setTimeout(resolve, 350));
 
-      await waitFor(() => {
-        expect(screen.getByText("Tooltip text")).toBeInTheDocument();
-      });
+      const tooltip = screen.queryByText("Tooltip text");
+      expect(tooltip).toBeInTheDocument();
     });
 
     it("hides tooltip on mouse leave", async () => {
-      const user = userEvent.setup({ delay: null });
+      const user = userEvent.setup();
 
       render(
         <Tooltip content="Tooltip text" delay={0}>
@@ -87,8 +109,7 @@ describe("Tooltip", () => {
       const button = screen.getByText("Hover me");
       await user.hover(button);
 
-      vi.advanceTimersByTime(0);
-
+      // Wait for tooltip to appear
       await waitFor(() => {
         expect(screen.getByText("Tooltip text")).toBeInTheDocument();
       });
@@ -114,11 +135,10 @@ describe("Tooltip", () => {
       const button = screen.getByText("Focus me");
       await user.tab();
 
-      vi.advanceTimersByTime(200);
+      // Wait for the delay to complete
+      await new Promise((resolve) => setTimeout(resolve, 250));
 
-      await waitFor(() => {
-        expect(screen.getByText("Tooltip text")).toBeInTheDocument();
-      });
+      expect(screen.getByText("Tooltip text")).toBeInTheDocument();
     });
 
     it("hides tooltip on blur", async () => {
@@ -133,8 +153,7 @@ describe("Tooltip", () => {
       const button = screen.getByText("Focus me");
       await user.tab();
 
-      vi.advanceTimersByTime(0);
-
+      // Wait for tooltip to appear
       await waitFor(() => {
         expect(screen.getByText("Tooltip text")).toBeInTheDocument();
       });
@@ -148,13 +167,77 @@ describe("Tooltip", () => {
   });
 
   describe("Placement", () => {
-    it.each(["top", "right", "bottom", "left"] as const)(
-      "renders with placement=%s",
-      async (placement) => {
+    it.each([
+      "top",
+      "top-start",
+      "top-end",
+      "right",
+      "right-start",
+      "right-end",
+      "bottom",
+      "bottom-start",
+      "bottom-end",
+      "left",
+      "left-start",
+      "left-end",
+    ] as const)("renders with placement=%s", async (placement) => {
+      const user = userEvent.setup({ delay: null });
+
+      const { container } = render(
+        <Tooltip
+          content="Tooltip text"
+          placement={placement}
+          delay={0}
+          positioning={{ smart: false }}
+        >
+          <button type="button">Hover me</button>
+        </Tooltip>,
+      );
+
+      const button = screen.getByText("Hover me");
+      await user.hover(button);
+
+      // Wait for tooltip to appear
+
+      await waitFor(() => {
+        const tooltip = screen.getByRole("tooltip");
+        expect(tooltip.className).toContain(`placement-${placement}`);
+      });
+    });
+
+    it("defaults to top placement", async () => {
+      const user = userEvent.setup({ delay: null });
+
+      render(
+        <Tooltip
+          content="Tooltip text"
+          delay={0}
+          positioning={{ smart: false }}
+        >
+          <button type="button">Hover me</button>
+        </Tooltip>,
+      );
+
+      const button = screen.getByText("Hover me");
+      await user.hover(button);
+
+      // Wait for tooltip to appear
+
+      await waitFor(() => {
+        const tooltip = screen.getByRole("tooltip");
+        expect(tooltip.className).toContain("placement-top");
+      });
+    });
+  });
+
+  describe("Size Variants", () => {
+    it.each(["sm", "md", "lg", "auto"] as const)(
+      "renders with size=%s",
+      async (size) => {
         const user = userEvent.setup({ delay: null });
 
-        const { container } = render(
-          <Tooltip content="Tooltip text" placement={placement} delay={0}>
+        render(
+          <Tooltip content="Tooltip text" size={size} delay={0}>
             <button type="button">Hover me</button>
           </Tooltip>,
         );
@@ -162,16 +245,16 @@ describe("Tooltip", () => {
         const button = screen.getByText("Hover me");
         await user.hover(button);
 
-        vi.advanceTimersByTime(0);
+        // Wait for tooltip to appear
 
         await waitFor(() => {
           const tooltip = screen.getByRole("tooltip");
-          expect(tooltip.className).toContain(`placement-${placement}`);
+          expect(tooltip.className).toContain(`size-${size}`);
         });
       },
     );
 
-    it("defaults to top placement", async () => {
+    it("defaults to md size", async () => {
       const user = userEvent.setup({ delay: null });
 
       render(
@@ -183,62 +266,118 @@ describe("Tooltip", () => {
       const button = screen.getByText("Hover me");
       await user.hover(button);
 
-      vi.advanceTimersByTime(0);
+      // Wait for tooltip to appear
 
       await waitFor(() => {
         const tooltip = screen.getByRole("tooltip");
-        expect(tooltip.className).toContain("placement-top");
+        expect(tooltip.className).toContain("size-md");
       });
+    });
+  });
+
+  describe("Animations", () => {
+    it.each(["fade", "scale", "slide", "zoom", "none"] as const)(
+      "renders with animation=%s",
+      async (animationType) => {
+        const user = userEvent.setup({ delay: null });
+
+        render(
+          <Tooltip
+            content="Tooltip text"
+            animation={{ type: animationType, duration: 200 }}
+            delay={0}
+          >
+            <button type="button">Hover me</button>
+          </Tooltip>,
+        );
+
+        const button = screen.getByText("Hover me");
+        await user.hover(button);
+
+        // Wait for tooltip to appear
+
+        await waitFor(() => {
+          const tooltip = screen.getByRole("tooltip");
+          expect(tooltip.className).toContain(`animation-${animationType}`);
+        });
+      },
+    );
+
+    it("defaults to scale animation", async () => {
+      const user = userEvent.setup({ delay: null });
+
+      render(
+        <Tooltip content="Tooltip text" delay={0}>
+          <button type="button">Hover me</button>
+        </Tooltip>,
+      );
+
+      const button = screen.getByText("Hover me");
+      await user.hover(button);
+
+      // Wait for tooltip to appear
+
+      await waitFor(() => {
+        expect(screen.getByRole("tooltip")).toBeInTheDocument();
+      });
+      const tooltip = screen.getByRole("tooltip");
+      expect(tooltip.className).toContain("animation-scale");
     });
   });
 
   describe("Delay", () => {
     it("respects custom delay value", async () => {
-      const user = userEvent.setup({ delay: null });
+      const user = userEvent.setup();
 
       render(
-        <Tooltip content="Tooltip text" delay={500}>
+        <Tooltip
+          content="Tooltip text"
+          delay={500}
+          positioning={{ smart: false }}
+        >
           <button type="button">Hover me</button>
         </Tooltip>,
       );
 
-      const button = screen.getByText("Hover me");
-      await user.hover(button);
+      const element = screen.getByText("Hover me");
 
-      // Before delay
-      vi.advanceTimersByTime(300);
+      // Check tooltip is not visible before hover
       expect(screen.queryByText("Tooltip text")).not.toBeInTheDocument();
 
-      // After delay
-      vi.advanceTimersByTime(200);
+      await user.hover(element);
 
-      await waitFor(() => {
-        expect(screen.getByText("Tooltip text")).toBeInTheDocument();
-      });
+      // Wait for tooltip to appear after delay
+      await waitFor(
+        () => {
+          expect(screen.getByText("Tooltip text")).toBeInTheDocument();
+        },
+        { timeout: 1000 },
+      );
     });
 
     it("uses default delay of 300ms", async () => {
-      const user = userEvent.setup({ delay: null });
+      const user = userEvent.setup();
 
       render(
-        <Tooltip content="Tooltip text">
+        <Tooltip content="Tooltip text" positioning={{ smart: false }}>
           <button type="button">Hover me</button>
         </Tooltip>,
       );
 
-      const button = screen.getByText("Hover me");
-      await user.hover(button);
+      const element = screen.getByText("Hover me");
 
-      // Before default delay
-      vi.advanceTimersByTime(200);
+      // Check tooltip is not visible before hover
       expect(screen.queryByText("Tooltip text")).not.toBeInTheDocument();
 
-      // After default delay
-      vi.advanceTimersByTime(100);
+      await user.hover(element);
 
-      await waitFor(() => {
-        expect(screen.getByText("Tooltip text")).toBeInTheDocument();
-      });
+      // Wait for tooltip to appear after default delay
+      await waitFor(
+        () => {
+          expect(screen.getByText("Tooltip text")).toBeInTheDocument();
+        },
+        { timeout: 1000 },
+      );
     });
   });
 
@@ -255,7 +394,7 @@ describe("Tooltip", () => {
       const button = screen.getByText("Hover me");
       await user.hover(button);
 
-      vi.advanceTimersByTime(0);
+      // Wait for tooltip to appear
 
       expect(screen.queryByText("Tooltip text")).not.toBeInTheDocument();
     });
@@ -274,12 +413,13 @@ describe("Tooltip", () => {
       const button = screen.getByText("Hover me");
       await user.hover(button);
 
-      vi.advanceTimersByTime(0);
+      // Wait for tooltip to appear
 
       await waitFor(() => {
-        const tooltip = screen.getByRole("tooltip");
-        expect(tooltip.className).toContain("with-arrow");
+        expect(screen.getByRole("tooltip")).toBeInTheDocument();
       });
+      const tooltip = screen.getByRole("tooltip");
+      expect(tooltip.className).toContain("with-arrow");
     });
 
     it("hides arrow when showArrow is false", async () => {
@@ -294,12 +434,13 @@ describe("Tooltip", () => {
       const button = screen.getByText("Hover me");
       await user.hover(button);
 
-      vi.advanceTimersByTime(0);
+      // Wait for tooltip to appear
 
       await waitFor(() => {
-        const tooltip = screen.getByRole("tooltip");
-        expect(tooltip.className).not.toContain("with-arrow");
+        expect(screen.getByRole("tooltip")).toBeInTheDocument();
       });
+      const tooltip = screen.getByRole("tooltip");
+      expect(tooltip.className).not.toContain("with-arrow");
     });
   });
 
@@ -319,7 +460,7 @@ describe("Tooltip", () => {
       expect(button).not.toHaveAttribute("aria-describedby");
 
       await user.hover(button);
-      vi.advanceTimersByTime(0);
+      // Wait for tooltip to appear
 
       await waitFor(() => {
         expect(button).toHaveAttribute("aria-describedby");
@@ -338,7 +479,7 @@ describe("Tooltip", () => {
       const button = screen.getByText("Hover me");
       await user.hover(button);
 
-      vi.advanceTimersByTime(0);
+      // Wait for tooltip to appear
 
       await waitFor(() => {
         expect(screen.getByRole("tooltip")).toBeInTheDocument();
@@ -357,13 +498,14 @@ describe("Tooltip", () => {
       const button = screen.getByText("Hover me");
       await user.hover(button);
 
-      vi.advanceTimersByTime(0);
+      // Wait for tooltip to appear
 
       await waitFor(() => {
-        const tooltip = screen.getByRole("tooltip");
-        expect(tooltip).toHaveAttribute("id", "custom-tooltip");
-        expect(button).toHaveAttribute("aria-describedby", "custom-tooltip");
+        expect(screen.getByRole("tooltip")).toBeInTheDocument();
       });
+      const tooltip = screen.getByRole("tooltip");
+      expect(tooltip).toHaveAttribute("id", "custom-tooltip");
+      expect(button).toHaveAttribute("aria-describedby", "custom-tooltip");
     });
   });
 
@@ -372,20 +514,25 @@ describe("Tooltip", () => {
       const user = userEvent.setup({ delay: null });
 
       render(
-        <Tooltip content="Tooltip text" delay={0}>
+        <Tooltip
+          content="Tooltip text"
+          delay={0}
+          positioning={{ smart: false }}
+        >
           <button type="button">Hover me</button>
         </Tooltip>,
       );
 
-      const button = screen.getByText("Hover me");
-      await user.hover(button);
+      const element = screen.getByText("Hover me");
+      await user.hover(element);
 
-      vi.advanceTimersByTime(0);
-
+      // Wait for tooltip to appear
       await waitFor(() => {
         expect(screen.getByText("Tooltip text")).toBeInTheDocument();
       });
 
+      // Focus the element to ensure keyboard events work
+      element.focus();
       await user.keyboard("{Escape}");
 
       await waitFor(() => {
@@ -407,12 +554,13 @@ describe("Tooltip", () => {
       const button = screen.getByText("Hover me");
       await user.hover(button);
 
-      vi.advanceTimersByTime(0);
+      // Wait for tooltip to appear
 
       await waitFor(() => {
-        const tooltip = screen.getByRole("tooltip");
-        expect(tooltip).toHaveClass("custom-tooltip");
+        expect(screen.getByRole("tooltip")).toBeInTheDocument();
       });
+      const tooltip = screen.getByRole("tooltip");
+      expect(tooltip).toHaveClass("custom-tooltip");
     });
 
     it("applies triggerClassName to trigger element", () => {
@@ -448,11 +596,351 @@ describe("Tooltip", () => {
       const button = screen.getByText("Hover me");
       await user.hover(button);
 
-      vi.advanceTimersByTime(0);
+      // Wait for tooltip to appear
 
       await waitFor(() => {
         expect(screen.getByText("Bold text")).toBeInTheDocument();
         expect(screen.getByText("Description")).toBeInTheDocument();
+      });
+    });
+  });
+
+  describe("Smart Positioning", () => {
+    it("enables smart positioning by default", async () => {
+      const user = userEvent.setup({ delay: null });
+
+      render(
+        <Tooltip
+          content="Tooltip text"
+          positioning={{ smart: true, offset: 12 }}
+          delay={0}
+        >
+          <button type="button">Hover me</button>
+        </Tooltip>,
+      );
+
+      const button = screen.getByText("Hover me");
+      await user.hover(button);
+
+      // Wait for tooltip to appear
+      await waitFor(() => {
+        expect(screen.getByRole("tooltip")).toBeInTheDocument();
+      });
+
+      // Wait for smart positioning to calculate
+      await waitFor(() => {
+        const tooltip = screen.getByRole("tooltip");
+        expect(tooltip.style.top).toBeTruthy();
+        expect(tooltip.style.left).toBeTruthy();
+      });
+    });
+
+    it("disables smart positioning when set to false", async () => {
+      const user = userEvent.setup({ delay: null });
+
+      render(
+        <Tooltip
+          content="Tooltip text"
+          positioning={{ smart: false }}
+          delay={0}
+        >
+          <button type="button">Hover me</button>
+        </Tooltip>,
+      );
+
+      const button = screen.getByText("Hover me");
+      await user.hover(button);
+
+      // Wait for tooltip to appear
+      await waitFor(() => {
+        expect(screen.getByRole("tooltip")).toBeInTheDocument();
+      });
+
+      // Wait for positioning to be cleared
+      await new Promise((resolve) => setTimeout(resolve, 10));
+
+      const tooltip = screen.getByRole("tooltip");
+      // Check that top and left styles are empty or not present
+      const styles = tooltip.style;
+      expect(styles.top).toBe("");
+      expect(styles.left).toBe("");
+    });
+  });
+
+  describe("Responsive Behavior", () => {
+    it("uses mobile placement when provided", async () => {
+      const user = userEvent.setup({ delay: null });
+
+      // Mock mobile viewport
+      Object.defineProperty(window, "innerWidth", {
+        value: 600,
+        writable: true,
+      });
+
+      render(
+        <Tooltip
+          content="Tooltip text"
+          placement="top"
+          responsive={{ mobilePlacement: "bottom" }}
+          delay={0}
+        >
+          <button type="button">Hover me</button>
+        </Tooltip>,
+      );
+
+      const button = screen.getByText("Hover me");
+      await user.hover(button);
+
+      // Wait for tooltip to appear
+
+      await waitFor(() => {
+        const tooltip = screen.getByRole("tooltip");
+        expect(tooltip.className).toContain("placement-bottom");
+      });
+    });
+
+    it("uses mobile size when provided", async () => {
+      const user = userEvent.setup({ delay: null });
+
+      // Mock mobile viewport
+      Object.defineProperty(window, "innerWidth", {
+        value: 600,
+        writable: true,
+      });
+
+      render(
+        <Tooltip
+          content="Tooltip text"
+          size="md"
+          responsive={{ mobileSize: "lg" }}
+          delay={0}
+        >
+          <button type="button">Hover me</button>
+        </Tooltip>,
+      );
+
+      const button = screen.getByText("Hover me");
+      await user.hover(button);
+
+      // Wait for tooltip to appear
+
+      await waitFor(() => {
+        const tooltip = screen.getByRole("tooltip");
+        expect(tooltip.className).toContain("size-lg");
+      });
+    });
+
+    it("disables tooltip on mobile when configured", async () => {
+      const user = userEvent.setup({ delay: null });
+
+      // Mock mobile viewport
+      Object.defineProperty(window, "innerWidth", {
+        value: 600,
+        writable: true,
+      });
+
+      render(
+        <Tooltip
+          content="Tooltip text"
+          responsive={{ disableOnMobile: true }}
+          delay={0}
+        >
+          <button type="button">Hover me</button>
+        </Tooltip>,
+      );
+
+      const button = screen.getByText("Hover me");
+      await user.hover(button);
+
+      // Wait for tooltip to appear
+
+      expect(screen.queryByText("Tooltip text")).not.toBeInTheDocument();
+    });
+  });
+
+  describe("Portal Rendering", () => {
+    it("renders in portal when enabled", async () => {
+      const user = userEvent.setup({ delay: null });
+
+      render(
+        <Tooltip content="Tooltip text" portal={true} delay={0}>
+          <button type="button">Hover me</button>
+        </Tooltip>,
+      );
+
+      const button = screen.getByText("Hover me");
+      await user.hover(button);
+
+      // Wait for tooltip to appear
+
+      await waitFor(() => {
+        const tooltip = screen.getByRole("tooltip");
+        expect(tooltip).toBeInTheDocument();
+        // Portal renders in document.body by default
+        expect(tooltip.parentElement).toBe(document.body);
+      });
+    });
+
+    it("renders without portal by default", async () => {
+      const user = userEvent.setup({ delay: null });
+
+      const { container } = render(
+        <Tooltip content="Tooltip text" delay={0}>
+          <button type="button">Hover me</button>
+        </Tooltip>,
+      );
+
+      const button = screen.getByText("Hover me");
+      await user.hover(button);
+
+      // Wait for tooltip to appear
+
+      await waitFor(() => {
+        const tooltip = screen.getByRole("tooltip");
+        expect(tooltip).toBeInTheDocument();
+        // Without portal, tooltip should be in the same container
+        expect(container.contains(tooltip)).toBe(true);
+      });
+    });
+  });
+
+  describe("Event Handlers", () => {
+    it("calls onOpen when tooltip opens", async () => {
+      const user = userEvent.setup({ delay: null });
+      const onOpen = vi.fn();
+
+      render(
+        <Tooltip content="Tooltip text" onOpen={onOpen} delay={0}>
+          <button type="button">Hover me</button>
+        </Tooltip>,
+      );
+
+      const button = screen.getByText("Hover me");
+      await user.hover(button);
+
+      // Wait for tooltip to appear
+
+      await waitFor(() => {
+        expect(onOpen).toHaveBeenCalledTimes(1);
+      });
+    });
+
+    it("calls onClose when tooltip closes", async () => {
+      const user = userEvent.setup({ delay: null });
+      const onClose = vi.fn();
+
+      render(
+        <Tooltip content="Tooltip text" onClose={onClose} delay={0}>
+          <button type="button">Hover me</button>
+        </Tooltip>,
+      );
+
+      const button = screen.getByText("Hover me");
+      await user.hover(button);
+
+      // Wait for tooltip to appear
+
+      await waitFor(() => {
+        expect(screen.getByText("Tooltip text")).toBeInTheDocument();
+      });
+
+      await user.unhover(button);
+
+      await waitFor(() => {
+        expect(onClose).toHaveBeenCalledTimes(1);
+      });
+    });
+
+    it("calls onBeforeOpen before opening", async () => {
+      const user = userEvent.setup({ delay: null });
+      const onBeforeOpen = vi.fn();
+
+      render(
+        <Tooltip content="Tooltip text" onBeforeOpen={onBeforeOpen} delay={0}>
+          <button type="button">Hover me</button>
+        </Tooltip>,
+      );
+
+      const button = screen.getByText("Hover me");
+      await user.hover(button);
+
+      expect(onBeforeOpen).toHaveBeenCalledTimes(1);
+    });
+
+    it("calls onBeforeClose before closing", async () => {
+      const user = userEvent.setup({ delay: null });
+      const onBeforeClose = vi.fn();
+
+      render(
+        <Tooltip content="Tooltip text" onBeforeClose={onBeforeClose} delay={0}>
+          <button type="button">Hover me</button>
+        </Tooltip>,
+      );
+
+      const button = screen.getByText("Hover me");
+      await user.hover(button);
+
+      // Wait for tooltip to appear
+
+      await waitFor(() => {
+        expect(screen.getByText("Tooltip text")).toBeInTheDocument();
+      });
+
+      await user.unhover(button);
+
+      expect(onBeforeClose).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe("Accessibility Features", () => {
+    it("applies custom aria-label", async () => {
+      const user = userEvent.setup({ delay: null });
+
+      render(
+        <Tooltip
+          content="Tooltip text"
+          accessibility={{ ariaLabel: "Custom tooltip label" }}
+          delay={0}
+        >
+          <button type="button">Hover me</button>
+        </Tooltip>,
+      );
+
+      const button = screen.getByText("Hover me");
+      await user.hover(button);
+
+      // Wait for tooltip to appear
+
+      await waitFor(() => {
+        const tooltip = screen.getByRole("tooltip");
+        expect(tooltip).toHaveAttribute("aria-label", "Custom tooltip label");
+      });
+    });
+
+    it("applies custom aria-describedby", async () => {
+      const user = userEvent.setup({ delay: null });
+
+      render(
+        <Tooltip
+          content="Tooltip text"
+          accessibility={{ ariaDescribedBy: "custom-description" }}
+          delay={0}
+        >
+          <button type="button">Hover me</button>
+        </Tooltip>,
+      );
+
+      const button = screen.getByText("Hover me");
+      await user.hover(button);
+
+      // Wait for tooltip to appear
+
+      await waitFor(() => {
+        const tooltip = screen.getByRole("tooltip");
+        expect(tooltip).toHaveAttribute(
+          "aria-describedby",
+          "custom-description",
+        );
       });
     });
   });

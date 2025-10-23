@@ -14,6 +14,10 @@ A semantic heading component (h1-h6) with typography hierarchy, weight control, 
 - 3 weight variants (regular, semibold, bold)
 - 3 alignment options (left, center, right)
 - 8 size overrides (xs through 4xl)
+- 5 semantic variants (default, secondary, success, error, warning)
+- Polymorphic rendering (as prop)
+- Text truncation and line clamping
+- Enhanced accessibility (ARIA live, expanded, controls)
 - Responsive font sizing
 - Proper heading hierarchy
 - WCAG AA+ accessible
@@ -141,6 +145,48 @@ Light emphasis when needed.
 </Heading>
 ```
 
+## Semantic Variants
+
+### Default (Default)
+
+```tsx
+<Heading level={2} variant="default">
+  Default Heading
+</Heading>
+```
+
+### Secondary
+
+```tsx
+<Heading level={2} variant="secondary">
+  Muted Heading
+</Heading>
+```
+
+### Success
+
+```tsx
+<Heading level={2} variant="success">
+  Success Message
+</Heading>
+```
+
+### Error
+
+```tsx
+<Heading level={2} variant="error">
+  Error Message
+</Heading>
+```
+
+### Warning
+
+```tsx
+<Heading level={2} variant="warning">
+  Warning Message
+</Heading>
+```
+
 ## Size Overrides
 
 Override default size for a level:
@@ -154,6 +200,40 @@ Override default size for a level:
 // h4 with h2 size
 <Heading level={4} size="3xl">
   Larger H4
+</Heading>
+```
+
+## Polymorphic Rendering
+
+Render as different elements:
+
+```tsx
+// Render as div
+<Heading level={2} as="div">
+  Div Heading
+</Heading>
+
+// Render as span
+<Heading level={3} as="span">
+  Span Heading
+</Heading>
+```
+
+## Text Utilities
+
+### Truncation
+
+```tsx
+<Heading level={2} truncate>
+  This long heading will be truncated with ellipsis
+</Heading>
+```
+
+### Line Clamping
+
+```tsx
+<Heading level={2} clamp={2}>
+  This heading will be clamped to 2 lines with ellipsis
 </Heading>
 ```
 
@@ -322,6 +402,19 @@ Heading levels help screen reader users navigate content:
 </Heading>
 ```
 
+### Enhanced Accessibility
+
+```tsx
+<Heading 
+  level={2} 
+  aria-live="polite"
+  aria-expanded={true}
+  aria-controls="content"
+>
+  Dynamic Heading
+</Heading>
+```
+
 ## API Reference
 
 ### Props
@@ -333,11 +426,19 @@ Heading levels help screen reader users navigate content:
 | `weight` | `HeadingWeight` | `"bold"` | Font weight |
 | `align` | `HeadingAlign` | `"left"` | Text alignment |
 | `size` | `HeadingSize` | - | Size override |
+| `variant` | `HeadingVariant` | `"default"` | Semantic color variant |
+| `as` | `keyof JSX.IntrinsicElements` | - | Render as different element |
 | `noMargin` | `boolean` | `false` | Remove bottom margin |
+| `truncate` | `boolean` | `false` | Truncate text with ellipsis |
+| `clamp` | `number` | - | Number of lines to clamp |
+| `disabled` | `boolean` | `false` | Disable the component |
 | `className` | `string` | - | Additional CSS class |
 | `id` | `string` | - | Element ID for anchors |
 | `aria-label` | `string` | - | ARIA label |
 | `aria-describedby` | `string` | - | ARIA description |
+| `aria-live` | `"polite" \| "assertive" \| "off"` | - | ARIA live region |
+| `aria-expanded` | `boolean` | - | ARIA expanded state |
+| `aria-controls` | `string` | - | ARIA controls |
 
 ### Default Sizes by Level
 

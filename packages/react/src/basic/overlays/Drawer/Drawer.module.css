@@ -2,24 +2,33 @@
  * Drawer Component Styles
  * Theme-driven with Spexop architecture
  * 
+ * Following "The Spexop Way":
+ * - Principle 2: Borders before shadows - strong borders with subtle shadow
+ * - Principle 3: Typography before decoration - clear hierarchy
+ * - Principle 4: Tokens before magic numbers - all values use theme variables
+ * - Principle 7: Accessibility before aesthetics - high contrast, keyboard focus
+ * 
  * @component Drawer
  * @packageName @spexop/react
  * @description Slide-out panel with theme support
- * @version 0.3.0
- * @updated 2025-10-18 - Migrated to theme system
+ * @version 0.4.0
+ * @updated 2025-01-27 - Enhanced with modern UI/UX and improved accessibility
  */
 
 /* Backdrop */
 .backdrop {
   position: fixed;
   inset: 0;
-  background: var(--theme-overlay));
-  z-index: 1000;
+  background: var(--theme-overlay, rgba(0, 0, 0, 0.75));
+  z-index: var(--theme-z-drawer, 1000);
   border: none;
   padding: 0;
   cursor: pointer;
   opacity: 0;
-  transition: opacity 150ms ease-in-out;
+  transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(4px);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .backdrop.open {
@@ -29,24 +38,25 @@
 /* Drawer */
 .drawer {
   position: fixed;
-  z-index: 1001;
+  z-index: var(--theme-z-drawer, 1001);
   overflow-y: auto;
   overflow-x: hidden;
-  padding: var(--theme-spacing-6);
+  padding: var(--theme-spacing-6, 24px);
   transition: 
-    transform 300ms ease-in-out,
-    opacity 300ms ease-in-out;
-  font-family: var(--theme-font-family);
+    transform 300ms cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: var(--theme-font-family, -apple-system, BlinkMacSystemFont, sans-serif);
+  box-shadow: var(--theme-shadow-lg, 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05));
 }
 
 [data-theme="light"] .drawer {
-  background: var(--theme-surface-secondary);
-  border-color: var(--theme-border-strong);
+  background: var(--theme-surface, #ffffff);
+  border-color: var(--theme-border-strong, #d4d4d4);
 }
 
 [data-theme="dark"] .drawer {
-  background: var(--theme-surface);
-  border-color: var(--theme-border-strong);
+  background: var(--theme-surface, #1a1a1a);
+  border-color: var(--theme-border-strong, #404040);
 }
 
 /* Content Animation */
@@ -55,7 +65,19 @@
 }
 
 .drawer.right > * {
-  animation-delay: 0.09s;
+  animation-delay: 0.1s;
+}
+
+.drawer.left > * {
+  animation-delay: 0.1s;
+}
+
+.drawer.top > * {
+  animation-delay: 0.1s;
+}
+
+.drawer.bottom > * {
+  animation-delay: 0.1s;
 }
 
 @keyframes slideInContent {
@@ -69,8 +91,14 @@
   }
 }
 
+/* Focus styles for accessibility */
+.drawer:focus {
+  outline: 2px solid var(--theme-primary, #3b82f6);
+  outline-offset: 2px;
+}
+
 /* ============================================
-   POSITION: RIGHT - Bold left border, NO shadows
+   POSITION: RIGHT - Bold left border with modern styling
    ============================================ */
 
 .drawer.right {
@@ -79,21 +107,21 @@
   bottom: 0;
   border-right: none;
   /* Bold border for clear separation (Principle #2) */
-  border-left: 3px solid;
+  border-left: var(--theme-border-thick, 4px) solid;
   transform: translateX(100%);
   opacity: 0;
   transition: 
-    transform 0.3s ease-in-out,
-    opacity 0.3s ease-in-out;
-  /* NO box-shadow - borders only */
+    transform 300ms cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: var(--theme-radius-lg, 12px) 0 0 var(--theme-radius-lg, 12px);
 }
 
 [data-theme="light"] .drawer.right {
-  border-left-color: var(--theme-border-strong);
+  border-left-color: var(--theme-border-strong, #d4d4d4);
 }
 
 [data-theme="dark"] .drawer.right {
-  border-left-color: var(--theme-border-strong);
+  border-left-color: var(--theme-border-strong, #404040);
 }
 
 .drawer.right.open {
@@ -107,17 +135,21 @@
   left: 0;
   bottom: 0;
   border-left: none;
-  border-right: 3px solid;
+  border-right: var(--theme-border-thick, 4px) solid;
   transform: translateX(-100%);
   opacity: 0;
+  transition: 
+    transform 300ms cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 0 var(--theme-radius-lg, 12px) var(--theme-radius-lg, 12px) 0;
 }
 
 [data-theme="light"] .drawer.left {
-  border-right-color: var(--theme-border-strong);
+  border-right-color: var(--theme-border-strong, #d4d4d4);
 }
 
 [data-theme="dark"] .drawer.left {
-  border-right-color: var(--theme-border-strong);
+  border-right-color: var(--theme-border-strong, #404040);
 }
 
 .drawer.left.open {
@@ -131,17 +163,21 @@
   left: 0;
   right: 0;
   border-top: none;
-  border-bottom: 3px solid;
+  border-bottom: var(--theme-border-thick, 4px) solid;
   transform: translateY(-100%);
   opacity: 0;
+  transition: 
+    transform 300ms cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 0 0 var(--theme-radius-lg, 12px) var(--theme-radius-lg, 12px);
 }
 
 [data-theme="light"] .drawer.top {
-  border-bottom-color: var(--theme-border-strong);
+  border-bottom-color: var(--theme-border-strong, #d4d4d4);
 }
 
 [data-theme="dark"] .drawer.top {
-  border-bottom-color: var(--theme-border-strong);
+  border-bottom-color: var(--theme-border-strong, #404040);
 }
 
 .drawer.top.open {
@@ -155,17 +191,21 @@
   left: 0;
   right: 0;
   border-bottom: none;
-  border-top: 3px solid;
+  border-top: var(--theme-border-thick, 4px) solid;
   transform: translateY(100%);
   opacity: 0;
+  transition: 
+    transform 300ms cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: var(--theme-radius-lg, 12px) var(--theme-radius-lg, 12px) 0 0;
 }
 
 [data-theme="light"] .drawer.bottom {
-  border-top-color: var(--theme-border-strong);
+  border-top-color: var(--theme-border-strong, #d4d4d4);
 }
 
 [data-theme="dark"] .drawer.bottom {
-  border-top-color: var(--theme-border-strong);
+  border-top-color: var(--theme-border-strong, #404040);
 }
 
 .drawer.bottom.open {
@@ -175,7 +215,7 @@
 
 /* Scrollbar */
 .drawer::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
 .drawer::-webkit-scrollbar-track {
@@ -183,31 +223,37 @@
 }
 
 [data-theme="light"] .drawer::-webkit-scrollbar-thumb {
-  background: var(--theme-border-strong);
-  border-radius: var(--theme-radius-pill);
+  background: var(--theme-border-strong, #d4d4d4);
+  border-radius: var(--theme-radius-pill, 9999px);
+  border: 2px solid transparent;
+  background-clip: content-box;
 }
 
 [data-theme="light"] .drawer::-webkit-scrollbar-thumb:hover {
-  background: var(--theme-text-secondary);
+  background: var(--theme-text-secondary, #525252);
+  background-clip: content-box;
 }
 
 [data-theme="dark"] .drawer::-webkit-scrollbar-thumb {
-  background: var(--theme-border-strong);
-  border-radius: var(--theme-radius-pill);
+  background: var(--theme-border-strong, #404040);
+  border-radius: var(--theme-radius-pill, 9999px);
+  border: 2px solid transparent;
+  background-clip: content-box;
 }
 
 [data-theme="dark"] .drawer::-webkit-scrollbar-thumb:hover {
-  background: var(--theme-border-strong);
+  background: var(--theme-text-secondary, #a3a3a3);
+  background-clip: content-box;
 }
 
 [data-theme="light"] .drawer {
   scrollbar-width: thin;
-  scrollbar-color: var(--theme-border-strong) transparent;
+  scrollbar-color: var(--theme-border-strong, #d4d4d4) transparent;
 }
 
 [data-theme="dark"] .drawer {
   scrollbar-width: thin;
-  scrollbar-color: var(--theme-border-strong) transparent;
+  scrollbar-color: var(--theme-border-strong, #404040) transparent;
 }
 
 /* Accessibility */
@@ -223,24 +269,57 @@
 @media (prefers-contrast: high) {
   .drawer.right,
   .drawer.left {
-    border-width: 4px;
+    border-width: var(--theme-border-thick, 4px);
   }
   
   .drawer.top,
   .drawer.bottom {
-    border-width: 4px;
+    border-width: var(--theme-border-thick, 4px);
+  }
+  
+  .drawer {
+    box-shadow: 0 0 0 2px var(--theme-primary, #3b82f6);
   }
 }
 
-/* Mobile */
-@media (max-width: 767px) {
+/* Mobile responsiveness */
+@media (max-width: 768px) {
   .drawer.right,
   .drawer.left {
     width: 100% !important;
+    border-radius: 0;
   }
 
   .drawer.top,
   .drawer.bottom {
     height: 100% !important;
+    border-radius: 0;
+  }
+  
+  .drawer {
+    padding: var(--theme-spacing-4, 16px);
+  }
+}
+
+/* Tablet responsiveness */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .drawer.right,
+  .drawer.left {
+    max-width: 80vw;
+  }
+  
+  .drawer.top,
+  .drawer.bottom {
+    max-height: 80vh;
+  }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .drawer {
+    box-shadow: 
+      var(--theme-shadow-lg, 0 10px 15px -3px rgba(0, 0, 0, 0.1)), 
+      0 4px 6px -2px rgba(0, 0, 0, 0.05),
+      0 0 0 0.5px rgba(0, 0, 0, 0.05);
   }
 }

@@ -13,7 +13,7 @@
  * @author @olmstedian | github.com/olmstedian | @spexop | github.com/spexop-ui
  */
 
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import React from "react";
 import { describe, expect, it, vi } from "vitest";
 import { ButtonGroup } from "./ButtonGroup.js";
@@ -162,6 +162,53 @@ describe("ButtonGroup", () => {
       const group = container.firstChild;
       expect(group).toHaveAttribute("aria-labelledby", "group-label");
     });
+
+    it("supports aria-describedby", () => {
+      const { container } = render(
+        <ButtonGroup
+          aria-label="Button group"
+          aria-describedby="group-description"
+        >
+          <button type="button">Button</button>
+        </ButtonGroup>,
+      );
+
+      const group = container.firstChild;
+      expect(group).toHaveAttribute("aria-describedby", "group-description");
+    });
+
+    it("auto-sets aria-orientation for horizontal", () => {
+      const { container } = render(
+        <ButtonGroup aria-label="Button group" direction="horizontal">
+          <button type="button">Button</button>
+        </ButtonGroup>,
+      );
+
+      const group = container.firstChild;
+      expect(group).toHaveAttribute("aria-orientation", "horizontal");
+    });
+
+    it("auto-sets aria-orientation for vertical", () => {
+      const { container } = render(
+        <ButtonGroup aria-label="Button group" direction="vertical">
+          <button type="button">Button</button>
+        </ButtonGroup>,
+      );
+
+      const group = container.firstChild;
+      expect(group).toHaveAttribute("aria-orientation", "vertical");
+    });
+
+    it("supports custom aria-orientation", () => {
+      const { container } = render(
+        <ButtonGroup aria-label="Button group" aria-orientation="vertical">
+          <button type="button">Button</button>
+        </ButtonGroup>,
+      );
+
+      const group = container.firstChild;
+      expect(group).toHaveAttribute("aria-orientation", "vertical");
+    });
   });
 
   describe("Multiple Buttons", () => {
@@ -301,6 +348,96 @@ describe("ButtonGroup", () => {
       expect(boldButton).toBeInTheDocument();
       expect(italicButton).toBeInTheDocument();
     });
+
+    it("supports keyboard navigation with arrow keys", () => {
+      const { container } = render(
+        <ButtonGroup aria-label="Button group">
+          <button type="button">First</button>
+          <button type="button">Second</button>
+          <button type="button">Third</button>
+        </ButtonGroup>,
+      );
+
+      const firstButton = screen.getByText("First");
+      const secondButton = screen.getByText("Second");
+      const thirdButton = screen.getByText("Third");
+
+      // Focus first button
+      firstButton.focus();
+      expect(document.activeElement).toBe(firstButton);
+
+      // Arrow right should move to second button
+      const groupElement = container.firstChild as HTMLElement;
+      fireEvent.keyDown(groupElement, { key: "ArrowRight" });
+      expect(document.activeElement).toBe(secondButton);
+
+      // Arrow right should move to third button
+      fireEvent.keyDown(groupElement, { key: "ArrowRight" });
+      expect(document.activeElement).toBe(thirdButton);
+
+      // Arrow left should move back to second button
+      fireEvent.keyDown(groupElement, { key: "ArrowLeft" });
+      expect(document.activeElement).toBe(secondButton);
+    });
+
+    it("wraps around at boundaries with arrow keys", () => {
+      const { container } = render(
+        <ButtonGroup aria-label="Button group">
+          <button type="button">First</button>
+          <button type="button">Second</button>
+        </ButtonGroup>,
+      );
+
+      const firstButton = screen.getByText("First");
+      const secondButton = screen.getByText("Second");
+
+      // Start at first button
+      firstButton.focus();
+
+      // Arrow left should wrap to last button
+      const groupElement = container.firstChild as HTMLElement;
+      fireEvent.keyDown(groupElement, { key: "ArrowLeft" });
+      expect(document.activeElement).toBe(secondButton);
+
+      // Arrow right should wrap to first button
+      fireEvent.keyDown(groupElement, { key: "ArrowRight" });
+      expect(document.activeElement).toBe(firstButton);
+    });
+
+    it("ignores disabled buttons in keyboard navigation", () => {
+      const { container } = render(
+        <ButtonGroup aria-label="Button group">
+          <button type="button">First</button>
+          <button type="button" disabled>
+            Disabled
+          </button>
+          <button type="button">Third</button>
+        </ButtonGroup>,
+      );
+
+      const firstButton = screen.getByText("First");
+      const thirdButton = screen.getByText("Third");
+
+      firstButton.focus();
+
+      // Arrow right should skip disabled button
+      const groupElement = container.firstChild as HTMLElement;
+      fireEvent.keyDown(groupElement, { key: "ArrowRight" });
+      expect(document.activeElement).toBe(thirdButton);
+    });
+
+    it("supports custom onKeyDown handler", () => {
+      const handleKeyDown = vi.fn();
+      const { container } = render(
+        <ButtonGroup aria-label="Button group" onKeyDown={handleKeyDown}>
+          <button type="button">Button</button>
+        </ButtonGroup>,
+      );
+
+      const groupElement = container.firstChild as HTMLElement;
+      fireEvent.keyDown(groupElement, { key: "ArrowRight" });
+      expect(handleKeyDown).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe("Structure", () => {
@@ -328,6 +465,108 @@ describe("ButtonGroup", () => {
       expect(buttons[0]).toHaveTextContent("First");
       expect(buttons[1]).toHaveTextContent("Second");
       expect(buttons[2]).toHaveTextContent("Third");
+    });
+  });
+
+  describe("Modern UI Features", () => {
+    it("supports forwardRef", () => {
+      const ref = React.createRef<HTMLDivElement>();
+      render(
+        <ButtonGroup ref={ref} aria-label="Button group">
+          <button type="button">Button</button>
+        </ButtonGroup>,
+      );
+
+      expect(ref.current).toBeInstanceOf(HTMLDivElement);
+      expect(ref.current).toHaveClass(styles.buttonGroup);
+    });
+
+    it("applies modern CSS classes", () => {
+      const { container } = render(
+        <ButtonGroup aria-label="Button group" direction="horizontal" compact>
+          <button type="button">Button</button>
+        </ButtonGroup>,
+      );
+
+      const group = container.firstChild;
+      expect(group).toHaveClass(styles.buttonGroup);
+      expect(group).toHaveClass(styles.horizontal);
+      expect(group).toHaveClass(styles.compact);
+    });
+
+    it("supports all HTML div attributes", () => {
+      const { container } = render(
+        <ButtonGroup
+          aria-label="Button group"
+          data-testid="test-group"
+          id="my-group"
+          style={{ backgroundColor: "red" }}
+        >
+          <button type="button">Button</button>
+        </ButtonGroup>,
+      );
+
+      const group = container.firstChild;
+      expect(group).toHaveAttribute("data-testid", "test-group");
+      expect(group).toHaveAttribute("id", "my-group");
+      expect(group).toHaveStyle("background-color: rgb(255, 0, 0)");
+    });
+
+    it("handles empty children gracefully", () => {
+      const { container } = render(
+        <ButtonGroup aria-label="Empty group">
+          {null}
+          {undefined}
+          {false}
+        </ButtonGroup>,
+      );
+
+      const group = container.firstChild;
+      expect(group).toBeInTheDocument();
+      expect(group).toHaveAttribute("role", "group");
+    });
+  });
+
+  describe("Performance", () => {
+    it("uses modern CSS properties for performance", () => {
+      const { container } = render(
+        <ButtonGroup aria-label="Button group">
+          <button type="button">Button</button>
+        </ButtonGroup>,
+      );
+
+      const group = container.firstChild as HTMLElement;
+
+      // Verify the element has the expected classes and structure
+      expect(group).toHaveClass(styles.buttonGroup);
+      expect(group).toHaveAttribute("role", "group");
+      expect(group).toHaveAttribute("aria-label", "Button group");
+
+      // Verify it's a div element
+      expect(group.tagName).toBe("DIV");
+    });
+
+    it("handles rapid keyboard navigation efficiently", () => {
+      const { container } = render(
+        <ButtonGroup aria-label="Button group">
+          <button type="button">First</button>
+          <button type="button">Second</button>
+          <button type="button">Third</button>
+        </ButtonGroup>,
+      );
+
+      const firstButton = screen.getByText("First");
+      firstButton.focus();
+
+      // Rapid key presses should not cause errors
+      const groupElement = container.firstChild as HTMLElement;
+      for (let i = 0; i < 10; i++) {
+        fireEvent.keyDown(groupElement, { key: "ArrowRight" });
+        fireEvent.keyDown(groupElement, { key: "ArrowLeft" });
+      }
+
+      // Should still be functional
+      expect(document.activeElement).toBe(firstButton);
     });
   });
 });

@@ -11,11 +11,18 @@ A versatile text component for paragraphs and body text with size, weight, align
 ## Features
 
 - 8 size variants (xs through 4xl)
-- 3 weight variants (regular, semibold, bold)
+- 4 weight variants (regular, medium, semibold, bold)
 - 4 alignment options (left, center, right, justify)
-- 5 semantic variants (default, secondary, success, error, warning)
-- Text truncation and line clamping
-- Polymorphic rendering (p, span, div, label)
+- 6 semantic variants (default, secondary, success, error, warning, info)
+- Text truncation and line clamping (1-5 lines)
+- Text decoration (none, underline, line-through)
+- Text transform (none, uppercase, lowercase, capitalize)
+- Text overflow control (clip, ellipsis)
+- White space handling (normal, nowrap, pre, pre-line, pre-wrap)
+- Custom line height, letter spacing, and word spacing
+- Polymorphic rendering (p, span, div, label, strong, em, small, mark)
+- Enhanced accessibility with ARIA support
+- Forward ref support
 - WCAG AA+ accessible
 - TypeScript support
 
@@ -58,6 +65,7 @@ function App() {
 
 ```tsx
 <Text weight="regular">Regular weight (400)</Text>
+<Text weight="medium">Medium weight (500)</Text>
 <Text weight="semibold">Semibold weight (600)</Text>
 <Text weight="bold">Bold weight (700)</Text>
 ```
@@ -79,6 +87,7 @@ function App() {
 <Text variant="success">Success message</Text>
 <Text variant="error">Error message</Text>
 <Text variant="warning">Warning message</Text>
+<Text variant="info">Info message</Text>
 ```
 
 ## Text Utilities
@@ -87,7 +96,7 @@ function App() {
 
 ```tsx
 <Text truncate>
-  This is a very long text that will be truncated with ellipsis when it exceeds the container width...
+  This text will be truncated with ellipsis if it overflows
 </Text>
 ```
 
@@ -95,156 +104,117 @@ function App() {
 
 ```tsx
 <Text clamp={2}>
-  This text will be limited to 2 lines and show ellipsis if it overflows.
-  Any additional text beyond two lines will be hidden.
+  This text will be clamped to 2 lines with ellipsis
 </Text>
 
 <Text clamp={3}>
-  This text will be limited to 3 lines...
+  This text will be clamped to 3 lines with ellipsis
 </Text>
 ```
 
-## Polymorphic Rendering
-
-### As Span
+### Text Decoration
 
 ```tsx
-<Text as="span" size="sm">
-  Inline text
+<Text decoration="underline">Underlined text</Text>
+<Text decoration="line-through">Strikethrough text</Text>
+<Text decoration="none">No decoration</Text>
+```
+
+### Text Transform
+
+```tsx
+<Text transform="uppercase">UPPERCASE TEXT</Text>
+<Text transform="lowercase">lowercase text</Text>
+<Text transform="capitalize">Capitalized Text</Text>
+<Text transform="none">Normal text</Text>
+```
+
+### Text Overflow
+
+```tsx
+<Text overflow="ellipsis">Text with ellipsis overflow</Text>
+<Text overflow="clip">Text with clip overflow</Text>
+```
+
+### White Space
+
+```tsx
+<Text whiteSpace="nowrap">No wrap text</Text>
+<Text whiteSpace="pre">Pre-formatted text</Text>
+<Text whiteSpace="pre-line">Pre-line text</Text>
+<Text whiteSpace="pre-wrap">Pre-wrap text</Text>
+```
+
+### Custom Spacing
+
+```tsx
+<Text lineHeight={1.8} letterSpacing={2} wordSpacing={4}>
+  Custom spaced text
 </Text>
 ```
 
-### As Div
+## Semantic Elements
 
 ```tsx
-<Text as="div" size="base">
-  Block text
-</Text>
+<Text as="strong">Strong emphasis</Text>
+<Text as="em">Emphasis</Text>
+<Text as="small">Small text</Text>
+<Text as="mark">Highlighted text</Text>
+<Text as="span">Inline text</Text>
+<Text as="div">Block text</Text>
+<Text as="label">Form label</Text>
 ```
 
-### As Label
+## Accessibility
 
 ```tsx
-<Text as="label" weight="semibold">
-  Form Label
+<Text
+  aria-label="Descriptive label"
+  aria-live="polite"
+  aria-describedby="description"
+  role="status"
+  tabIndex={0}
+>
+  Accessible text
 </Text>
 ```
 
 ## Advanced Usage
 
-### With ARIA Live
+### Ref Forwarding
 
 ```tsx
-<Text aria-live="polite" variant="success">
-  Changes saved successfully
-</Text>
+const textRef = useRef<HTMLParagraphElement>(null);
+
+<Text ref={textRef}>Text with ref</Text>
 ```
 
-### Without Margin
+### Custom Styling
 
 ```tsx
-<Text noMargin>
-  Text without bottom margin
-</Text>
-```
-
-### Combined Styles
-
-```tsx
-<Text 
-  size="lg" 
-  weight="semibold" 
-  align="center"
-  variant="secondary"
+<Text
+  style={{ color: 'red', backgroundColor: 'yellow' }}
+  className="custom-class"
 >
-  Combined styling
+  Custom styled text
 </Text>
 ```
 
-## Common Patterns
-
-### Hero Description
+### Complex Combinations
 
 ```tsx
-import { Stack, Heading, Text } from '@spexop/react';
-
-<Stack direction="vertical" gap="sm" align="center">
-  <Heading level={1} weight="bold" align="center">
-    Build Beautiful Interfaces
-  </Heading>
-  <Text size="lg" weight="regular" align="center">
-    Modern design system for React applications
-  </Text>
-</Stack>
-```
-
-### Feature Description
-
-```tsx
-import { Stack, Heading, Text, Icon } from '@spexop/react';
-
-<Stack direction="vertical" gap="sm">
-  <Icon name="Layout" size="lg" />
-  <Heading level={3} weight="semibold">
-    Responsive Design
-  </Heading>
-  <Text weight="regular">
-    Built-in responsive breakpoints that adapt to any screen size
-  </Text>
-</Stack>
-```
-
-### Error Message
-
-```tsx
-<Text variant="error" size="sm" aria-live="polite">
-  Please enter a valid email address
-</Text>
-```
-
-### Metadata Text
-
-```tsx
-<Text size="sm" variant="secondary">
-  Published on October 21, 2025 · 5 min read
-</Text>
-```
-
-## Design Principles
-
-### Typography before decoration
-
-Text uses font-weight and size for emphasis, not color or decoration (except for semantic variants).
-
-### Tokens before magic numbers
-
-All sizes, weights, and colors use design tokens:
-
-- Sizes: `--theme-font-size-*`
-- Weights: `--theme-font-weight-*`
-- Colors: `--theme-text*`
-
-## Accessibility
-
-### Semantic Variants
-
-```tsx
-// Success feedback
-<Text variant="success" aria-live="polite">
-  Saved successfully
-</Text>
-
-// Error feedback
-<Text variant="error" aria-live="assertive">
-  Invalid email address
-</Text>
-```
-
-### Screen Reader Support
-
-```tsx
-<Text aria-label="Descriptive text for screen readers">
-  Visual text
+<Text
+  size="lg"
+  weight="bold"
+  align="center"
+  variant="success"
+  decoration="underline"
+  transform="uppercase"
+  whiteSpace="nowrap"
+  truncate
+  aria-label="Success message"
+>
+  SUCCESS MESSAGE
 </Text>
 ```
 
@@ -254,52 +224,71 @@ All sizes, weights, and colors use design tokens:
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `children` | `ReactNode` | required | Text content |
-| `size` | `TextSize` | `"base"` | Font size |
-| `weight` | `TextWeight` | `"regular"` | Font weight |
+| `children` | `ReactNode` | - | Text content |
+| `size` | `TextSize` | `"base"` | Font size variant |
+| `weight` | `TextWeight` | `"regular"` | Font weight variant |
 | `align` | `TextAlign` | `"left"` | Text alignment |
-| `variant` | `TextVariant` | `"default"` | Semantic variant |
-| `as` | `p\|span\|div\|label` | `"p"` | Element type |
-| `noMargin` | `boolean` | `false` | Remove margin |
+| `variant` | `TextVariant` | `"default"` | Semantic color variant |
+| `as` | `ElementType` | `"p"` | HTML element to render |
+| `noMargin` | `boolean` | `false` | Remove default margin |
 | `truncate` | `boolean` | `false` | Truncate with ellipsis |
-| `clamp` | `number` | - | Line clamp (1-5) |
+| `clamp` | `1 \| 2 \| 3 \| 4 \| 5` | - | Number of lines to clamp |
+| `decoration` | `TextDecoration` | `"none"` | Text decoration |
+| `transform` | `TextTransform` | `"none"` | Text transform |
+| `overflow` | `TextOverflow` | `"clip"` | Text overflow behavior |
+| `whiteSpace` | `WhiteSpace` | `"normal"` | White space handling |
+| `lineHeight` | `number` | - | Custom line height |
+| `letterSpacing` | `number` | - | Letter spacing in pixels |
+| `wordSpacing` | `number` | - | Word spacing in pixels |
 | `className` | `string` | - | Additional CSS class |
+| `style` | `CSSProperties` | - | Inline styles |
 | `id` | `string` | - | Element ID |
-| `aria-label` | `string` | - | ARIA label |
-| `aria-live` | `string` | - | ARIA live region |
-| `aria-describedby` | `string` | - | ARIA description |
+
+### Accessibility Props
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `aria-label` | `string` | ARIA label |
+| `aria-live` | `"polite" \| "assertive" \| "off"` | ARIA live region |
+| `aria-describedby` | `string` | ARIA described by |
+| `aria-atomic` | `boolean` | ARIA atomic |
+| `aria-relevant` | `string` | ARIA relevant |
+| `role` | `string` | ARIA role |
+| `tabIndex` | `number` | Tab index |
 
 ## Browser Support
 
-- Chrome/Edge (last 2 versions)
-- Firefox (last 2 versions)
-- Safari (last 2 versions)
-- iOS Safari (last 2 versions)
-- Chrome Android (last 2 versions)
+- Chrome 60+
+- Firefox 60+
+- Safari 12+
+- Edge 79+
 
-## Related Components
+## Migration Guide
 
-- Heading - For headings (h1-h6)
-- Link - For navigation links
-- Badge - For status indicators
+### From v0.1.0 to v0.2.0
 
-## Best Practices
+- Added `medium` weight option
+- Added `info` variant
+- Added new text utility props (`decoration`, `transform`, `overflow`, `whiteSpace`)
+- Added custom spacing props (`lineHeight`, `letterSpacing`, `wordSpacing`)
+- Added new semantic elements (`strong`, `em`, `small`, `mark`)
+- Enhanced accessibility with additional ARIA props
+- Added forward ref support
 
-### Do's
+## Performance
 
-- Use `weight="regular"` for body text
-- Use `weight="semibold"` for emphasis
-- Use `variant="secondary"` for metadata
-- Use `aria-live` for dynamic content
-- Use `truncate` or `clamp` for constrained layouts
+The Text component is optimized for performance with:
 
-### Don'ts
+- Memoized className computation
+- Memoized inline styles
+- Forward ref support for direct DOM access
+- Minimal re-renders with proper dependency arrays
 
-- Don't use Text for headings (use Heading)
-- Don't rely on color alone for meaning
-- Don't forget aria-live for status updates
-- Don't use excessive line clamping
+## Design Principles
 
-## License
+Following "The Spexop Way":
 
-MIT © Spexop Team
+- **Typography before decoration**: Uses font weight for hierarchy, not lighter colors
+- **Tokens before magic numbers**: All values use design tokens from @spexop/theme
+- **Accessibility before aesthetics**: WCAG AA+ compliance by default
+- **Composition before complexity**: Build up from simple text primitives

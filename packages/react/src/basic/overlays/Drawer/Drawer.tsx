@@ -1,4 +1,9 @@
 import React, { useEffect, useId, useRef } from "react";
+import { createPortal } from "react-dom";
+import { useBodyScrollLock } from "../../../hooks/useBodyScrollLock.js";
+import { useEscapeKey } from "../../../hooks/useEscapeKey.js";
+import { useFocusTrap } from "../../../hooks/useFocusTrap.js";
+import { cn } from "../../../utils/index.js";
 import styles from "./Drawer.module.css";
 
 export interface DrawerProps {
@@ -78,24 +83,78 @@ export interface DrawerProps {
    * ARIA labelledby for drawer
    */
   "aria-labelledby"?: string;
+
+  /**
+   * ARIA describedby for drawer
+   */
+  "aria-describedby"?: string;
+
+  /**
+   * Whether to render drawer in a portal
+   * @default true
+   */
+  portal?: boolean;
+
+  /**
+   * Portal container element
+   * @default document.body
+   */
+  portalContainer?: HTMLElement;
+
+  /**
+   * Animation duration in milliseconds
+   * @default 300
+   */
+  animationDuration?: number;
+
+  /**
+   * Whether to prevent body scroll
+   * @default true
+   */
+  preventBodyScroll?: boolean;
+
+  /**
+   * Custom ID for the drawer
+   */
+  id?: string;
+
+  /**
+   * Ref to element that should receive focus when drawer opens
+   */
+  initialFocusRef?: React.RefObject<HTMLElement | null>;
+
+  /**
+   * Whether to restore focus to trigger element on close
+   * @default true
+   */
+  restoreFocus?: boolean;
 }
 
 /**
  * Drawer - Generic slide-in panel component
  *
  * A fully accessible, customizable drawer/panel that slides in from any direction.
+ * Following "The Spexop Way":
+ * - Principle 2: Borders before shadows - strong borders with subtle shadow
+ * - Principle 3: Typography before decoration - clear hierarchy
+ * - Principle 4: Tokens before magic numbers - uses design tokens
+ * - Principle 7: Accessibility before aesthetics - WCAG AA+ compliant
  *
  * Features:
  * - Slides from any direction (left, right, top, bottom)
- * - Customizable size
- * - Optional backdrop with blur
+ * - Customizable size with responsive behavior
+ * - Optional backdrop with blur effect
  * - Focus trap (WCAG 2.2 AA compliant)
  * - ESC key to close
  * - Click outside to close
  * - Body scroll lock
- * - Smooth animations
+ * - Smooth animations with modern easing
  * - Focus restoration
  * - Theme-aware styling
+ * - Portal rendering for better z-index management
+ * - Mobile-first responsive design
+ *
+ * @author @olmstedian | github.com/olmstedian | @spexop | github.com/spexop-ui
  *
  * @example
  * ```tsx
@@ -127,6 +186,14 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
       backdropClassName,
       "aria-label": ariaLabel,
       "aria-labelledby": ariaLabelledby,
+      "aria-describedby": ariaDescribedby,
+      portal = true,
+      portalContainer,
+      animationDuration = 300,
+      preventBodyScroll = true,
+      id,
+      initialFocusRef,
+      restoreFocus = true,
     },
     ref,
   ) => {
@@ -134,34 +201,15 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
     const drawerRef = useRef<HTMLDivElement>(null);
     const previousFocusRef = useRef<HTMLElement | null>(null);
 
-    // Lock body scroll when open
-    useEffect(() => {
-      if (!lockScroll) return;
-
-      if (isOpen) {
-        document.body.style.overflow = "hidden";
-      } else {
-        document.body.style.overflow = "";
-      }
-
-      return () => {
-        document.body.style.overflow = "";
-      };
-    }, [isOpen, lockScroll]);
+    // Use body scroll lock hook
+    useBodyScrollLock(isOpen && preventBodyScroll);
 
     // Handle ESC key
-    useEffect(() => {
-      if (!closeOnEscape) return;
-
-      const handleEscape = (event: KeyboardEvent) => {
-        if (event.key === "Escape" && isOpen) {
-          onClose();
-        }
-      };
-
-      document.addEventListener("keydown", handleEscape);
-      return () => document.removeEventListener("keydown", handleEscape);
-    }, [isOpen, onClose, closeOnEscape]);
+    useEscapeKey(() => {
+      if (isOpen && closeOnEscape) {
+        onClose();
+      }
+    });
 
     // Focus management
     useEffect(() => {
@@ -173,57 +221,30 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
         setTimeout(() => {
           const drawer = drawerRef.current;
           if (drawer) {
-            const firstFocusable = drawer.querySelector<HTMLElement>(
-              'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
-            );
-            firstFocusable?.focus();
+            // Use initialFocusRef if provided, otherwise find first focusable element
+            if (initialFocusRef?.current) {
+              initialFocusRef.current.focus();
+            } else {
+              const firstFocusable = drawer.querySelector<HTMLElement>(
+                'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+              );
+              firstFocusable?.focus();
+            }
           }
-        }, 100);
-      } else {
+        }, animationDuration / 3);
+      } else if (restoreFocus) {
         // Restore focus when closing
         setTimeout(() => {
           previousFocusRef.current?.focus();
-        }, 100);
+        }, animationDuration / 3);
       }
-    }, [isOpen]);
+    }, [isOpen, initialFocusRef, restoreFocus, animationDuration]);
 
     // Focus trap
-    useEffect(() => {
-      if (!isOpen || !trapFocus) return;
-
-      const handleTab = (e: KeyboardEvent) => {
-        if (e.key !== "Tab") return;
-
-        const drawer = drawerRef.current;
-        if (!drawer) return;
-
-        const focusableElements = drawer.querySelectorAll<HTMLElement>(
-          'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
-        );
-
-        if (focusableElements.length === 0) return;
-
-        const firstElement = focusableElements[0];
-        const lastElement = focusableElements[focusableElements.length - 1];
-
-        if (e.shiftKey) {
-          // Shift+Tab: if at first element, wrap to last
-          if (document.activeElement === firstElement) {
-            e.preventDefault();
-            lastElement?.focus();
-          }
-        } else {
-          // Tab: if at last element, wrap to first
-          if (document.activeElement === lastElement) {
-            e.preventDefault();
-            firstElement?.focus();
-          }
-        }
-      };
-
-      document.addEventListener("keydown", handleTab);
-      return () => document.removeEventListener("keydown", handleTab);
-    }, [isOpen, trapFocus]);
+    useFocusTrap(
+      drawerRef as React.RefObject<HTMLElement>,
+      isOpen && trapFocus,
+    );
 
     // Handle backdrop click
     const handleBackdropClick = () => {
@@ -235,16 +256,20 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
     // Don't render if not open (for performance)
     if (!isOpen) return null;
 
-    return (
+    const drawerContent = (
       <>
         {/* Backdrop */}
         {showBackdrop && (
           <button
             type="button"
-            className={`${styles.backdrop} ${styles.open} ${backdropClassName || ""}`}
+            className={cn(styles.backdrop, styles.open, backdropClassName)}
             onClick={handleBackdropClick}
             aria-label="Close drawer"
             tabIndex={-1}
+            style={{
+              WebkitTapHighlightColor: "transparent",
+              touchAction: "manipulation",
+            }}
           />
         )}
 
@@ -259,21 +284,39 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
               ref.current = node;
             }
           }}
-          id={drawerId}
-          className={`${styles.drawer} ${styles[position]} ${styles.open} ${className || ""}`}
-          style={{
-            [position === "left" || position === "right" ? "width" : "height"]:
-              size,
-          }}
+          id={id || drawerId}
+          className={cn(
+            styles.drawer,
+            styles[position],
+            styles.open,
+            className,
+          )}
+          style={
+            {
+              [position === "left" || position === "right"
+                ? "width"
+                : "height"]: size,
+              "--animation-duration": `${animationDuration}ms`,
+            } as React.CSSProperties
+          }
           role="dialog"
           aria-modal="true"
           aria-label={ariaLabel}
           aria-labelledby={ariaLabelledby}
+          aria-describedby={ariaDescribedby}
+          tabIndex={-1}
         >
           {children}
         </div>
       </>
     );
+
+    // Render in portal if enabled
+    if (portal) {
+      return createPortal(drawerContent, portalContainer || document.body);
+    }
+
+    return drawerContent;
   },
 );
 

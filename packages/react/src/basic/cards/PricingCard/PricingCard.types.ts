@@ -1,34 +1,42 @@
 /**
- * PricingCard Types
+ * PricingCard Component Types
+ *
  * @module @spexop/react/cards
  */
 
-import type { CardVariant } from "../Card/Card.types.js";
+import type { ReactNode } from "react";
 
-/**
- * Props for PricingCard component
- */
 export interface PricingCardProps {
-  /** Plan name (e.g., "Basic", "Pro", "Enterprise") */
+  /** Plan name */
   name: string;
-  /** Price amount */
-  price: number | string;
-  /** Billing period (e.g., "month", "year", "one-time") */
+  /** Plan price (number) */
+  price: number;
+  /** Billing period */
   period?: string;
-  /** Currency symbol (default: "$") */
+  /** Currency symbol */
   currency?: string;
-  /** Optional badge (e.g., "Popular", "Best Value") */
-  badge?: string;
-  /** List of features included in this plan */
+  /** Plan features (array of strings) */
   features: string[];
-  /** CTA button label (default: "Get Started") */
-  ctaLabel?: string;
-  /** CTA button click handler */
-  onCtaClick?: () => void;
-  /** Highlight this card as featured plan */
+  /** Whether this is the highlighted plan */
   highlighted?: boolean;
-  /** Card visual variant */
-  variant?: CardVariant;
-  /** Additional CSS class names */
+  /** Badge text for highlighted plan */
+  badge?: string;
+  /** CTA button label */
+  ctaLabel?: string;
+  /** Card variant */
+  variant?:
+    | "basic"
+    | "highlighted"
+    | "outlined"
+    | "interactive"
+    | "ghost"
+    | "elevated"
+    | "default"
+    | "outline";
+  /** Additional CSS class */
   className?: string;
+  /** Click handler for CTA */
+  onCtaClick?: () => void;
+  /** Children elements */
+  children?: ReactNode;
 }

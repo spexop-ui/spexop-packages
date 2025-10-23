@@ -44,9 +44,20 @@ export type HeadingSize =
   | "4xl"; // 36px
 
 /**
+ * Heading variant for semantic meaning
+ */
+export type HeadingVariant =
+  | "default" // Default text color
+  | "secondary" // Secondary/muted text
+  | "success" // Success state (green)
+  | "error" // Error state (red)
+  | "warning"; // Warning state (yellow/orange)
+
+/**
  * Heading component props
  */
-export interface HeadingProps {
+export interface HeadingProps
+  extends Omit<HTMLAttributes<HTMLHeadingElement>, "className" | "children"> {
   /**
    * Heading content
    */
@@ -76,10 +87,39 @@ export interface HeadingProps {
   size?: HeadingSize;
 
   /**
-   * Margin bottom spacing
+   * Semantic variant for color
+   * @default 'default'
+   */
+  variant?: HeadingVariant;
+
+  /**
+   * Render as different element
+   * @default 'h2' (or based on level)
+   */
+  as?: keyof JSX.IntrinsicElements;
+
+  /**
+   * Remove margin
    * @default false
    */
   noMargin?: boolean;
+
+  /**
+   * Truncate text with ellipsis
+   * @default false
+   */
+  truncate?: boolean;
+
+  /**
+   * Number of lines to clamp (for multi-line truncation)
+   */
+  clamp?: number;
+
+  /**
+   * Disable the component
+   * @default false
+   */
+  disabled?: boolean;
 
   /**
    * Additional CSS class
@@ -102,4 +142,19 @@ export interface HeadingProps {
    * ARIA described by
    */
   "aria-describedby"?: string;
+
+  /**
+   * ARIA live region
+   */
+  "aria-live"?: "polite" | "assertive" | "off";
+
+  /**
+   * ARIA expanded state
+   */
+  "aria-expanded"?: boolean;
+
+  /**
+   * ARIA controls
+   */
+  "aria-controls"?: string;
 }

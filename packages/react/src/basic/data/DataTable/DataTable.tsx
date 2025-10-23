@@ -331,7 +331,11 @@ export function DataTable<T = unknown>({
               value={filterState.global}
               onChange={(e) => handleFilterChange("global", e.target.value)}
               aria-label="Search table"
+              aria-describedby="search-help"
             />
+            <div id="search-help" className={styles.searchHelp}>
+              Search across all columns
+            </div>
           </div>
         </div>
       )}
@@ -342,17 +346,22 @@ export function DataTable<T = unknown>({
           {columns
             .filter((col) => col.filterable !== false)
             .map((col) => (
-              <input
-                key={col.id}
-                type="text"
-                className={styles.filterInput}
-                placeholder={`Filter ${col.header}...`}
-                value={filterState.columns[col.id] || ""}
-                onChange={(e) =>
-                  handleFilterChange("column", e.target.value, col.id)
-                }
-                aria-label={`Filter ${col.header}`}
-              />
+              <div key={col.id} className={styles.filterGroup}>
+                <input
+                  type="text"
+                  className={styles.filterInput}
+                  placeholder={`Filter ${col.header}...`}
+                  value={filterState.columns[col.id] || ""}
+                  onChange={(e) =>
+                    handleFilterChange("column", e.target.value, col.id)
+                  }
+                  aria-label={`Filter ${col.header}`}
+                  aria-describedby={`filter-help-${col.id}`}
+                />
+                <div id={`filter-help-${col.id}`} className={styles.filterHelp}>
+                  Filter by {col.header}
+                </div>
+              </div>
             ))}
         </div>
       )}
@@ -499,6 +508,7 @@ export function DataTable<T = unknown>({
                 handlePaginationChange(0, Number.parseInt(e.target.value, 10))
               }
               aria-label="Rows per page"
+              aria-describedby="page-size-help"
             >
               {pageSizeOptions.map((option) => (
                 <option key={option} value={option}>
@@ -506,6 +516,9 @@ export function DataTable<T = unknown>({
                 </option>
               ))}
             </select>
+            <div id="page-size-help" className={styles.pageSizeHelp}>
+              Choose number of rows to display
+            </div>
 
             <div className={styles.pageButtons}>
               <button
@@ -514,6 +527,7 @@ export function DataTable<T = unknown>({
                 onClick={() => handlePaginationChange(0)}
                 disabled={paginationState.page === 0}
                 aria-label="First page"
+                tabIndex={0}
               >
                 ««
               </button>
@@ -523,6 +537,7 @@ export function DataTable<T = unknown>({
                 onClick={() => handlePaginationChange(paginationState.page - 1)}
                 disabled={paginationState.page === 0}
                 aria-label="Previous page"
+                tabIndex={0}
               >
                 «
               </button>
@@ -553,6 +568,7 @@ export function DataTable<T = unknown>({
                     aria-current={
                       pageNum === paginationState.page ? "page" : undefined
                     }
+                    tabIndex={0}
                   >
                     {pageNum + 1}
                   </button>
@@ -565,6 +581,7 @@ export function DataTable<T = unknown>({
                 onClick={() => handlePaginationChange(paginationState.page + 1)}
                 disabled={paginationState.page >= totalPages - 1}
                 aria-label="Next page"
+                tabIndex={0}
               >
                 »
               </button>
@@ -574,6 +591,7 @@ export function DataTable<T = unknown>({
                 onClick={() => handlePaginationChange(totalPages - 1)}
                 disabled={paginationState.page >= totalPages - 1}
                 aria-label="Last page"
+                tabIndex={0}
               >
                 »»
               </button>

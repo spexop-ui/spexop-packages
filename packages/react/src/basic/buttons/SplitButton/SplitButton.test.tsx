@@ -26,7 +26,7 @@ import { SplitButton } from "./SplitButton.js";
 import styles from "./SplitButton.module.css";
 
 describe("SplitButton", () => {
-  const mockOptions = [
+  const getMockMenuItems = () => [
     {
       label: "Option 1",
       value: "option1",
@@ -40,13 +40,18 @@ describe("SplitButton", () => {
   ];
 
   afterEach(() => {
-    vi.clearAllMocks();
+    // Don't clear mocks for menu items as they need to persist
+    // vi.clearAllMocks();
   });
 
   describe("Rendering", () => {
     it("renders main button", () => {
       render(
-        <SplitButton label="Save" onClick={vi.fn()} options={mockOptions} />,
+        <SplitButton
+          label="Save"
+          onClick={vi.fn()}
+          menuItems={getMockMenuItems()}
+        />,
       );
 
       expect(screen.getByText("Save")).toBeInTheDocument();
@@ -54,7 +59,11 @@ describe("SplitButton", () => {
 
     it("renders toggle button", () => {
       render(
-        <SplitButton label="Save" onClick={vi.fn()} options={mockOptions} />,
+        <SplitButton
+          label="Save"
+          onClick={vi.fn()}
+          menuItems={getMockMenuItems()}
+        />,
       );
 
       const toggleButton = screen.getByRole("button", {
@@ -65,7 +74,11 @@ describe("SplitButton", () => {
 
     it("menu is not visible by default", () => {
       const { container } = render(
-        <SplitButton label="Save" onClick={vi.fn()} options={mockOptions} />,
+        <SplitButton
+          label="Save"
+          onClick={vi.fn()}
+          menuItems={getMockMenuItems()}
+        />,
       );
 
       const menu = container.querySelector('[role="menu"]');
@@ -77,7 +90,7 @@ describe("SplitButton", () => {
         <SplitButton
           label="Save"
           onClick={vi.fn()}
-          options={mockOptions}
+          menuItems={getMockMenuItems()}
           className="custom-class"
         />,
       );
@@ -96,7 +109,7 @@ describe("SplitButton", () => {
         <SplitButton
           label="Save"
           onClick={handleClick}
-          options={mockOptions}
+          menuItems={getMockMenuItems()}
         />,
       );
 
@@ -114,7 +127,7 @@ describe("SplitButton", () => {
         <SplitButton
           label="Save"
           onClick={handleClick}
-          options={mockOptions}
+          menuItems={getMockMenuItems()}
           disabled
         />,
       );
@@ -130,7 +143,11 @@ describe("SplitButton", () => {
     it("opens menu when toggle button is clicked", async () => {
       const user = userEvent.setup();
       const { container } = render(
-        <SplitButton label="Save" onClick={vi.fn()} options={mockOptions} />,
+        <SplitButton
+          label="Save"
+          onClick={vi.fn()}
+          menuItems={getMockMenuItems()}
+        />,
       );
 
       const toggleButton = screen.getByRole("button", {
@@ -145,7 +162,11 @@ describe("SplitButton", () => {
     it("closes menu when toggle button is clicked again", async () => {
       const user = userEvent.setup();
       const { container } = render(
-        <SplitButton label="Save" onClick={vi.fn()} options={mockOptions} />,
+        <SplitButton
+          label="Save"
+          onClick={vi.fn()}
+          menuItems={getMockMenuItems()}
+        />,
       );
 
       const toggleButton = screen.getByRole("button", {
@@ -169,7 +190,7 @@ describe("SplitButton", () => {
         <SplitButton
           label="Save"
           onClick={vi.fn()}
-          options={mockOptions}
+          menuItems={getMockMenuItems()}
           disabled
         />,
       );
@@ -189,7 +210,11 @@ describe("SplitButton", () => {
       const user = userEvent.setup();
 
       render(
-        <SplitButton label="Save" onClick={vi.fn()} options={mockOptions} />,
+        <SplitButton
+          label="Save"
+          onClick={vi.fn()}
+          menuItems={getMockMenuItems()}
+        />,
       );
 
       const toggleButton = screen.getByRole("button", {
@@ -208,7 +233,9 @@ describe("SplitButton", () => {
         { label: "Option 1", value: "opt1", onClick: option1Click },
       ];
 
-      render(<SplitButton label="Save" onClick={vi.fn()} options={options} />);
+      render(
+        <SplitButton label="Save" onClick={vi.fn()} menuItems={options} />,
+      );
 
       // Open menu
       const toggleButton = screen.getByRole("button", {
@@ -226,7 +253,11 @@ describe("SplitButton", () => {
     it("closes menu after option is clicked", async () => {
       const user = userEvent.setup();
       const { container } = render(
-        <SplitButton label="Save" onClick={vi.fn()} options={mockOptions} />,
+        <SplitButton
+          label="Save"
+          onClick={vi.fn()}
+          menuItems={getMockMenuItems()}
+        />,
       );
 
       // Open menu
@@ -256,7 +287,9 @@ describe("SplitButton", () => {
         },
       ];
 
-      render(<SplitButton label="Save" onClick={vi.fn()} options={options} />);
+      render(
+        <SplitButton label="Save" onClick={vi.fn()} menuItems={options} />,
+      );
 
       // Open menu
       const toggleButton = screen.getByRole("button", {
@@ -278,7 +311,11 @@ describe("SplitButton", () => {
       const { container } = render(
         <div>
           <button type="button">Outside Button</button>
-          <SplitButton label="Save" onClick={vi.fn()} options={mockOptions} />
+          <SplitButton
+            label="Save"
+            onClick={vi.fn()}
+            menuItems={getMockMenuItems()}
+          />
         </div>,
       );
 
@@ -302,7 +339,11 @@ describe("SplitButton", () => {
     it("closes menu on Escape key", async () => {
       const user = userEvent.setup();
       const { container } = render(
-        <SplitButton label="Save" onClick={vi.fn()} options={mockOptions} />,
+        <SplitButton
+          label="Save"
+          onClick={vi.fn()}
+          menuItems={getMockMenuItems()}
+        />,
       );
 
       // Open menu
@@ -325,7 +366,11 @@ describe("SplitButton", () => {
       const user = userEvent.setup();
 
       render(
-        <SplitButton label="Save" onClick={vi.fn()} options={mockOptions} />,
+        <SplitButton
+          label="Save"
+          onClick={vi.fn()}
+          menuItems={getMockMenuItems()}
+        />,
       );
 
       // Open menu
@@ -337,6 +382,9 @@ describe("SplitButton", () => {
       // Arrow Down should focus first item
       await user.keyboard("{ArrowDown}");
 
+      // Wait for focus to be set
+      await new Promise((resolve) => setTimeout(resolve, 10));
+
       const firstItem = screen.getByRole("menuitem", { name: "Option 1" });
       expect(firstItem).toHaveFocus();
     });
@@ -345,7 +393,11 @@ describe("SplitButton", () => {
       const user = userEvent.setup();
 
       render(
-        <SplitButton label="Save" onClick={vi.fn()} options={mockOptions} />,
+        <SplitButton
+          label="Save"
+          onClick={vi.fn()}
+          menuItems={getMockMenuItems()}
+        />,
       );
 
       // Open menu
@@ -357,8 +409,14 @@ describe("SplitButton", () => {
       // Focus first item
       await user.keyboard("{ArrowDown}");
 
+      // Wait for focus to be set
+      await new Promise((resolve) => setTimeout(resolve, 10));
+
       // Arrow Down to second item
       await user.keyboard("{ArrowDown}");
+
+      // Wait for focus to be set
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       const secondItem = screen.getByRole("menuitem", { name: "Option 2" });
       expect(secondItem).toHaveFocus();
@@ -368,7 +426,11 @@ describe("SplitButton", () => {
   describe("ARIA Attributes", () => {
     it("toggle button has aria-expanded false when closed", () => {
       render(
-        <SplitButton label="Save" onClick={vi.fn()} options={mockOptions} />,
+        <SplitButton
+          label="Save"
+          onClick={vi.fn()}
+          menuItems={getMockMenuItems()}
+        />,
       );
 
       const toggleButton = screen.getByRole("button", {
@@ -381,7 +443,11 @@ describe("SplitButton", () => {
       const user = userEvent.setup();
 
       render(
-        <SplitButton label="Save" onClick={vi.fn()} options={mockOptions} />,
+        <SplitButton
+          label="Save"
+          onClick={vi.fn()}
+          menuItems={getMockMenuItems()}
+        />,
       );
 
       const toggleButton = screen.getByRole("button", {
@@ -394,7 +460,11 @@ describe("SplitButton", () => {
 
     it("toggle button has aria-haspopup", () => {
       render(
-        <SplitButton label="Save" onClick={vi.fn()} options={mockOptions} />,
+        <SplitButton
+          label="Save"
+          onClick={vi.fn()}
+          menuItems={getMockMenuItems()}
+        />,
       );
 
       const toggleButton = screen.getByRole("button", {
@@ -406,7 +476,11 @@ describe("SplitButton", () => {
     it("menu has role menu", async () => {
       const user = userEvent.setup();
       const { container } = render(
-        <SplitButton label="Save" onClick={vi.fn()} options={mockOptions} />,
+        <SplitButton
+          label="Save"
+          onClick={vi.fn()}
+          menuItems={getMockMenuItems()}
+        />,
       );
 
       const toggleButton = screen.getByRole("button", {
@@ -422,7 +496,11 @@ describe("SplitButton", () => {
       const user = userEvent.setup();
 
       render(
-        <SplitButton label="Save" onClick={vi.fn()} options={mockOptions} />,
+        <SplitButton
+          label="Save"
+          onClick={vi.fn()}
+          menuItems={getMockMenuItems()}
+        />,
       );
 
       const toggleButton = screen.getByRole("button", {
@@ -439,7 +517,7 @@ describe("SplitButton", () => {
         <SplitButton
           label="Save"
           onClick={vi.fn()}
-          options={mockOptions}
+          menuItems={getMockMenuItems()}
           aria-label="Save document"
         />,
       );
@@ -453,7 +531,7 @@ describe("SplitButton", () => {
         <SplitButton
           label="Save"
           onClick={vi.fn()}
-          options={mockOptions}
+          menuItems={getMockMenuItems()}
           aria-label-toggle="More save options"
         />,
       );
@@ -471,7 +549,7 @@ describe("SplitButton", () => {
         <SplitButton
           label="Save"
           onClick={vi.fn()}
-          options={mockOptions}
+          menuItems={getMockMenuItems()}
           disabled
         />,
       );
@@ -485,7 +563,7 @@ describe("SplitButton", () => {
         <SplitButton
           label="Save"
           onClick={vi.fn()}
-          options={mockOptions}
+          menuItems={getMockMenuItems()}
           disabled
         />,
       );
@@ -501,7 +579,7 @@ describe("SplitButton", () => {
         <SplitButton
           label="Save"
           onClick={vi.fn()}
-          options={mockOptions}
+          menuItems={getMockMenuItems()}
           disabled
         />,
       );
@@ -514,7 +592,11 @@ describe("SplitButton", () => {
   describe("Variants", () => {
     it("applies primary variant by default", () => {
       const { container } = render(
-        <SplitButton label="Save" onClick={vi.fn()} options={mockOptions} />,
+        <SplitButton
+          label="Save"
+          onClick={vi.fn()}
+          menuItems={getMockMenuItems()}
+        />,
       );
 
       const variantClass = container.querySelector(
@@ -528,7 +610,7 @@ describe("SplitButton", () => {
         <SplitButton
           label="Save"
           onClick={vi.fn()}
-          options={mockOptions}
+          menuItems={getMockMenuItems()}
           variant="secondary"
         />,
       );
@@ -547,7 +629,7 @@ describe("SplitButton", () => {
           label="Download"
           icon={<Download size={20} />}
           onClick={vi.fn()}
-          options={mockOptions}
+          menuItems={getMockMenuItems()}
         />,
       );
 
@@ -570,7 +652,7 @@ describe("SplitButton", () => {
         <SplitButton
           label="Save"
           onClick={vi.fn()}
-          options={optionsWithIcons}
+          menuItems={optionsWithIcons}
         />,
       );
 
@@ -593,7 +675,7 @@ describe("SplitButton", () => {
       ];
 
       render(
-        <SplitButton label="Save" onClick={vi.fn()} options={singleOption} />,
+        <SplitButton label="Save" onClick={vi.fn()} menuItems={singleOption} />,
       );
 
       const toggleButton = screen.getByRole("button", {
@@ -613,7 +695,7 @@ describe("SplitButton", () => {
       }));
 
       render(
-        <SplitButton label="Save" onClick={vi.fn()} options={manyOptions} />,
+        <SplitButton label="Save" onClick={vi.fn()} menuItems={manyOptions} />,
       );
 
       const toggleButton = screen.getByRole("button", {
@@ -629,7 +711,11 @@ describe("SplitButton", () => {
   describe("Structure", () => {
     it("renders splitButton class", () => {
       const { container } = render(
-        <SplitButton label="Save" onClick={vi.fn()} options={mockOptions} />,
+        <SplitButton
+          label="Save"
+          onClick={vi.fn()}
+          menuItems={getMockMenuItems()}
+        />,
       );
 
       const splitButton = container.querySelector(`.${styles.splitButton}`);
@@ -638,7 +724,11 @@ describe("SplitButton", () => {
 
     it("renders mainButton class", () => {
       const { container } = render(
-        <SplitButton label="Save" onClick={vi.fn()} options={mockOptions} />,
+        <SplitButton
+          label="Save"
+          onClick={vi.fn()}
+          menuItems={getMockMenuItems()}
+        />,
       );
 
       const mainButton = container.querySelector(`.${styles.mainButton}`);
@@ -647,7 +737,11 @@ describe("SplitButton", () => {
 
     it("renders toggleButton class", () => {
       const { container } = render(
-        <SplitButton label="Save" onClick={vi.fn()} options={mockOptions} />,
+        <SplitButton
+          label="Save"
+          onClick={vi.fn()}
+          menuItems={getMockMenuItems()}
+        />,
       );
 
       const toggleButton = container.querySelector(`.${styles.toggleButton}`);
@@ -655,31 +749,214 @@ describe("SplitButton", () => {
     });
   });
 
-  describe("Performance", () => {
-    it("uses requestAnimationFrame for clicks", async () => {
+  describe("Loading State", () => {
+    it("shows loading spinner when loading", () => {
+      render(
+        <SplitButton
+          label="Save"
+          onClick={vi.fn()}
+          menuItems={getMockMenuItems()}
+          loading
+        />,
+      );
+
+      const loadingIcon = document.querySelector(`.${styles.loadingIcon}`);
+      expect(loadingIcon).toBeInTheDocument();
+    });
+
+    it("disables interaction when loading", async () => {
       const user = userEvent.setup();
       const handleClick = vi.fn();
-      const rafSpy = vi
-        .spyOn(window, "requestAnimationFrame")
-        .mockImplementation((cb) => {
-          cb(0);
-          return 0;
-        });
 
       render(
         <SplitButton
           label="Save"
           onClick={handleClick}
-          options={mockOptions}
+          menuItems={getMockMenuItems()}
+          loading
         />,
       );
 
       const mainButton = screen.getByText("Save");
       await user.click(mainButton);
 
-      expect(rafSpy).toHaveBeenCalled();
+      expect(handleClick).not.toHaveBeenCalled();
+    });
+  });
 
-      rafSpy.mockRestore();
+  describe("Size Variants", () => {
+    it("applies small size", () => {
+      const { container } = render(
+        <SplitButton
+          label="Save"
+          onClick={vi.fn()}
+          menuItems={getMockMenuItems()}
+          size="sm"
+        />,
+      );
+
+      const splitButton = container.querySelector(`.${styles["size-sm"]}`);
+      expect(splitButton).toBeInTheDocument();
+    });
+
+    it("applies large size", () => {
+      const { container } = render(
+        <SplitButton
+          label="Save"
+          onClick={vi.fn()}
+          menuItems={getMockMenuItems()}
+          size="lg"
+        />,
+      );
+
+      const splitButton = container.querySelector(`.${styles["size-lg"]}`);
+      expect(splitButton).toBeInTheDocument();
+    });
+  });
+
+  describe("Compact Mode", () => {
+    it("applies compact mode", () => {
+      const { container } = render(
+        <SplitButton
+          label="Save"
+          onClick={vi.fn()}
+          menuItems={getMockMenuItems()}
+          compact="sm"
+        />,
+      );
+
+      const splitButton = container.querySelector(`.${styles["compact-sm"]}`);
+      expect(splitButton).toBeInTheDocument();
+    });
+
+    it("hides label in compact mode", () => {
+      render(
+        <SplitButton
+          label="Save"
+          onClick={vi.fn()}
+          menuItems={getMockMenuItems()}
+          compact="sm"
+        />,
+      );
+
+      expect(screen.queryByText("Save")).not.toBeInTheDocument();
+    });
+  });
+
+  describe("Full Width", () => {
+    it("applies full width", () => {
+      const { container } = render(
+        <SplitButton
+          label="Save"
+          onClick={vi.fn()}
+          menuItems={getMockMenuItems()}
+          fullWidth
+        />,
+      );
+
+      const splitButton = container.querySelector(`.${styles.fullWidth}`);
+      expect(splitButton).toBeInTheDocument();
+    });
+  });
+
+  describe("Menu Items with Advanced Features", () => {
+    it("renders menu items with descriptions", async () => {
+      const user = userEvent.setup();
+      const menuItemsWithDescription = [
+        {
+          label: "Save as Draft",
+          value: "draft",
+          description: "Save without publishing",
+          onClick: vi.fn(),
+        },
+      ];
+
+      render(
+        <SplitButton
+          label="Save"
+          onClick={vi.fn()}
+          menuItems={menuItemsWithDescription}
+        />,
+      );
+
+      const toggleButton = screen.getByRole("button", {
+        name: "Show more options",
+      });
+      await user.click(toggleButton);
+
+      expect(screen.getByText("Save without publishing")).toBeInTheDocument();
+    });
+
+    it("renders menu items with badges", async () => {
+      const user = userEvent.setup();
+      const menuItemsWithBadge = [
+        {
+          label: "New Feature",
+          value: "new",
+          badge: "NEW",
+          onClick: vi.fn(),
+        },
+      ];
+
+      render(
+        <SplitButton
+          label="Actions"
+          onClick={vi.fn()}
+          menuItems={menuItemsWithBadge}
+        />,
+      );
+
+      const toggleButton = screen.getByRole("button", {
+        name: "Show more options",
+      });
+      await user.click(toggleButton);
+
+      expect(screen.getByText("NEW")).toBeInTheDocument();
+    });
+
+    it("renders menu dividers", async () => {
+      const user = userEvent.setup();
+      const menuItemsWithDivider = [
+        { label: "Option 1", value: "1", onClick: vi.fn() },
+        { type: "divider" as const },
+        { label: "Option 2", value: "2", onClick: vi.fn() },
+      ];
+
+      const { container } = render(
+        <SplitButton
+          label="Actions"
+          onClick={vi.fn()}
+          menuItems={menuItemsWithDivider}
+        />,
+      );
+
+      const toggleButton = screen.getByRole("button", {
+        name: "Show more options",
+      });
+      await user.click(toggleButton);
+
+      const divider = container.querySelector(`.${styles.menuDivider}`);
+      expect(divider).toBeInTheDocument();
+    });
+  });
+
+  describe("Performance", () => {
+    it("handles clicks efficiently", async () => {
+      const user = userEvent.setup();
+      const handleClick = vi.fn();
+
+      render(
+        <SplitButton
+          label="Save"
+          onClick={handleClick}
+          menuItems={getMockMenuItems()}
+        />,
+      );
+
+      const mainButton = screen.getByText("Save");
+      await user.click(mainButton);
+
+      expect(handleClick).toHaveBeenCalledTimes(1);
     });
   });
 });

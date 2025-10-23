@@ -1,11 +1,12 @@
 /**
  * ButtonGridItem Component Styles
- * Migrated to theme system
+ * Modern UI/UX patterns with Spexop design principles
  * Interactive component that displays media with overlay content and performs actions
  * 
  * @component ButtonGridItem
  * @packageName @spexop/react
- * @version 0.2.0
+ * @version 0.4.0
+ * @updated 2025-01-27 - Enhanced with modern UI/UX patterns
  */
 
 /* Card Container */
@@ -14,30 +15,63 @@
 	display: block;
 	background: var(--theme-surface);
 	border: var(--theme-border-width) solid var(--theme-border-strong);
-	border-radius: var(--theme-radius-liquid);
+	border-radius: var(--theme-radius-lg);
 	cursor: pointer;
 	overflow: hidden;
-	transition: all 0.15s ease;
-	/* Performance */
-	will-change: transform;
+	transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+	min-height: 44px;
+	min-width: 44px;
+	/* Performance optimizations */
+	will-change: transform, box-shadow;
 	transform: translateZ(0);
 	backface-visibility: hidden;
+	/* Modern focus management */
+	outline: none;
 }
 
 .buttonGridItem:hover {
-	transform: translateY(-4px) translateZ(0);
-	box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-	border-color: var(--theme-text);
+	transform: translateY(-2px) translateZ(0);
+	border-color: var(--theme-primary);
+	box-shadow: 
+		0 4px 12px rgba(0, 0, 0, 0.1),
+		0 2px 4px rgba(0, 0, 0, 0.06);
 }
 
 .buttonGridItem:focus-visible {
-	outline: 4px solid var(--theme-primary);
-	outline-offset: 4px;
+	outline: 2px solid var(--theme-focus);
+	outline-offset: 2px;
+	border-color: var(--theme-focus);
 }
 
 .buttonGridItem:active {
-	transform: translateY(-2px) translateZ(0);
+	transform: translateY(-1px) translateZ(0);
 	transition-duration: 100ms;
+	border-color: var(--theme-primary-active);
+}
+
+/* Loading state */
+.buttonGridItem.loading {
+	pointer-events: none;
+	opacity: 0.7;
+}
+
+.buttonGridItem.loading::after {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 20px;
+	height: 20px;
+	margin: -10px 0 0 -10px;
+	border: 2px solid var(--theme-border);
+	border-top-color: var(--theme-primary);
+	border-radius: 50%;
+	animation: spin 1s linear infinite;
+	z-index: 10;
+}
+
+@keyframes spin {
+	to { transform: rotate(360deg); }
 }
 
 /* Media Container */
@@ -49,6 +83,7 @@
 	height: 100%;
 	overflow: hidden;
 	z-index: 1;
+	border-radius: inherit;
 }
 
 .mediaContainer img,
@@ -57,7 +92,7 @@
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
-	transition: transform 0.15s ease;
+	transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 	/* Performance */
 	will-change: transform;
 	transform: translateZ(0);
@@ -66,7 +101,26 @@
 .buttonGridItem:hover .mediaContainer img,
 .buttonGridItem:hover .mediaContainer picture,
 .buttonGridItem:hover .mediaContainer video {
-	transform: scale(1.05) translateZ(0);
+	transform: scale(1.02) translateZ(0);
+}
+
+/* Media loading state */
+.mediaContainer.loading {
+	background: var(--theme-surface-secondary);
+}
+
+.mediaContainer.loading::after {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 40px;
+	height: 40px;
+	margin: -20px 0 0 -20px;
+	border: 3px solid var(--theme-border);
+	border-top-color: var(--theme-primary);
+	border-radius: 50%;
+	animation: spin 1s linear infinite;
 }
 
 /* Content Overlay */
@@ -78,23 +132,26 @@
 	height: 100%;
 	background: linear-gradient(
 		to bottom,
-		rgba(0, 0, 0, 0.1) 0%,
-		rgba(0, 0, 0, 0.3) 40%,
-		rgba(0, 0, 0, 0.8) 100%
+		rgba(0, 0, 0, 0) 0%,
+		rgba(0, 0, 0, 0.1) 30%,
+		rgba(0, 0, 0, 0.6) 70%,
+		rgba(0, 0, 0, 0.85) 100%
 	);
 	z-index: 2;
 	display: flex;
 	align-items: flex-end;
 	padding: var(--theme-spacing-6);
-	transition: background 0.15s ease;
+	transition: background 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	border-radius: inherit;
 }
 
 .buttonGridItem:hover .contentOverlay {
 	background: linear-gradient(
 		to bottom,
-		rgba(0, 0, 0, 0.05) 0%,
-		rgba(0, 0, 0, 0.2) 40%,
-		rgba(0, 0, 0, 0.75) 100%
+		rgba(0, 0, 0, 0) 0%,
+		rgba(0, 0, 0, 0.05) 30%,
+		rgba(0, 0, 0, 0.4) 70%,
+		rgba(0, 0, 0, 0.8) 100%
 	);
 }
 
@@ -102,37 +159,42 @@
 .content {
 	width: 100%;
 	color: white;
+	display: flex;
+	flex-direction: column;
+	gap: var(--theme-spacing-2);
 }
 
 /* Label */
 .label {
-	font-size: 20px;
+	font-size: var(--theme-font-size-lg);
 	font-weight: var(--theme-font-weight-bold);
-	font-family: var(--theme-font-family);
-	margin: 0 0 var(--theme-spacing-2) 0;
-	line-height: 1.2;
-	text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-	transition: transform 0.15s ease;
+	font-family: var(--theme-font-family-heading);
+	margin: 0;
+	line-height: var(--theme-line-height-tight);
+	text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+	transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+	letter-spacing: -0.01em;
 }
 
 .buttonGridItem:hover .label {
-	transform: translateX(2px);
+	transform: translateY(-1px);
 }
 
 /* Description */
 .description {
-	font-size: 16px;
+	font-size: var(--theme-font-size-base);
 	font-weight: var(--theme-font-weight-normal);
 	font-family: var(--theme-font-family);
-	margin: 0 0 var(--theme-spacing-4) 0;
-	line-height: 1.5;
-	opacity: 0.95;
-	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-	transition: transform 0.15s ease;
+	margin: 0;
+	line-height: var(--theme-line-height-normal);
+	opacity: 0.9;
+	text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+	transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .buttonGridItem:hover .description {
-	transform: translateX(2px);
+	transform: translateY(-1px);
+	opacity: 1;
 }
 
 /* Action Button */
@@ -141,45 +203,74 @@
 	color: white;
 	border: none;
 	padding: var(--theme-spacing-3) var(--theme-spacing-5);
-	font-size: 16px;
+	font-size: var(--theme-font-size-sm);
 	font-weight: var(--theme-font-weight-semibold);
 	font-family: var(--theme-font-family);
-	border-radius: var(--theme-radius-relaxed);
+	border-radius: var(--theme-radius-md);
 	cursor: pointer;
-	transition: all 0.15s ease;
+	transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 	display: inline-flex;
 	align-items: center;
 	gap: var(--theme-spacing-2);
 	text-shadow: none;
 	/* Performance */
-	will-change: transform, background-color;
+	will-change: transform, background-color, box-shadow;
 	transform: translateZ(0);
+	/* Modern button styling */
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	align-self: flex-start;
 }
 
 .actionButton:hover {
-	background: var(--theme-primary-active);
-	transform: translateX(4px) translateZ(0);
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+	background: var(--theme-primary-hover);
+	transform: translateY(-1px) translateZ(0);
+	box-shadow: 
+		0 4px 12px rgba(0, 0, 0, 0.15),
+		0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .actionButton:active {
-	transform: translateX(2px) translateZ(0);
+	transform: translateY(0) translateZ(0);
 	transition-duration: 100ms;
+	background: var(--theme-primary-active);
 }
 
 .actionButton:focus-visible {
 	outline: 2px solid white;
 	outline-offset: 2px;
+	background: var(--theme-primary-hover);
+}
+
+/* Button loading state */
+.actionButton.loading {
+	pointer-events: none;
+	opacity: 0.8;
+}
+
+.actionButton.loading::after {
+	content: '';
+	width: 16px;
+	height: 16px;
+	border: 2px solid transparent;
+	border-top-color: currentColor;
+	border-radius: 50%;
+	animation: spin 1s linear infinite;
+	margin-left: var(--theme-spacing-2);
 }
 
 /* Button Icon */
 .buttonIcon {
 	display: block;
-	transition: transform 0.15s ease;
+	transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+	flex-shrink: 0;
 }
 
 .actionButton:hover .buttonIcon {
-	transform: translateX(2px);
+	transform: translateX(1px);
+}
+
+.actionButton:active .buttonIcon {
+	transform: translateX(0);
 }
 
 /* Dark Theme Adjustments */
@@ -191,8 +282,9 @@ html[data-theme="dark"] .buttonGridItem {
 html[data-theme="dark"] .contentOverlay {
 	background: linear-gradient(
 		to bottom,
-		rgba(0, 0, 0, 0.2) 0%,
-		rgba(0, 0, 0, 0.4) 40%,
+		rgba(0, 0, 0, 0) 0%,
+		rgba(0, 0, 0, 0.2) 30%,
+		rgba(0, 0, 0, 0.7) 70%,
 		rgba(0, 0, 0, 0.9) 100%
 	);
 }
@@ -200,31 +292,46 @@ html[data-theme="dark"] .contentOverlay {
 html[data-theme="dark"] .buttonGridItem:hover .contentOverlay {
 	background: linear-gradient(
 		to bottom,
-		rgba(0, 0, 0, 0.1) 0%,
-		rgba(0, 0, 0, 0.3) 40%,
-		rgba(0, 0, 0, 0.85) 100%
+		rgba(0, 0, 0, 0) 0%,
+		rgba(0, 0, 0, 0.1) 30%,
+		rgba(0, 0, 0, 0.5) 70%,
+		rgba(0, 0, 0, 0.8) 100%
 	);
+}
+
+html[data-theme="dark"] .buttonGridItem:hover {
+	box-shadow: 
+		0 4px 12px rgba(0, 0, 0, 0.3),
+		0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* High Contrast Mode */
 @media (prefers-contrast: high) {
 	.buttonGridItem {
-		border-width: 4px;
+		border-width: var(--theme-border-thick);
+		border-color: var(--theme-text);
 	}
 
 	.buttonGridItem:focus-visible {
-		outline-width: 4px;
-		outline-offset: 4px;
+		outline-width: var(--theme-border-thick);
+		outline-offset: var(--theme-border-thick);
+		outline-color: var(--theme-focus);
 	}
 
 	.label,
 	.description {
-		text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+		text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
+		font-weight: var(--theme-font-weight-bold);
+	}
+
+	.actionButton {
+		border: var(--theme-border-thin) solid white;
 	}
 
 	.actionButton:focus-visible {
-		outline-width: 4px;
-		outline-offset: 4px;
+		outline-width: var(--theme-border-thick);
+		outline-offset: var(--theme-border-thick);
+		outline-color: white;
 	}
 }
 
@@ -239,6 +346,8 @@ html[data-theme="dark"] .buttonGridItem:hover .contentOverlay {
 	.actionButton,
 	.buttonIcon {
 		transition-duration: 0.01ms;
+		animation-duration: 0.01ms;
+		animation-iteration-count: 1;
 	}
 
 	.buttonGridItem:hover {
@@ -263,26 +372,67 @@ html[data-theme="dark"] .buttonGridItem:hover .contentOverlay {
 	.actionButton:hover .buttonIcon {
 		transform: none;
 	}
+
+	/* Disable loading animations */
+	.buttonGridItem.loading::after,
+	.mediaContainer.loading::after,
+	.actionButton.loading::after {
+		animation: none;
+	}
 }
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
+	.buttonGridItem {
+		min-height: 48px;
+		min-width: 48px;
+		-webkit-tap-highlight-color: transparent;
+		touch-action: manipulation;
+	}
+	
+	.buttonGridItem:active {
+		transform: scale(0.98) translateZ(0);
+		transition-duration: 80ms;
+	}
+	
 	.contentOverlay {
 		padding: var(--theme-spacing-4);
 	}
 
 	.label {
-		font-size: 18px;
+		font-size: var(--theme-font-size-base);
 	}
 
 	.description {
-		font-size: 14px;
-		margin-bottom: var(--theme-spacing-3);
+		font-size: var(--theme-font-size-sm);
 	}
 
 	.actionButton {
 		padding: var(--theme-spacing-2) var(--theme-spacing-4);
-		font-size: 14px;
+		font-size: var(--theme-font-size-xs);
+		min-height: 44px;
+		-webkit-tap-highlight-color: transparent;
+		touch-action: manipulation;
+	}
+	
+	.actionButton:active {
+		transform: scale(0.96) translateZ(0);
+		transition-duration: 80ms;
+	}
+}
+
+/* Tablet Responsive */
+@media (min-width: 769px) and (max-width: 1024px) {
+	.contentOverlay {
+		padding: var(--theme-spacing-5);
+	}
+
+	.label {
+		font-size: var(--theme-font-size-lg);
+	}
+
+	.description {
+		font-size: var(--theme-font-size-base);
 	}
 }
 
@@ -304,24 +454,30 @@ html[data-theme="dark"] .buttonGridItem:hover .contentOverlay {
 	z-index: 10;
 }
 
-/* Loading State (for future enhancement) */
-.buttonGridItem.loading {
-	pointer-events: none;
-	opacity: 0.7;
-}
-
-.buttonGridItem.loading .actionButton {
-	background: var(--theme-border-strong);
-	cursor: not-allowed;
-}
-
-/* Disabled State (for future enhancement) */
+/* Disabled State */
 .buttonGridItem.disabled {
 	pointer-events: none;
 	opacity: 0.5;
+	background: var(--theme-surface-secondary);
+	border-color: var(--theme-border-subtle);
 }
 
 .buttonGridItem.disabled .actionButton {
 	background: var(--theme-border-strong);
 	cursor: not-allowed;
+	color: var(--theme-text-muted);
+}
+
+/* Error State */
+.buttonGridItem.error {
+	border-color: var(--theme-error);
+}
+
+.buttonGridItem.error .actionButton {
+	background: var(--theme-error);
+}
+
+.buttonGridItem.error .actionButton:hover {
+	background: var(--theme-error);
+	opacity: 0.9;
 }

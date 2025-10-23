@@ -1,24 +1,28 @@
 # Snackbar Component
 
-**Version**: 0.1.0  
+**Version**: 0.4.0  
 **Package**: `@spexop/react`  
 **Status**: Production Ready
 
 ## Overview
 
-A brief notification component that appears at the bottom of the screen. Perfect for showing success messages, errors, or informational updates that don't require user action.
+An accessible snackbar notification component for brief messages following "The Spexop Way". Perfect for showing success messages, errors, warnings, or informational updates with optional actions.
 
 ## Features
 
-- ✅ 4 variants (default, success, warning, error)
+- ✅ 4 semantic variants (info, success, warning, error)
 - ✅ Auto-dismiss with configurable duration
-- ✅ Action button support
-- ✅ Dismiss button (X)
-- ✅ Slide-up animation
-- ✅ Queue management
-- ✅ Position control (bottom-left, bottom-center, bottom-right)
-- ✅ WCAG AA+ accessible
-- ✅ TypeScript support
+- ✅ Action button support with proper accessibility
+- ✅ Close button with X icon from @spexop/icons
+- ✅ Multiple animation types (slide, fade, scale, none)
+- ✅ 6 position options (top/bottom + left/center/right)
+- ✅ Portal rendering for proper z-index management
+- ✅ Keyboard navigation (Escape, Enter, Space)
+- ✅ WCAG AA+ accessible with proper ARIA attributes
+- ✅ High contrast mode support
+- ✅ Reduced motion support
+- ✅ Responsive design
+- ✅ TypeScript support with comprehensive types
 
 ## Installation
 
@@ -35,20 +39,23 @@ import { Snackbar } from '@spexop/react';
 import { useState } from 'react';
 
 function App() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   
   return (
     <>
-      <button onClick={() => setIsOpen(true)}>
+      <button onClick={() => setIsVisible(true)}>
         Show Notification
       </button>
       
       <Snackbar
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
         message="Changes saved successfully!"
         variant="success"
-        duration={3000}
+        isVisible={isVisible}
+        onClose={() => setIsVisible(false)}
+        action={{
+          label: "Undo",
+          onClick: () => handleUndo()
+        }}
       />
     </>
   );
@@ -57,16 +64,16 @@ function App() {
 
 ## Variants
 
-### Default
+### Info (Default)
 
 Neutral information message.
 
 ```tsx
 <Snackbar
-  isOpen={isOpen}
-  onClose={handleClose}
   message="Profile updated"
-  variant="default"
+  variant="info"
+  isVisible={isVisible}
+  onClose={() => setIsVisible(false)}
 />
 ```
 
@@ -76,10 +83,10 @@ Positive confirmation message.
 
 ```tsx
 <Snackbar
-  isOpen={isOpen}
-  onClose={handleClose}
   message="File uploaded successfully!"
   variant="success"
+  isVisible={isVisible}
+  onClose={() => setIsVisible(false)}
 />
 ```
 
@@ -89,10 +96,10 @@ Cautionary message.
 
 ```tsx
 <Snackbar
-  isOpen={isOpen}
-  onClose={handleClose}
   message="Network connection unstable"
   variant="warning"
+  isVisible={isVisible}
+  onClose={() => setIsVisible(false)}
 />
 ```
 
@@ -102,23 +109,320 @@ Error message.
 
 ```tsx
 <Snackbar
-  isOpen={isOpen}
-  onClose={handleClose}
   message="Failed to save changes"
   variant="error"
+  isVisible={isVisible}
+  onClose={() => setIsVisible(false)}
 />
 ```
 
-## Duration
+## Positions
 
-### Auto-dismiss
+### Bottom Positions
+
+```tsx
+// Bottom left
+<Snackbar
+  message="Message"
+  position="bottom-left"
+  isVisible={isVisible}
+  onClose={() => setIsVisible(false)}
+/>
+
+// Bottom center (default)
+<Snackbar
+  message="Message"
+  position="bottom-center"
+  isVisible={isVisible}
+  onClose={() => setIsVisible(false)}
+/>
+
+// Bottom right
+<Snackbar
+  message="Message"
+  position="bottom-right"
+  isVisible={isVisible}
+  onClose={() => setIsVisible(false)}
+/>
+```
+
+### Top Positions
+
+```tsx
+// Top left
+<Snackbar
+  message="Message"
+  position="top-left"
+  isVisible={isVisible}
+  onClose={() => setIsVisible(false)}
+/>
+
+// Top center
+<Snackbar
+  message="Message"
+  position="top-center"
+  isVisible={isVisible}
+  onClose={() => setIsVisible(false)}
+/>
+
+// Top right
+<Snackbar
+  message="Message"
+  position="top-right"
+  isVisible={isVisible}
+  onClose={() => setIsVisible(false)}
+/>
+```
+
+## Animations
+
+### Animation Types
+
+```tsx
+// Slide animation (default)
+<Snackbar
+  message="Message"
+  animation="slide"
+  isVisible={isVisible}
+  onClose={() => setIsVisible(false)}
+/>
+
+// Fade animation
+<Snackbar
+  message="Message"
+  animation="fade"
+  isVisible={isVisible}
+  onClose={() => setIsVisible(false)}
+/>
+
+// Scale animation
+<Snackbar
+  message="Message"
+  animation="scale"
+  isVisible={isVisible}
+  onClose={() => setIsVisible(false)}
+/>
+
+// No animation
+<Snackbar
+  message="Message"
+  animation="none"
+  isVisible={isVisible}
+  onClose={() => setIsVisible(false)}
+/>
+```
+
+## Action Button
+
+### With Action
 
 ```tsx
 <Snackbar
+  message="Changes saved successfully"
+  variant="success"
+  isVisible={isVisible}
+  onClose={() => setIsVisible(false)}
+  action={{
+    label: "Undo",
+    onClick: () => handleUndo()
+  }}
+/>
+```
+
+### Without Action
+
+```tsx
+<Snackbar
+  message="Simple notification"
+  isVisible={isVisible}
+  onClose={() => setIsVisible(false)}
+/>
+```
+
+## Close Button
+
+### With Close Button (Default)
+
+```tsx
+<Snackbar
+  message="Message"
+  isVisible={isVisible}
+  onClose={() => setIsVisible(false)}
+  showCloseButton={true}
+/>
+```
+
+### Without Close Button
+
+```tsx
+<Snackbar
+  message="Message"
+  isVisible={isVisible}
+  onClose={() => setIsVisible(false)}
+  showCloseButton={false}
+/>
+```
+
+## Auto-dismiss
+
+### With Auto-dismiss
+
+```tsx
+<Snackbar
+  message="Message"
+  isVisible={isVisible}
+  onClose={() => setIsVisible(false)}
+  autoHideDuration={4000} // 4 seconds
+/>
+```
+
+### Without Auto-dismiss
+
+```tsx
+<Snackbar
+  message="Persistent message"
+  isVisible={isVisible}
+  onClose={() => setIsVisible(false)}
+  autoHideDuration={0} // No auto-hide
+/>
+```
+
+## Portal Rendering
+
+### With Portal (Default)
+
+```tsx
+<Snackbar
+  message="Message"
+  isVisible={isVisible}
+  onClose={() => setIsVisible(false)}
+  portal={true}
+/>
+```
+
+### Without Portal
+
+```tsx
+<Snackbar
+  message="Message"
+  isVisible={isVisible}
+  onClose={() => setIsVisible(false)}
+  portal={false}
+/>
+```
+
+## Keyboard Navigation
+
+The Snackbar component supports full keyboard navigation:
+
+- **Escape**: Close the snackbar
+- **Enter/Space**: Activate the action button (if present)
+- **Tab**: Navigate between interactive elements
+
+## Accessibility
+
+The Snackbar component follows WCAG AA+ guidelines:
+
+- Proper ARIA attributes (`role="alert"`, `aria-live="polite"`)
+- Keyboard navigation support
+- Screen reader announcements
+- High contrast mode support
+- Focus management
+- Proper color contrast ratios
+
+## API Reference
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `message` | `React.ReactNode` | - | **Required.** Snackbar message content |
+| `variant` | `"info" \| "success" \| "warning" \| "error"` | `"info"` | Semantic variant for styling |
+| `action` | `{ label: string; onClick: () => void }` | - | Optional action button configuration |
+| `isVisible` | `boolean` | `true` | Whether the snackbar is visible |
+| `autoHideDuration` | `number` | `4000` | Auto-hide duration in ms (0 = no auto-hide) |
+| `position` | `"top-left" \| "top-center" \| "top-right" \| "bottom-left" \| "bottom-center" \| "bottom-right"` | `"bottom-center"` | Position of the snackbar |
+| `onClose` | `() => void` | - | Callback when snackbar closes |
+| `className` | `string` | - | Additional CSS class |
+| `aria-label` | `string` | - | ARIA label for accessibility |
+| `showCloseButton` | `boolean` | `true` | Whether to show close button |
+| `animation` | `"slide" \| "fade" \| "scale" \| "none"` | `"slide"` | Animation type |
+| `portal` | `boolean` | `true` | Whether to render in portal |
+
+## Best Practices
+
+### When to Use
+
+- **Success confirmations**: "Changes saved successfully"
+- **Brief notifications**: "New message received"
+- **Non-critical errors**: "Network connection lost"
+- **Undo actions**: "File deleted" with "Undo" button
+
+### When NOT to Use
+
+- **Critical errors**: Use Alert or Modal instead
+- **Complex forms**: Use inline validation
+- **Long messages**: Use Toast or Modal instead
+- **Multiple notifications**: Use Toast system instead
+
+### Accessibility Guidelines
+
+- Always provide meaningful `aria-label` for screen readers
+- Use semantic variants appropriately (error, warning, success, info)
+- Ensure sufficient color contrast (WCAG AA+)
+- Test with keyboard navigation
+- Test with screen readers
+
+### Design Guidelines
+
+- Keep messages concise and actionable
+- Use action buttons sparingly and make them clear
+- Position at bottom for desktop, top for mobile
+- Use appropriate variants for message type
+- Consider auto-hide duration based on message importance
+
+### Performance Tips
+
+- Use `portal={false}` only when necessary
+- Avoid rapid show/hide cycles
+- Consider using a toast management system for multiple notifications
+- Use `animation="none"` for better performance on low-end devices
+
+## Migration from v0.3
+
+The Snackbar component has been significantly improved in v0.4:
+
+### Breaking Changes
+
+- `actionLabel` and `onAction` props replaced with `action` object
+- `position` prop now supports 6 positions instead of 2
+- `isOpen` prop renamed to `isVisible`
+- `duration` prop renamed to `autoHideDuration`
+
+### Migration Guide
+
+```tsx
+// v0.3
+<Snackbar
+  message="Message"
+  actionLabel="Undo"
+  onAction={handleUndo}
   isOpen={isOpen}
-  onClose={handleClose}
-  message="Changes saved"
-  duration={3000} // 3 seconds
+  position="bottom"
+  duration={3000}
+/>
+
+// v0.4
+<Snackbar
+  message="Message"
+  action={{
+    label: "Undo",
+    onClick: handleUndo
+  }}
+  isVisible={isVisible}
+  position="bottom-center"
+  autoHideDuration={3000}
+  onClose={() => setIsVisible(false)}
 />
 ```
 
@@ -341,63 +645,6 @@ function NotificationManager() {
 }
 ```
 
-## Props
-
-```typescript
-interface SnackbarProps {
-  /** Whether the snackbar is visible */
-  isOpen: boolean;
-  /** Callback when snackbar closes */
-  onClose: () => void;
-  /** Message to display */
-  message: string;
-  /** Visual variant */
-  variant?: "default" | "success" | "warning" | "error";
-  /** Auto-dismiss duration in ms (0 = no auto-dismiss) */
-  duration?: number;
-  /** Position on screen */
-  position?: "bottom-left" | "bottom-center" | "bottom-right";
-  /** Optional action button */
-  action?: {
-    label: string;
-    onClick: () => void;
-  };
-  /** Additional CSS class */
-  className?: string;
-}
-```
-
-## Design Principles
-
-Following "The Spexop Way":
-
-1. **Borders before shadows** - Clean border-based design
-2. **Typography before decoration** - Clear message text
-3. **Tokens before magic numbers** - Uses spacing and timing tokens
-4. **Accessibility before aesthetics** - Screen reader announcements
-
-## Accessibility
-
-- ✅ ARIA live region for announcements
-- ✅ Keyboard dismissible (Escape key)
-- ✅ Focus management
-- ✅ Screen reader support
-- ✅ High contrast variants
-- ✅ Sufficient color contrast
-- ✅ WCAG AA+ compliant
-
-### Keyboard Shortcuts
-
-- `Escape` - Dismiss snackbar
-- `Tab` - Focus action button (if present)
-- `Enter/Space` - Activate action button
-
-## Animation
-
-- **Slide up** on open (200ms)
-- **Slide down** on close (200ms)
-- **Easing**: ease-in-out
-
 ## Browser Support
 
 - Chrome/Edge 90+
@@ -410,15 +657,6 @@ Following "The Spexop Way":
 - `Alert` - Persistent inline notifications
 - `Toast` - More prominent notifications
 - `Modal` - Blocking dialogs
-
-## Best Practices
-
-1. **Keep messages brief** - One line is ideal
-2. **Use appropriate variants** - Match severity to variant
-3. **Auto-dismiss for success** - 3-4 seconds is good
-4. **Don't auto-dismiss errors** - Let users read and act
-5. **Provide actions sparingly** - Only when needed
-6. **Queue notifications** - Don't show multiple at once
 
 ## License
 
