@@ -636,7 +636,7 @@ const handleAction = useCallback(() => {
 />
 ```
 
-2. **Lazy Load Icons**
+1. **Lazy Load Icons**
 
 ```tsx
 const LazyIcon = lazy(() => import('@spexop/icons').then(m => ({ default: m.Rocket })));
@@ -647,7 +647,7 @@ const LazyIcon = lazy(() => import('@spexop/icons').then(m => ({ default: m.Rock
 />
 ```
 
-3. **Avoid Inline Functions**
+1. **Avoid Inline Functions**
 
 ```tsx
 // ❌ AVOID - Creates new function on every render
@@ -848,7 +848,7 @@ CTACard is deprecated and will be removed in v0.4.0. Use Card composition instea
    - Test with screen readers
    - Verify color contrast ratios
 
-### Performance
+### Performance Optimization
 
 1. **Optimize Images**
    - Use appropriate icon sizes

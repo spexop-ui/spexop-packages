@@ -65,4 +65,7 @@ spexop-react-rules.mdc
 #Development Documents
 docs-dev/
 
+#Code Workspace
+spexop-packages.code-workspace
+
 
