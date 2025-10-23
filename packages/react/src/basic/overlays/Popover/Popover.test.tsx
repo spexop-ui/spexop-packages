@@ -21,7 +21,13 @@
  * @author @olmstedian | github.com/olmstedian | @spexop | github.com/spexop-ui
  */
 
-import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import React from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -1024,7 +1030,7 @@ describe("Popover", () => {
       await waitFor(() => {
         expect(screen.queryByText("Popover content")).not.toBeInTheDocument();
       });
-      
+
       expect(trigger).toHaveFocus();
     });
   });

@@ -18,8 +18,16 @@ export * from "./cards/index.js";
 // Data Components (2 components)
 export * from "./data/index.js";
 // Display Components (6 components) - exclude IconProps to avoid conflict
-export { 
-  Avatar, Badge, Carousel, CodeBlock, Divider, Icon, KeyboardShortcut, ThemeToggle, IconButton 
+export {
+  Avatar,
+  Badge,
+  Carousel,
+  CodeBlock,
+  Divider,
+  Icon,
+  KeyboardShortcut,
+  ThemeToggle,
+  IconButton,
 } from "./indicators/index.js";
 // Feedback Components (7 components)
 export * from "./feedback/index.js";

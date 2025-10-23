@@ -27,7 +27,11 @@ import {
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import styles from "./SearchModal.module.css";
-import type { SearchModalProps, SearchResult, QuickLink } from "./SearchModal.types.js";
+import type {
+  QuickLink,
+  SearchModalProps,
+  SearchResult,
+} from "./SearchModal.types.js";
 
 export function SearchModal({
   isOpen,

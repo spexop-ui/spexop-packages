@@ -70,10 +70,7 @@
       "import": "./dist/src/templates/renderers.js"
     }
   },
-  "files": [
-    "dist",
-    "src"
-  ],
+  "files": ["dist", "src"],
   "scripts": {
     "build": "vite build",
     "dev": "vite build --watch",
