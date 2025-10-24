@@ -1,5 +1,20 @@
 # Changelog - @spexop/theme
 
+## [0.4.1] - 2025-10-24
+
+### Changed
+
+- Updated npm package configuration to explicitly include documentation files
+- README.md, CHANGELOG.md, CHANGELOG-v0.4.0.md, and LICENSE now included in published package
+- Improved developer experience with offline documentation access in node_modules
+
+### Technical Details
+
+- No code changes from v0.4.0
+- Only packaging configuration updated (files field in package.json)
+- 100% backward compatible
+- Zero functional changes
+
 ## [0.4.0] - 2025-10-22
 
 ### Breaking Changes
@@ -81,7 +96,7 @@
 - Sketch format
 - CSS Custom Properties with fallbacks
 
-### Changed
+### Changed in v0.4.1
 
 #### API Improvements
 
