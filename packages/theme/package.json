@@ -36,7 +36,14 @@
     },
     "./dist/css/*.css": "./dist/css/*.css"
   },
-  "files": ["dist", "src"],
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "CHANGELOG.md",
+    "CHANGELOG-v0.4.0.md",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "tsup && npm run build:css",
     "build:css": "tsx scripts/build-css-presets.ts",
