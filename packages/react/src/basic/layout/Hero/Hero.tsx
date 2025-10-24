@@ -23,7 +23,7 @@ import type { HeroProps } from "./Hero.types.js";
  * ```
  */
 export function Hero({
-  variant = "centered",
+  variant = "centered-spacious",
   eyebrow,
   title,
   subtitle,
@@ -32,11 +32,16 @@ export function Hero({
   secondaryAction,
   stats,
   media,
+  backgroundMedia,
   background = "default",
   align = "center",
   animation,
   backgroundPattern,
   titleLevel = 1,
+  titleSize = 1,
+  overlayIntensity,
+  contentPosition = "center",
+  features,
   ariaLabel,
   className = "",
   style,
@@ -92,6 +97,7 @@ export function Hero({
     styles[`hero--${variant}`],
     styles[`hero--${background}`],
     styles[`hero--align-${align}`],
+    contentPosition && styles[`hero--position-${contentPosition}`],
     className,
   ]
     .filter(Boolean)
@@ -117,8 +123,16 @@ export function Hero({
 
   // Render title
   const renderTitle = () => {
+    const titleStyle = {
+      fontSize: `clamp(${2.5 * titleSize}rem, ${8 * titleSize}vw, ${5 * titleSize}rem)`,
+    };
+
     if (animationConfig.disabled) {
-      return <HeadingTag className={styles.heroTitle}>{title}</HeadingTag>;
+      return (
+        <HeadingTag className={styles.heroTitle} style={titleStyle}>
+          {title}
+        </HeadingTag>
+      );
     }
 
     return (
@@ -131,7 +145,9 @@ export function Hero({
         }
         duration={600}
       >
-        <HeadingTag className={styles.heroTitle}>{title}</HeadingTag>
+        <HeadingTag className={styles.heroTitle} style={titleStyle}>
+          {title}
+        </HeadingTag>
       </FadeIn>
     );
   };
@@ -191,9 +207,10 @@ export function Hero({
         {primaryAction && (
           <Button
             onClick={primaryAction.onClick}
-            variant="primary"
+            variant={primaryAction.variant || "primary"}
             size="lg"
             aria-label={primaryAction.ariaLabel}
+            className={styles.heroButton}
           >
             {primaryAction.iconLeft}
             {primaryAction.label}
@@ -203,9 +220,10 @@ export function Hero({
         {secondaryAction && (
           <Button
             onClick={secondaryAction.onClick}
-            variant="outline"
+            variant={secondaryAction.variant || "outline"}
             size="lg"
             aria-label={secondaryAction.ariaLabel}
+            className={styles.heroButton}
           >
             {secondaryAction.iconLeft}
             {secondaryAction.label}
@@ -311,7 +329,103 @@ export function Hero({
     return (
       <div className={styles.heroMediaContainer}>
         {mediaContent}
-        {media.overlay && <div className={styles.heroMediaOverlay} />}
+        {media.overlay && (
+          <div
+            className={styles.heroMediaOverlay}
+            style={
+              overlayIntensity !== undefined
+                ? { opacity: overlayIntensity }
+                : undefined
+            }
+          />
+        )}
+      </div>
+    );
+  };
+
+  // Render features for feature-showcase variant
+  const renderFeatures = () => {
+    if (!features || features.length === 0) return null;
+
+    const featuresContent = (
+      <div className={styles.heroFeatures}>
+        {features.map((feature, index) => (
+          <div key={`${feature.title}-${index}`} className={styles.heroFeature}>
+            <div className={styles.heroFeatureIcon}>{feature.icon}</div>
+            <h3 className={styles.heroFeatureTitle}>{feature.title}</h3>
+            <p className={styles.heroFeatureDescription}>
+              {feature.description}
+            </p>
+          </div>
+        ))}
+      </div>
+    );
+
+    if (animationConfig.disabled) {
+      return featuresContent;
+    }
+
+    return (
+      <div className={styles.heroFeatures}>
+        <Stagger
+          delay={animationConfig.staggerDelay}
+          variant="fadeIn"
+          duration={400}
+        >
+          {features.map((feature, index) => (
+            <div
+              key={`${feature.title}-${index}`}
+              className={styles.heroFeature}
+            >
+              <div className={styles.heroFeatureIcon}>{feature.icon}</div>
+              <h3 className={styles.heroFeatureTitle}>{feature.title}</h3>
+              <p className={styles.heroFeatureDescription}>
+                {feature.description}
+              </p>
+            </div>
+          ))}
+        </Stagger>
+      </div>
+    );
+  };
+
+  // Render universal background media
+  const renderBackgroundMedia = () => {
+    if (!backgroundMedia) return null;
+
+    const mediaContent =
+      backgroundMedia.type === "video" ? (
+        <video
+          className={styles.heroBackgroundMedia}
+          src={backgroundMedia.src}
+          muted
+          loop
+          autoPlay
+          playsInline
+          aria-label={backgroundMedia.alt || "Background video"}
+        />
+      ) : (
+        <img
+          className={styles.heroBackgroundMedia}
+          src={backgroundMedia.src}
+          alt={backgroundMedia.alt || ""}
+          loading="lazy"
+        />
+      );
+
+    return (
+      <div className={styles.heroBackgroundMediaContainer}>
+        {mediaContent}
+        {backgroundMedia.overlay && (
+          <div
+            className={styles.heroBackgroundMediaOverlay}
+            style={
+              overlayIntensity !== undefined
+                ? { opacity: overlayIntensity }
+                : undefined
+            }
+          />
+        )}
       </div>
     );
   };
@@ -334,6 +448,9 @@ export function Hero({
       style={style}
       aria-label={ariaLabel || "Hero section"}
     >
+      {/* Universal Background Media */}
+      {renderBackgroundMedia()}
+
       {/* Animated Background Pattern */}
       {backgroundPattern && (
         <AnimatedBackground
@@ -344,18 +461,30 @@ export function Hero({
       )}
 
       <div className={styles.heroInner}>
-        {variant === "split" ? (
+        {/* Feature Showcase Variant */}
+        {variant === "feature-showcase" ? (
           <>
-            {renderContent()}
-            {renderMedia()}
+            <div className={styles.heroFeatureShowcaseHeader}>
+              {renderEyebrow()}
+              {renderTitle()}
+              {renderSubtitle()}
+              {renderDescription()}
+            </div>
+            {renderFeatures()}
+            {renderActions()}
           </>
-        ) : variant === "full-bleed" ? (
+        ) : /* Split Variant with Content Overlay */ variant === "split" ? (
+          <>
+            {renderMedia()}
+            <div className={styles.heroSplitContent}>{renderContent()}</div>
+          </>
+        ) : /* Full-Bleed Variant */ variant === "full-bleed" ? (
           <>
             {renderMedia()}
             <div className={styles.heroOverlay}>{renderContent()}</div>
           </>
         ) : (
-          <>
+          /* All Other Variants */ <>
             {renderContent()}
             {media && renderMedia()}
           </>

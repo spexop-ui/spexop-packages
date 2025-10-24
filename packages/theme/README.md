@@ -12,6 +12,7 @@ It's read-only and should be edited in spexop-packages repository. Please don't 
 - ✅ **13 Pre-built Themes** - Production-ready preset themes
 - ✅ **Pre-built CSS Files** - Import and go
 - ✅ **29+ Export Formats** - CSS, SCSS, Tailwind, Figma, and more
+- ✅ **RGB Transparency Support** - Automatic RGB variants for glassmorphism effects
 - ✅ **Type-Safe** - Full TypeScript support
 - ✅ **Zero Runtime Cost** - Uses CSS variables
 - ✅ **Tree-Shakeable** - Import only what you need
@@ -137,6 +138,57 @@ const theme: SpexopThemeConfig = {
 - **Maintainability** - Change once, update everywhere
 - **Clear Intent** - "colors.secondary" is more meaningful than "#3b82f6"
 - **Hybrid Approach** - Mix references and literals as needed
+
+## RGB Transparency Support
+
+The theme system automatically generates RGB variants for primary and surface colors, enabling transparency effects and glassmorphism.
+
+### Generated Tokens
+
+```css
+:root {
+  --theme-primary: #ef4444;
+  --theme-primary-rgb: 239, 68, 68;  /* Auto-generated */
+  
+  --theme-surface: #ffffff;
+  --theme-surface-rgb: 255, 255, 255;  /* Auto-generated */
+}
+```
+
+### Usage in Components
+
+Perfect for modern UI effects:
+
+```css
+/* Glassmorphism effect */
+.elegant-card {
+  background: rgba(var(--theme-surface-rgb), 0.95);
+  backdrop-filter: blur(12px);
+}
+
+/* Transparent overlays */
+.hero-overlay {
+  background: rgba(var(--theme-primary-rgb), 0.1);
+}
+
+/* Layered backgrounds */
+.modern-hero::after {
+  background: radial-gradient(
+    circle,
+    rgba(var(--theme-primary-rgb), 0.1) 0%,
+    transparent 70%
+  );
+}
+```
+
+### Browser Support
+
+Works in all modern browsers with CSS custom property support:
+
+- Chrome 49+
+- Firefox 31+
+- Safari 9.1+
+- Edge 15+
 
 ## Available Presets
 
@@ -487,7 +539,7 @@ const darkTheme = generateDarkMode(lightTheme, {
 - **Tree-shakeable:** Import only what you need
 - **Zero dependencies**
 
-## Browser Support
+## Browser Support (not tested)
 
 Works in all modern browsers that support CSS custom properties:
 

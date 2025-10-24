@@ -6,6 +6,7 @@
  */
 
 import type { SpexopThemeConfig } from "../types/SpexopThemeConfig.js";
+import { hexToRgb } from "../utils/colorManipulation.js";
 import {
   fluidTypographyToCSS,
   generateFluidTypographyScale,
@@ -64,6 +65,35 @@ function cssVarOptional(
   if (value === undefined || value === "") return "";
   const resolved = resolveValue(value, theme);
   return resolved ? `  --theme-${name}: ${resolved};` : "";
+}
+
+/**
+ * Helper to generate CSS variable with RGB variant for transparency support
+ */
+function cssVarWithRgb(
+  name: string,
+  value: string | number | undefined,
+  theme: SpexopThemeConfig,
+): string {
+  if (value === undefined || value === "") return "";
+
+  const resolved = resolveValue(value, theme);
+  if (!resolved) return "";
+
+  let rgbValue = "0, 0, 0"; // Default fallback
+
+  try {
+    // Only convert if it's a hex color
+    if (resolved.startsWith("#")) {
+      const rgb = hexToRgb(resolved);
+      rgbValue = `${rgb.r}, ${rgb.g}, ${rgb.b}`;
+    }
+  } catch (e) {
+    // If conversion fails, use default
+    console.warn(`Could not convert ${resolved} to RGB for ${name}`);
+  }
+
+  return `  --theme-${name}: ${resolved};\n  --theme-${name}-rgb: ${rgbValue};`;
 }
 
 /**
@@ -582,8 +612,8 @@ export function generateCSS(
 
 ${scope} {
   /* === Colors === */
-  /* Primary */
-${cssVar("primary", colors.primary, config)}
+  /* Primary (with RGB for transparency support) */
+${cssVarWithRgb("primary", colors.primary, config)}
 ${cssVar("primary-hover", colors.primaryHover || colors.primary, config)}
 ${cssVar("primary-active", colors.primaryActive || colors.primary, config)}
 ${cssVarOptional("primary-light", colors.primaryLight, config)}
@@ -593,8 +623,8 @@ ${cssVarOptional("secondary", colors.secondary, config)}
 ${cssVarOptional("secondary-hover", colors.secondaryHover, config)}
 ${cssVarOptional("secondary-active", colors.secondaryActive, config)}
   
-  /* Surface */
-${cssVar("surface", colors.surface, config)}
+  /* Surface (with RGB for transparency support) */
+${cssVarWithRgb("surface", colors.surface, config)}
 ${cssVar("surface-secondary", colors.surfaceSecondary, config)}
 ${cssVar("surface-hover", colors.surfaceHover, config)}
   

@@ -1,14 +1,29 @@
 # Changelog - @spexop/theme
 
+## [0.4.2] - 2025-10-24
+
+### Added in v0.4.2
+
+- RGB variants for primary and surface colors to support transparency effects
+  - Generates `--theme-primary-rgb` and `--theme-surface-rgb` custom properties
+  - Enables glassmorphism and rgba() transparency in modern UI components (e.g., Hero component)
+  - Automatic hex-to-RGB conversion with fallback values for non-hex colors
+  - Supports modern UI effects like glassmorphism, layered backgrounds, and transparent overlays
+
+### Changed in v0.4.2
+
+- CSS generator now includes `cssVarWithRgb()` helper function for automatic RGB token generation
+- All 13 pre-built CSS themes now include RGB variants
+
 ## [0.4.1] - 2025-10-24
 
-### Changed
+### Changed in v0.4.1
 
 - Updated npm package configuration to explicitly include documentation files
 - README.md, CHANGELOG.md, CHANGELOG-v0.4.0.md, and LICENSE now included in published package
 - Improved developer experience with offline documentation access in node_modules
 
-### Technical Details
+### Technical Details in v0.4.1
 
 - No code changes from v0.4.0
 - Only packaging configuration updated (files field in package.json)
@@ -17,7 +32,7 @@
 
 ## [0.4.0] - 2025-10-22
 
-### Breaking Changes
+### Breaking Changes in v0.4.0
 
 #### Token Resolution
 
@@ -44,7 +59,7 @@
 - Color validation now supports more formats (hex, rgb, hsl, named colors)
 - Theme validation includes accessibility compliance checks
 
-### Added
+### Added in v0.4.0
 
 #### Security Enhancements
 
@@ -74,7 +89,7 @@
 - Color harmony generation (complementary, triadic, etc.)
 - Color palette generation from base colors
 
-#### Dark Mode Generation
+#### Dark Mode Generation in v0.4.0
 
 - Automatic dark mode generation from light themes
 - Smart color inversion algorithms
@@ -96,7 +111,7 @@
 - Sketch format
 - CSS Custom Properties with fallbacks
 
-### Changed in v0.4.1
+### Changed in v0.4.0
 
 #### API Improvements
 

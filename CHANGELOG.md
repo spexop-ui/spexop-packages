@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [@spexop/react@0.4.2] - 2025-10-24
+
+### @spexop/react v0.4.2
+
+#### Hero Component Major Enhancement in v0.4.2
+
+- 9 layout variants (was 6): centered-spacious, centered-compact, feature-showcase, title, and enhanced modern/elegant/split
+- Universal background media support for all variants
+- Content positioning control for overlay variants
+- Dynamic title sizing and adjustable overlay intensity
+- Parallax effects, glassmorphism, and interactive feature grids
+- Complete documentation rewrite (1700+ lines)
+
+### @spexop/theme v0.4.2
+
+#### RGB Transparency Support in v0.4.2
+
+- Auto-generated RGB variants for primary and surface colors
+- `--theme-primary-rgb` and `--theme-surface-rgb` custom properties
+- Enables glassmorphism and modern transparency effects
+- All 13 pre-built themes updated
+
+---
+
 ## [@spexop/theme@0.4.0] - 2025-10-17
 
 ### Added

@@ -6,11 +6,11 @@
 import { Badge } from "../../indicators/Badge/Badge.js";
 import { Hero } from "./Hero.js";
 
-// Example 1: Centered Hero (Default)
+// Example 1: Centered Spacious Hero (Default)
 export function CenteredHeroExample() {
   return (
     <Hero
-      variant="centered"
+      variant="centered-spacious"
       title="Build Faster with Spexop"
       subtitle="Modern design system for React"
       description="Production-ready components with 245+ design tokens and sophisticated animations"
@@ -103,7 +103,7 @@ export function FullBleedHeroExample() {
 export function AnimatedHeroExample() {
   return (
     <Hero
-      variant="centered"
+      variant="centered-spacious"
       title="Smooth Animations"
       subtitle="Built with performance in mind"
       description="All animations respect user preferences and run at 60fps"
@@ -129,7 +129,7 @@ export function AnimatedHeroExample() {
 export function GradientHeroExample() {
   return (
     <Hero
-      variant="centered"
+      variant="centered-compact"
       background="gradient"
       title="Beautiful Gradients"
       subtitle="Liquid glass aesthetic"
@@ -146,7 +146,7 @@ export function GradientHeroExample() {
 export function ContemporaryHeroExample() {
   return (
     <Hero
-      variant="centered"
+      variant="centered-spacious"
       background="elevated"
       eyebrow={
         <Badge variant="default" pill>

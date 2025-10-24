@@ -5,11 +5,14 @@ import type { ReactNode } from "react";
  */
 export type HeroVariant =
   | "split"
-  | "centered"
+  | "centered-compact"
+  | "centered-spacious"
   | "minimal"
   | "full-bleed"
   | "modern"
-  | "elegant";
+  | "elegant"
+  | "feature-showcase"
+  | "title";
 
 /**
  * Hero background styles
@@ -24,6 +27,11 @@ export type HeroBackground =
  * Content alignment options
  */
 export type HeroAlign = "left" | "center" | "right";
+
+/**
+ * Content position for overlay layouts
+ */
+export type ContentPosition = "top" | "center" | "bottom";
 
 /**
  * Animation sequence options
@@ -108,6 +116,26 @@ export interface HeroStat {
    * Stat label/description
    */
   label: string;
+}
+
+/**
+ * Feature configuration for feature-showcase variant
+ */
+export interface HeroFeature {
+  /**
+   * Feature icon element
+   */
+  icon: ReactNode;
+
+  /**
+   * Feature title
+   */
+  title: string;
+
+  /**
+   * Feature description
+   */
+  description: string;
 }
 
 /**
@@ -213,6 +241,12 @@ export interface HeroProps {
   media?: HeroMedia;
 
   /**
+   * Universal background media (works with all variants)
+   * Applies behind content regardless of layout
+   */
+  backgroundMedia?: HeroMedia;
+
+  /**
    * Background style
    * @default "default"
    */
@@ -240,6 +274,37 @@ export interface HeroProps {
    * @default 1
    */
   titleLevel?: 1 | 2;
+
+  /**
+   * Title size scale multiplier
+   * Multiplies the base clamp values (2.5rem, 8vw, 5rem)
+   * @default 1
+   * @example
+   * titleSize={0.5} - 50% of default size
+   * titleSize={1.5} - 150% of default size
+   */
+  titleSize?: number;
+
+  /**
+   * Overlay intensity for media backgrounds
+   * Controls opacity of the overlay when media.overlay is true
+   * @default undefined (uses default CSS opacity)
+   * @example
+   * overlayIntensity={0.3} - Light overlay
+   * overlayIntensity={0.7} - Heavy overlay
+   */
+  overlayIntensity?: number;
+
+  /**
+   * Content position for overlay layouts (split, full-bleed)
+   * @default "center"
+   */
+  contentPosition?: ContentPosition;
+
+  /**
+   * Features for feature-showcase variant
+   */
+  features?: HeroFeature[];
 
   /**
    * ARIA label for the hero section

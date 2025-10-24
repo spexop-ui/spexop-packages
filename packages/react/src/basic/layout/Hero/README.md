@@ -4,16 +4,20 @@ A reusable, animated Hero component that serves as a prominent entry point for l
 
 ## Features
 
-- ✅ **6 Layout Variants**: centered, split, minimal, full-bleed, modern, elegant
+- ✅ **9 Layout Variants**: centered-compact, centered-spacious, split, minimal, full-bleed, modern, elegant, feature-showcase, title
+- ✅ **Universal Media Backgrounds**: All variants support photo/video backgrounds
+- ✅ **Content Overlay Positioning**: Top, center, or bottom positioning for split/full-bleed variants
 - ✅ **Smooth Animations**: FadeIn, ScaleUp, Stagger with reduced motion support
-- ✅ **Modern UI Elements**: Accent bars, enhanced typography, interactive stats
+- ✅ **Modern UI Elements**: Accent bars, parallax effects, glassmorphism, interactive stats
+- ✅ **Feature Showcase**: Grid-based feature cards with icons and hover effects
 - ✅ **WCAG AA+ Compliant**: Full accessibility with semantic HTML and ARIA
 - ✅ **Responsive Design**: Optimized for mobile, tablet, and desktop
-- ✅ **Interactive Stats**: Hover effects with accent bar animations
 - ✅ **Enhanced Typography**: Clear hierarchy with design tokens
+- ✅ **Title Size Control**: Flexible title scaling with multiplier prop
+- ✅ **Overlay Intensity**: Adjustable media overlay opacity (0-1)
+- ✅ **Spexop Button Integration**: Uses proper Button variants with custom Hero styling
 - ✅ **Type-Safe**: Comprehensive TypeScript support
-- ✅ **Flexible Content**: Eyebrow, title, subtitle, description, actions, stats
-- ✅ **Media Support**: Background images and autoplay videos with optimization
+- ✅ **Flexible Content**: Eyebrow, title, subtitle, description, actions, stats, features
 
 ## Installation
 
@@ -44,13 +48,13 @@ function App() {
 
 ## Layout Variants
 
-### Centered (Default)
+### Centered Spacious (Default)
 
-Perfect for single-column layouts with center-aligned content. Now features accent bar under title.
+Perfect for landing pages with generous spacing and breathing room.
 
 ```tsx
 <Hero
-  variant="centered"
+  variant="centered-spacious"
   eyebrow={<Badge variant="info">New Release</Badge>}
   title="Welcome to Spexop"
   subtitle="Build beautiful interfaces"
@@ -72,13 +76,39 @@ Perfect for single-column layouts with center-aligned content. Now features acce
 
 Features:
 
+- Generous spacing (70vh min-height)
 - 2px accent bar under title
 - Enhanced eyebrow with 2px border
 - Interactive stats with hover effects
+- Center-aligned content
 
-### Modern (New in v0.3.2)
+### Centered Compact
 
-Contemporary design with subtle gradient and accent line effect.
+Minimal spacing variant for secondary pages or contained sections.
+
+```tsx
+<Hero
+  variant="centered-compact"
+  title="Get Started"
+  subtitle="Quick start guide"
+  description="Everything you need to begin building with Spexop"
+  primaryAction={{
+    label: "View Docs",
+    onClick: handleDocs
+  }}
+/>
+```
+
+Features:
+
+- Compact spacing (50vh min-height)
+- Smaller title sizing
+- Tighter gaps between elements
+- Perfect for internal pages
+
+### Modern (Enhanced)
+
+Contemporary design with parallax effects and dynamic depth.
 
 ```tsx
 <Hero
@@ -87,20 +117,28 @@ Contemporary design with subtle gradient and accent line effect.
   title="Build the Future Today"
   subtitle="Modern design system for ambitious teams"
   description="Create stunning, accessible interfaces..."
+  backgroundMedia={{
+    type: "video",
+    src: "/bg-video.mp4",
+    overlay: true
+  }}
+  overlayIntensity={0.4}
   primaryAction={{ label: "Start Building", onClick: handleStart }}
 />
 ```
 
 Features:
 
-- Subtle gradient background
-- Horizontal accent line at top (fades in/out)
+- Animated gradient background with depth
+- Shimmering top accent line
+- Pulsing radial gradient effect (parallax-style)
+- Supports background media with overlay
 - Center-aligned content
-- Clean and contemporary
+- Modern and dynamic appearance
 
-### Elegant (New in v0.3.2)
+### Elegant (Enhanced with Video Support)
 
-Refined design with accent bar and enhanced typography.
+Professional design with glassmorphism and video background support.
 
 ```tsx
 <Hero
@@ -109,38 +147,57 @@ Refined design with accent bar and enhanced typography.
   title="Premium Design System"
   subtitle="Built for scale, designed for excellence"
   description="Trusted by leading companies worldwide..."
+  backgroundMedia={{
+    type: "video",
+    src: "/corporate-bg.mp4",
+    overlay: true
+  }}
+  overlayIntensity={0.6}
   primaryAction={{ label: "Request Demo", onClick: handleDemo }}
 />
 ```
 
 Features:
 
-- 160px primary accent bar at bottom
+- Full video background support
+- Glassmorphism content card (backdrop blur)
+- 200px gradient accent bar at bottom
 - 3px strong bottom border
-- Enhanced typography (medium weight, letter-spacing)
-- Larger description text (18px)
-- Professional appearance
+- Enhanced typography with perfect spacing
+- Professional and premium appearance
 
-### Split
+### Split (Enhanced with Content Overlay)
 
-Side-by-side layout with content on one side and media on the other.
+Full-width video or image with content overlay. Supports adjustable positioning.
 
 ```tsx
 <Hero
   variant="split"
+  contentPosition="center"  // "top" | "center" | "bottom"
   title="Design System Excellence"
-  description="30+ production-ready components with liquid glass aesthetic"
+  subtitle="Build faster with confidence"
+  description="60+ production-ready components with modern UI/UX"
   media={{
-    type: "image",
-    src: "/hero-image.jpg",
-    alt: "Design system preview"
+    type: "video",
+    src: "/hero-video.mp4",
+    autoplay: true,
+    overlay: true
   }}
+  overlayIntensity={0.5}
   primaryAction={{
     label: "Explore Components",
     onClick: handleExplore
   }}
 />
 ```
+
+Features:
+
+- Full-screen media background
+- Content overlay with positioning control
+- Adjustable overlay intensity
+- Video fills entire viewport
+- Responsive mobile behavior
 
 ### Minimal
 
@@ -159,6 +216,42 @@ Simplified single-column layout with reduced spacing.
 />
 ```
 
+### Title (New - Compact Documentation Header)
+
+Ultra-compact variant (20-30vh) perfect for documentation pages. Supports only title and subtitle with optional background media.
+
+```tsx
+<Hero
+  variant="title"
+  title="Component API"
+  subtitle="Complete reference for all props and methods"
+  backgroundMedia={{
+    type: "image",
+    src: "/docs-bg.jpg",
+    overlay: true
+  }}
+  overlayIntensity={0.3}
+/>
+
+// Or with simple eyebrow
+<Hero
+  variant="title"
+  eyebrow="Documentation"
+  title="Getting Started"
+  subtitle="Everything you need to begin building with Spexop"
+/>
+```
+
+Features:
+
+- Compact height (25vh default, 20vh mobile)
+- Center-aligned title and subtitle only
+- No actions, stats, or description displayed
+- Supports background media with overlay
+- Perfect for documentation section headers
+- Clean and minimal design
+- Responsive typography scaling
+
 ### Full-Bleed
 
 Full-width hero with background media and overlay content.
@@ -166,6 +259,7 @@ Full-width hero with background media and overlay content.
 ```tsx
 <Hero
   variant="full-bleed"
+  contentPosition="center"
   title="Immersive Experiences"
   subtitle="Build stunning landing pages"
   media={{
@@ -174,11 +268,80 @@ Full-width hero with background media and overlay content.
     autoplay: true,
     overlay: true
   }}
+  overlayIntensity={0.7}
   background="transparent"
   primaryAction={{
     label: "Watch Demo",
     onClick: handleDemo
   }}
+/>
+```
+
+### Feature Showcase (New)
+
+Grid-based feature display with icons and interactive cards.
+
+```tsx
+import { Zap, Shield, Cpu, Layers } from '@spexop/icons';
+
+<Hero
+  variant="feature-showcase"
+  title="Why Choose Spexop"
+  subtitle="Built for developers, designed for users"
+  description="Everything you need to build modern applications"
+  features={[
+    {
+      icon: <Zap />,
+      title: "Lightning Fast",
+      description: "Optimized for performance with minimal bundle size"
+    },
+    {
+      icon: <Shield />,
+      title: "Secure by Default",
+      description: "Built-in security best practices and WCAG AA+ compliance"
+    },
+    {
+      icon: <Cpu />,
+      title: "Developer Experience",
+      description: "Type-safe APIs with comprehensive TypeScript support"
+    },
+    {
+      icon: <Layers />,
+      title: "Composable",
+      description: "Primitives-first approach for maximum flexibility"
+    }
+  ]}
+  primaryAction={{
+    label: "Get Started",
+    onClick: handleStart
+  }}
+/>
+```
+
+Features:
+
+- Responsive grid layout (auto-fit, 280px min)
+- Interactive hover effects with accent bars
+- Icon containers with primary brand colors
+- 2px borders following Spexop principles
+- Smooth animations with Stagger support
+- Perfect for feature pages or benefits sections
+
+## Universal Background Media
+
+All variants now support background media through the `backgroundMedia` prop:
+
+```tsx
+<Hero
+  variant="centered-spacious"
+  backgroundMedia={{
+    type: "video",
+    src: "/subtle-bg.mp4",
+    overlay: true
+  }}
+  overlayIntensity={0.3}
+  title="Your Title Here"
+  subtitle="With video background"
 />
 ```
 
@@ -315,6 +478,100 @@ Align content to the left, center, or right:
 
 Video automatically pauses when out of viewport to improve performance.
 
+## Title Size Control
+
+Control the size of the hero title using the `titleSize` prop. This prop accepts a multiplier value that scales the base clamp values.
+
+```tsx
+// Small title (50% of default)
+<Hero
+  title="Compact Hero Title"
+  titleSize={0.5}
+  description="Perfect for secondary pages"
+/>
+
+// Default title
+<Hero
+  title="Standard Hero Title"
+  titleSize={1}
+  description="Default size (can be omitted)"
+/>
+
+// Large title (150% of default)
+<Hero
+  title="Bold Hero Title"
+  titleSize={1.5}
+  description="Great for emphasis"
+/>
+
+// Extra large title (200% of default)
+<Hero
+  title="Massive Hero Title"
+  titleSize={2}
+  description="Maximum impact"
+/>
+```
+
+The base title sizing uses responsive clamp values that scale automatically across breakpoints.
+
+## Overlay Intensity Control
+
+When using background media with an overlay, control the opacity of the overlay using the `overlayIntensity` prop. This accepts a value between 0 (transparent) and 1 (fully opaque).
+
+```tsx
+// Light overlay (30% opacity)
+<Hero
+  variant="full-bleed"
+  title="Subtle Overlay"
+  media={{
+    type: "video",
+    src: "/background.mp4",
+    autoplay: true,
+    overlay: true
+  }}
+  overlayIntensity={0.3}
+/>
+
+// Medium overlay (50% opacity)
+<Hero
+  variant="full-bleed"
+  title="Balanced Overlay"
+  media={{
+    type: "image",
+    src: "/background.jpg",
+    overlay: true
+  }}
+  overlayIntensity={0.5}
+/>
+
+// Heavy overlay (80% opacity)
+<Hero
+  variant="full-bleed"
+  title="Dark Overlay"
+  media={{
+    type: "video",
+    src: "/background.mp4",
+    autoplay: true,
+    overlay: true
+  }}
+  overlayIntensity={0.8}
+/>
+
+// Full opacity overlay
+<Hero
+  variant="full-bleed"
+  title="Maximum Contrast"
+  media={{
+    type: "image",
+    src: "/background.jpg",
+    overlay: true
+  }}
+  overlayIntensity={1}
+/>
+```
+
+Note: The `overlayIntensity` prop only takes effect when `media.overlay` is set to `true`.
+
 ## With Icons
 
 Add icons to action buttons for better visual hierarchy:
@@ -367,7 +624,7 @@ The Hero component is built with accessibility in mind:
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `variant` | `"centered" \| "split" \| "minimal" \| "full-bleed"` | `"centered"` | Layout variant |
+| `variant` | `"centered-compact" \| "centered-spacious" \| "split" \| "minimal" \| "full-bleed" \| "modern" \| "elegant" \| "feature-showcase" \| "title"` | `"centered-spacious"` | Layout variant |
 | `title` | `string` | Required | Main title text |
 | `subtitle` | `string` | - | Subtitle text |
 | `description` | `string` | - | Description/body text |
@@ -375,11 +632,17 @@ The Hero component is built with accessibility in mind:
 | `primaryAction` | `ButtonConfig` | - | Primary CTA button |
 | `secondaryAction` | `ButtonConfig` | - | Secondary CTA button |
 | `stats` | `HeroStat[]` | - | Statistics/metrics |
-| `media` | `HeroMedia` | - | Background media |
+| `features` | `HeroFeature[]` | - | Features for feature-showcase variant |
+| `media` | `HeroMedia` | - | Variant-specific media |
+| `backgroundMedia` | `HeroMedia` | - | Universal background media (all variants) |
 | `background` | `"default" \| "elevated" \| "gradient" \| "transparent"` | `"default"` | Background style |
 | `align` | `"left" \| "center" \| "right"` | `"center"` | Content alignment |
+| `contentPosition` | `"top" \| "center" \| "bottom"` | `"center"` | Content position for overlay variants |
 | `animation` | `HeroAnimationConfig` | - | Animation configuration |
+| `backgroundPattern` | `HeroBackgroundPattern` | - | Animated background pattern |
 | `titleLevel` | `1 \| 2` | `1` | Heading level |
+| `titleSize` | `number` | `1` | Title size scale multiplier |
+| `overlayIntensity` | `number` | - | Media overlay opacity (0-1) |
 | `ariaLabel` | `string` | - | ARIA label |
 | `className` | `string` | - | Additional CSS class |
 | `style` | `React.CSSProperties` | - | Inline styles |
@@ -402,8 +665,10 @@ The Hero component is built with accessibility in mind:
 | `type` | `"image" \| "video"` | Media type |
 | `src` | `string` | Media source URL |
 | `alt` | `string` | Alt text (images) |
-| `overlay` | `boolean` | Dark overlay |
+| `overlay` | `boolean` | Enable dark overlay |
 | `autoplay` | `boolean` | Video autoplay |
+
+Note: Use the `overlayIntensity` prop on `Hero` to control the overlay opacity when `overlay` is `true`.
 
 ### HeroStat
 
@@ -411,6 +676,14 @@ The Hero component is built with accessibility in mind:
 |------|------|-------------|
 | `value` | `string` | Stat value (e.g., "245+") |
 | `label` | `string` | Stat label |
+
+### HeroFeature
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `icon` | `ReactNode` | Feature icon element |
+| `title` | `string` | Feature title |
+| `description` | `string` | Feature description |
 
 ### HeroAnimationConfig
 
@@ -484,15 +757,53 @@ The Hero component uses S-prefix design tokens for consistent styling:
 **Modern:** Gradient background + top accent line for contemporary feel  
 **Elegant:** Accent bar + enhanced typography for professional appearance
 
+## Variant Selection Guide
+
+Choose the right variant for your use case:
+
+| Use Case | Recommended Variant | Why |
+|----------|-------------------|-----|
+| Main landing page | `centered-spacious` | Maximum impact, generous breathing room |
+| Internal/secondary pages | `centered-compact` | Compact, efficient use of space |
+| Video showcase | `split` | Full-screen media with overlay content |
+| Feature benefits | `feature-showcase` | Grid cards perfect for listing features |
+| Documentation headers | `title` | Ultra-compact, perfect for section headers |
+| Corporate/Enterprise | `elegant` | Professional with glassmorphism |
+| Modern SaaS | `modern` | Contemporary with parallax effects |
+| Immersive experiences | `full-bleed` | Full-width media backgrounds |
+| Simple announcements | `minimal` | Clean and straightforward |
+
 ## Best Practices
 
-1. **Use h1 for main page heroes**: Set `titleLevel={1}` for the primary hero on a page
-2. **Provide meaningful alt text**: Always add descriptive alt text for images
-3. **Optimize media**: Compress images and videos for faster loading
-4. **Test with reduced motion**: Verify experience with animations disabled
-5. **Keep descriptions concise**: Aim for 2-3 sentences maximum
-6. **Use appropriate variants**: Choose variants that match your content layout
-7. **Leverage new variants**: Use modern for SaaS, elegant for corporate sites
+### Content Guidelines
+
+- **Use h1 for main page heroes**: Set `titleLevel={1}` for the primary hero on a page
+- **Keep titles concise**: Aim for 5-10 words maximum
+- **Meaningful subtitles**: 10-20 words providing context
+- **Brief descriptions**: 2-3 sentences maximum
+- **Limit actions**: Use 1-2 buttons maximum
+
+### Media Guidelines
+
+- **Provide meaningful alt text**: Always add descriptive alt text for images
+- **Optimize media**: Compress images (WebP/AVIF) and videos (H.264, 2-5 Mbps)
+- **Video duration**: Keep looping videos to 10-20 seconds
+- **Overlay intensity**: Use 0.3-0.7 for readability, adjust based on content
+- **Background media**: Use subtle backgrounds to avoid overwhelming content
+
+### Accessibility Guidelines
+
+- **Test with reduced motion**: Verify experience with animations disabled
+- **Keyboard navigation**: Ensure all buttons are keyboard accessible
+- **Color contrast**: Maintain WCAG AA+ contrast ratios
+- **Screen reader testing**: Verify ARIA labels and semantic HTML
+
+### Performance Guidelines
+
+- **Lazy load**: Below-fold images should lazy load
+- **Video autoplay**: Only autoplay muted videos
+- **Pattern intensity**: Use "low" intensity for better performance
+- **Responsive images**: Provide multiple sizes for different viewports
 
 ## Examples
 
@@ -588,6 +899,134 @@ The Hero component uses S-prefix design tokens for consistent styling:
 - [`Container`](../Container/README.md) - Layout container
 - [`FadeIn`](../../animations/FadeIn.tsx) - Animation component
 
+## Quick Reference
+
+### All Variants
+
+```tsx
+"centered-spacious"  // Default, 70vh, generous spacing
+"centered-compact"   // 50vh, minimal spacing
+"split"              // 70vh, full-screen overlay
+"modern"             // 60vh, parallax effects
+"elegant"            // 65vh, glassmorphism
+"feature-showcase"   // Auto height, feature grid
+"title"              // 25vh, documentation header
+"minimal"            // 400px, simple layout
+"full-bleed"         // 600px, immersive media
+```
+
+### Essential Props Cheatsheet
+
+```tsx
+// Required
+title: string
+
+// Layout
+variant?: HeroVariant
+align?: "left" | "center" | "right"
+background?: "default" | "elevated" | "gradient" | "transparent"
+contentPosition?: "top" | "center" | "bottom"
+
+// Content
+subtitle?: string
+description?: string
+eyebrow?: ReactNode
+titleSize?: number  // 0.5 - 2+
+titleLevel?: 1 | 2
+
+// Media
+media?: HeroMedia
+backgroundMedia?: HeroMedia
+overlayIntensity?: number  // 0-1
+
+// Actions
+primaryAction?: ButtonConfig
+secondaryAction?: ButtonConfig
+
+// Data
+stats?: HeroStat[]
+features?: HeroFeature[]
+
+// Animation
+animation?: HeroAnimationConfig
+backgroundPattern?: HeroBackgroundPattern
+
+// Styling
+className?: string
+style?: CSSProperties
+ariaLabel?: string
+```
+
+### Media Configuration
+
+```tsx
+{
+  type: "image" | "video",
+  src: string,
+  alt?: string,
+  overlay?: boolean,
+  autoplay?: boolean  // Video only
+}
+```
+
+### Button Configuration
+
+```tsx
+{
+  label: string,
+  onClick: () => void,
+  variant?: ButtonVariant,
+  iconLeft?: ReactNode,
+  iconRight?: ReactNode,
+  ariaLabel?: string
+}
+```
+
+### Feature Configuration
+
+```tsx
+{
+  icon: ReactNode,
+  title: string,
+  description: string
+}
+```
+
+## Migration Guide
+
+### From v0.3 to v0.4
+
+The `"centered"` variant has been split into two variants:
+
+```tsx
+// Before (v0.3)
+<Hero variant="centered" />
+
+// After (v0.4)
+// For landing pages:
+<Hero variant="centered-spacious" />
+
+// For internal pages:
+<Hero variant="centered-compact" />
+```
+
+**New features in v0.4:**
+
+- 7 new/updated variants
+- Universal `backgroundMedia` prop
+- `contentPosition` prop
+- `titleSize` prop
+- `overlayIntensity` prop
+- `features` prop for feature-showcase variant
+
+## Related Documentation
+
+- [Usage Guide](./USAGE-GUIDE.md) - Comprehensive usage examples
+- [Button Component](../buttons/Button/README.md) - Action buttons
+- [Badge Component](../indicators/Badge/README.md) - Eyebrow badges
+- [Theme Documentation](../../../../theme/README.md) - Design tokens
+
 ## License
 
 MIT © Spexop Design System
+  

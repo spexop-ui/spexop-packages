@@ -5,11 +5,73 @@ All notable changes to @spexop/react will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.2] - 2025-10-24
+
+### Added in v0.4.2 - Hero Component Enhancements
+
+#### New Variants (5 new, 9 total)
+
+- **centered-spacious**: Generous spacing variant for landing pages (70vh)
+- **centered-compact**: Minimal spacing variant for internal pages (50vh)
+- **feature-showcase**: Grid-based feature cards with icons and interactive hover effects
+- **title**: Ultra-compact documentation header (25vh, title and subtitle only)
+- Enhanced **modern** variant with parallax effects and animated gradients
+- Enhanced **elegant** variant with glassmorphism and video background support
+- Enhanced **split** variant with full-screen video overlay and content positioning
+
+#### New Props in v0.4.2
+
+- **titleSize**: Dynamic title scaling with multiplier (0.5 - 2+)
+- **overlayIntensity**: Adjustable media overlay opacity (0-1)
+- **contentPosition**: Content positioning for overlay variants ("top" | "center" | "bottom")
+- **backgroundMedia**: Universal background media support for all variants
+- **features**: Feature cards array for feature-showcase variant (icon, title, description)
+
+#### Feature Enhancements in v0.4.2
+
+- **Universal Background Media**: All variants now support photo/video backgrounds via `backgroundMedia` prop
+- **Split Variant**: Full-screen media with content overlay, adjustable positioning, no blank space
+- **Modern Variant**: Added parallax depth effects, animated gradients, pulsing radial backgrounds
+- **Elegant Variant**: Glassmorphism content cards with backdrop-filter blur, video background support
+- **Button Integration**: Proper Spexop Button variant usage with custom Hero styling
+- **Feature Cards**: Interactive grid layout with hover effects, accent bars, icon containers
+
+#### Documentation in v0.4.2
+
+- Complete rewrite of USAGE-GUIDE.md (700+ lines) with 30+ code examples
+- Enhanced README.md (1030+ lines) with variant selection guide and quick reference
+- Migration guide from v0.3 to v0.4
+- Comprehensive props API documentation
+- Best practices organized by category (Content, Media, Accessibility, Performance)
+
+### Breaking Changes in v0.4.2
+
+- **Removed** `"centered"` variant - replaced with `"centered-spacious"` and `"centered-compact"`
+  - Migration: Use `"centered-spacious"` for landing pages or `"centered-compact"` for internal pages
+  - Default variant changed to `"centered-spacious"`
+
+### Changed in v0.4.2
+
+- Hero component now uses proper Button variants from `@spexop/theme`
+- Split variant completely redesigned for video overlay support
+- Modern and Elegant variants significantly enhanced with new visual effects
+- All variants now support background media independently of layout-specific media
+- Improved responsive behavior across all variants
+
+### Technical in v0.4.2
+
+- Added `HeroFeature` interface for feature-showcase variant
+- Added `ContentPosition` type for overlay positioning
+- Enhanced type safety with 9 variant types
+- CSS modules expanded to 1100+ lines with new variant styles
+- Improved animation handling with Stagger support for features
+- Better mobile responsiveness with optimized breakpoints
+
 ## [0.4.1] - 2025-10-24
 
-### Added
+### Added in v0.4.1
 
-#### Form Validation & Error Handling System
+#### Form Validation & Error Handling System in v0.4.1
 
 - **FormProvider**: Context provider for form state management with validation
 - **FormField**: Field wrapper component with automatic validation and error display
@@ -97,7 +159,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Performance warnings (threshold-based)
 - Development-only (tree-shaken in production)
 
-### Documentation
+### Documentation in v0.4.1
 
 - Comprehensive README files for all new components
 - USAGE-GUIDE files with examples and patterns
@@ -134,7 +196,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added 'page' maxWidth option (1600px) to Container component
 - Available system-wide for all components using Container
 
-### Documentation in v0.4.1
+### Additional Documentation Added in v0.4.1
 
 - PageLayout README with quick start and API reference
 - PageLayout USAGE-GUIDE with comprehensive examples and patterns
@@ -145,7 +207,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.4.0] - 2025-10-22
 
-### Breaking Changes
+### Breaking Changes in v0.4.0
 
 #### Component Structure Reorganization
 
@@ -204,7 +266,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Optimized touch scrolling with momentum on mobile
 - Lazy loading support for images and non-critical content
 
-### Changed
+### Changed in v0.4.0
 
 #### Component Locations
 
