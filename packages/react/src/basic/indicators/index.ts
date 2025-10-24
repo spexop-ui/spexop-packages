@@ -11,6 +11,7 @@ export * from "./Carousel/index.js";
 export * from "./CodeBlock/index.js";
 export * from "./Divider/index.js";
 export * from "./Icon/index.js";
+export * from "./Image/index.js";
 export * from "./KeyboardShortcut/index.js";
 export * from "./ThemeToggle/index.js";
 

@@ -146,4 +146,3 @@ This component follows "The Spexop Way":
 - Spinner - For indeterminate loading indicators
 - Progress - For determinate loading states
 - EmptyState - For empty content states
-

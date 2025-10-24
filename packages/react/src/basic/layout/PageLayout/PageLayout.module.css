@@ -1,0 +1,24 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   PageLayout Component - Page-level layout container
+   Built on Container primitive with page-optimized defaults
+   @version 0.4.1
+   @created 2025-10-24
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.pageLayout {
+  /* Minimal styling - Container handles most layout */
+  box-sizing: border-box;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PERFORMANCE OPTIMIZATIONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Container already applies hardware acceleration and optimizations */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   REDUCED MOTION SUPPORT
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Respect user's motion preferences - Container handles this */
+

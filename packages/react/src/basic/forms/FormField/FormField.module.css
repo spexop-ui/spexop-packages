@@ -1,0 +1,68 @@
+/**
+ * FormField Component Styles
+ * 
+ * Follows "The Spexop Way":
+ * - Principle 2: Borders before shadows
+ * - Principle 3: Typography before decoration
+ * - Principle 4: Tokens before magic numbers
+ * - Principle 7: Accessibility before aesthetics
+ */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--theme-spacing-2);
+  margin-bottom: var(--theme-spacing-4);
+}
+
+.label {
+  font-size: var(--theme-font-size-sm);
+  font-weight: var(--theme-font-weight-semibold);
+  color: var(--theme-text);
+  display: flex;
+  align-items: center;
+  gap: var(--theme-spacing-1);
+}
+
+.required {
+  color: var(--theme-error, #dc2626);
+  font-weight: var(--theme-font-weight-bold);
+}
+
+.helperText {
+  font-size: var(--theme-font-size-xs);
+  color: var(--theme-text-secondary);
+  line-height: 1.4;
+}
+
+.error {
+  font-size: var(--theme-font-size-xs);
+  color: var(--theme-error, #dc2626);
+  font-weight: var(--theme-font-weight-semibold);
+  line-height: 1.4;
+  display: flex;
+  align-items: center;
+  gap: var(--theme-spacing-1);
+}
+
+.inputWrapper {
+  position: relative;
+}
+
+/* Accessibility: Focus visible */
+.field:focus-within .label {
+  color: var(--theme-primary);
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .error {
+    text-decoration: underline;
+  }
+
+  .required {
+    outline: 2px solid var(--theme-error, #dc2626);
+    outline-offset: 2px;
+  }
+}
+

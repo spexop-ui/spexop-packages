@@ -174,34 +174,42 @@ function AppWithSettings() {
 ## Settings Sections
 
 ### Theme Section
+
 - Light, Dark, Auto options
 - Visual theme switcher with icons
 
 ### Color Palette Section
+
 - Red, Blue, Green, Purple, Neutral
 - Visual color indicators
 
 ### Layout Width Section
+
 - Default, Boxed, Fluid options
 - Controls overall layout behavior
 
 ### Content Width Section
+
 - Full, XL, L, M options
 - Controls max content width
 
 ### Spacing Section
+
 - Compact, Normal, Spacious
 - Affects padding throughout
 
 ### Sidebar Position Section
+
 - Left, Right options
 - Controls sidebar placement
 
 ### Sidebar Visibility Section
+
 - Show (icons mode), Hide options
 - Two-state architecture
 
 ### Text Zoom Section
+
 - 100-200% range
 - WCAG 2.2 AA compliance
 - Slider with percentage display
@@ -284,4 +292,3 @@ Following "The Spexop Way":
 ## License
 
 MIT
-

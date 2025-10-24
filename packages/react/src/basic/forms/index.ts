@@ -11,6 +11,7 @@ export * from "./Combobox/index.js";
 export * from "./DatePicker/index.js";
 export * from "./FileUpload/index.js";
 export * from "./Form/index.js";
+export * from "./FormField/index.js";
 export * from "./RadioGroup/index.js";
 export * from "./SearchBar/index.js";
 export * from "./Select/index.js";

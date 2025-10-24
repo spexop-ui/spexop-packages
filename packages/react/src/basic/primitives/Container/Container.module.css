@@ -51,6 +51,10 @@
   max-width: 1920px; /* Extra large, no standard breakpoint */
 }
 
+.maxWidthPage {
+  max-width: 1600px; /* Page layout standard width */
+}
+
 .maxWidthFull {
   max-width: none;
 }

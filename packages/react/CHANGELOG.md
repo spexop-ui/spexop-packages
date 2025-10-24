@@ -5,6 +5,148 @@ All notable changes to @spexop/react will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2025-10-24
+
+### Added
+
+#### Form Validation & Error Handling System
+
+- **FormProvider**: Context provider for form state management with validation
+- **FormField**: Field wrapper component with automatic validation and error display
+- **useForm** hook: Access form state and methods
+- **useFormField** hook: Individual field management with validation
+- Built-in validators: required, email, url, minLength, maxLength, min, max, pattern, custom, async
+- Real-time validation (onChange, onBlur, onSubmit)
+- Field-level and form-level error handling
+- Async validation support
+- Cross-field validation
+- Conditional validation rules
+- Full accessibility with ARIA labels and error announcements
+
+#### Image Component with Optimization
+
+- **Image** component: Optimized image component with lazy loading
+- Lazy loading with IntersectionObserver
+- Responsive srcset generation
+- Blur-up placeholder (LQIP)
+- Shimmer loading skeleton
+- Modern format support (WebP, AVIF)
+- Aspect ratio preservation
+- Error fallback handling
+- Priority loading support
+- **useImageOptimization** hook: Image optimization utilities
+
+#### Data Fetching System
+
+- **DataFetchProvider**: Context provider for data fetching with caching
+- **useFetch** hook: Fetch data with loading/error states and caching
+- **useMutation** hook: POST/PUT/DELETE operations with callbacks
+- **useInfiniteScroll** hook: Paginated data fetching with auto-loading
+- **usePrefetch** hook: Prefetch data for performance
+- Automatic caching with TTL
+- Request deduplication
+- Retry logic with exponential backoff
+- Abort signal support
+- TypeScript generics for type-safe responses
+
+#### SEO Components
+
+- **SEO** component: Comprehensive meta tags and structured data
+- **OpenGraph** component: OpenGraph protocol meta tags
+- **JsonLd** component: JSON-LD structured data
+- OpenGraph protocol support
+- Twitter Card support
+- Schema.org structured data
+- Canonical URL handling
+- Meta robots and viewport configuration
+- Title template support
+
+#### Animation Presets Library
+
+- **BounceIn**: Bounce entrance animation
+- **FlipIn**: 3D flip entrance animation
+- **ElasticSlide**: Elastic easing slide animation
+- **Blur**: Blur in/out transition
+- **TypeWriter**: Text typing effect animation
+- **Parallax**: Parallax scroll effect
+
+#### Internationalization (i18n)
+
+- **I18nProvider**: Internationalization context provider
+- **useTranslation** hook: Translation hook with fallbacks
+- **useLocale** hook: Current locale management
+- **useFormatNumber** hook: Number formatting
+- **useFormatDate** hook: Date formatting
+- **useFormatCurrency** hook: Currency formatting
+- JSON-based translation files
+- Nested translation keys
+- Pluralization support
+- Variable interpolation
+- Locale switching
+- RTL support detection
+- Native Intl API formatters
+
+#### Performance Monitoring
+
+- **PerformanceProvider**: Performance tracking provider (dev-only)
+- **useRenderCount** hook: Track component renders
+- **useRenderTime** hook: Measure render duration
+- **useComponentPerf** hook: Component-level metrics
+- Component render tracking
+- Render time measurement
+- Performance warnings (threshold-based)
+- Development-only (tree-shaken in production)
+
+### Documentation
+
+- Comprehensive README files for all new components
+- USAGE-GUIDE files with examples and patterns
+- TypeScript type definitions for all APIs
+- Inline JSDoc documentation
+
+## [0.4.1] - 2025-10-24
+
+### Added in v0.4.1
+
+#### PageLayout Component
+
+- New PageLayout component for page-level layouts with optimized defaults
+- 1600px default max-width (new 'page' option) ideal for page layouts
+- Responsive padding: 24px (mobile) → 40px (tablet) → 64px (desktop)
+- Dual padding API: accepts both semantic string variants ('lg') and numeric values (8)
+- Built on Container primitive for consistency and DRY principles
+- Polymorphic component supporting any HTML element via 'as' prop
+- Comprehensive test suite with 30 tests passing
+- Complete documentation with README and USAGE-GUIDE
+
+#### LoadingStates Components
+
+- New comprehensive loading state components for various use cases
+- **TextSkeleton**: Versatile text loading skeleton with multiple variants (text, heading, circle, rectangle)
+- **CardSkeleton**: Loading skeleton for card components with optional image, avatar, and footer
+- **PageSkeleton**: Full page loading skeleton with header, navigation, sections, and sidebar
+- **LoadingOverlay**: Full-screen or section loading overlay with 4 animation variants (spinner, dots, pulse, bars)
+- Size variants (sm, md, lg, xl) across all components
+- Animation speed control (slow, normal, fast)
+- Responsive and mobile-optimized
+- Dark mode and reduced motion support
+- Full ARIA labels for accessibility
+- 52 comprehensive tests passing
+
+#### Container Enhancements
+
+- Added 'page' maxWidth option (1600px) to Container component
+- Available system-wide for all components using Container
+
+### Documentation in v0.4.1
+
+- PageLayout README with quick start and API reference
+- PageLayout USAGE-GUIDE with comprehensive examples and patterns
+- LoadingStates README with complete API documentation
+- Examples for landing pages, blog posts, dashboards, and documentation pages
+- Loading state patterns for cards, pages, text, and overlays
+- Best practices and accessibility guidelines
+
 ## [0.4.0] - 2025-10-22
 
 ### Breaking Changes
@@ -26,7 +168,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Feedback components moved from `display/` to `feedback/`
 - Animation hooks moved from `animations/` to `hooks/`
 
-### Added
+### Added in v0.4.0
 
 #### Composition Patterns
 

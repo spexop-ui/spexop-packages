@@ -158,4 +158,3 @@ This component follows "The Spexop Way":
 - Alert - For important messages
 - Skeleton - For loading placeholders
 - Card - For content containers
-

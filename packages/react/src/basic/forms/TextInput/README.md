@@ -624,7 +624,7 @@ Respects `prefers-reduced-motion` for smooth or instant transitions:
 )}
 ```
 
-#### Required Field Indicators
+#### Required Field Indicators in v0.4.0
 
 ```tsx
 // Before: No visual required indicator

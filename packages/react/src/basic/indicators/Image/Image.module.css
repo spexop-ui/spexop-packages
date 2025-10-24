@@ -1,0 +1,168 @@
+/**
+ * Image Component Styles
+ * 
+ * Follows "The Spexop Way":
+ * - Principle 2: Borders before shadows
+ * - Principle 4: Tokens before magic numbers
+ * - Principle 7: Accessibility before aesthetics
+ */
+
+.container {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  background-color: var(--theme-surface-secondary, #f3f4f6);
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.imageContain {
+  object-fit: contain;
+}
+
+.imageCover {
+  object-fit: cover;
+}
+
+.imageFill {
+  object-fit: fill;
+}
+
+.imageNone {
+  object-fit: none;
+}
+
+.imageScaleDown {
+  object-fit: scale-down;
+}
+
+/* Aspect ratio container */
+.aspectRatio {
+  position: relative;
+  width: 100%;
+}
+
+.aspectRatio::before {
+  content: '';
+  display: block;
+  padding-bottom: var(--aspect-ratio, 100%);
+}
+
+.aspectRatio .image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Loading states */
+.skeleton {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--theme-surface-secondary, #f3f4f6) 0%,
+    var(--theme-surface-tertiary, #e5e7eb) 50%,
+    var(--theme-surface-secondary, #f3f4f6) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Blur placeholder */
+.blur {
+  filter: blur(20px);
+  transform: scale(1.1);
+  transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+.blurLoaded {
+  filter: blur(0);
+  transform: scale(1);
+}
+
+/* Fade in animation */
+.fadeIn {
+  opacity: 0;
+  animation: fadeIn 0.3s ease forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Error state */
+.error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background-color: var(--theme-surface-secondary, #f3f4f6);
+  color: var(--theme-text-secondary, #6b7280);
+  font-size: var(--theme-font-size-sm);
+  text-align: center;
+  padding: var(--theme-spacing-4);
+}
+
+/* Loading state */
+.loading {
+  opacity: 0;
+}
+
+.loaded {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .skeleton {
+    background: repeating-linear-gradient(
+      45deg,
+      var(--theme-surface-secondary, #f3f4f6),
+      var(--theme-surface-secondary, #f3f4f6) 10px,
+      var(--theme-surface-tertiary, #e5e7eb) 10px,
+      var(--theme-surface-tertiary, #e5e7eb) 20px
+    );
+  }
+
+  .error {
+    border: 2px solid var(--theme-error, #dc2626);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+
+  .blur,
+  .fadeIn,
+  .loaded {
+    animation: none;
+    transition: none;
+  }
+}
+

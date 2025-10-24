@@ -8,6 +8,7 @@
 export * from "./Accordion/index.js";
 export * from "./Footer/index.js";
 export * from "./Hero/index.js";
+export * from "./PageLayout/index.js";
 export * from "./PanelSection/index.js";
 export * from "./ScrollHeader/index.js";
 export * from "./Section/index.js";
