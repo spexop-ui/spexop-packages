@@ -1,5 +1,13 @@
 # Changelog - @spexop/theme
 
+## [0.4.4] - 2025-10-24
+
+### Changed
+
+- Version sync with @spexop/react v0.4.4
+- No functional changes from v0.4.3
+- Keeping version numbers aligned across packages
+
 ## [0.4.3] - 2025-10-24
 
 ### Added
