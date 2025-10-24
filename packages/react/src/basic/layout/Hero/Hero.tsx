@@ -11,7 +11,7 @@ import type { HeroProps } from "./Hero.types.js";
  * @example
  * ```tsx
  * <Hero
- *   variant="centered"
+ *   variant="centered-spacious"
  *   title="Build Faster with Spexop"
  *   subtitle="Modern design system for React"
  *   description="Production-ready components with 245+ design tokens"
@@ -48,6 +48,7 @@ export function Hero({
 }: HeroProps) {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const backgroundVideoRef = useRef<HTMLVideoElement>(null);
 
   // Check for prefers-reduced-motion
   useEffect(() => {
@@ -62,7 +63,7 @@ export function Hero({
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
 
-  // Handle video autoplay with intersection observer
+  // Handle video autoplay with intersection observer for media prop
   useEffect(() => {
     if (media?.type === "video" && media.autoplay && videoRef.current) {
       const observer = new IntersectionObserver(
@@ -82,6 +83,31 @@ export function Hero({
       return () => observer.disconnect();
     }
   }, [media]);
+
+  // Handle video autoplay with intersection observer for backgroundMedia prop
+  useEffect(() => {
+    if (
+      backgroundMedia?.type === "video" &&
+      backgroundMedia.autoplay &&
+      backgroundVideoRef.current
+    ) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) {
+              backgroundVideoRef.current?.play();
+            } else {
+              backgroundVideoRef.current?.pause();
+            }
+          }
+        },
+        { threshold: 0.5 },
+      );
+
+      observer.observe(backgroundVideoRef.current);
+      return () => observer.disconnect();
+    }
+  }, [backgroundMedia]);
 
   // Animation config with defaults
   const animationConfig = {
@@ -396,6 +422,7 @@ export function Hero({
     const mediaContent =
       backgroundMedia.type === "video" ? (
         <video
+          ref={backgroundVideoRef}
           className={styles.heroBackgroundMedia}
           src={backgroundMedia.src}
           muted

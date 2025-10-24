@@ -1080,16 +1080,16 @@ Automatically respects `prefers-reduced-motion`:
 
 ```tsx
 // Old centered → centered-spacious (for landing pages)
-<Hero variant="centered" /> 
-→ <Hero variant="centered-spacious" />
+<Hero variant="centered" />  // v0.3 ❌
+→ <Hero variant="centered-spacious" />  // v0.4 ✅
 
 // Old centered → centered-compact (for internal pages)
-<Hero variant="centered" />
-→ <Hero variant="centered-compact" />
+<Hero variant="centered" />  // v0.3 ❌
+→ <Hero variant="centered-compact" />  // v0.4 ✅
 
 // Old split → Use new overlay features
-<Hero variant="split" media={{ ... }} />
-→ <Hero variant="split" contentPosition="center" media={{ ... }} />
+<Hero variant="split" media={{ ... }} />  // v0.3
+→ <Hero variant="split" contentPosition="center" media={{ ... }} />  // v0.4 ✅
 ```
 
 ## Troubleshooting

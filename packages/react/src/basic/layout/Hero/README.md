@@ -33,7 +33,7 @@ import { Hero } from '@spexop/react';
 function App() {
   return (
     <Hero
-      variant="centered"
+      variant="centered-spacious"
       title="Build Faster with Spexop"
       subtitle="Modern design system for React"
       description="Production-ready components with 245+ design tokens"
@@ -351,7 +351,7 @@ Display key metrics alongside your hero content with modern interactive cards.
 
 ```tsx
 <Hero
-  variant="centered"
+  variant="centered-spacious"
   title="Trusted by Developers"
   subtitle="Building the future of design systems"
   stats={[
@@ -380,7 +380,7 @@ Control animation behavior with fine-grained settings.
 
 ```tsx
 <Hero
-  variant="centered"
+  variant="centered-spacious"
   title="Animated Hero"
   animation={{
     sequence: 'sequential',     // or 'simultaneous'
@@ -811,11 +811,11 @@ Choose the right variant for your use case:
 
 ```tsx
 <Hero
-  variant="centered"
+  variant="centered-spacious"
   eyebrow={<Badge variant="success">New Release</Badge>}
   title="Spexop Design System 2.0"
   subtitle="Build stunning interfaces faster than ever"
-  description="Production-ready React components with sophisticated animations and liquid glass aesthetics. Start building beautiful applications today."
+  description="Production-ready React components with sophisticated animations and modern UI/UX. Start building beautiful applications today."
   primaryAction={{
     label: "Get Started",
     onClick: () => navigate('/docs'),
@@ -828,7 +828,7 @@ Choose the right variant for your use case:
   }}
   stats={[
     { value: "245+", label: "Design Tokens" },
-    { value: "30+", label: "Components" },
+    { value: "60+", label: "Components" },
     { value: "100%", label: "TypeScript" }
   ]}
   animation={{
@@ -1000,14 +1000,14 @@ The `"centered"` variant has been split into two variants:
 
 ```tsx
 // Before (v0.3)
-<Hero variant="centered" />
+<Hero variant="centered" />  // ❌ No longer supported
 
 // After (v0.4)
 // For landing pages:
-<Hero variant="centered-spacious" />
+<Hero variant="centered-spacious" />  // ✅ Use this
 
 // For internal pages:
-<Hero variant="centered-compact" />
+<Hero variant="centered-compact" />  // ✅ Use this
 ```
 
 **New features in v0.4:**

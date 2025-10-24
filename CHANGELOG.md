@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### @spexop/react v0.4.2
 
+#### Critical Bugfix
+
+- Background media videos now properly autoplay with intersection observer
+
 #### Hero Component Major Enhancement in v0.4.2
 
 - 9 layout variants (was 6): centered-spacious, centered-compact, feature-showcase, title, and enhanced modern/elegant/split

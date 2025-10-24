@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.4.2] - 2025-10-24
 
+### Fixed in v0.4.2
+
+- **Critical**: Background media videos now properly autoplay with intersection observer
+  - Added `backgroundVideoRef` ref and autoplay logic for `backgroundMedia` prop
+  - Videos automatically pause when out of viewport for performance optimization
+  - Matches existing behavior of `media` prop videos
+
 ### Added in v0.4.2 - Hero Component Enhancements
 
 #### New Variants (5 new, 9 total)
