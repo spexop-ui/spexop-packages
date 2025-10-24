@@ -1,8 +1,8 @@
 # Changelog - @spexop/theme
 
-## [0.4.2] - 2025-10-24
+## [0.4.3] - 2025-10-24
 
-### Added in v0.4.2
+### Added
 
 - RGB variants for primary and surface colors to support transparency effects
   - Generates `--theme-primary-rgb` and `--theme-surface-rgb` custom properties

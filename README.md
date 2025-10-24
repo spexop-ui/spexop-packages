@@ -2,16 +2,16 @@
 
 Professional React component library with a flexible theme system. Build modern web applications with primitives-first architecture.
 
-## 🎉 What's New in v0.4.2
+## 🎉 What's New in v0.4.3
 
-### Hero Component Major Enhancement in v0.4.2
+### Hero Component Major Enhancement
 
 - **9 layout variants** with modern UI/UX effects (glassmorphism, parallax, feature grids)
 - **Universal background media** support for all variants
 - **Dynamic title sizing** and overlay intensity control
 - **1700+ lines** of comprehensive documentation
 
-### RGB Transparency Support in v0.4.2
+### RGB Transparency Support
 
 - Auto-generated RGB tokens (`--theme-primary-rgb`, `--theme-surface-rgb`)
 - Enables modern transparency effects and glassmorphism
@@ -21,8 +21,8 @@ Professional React component library with a flexible theme system. Build modern 
 
 ## 📦 Packages
 
-- **[@spexop/theme](./packages/theme)** `v0.4.2` - Theme system with 13 presets, 29+ export formats, and RGB transparency
-- **[@spexop/react](./packages/react)** `v0.4.2` - 60+ React components with enhanced Hero and full theme support
+- **[@spexop/theme](./packages/theme)** `v0.4.3` - Theme system with 13 presets, 29+ export formats, and RGB transparency
+- **[@spexop/react](./packages/react)** `v0.4.3` - 60+ React components with enhanced Hero and full theme support
 
 ## 🚀 Quick Start
 

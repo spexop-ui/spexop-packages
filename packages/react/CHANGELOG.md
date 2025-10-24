@@ -5,18 +5,18 @@ All notable changes to @spexop/react will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.4.2] - 2025-10-24
+## [0.4.3] - 2025-10-24
 
-### Fixed in v0.4.2
+### Fixed in v0.4.3
 
 - **Critical**: Background media videos now properly autoplay with intersection observer
   - Added `backgroundVideoRef` ref and autoplay logic for `backgroundMedia` prop
   - Videos automatically pause when out of viewport for performance optimization
   - Matches existing behavior of `media` prop videos
 
-### Added in v0.4.2 - Hero Component Enhancements
+## [0.4.2] - 2025-10-24
 
-#### New Variants (5 new, 9 total)
+### New Variants (5 new, 9 total) in v0.4.2
 
 - **centered-spacious**: Generous spacing variant for landing pages (70vh)
 - **centered-compact**: Minimal spacing variant for internal pages (50vh)
@@ -26,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Enhanced **elegant** variant with glassmorphism and video background support
 - Enhanced **split** variant with full-screen video overlay and content positioning
 
-#### New Props in v0.4.2
+### New Props in v0.4.2
 
 - **titleSize**: Dynamic title scaling with multiplier (0.5 - 2+)
 - **overlayIntensity**: Adjustable media overlay opacity (0-1)
@@ -34,7 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **backgroundMedia**: Universal background media support for all variants
 - **features**: Feature cards array for feature-showcase variant (icon, title, description)
 
-#### Feature Enhancements in v0.4.2
+### Feature Enhancements in v0.4.2
 
 - **Universal Background Media**: All variants now support photo/video backgrounds via `backgroundMedia` prop
 - **Split Variant**: Full-screen media with content overlay, adjustable positioning, no blank space
@@ -43,7 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Button Integration**: Proper Spexop Button variant usage with custom Hero styling
 - **Feature Cards**: Interactive grid layout with hover effects, accent bars, icon containers
 
-#### Documentation in v0.4.2
+### Documentation in v0.4.2
 
 - Complete rewrite of USAGE-GUIDE.md (700+ lines) with 30+ code examples
 - Enhanced README.md (1030+ lines) with variant selection guide and quick reference
@@ -327,7 +327,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Specialized card components: BlogCard, FeatureCard, ProfileCard, StatsCard, TestimonialCard
 - Backwards compatible re-export shims
 
-### Fixed
+### Fixed in v0.4.0
 
 #### Mobile Issues
 

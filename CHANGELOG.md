@@ -7,9 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [@spexop/react@0.4.2] - 2025-10-24
+## [0.4.3] - 2025-10-24
 
-### @spexop/react v0.4.2
+### @spexop/react v0.4.3
 
 #### Critical Bugfix
 
@@ -24,9 +24,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Parallax effects, glassmorphism, and interactive feature grids
 - Complete documentation rewrite (1700+ lines)
 
-### @spexop/theme v0.4.2
+### @spexop/theme v0.4.3
 
-#### RGB Transparency Support in v0.4.2
+#### RGB Transparency Support
 
 - Auto-generated RGB variants for primary and surface colors
 - `--theme-primary-rgb` and `--theme-surface-rgb` custom properties
