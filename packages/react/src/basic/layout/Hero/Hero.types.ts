@@ -279,11 +279,288 @@ export interface HeroProps {
    * Title size scale multiplier
    * Multiplies the base clamp values (2.5rem, 8vw, 5rem)
    * @default 1
+   * @recommended Use values between 0.5 and 2.0 for best results
    * @example
    * titleSize={0.5} - 50% of default size
    * titleSize={1.5} - 150% of default size
    */
   titleSize?: number;
+
+  /**
+   * Title text color (CSS color or design token)
+   * @default "var(--theme-text)"
+   * @example
+   * titleColor="var(--theme-primary)"
+   * titleColor="#FF5733"
+   */
+  titleColor?: string;
+
+  /**
+   * Title font weight
+   * @default "var(--theme-font-weight-bold)"
+   * @example
+   * titleWeight={700}
+   * titleWeight="bold"
+   */
+  titleWeight?: number | string;
+
+  /**
+   * Title letter spacing
+   * @default "-0.02em"
+   * @example
+   * titleLetterSpacing="0"
+   * titleLetterSpacing="0.05em"
+   */
+  titleLetterSpacing?: string;
+
+  /**
+   * Title max width
+   * @default undefined
+   * @example
+   * titleMaxWidth="800px"
+   * titleMaxWidth="60ch"
+   */
+  titleMaxWidth?: string;
+
+  /**
+   * Title opacity
+   * @default 1
+   * @example
+   * titleOpacity={0.9}
+   */
+  titleOpacity?: number;
+
+  /**
+   * Title line height
+   * @default "1.1"
+   * @example
+   * titleLineHeight={1.2}
+   * titleLineHeight="1.5"
+   */
+  titleLineHeight?: number | string;
+
+  /**
+   * Subtitle size scale multiplier
+   * Multiplies the base clamp values (1.25rem, 3vw, 1.75rem)
+   * @default 1
+   * @recommended Use values between 0.5 and 2.0 for best results
+   * @example
+   * subtitleSize={0.8} - 80% of default size
+   * subtitleSize={1.2} - 120% of default size
+   */
+  subtitleSize?: number;
+
+  /**
+   * Subtitle text color (CSS color or design token)
+   * @default "var(--theme-text-secondary)"
+   * @example
+   * subtitleColor="var(--theme-text)"
+   * subtitleColor="var(--theme-primary)"
+   */
+  subtitleColor?: string;
+
+  /**
+   * Subtitle font weight
+   * @default "var(--theme-font-weight-semibold)"
+   * @example
+   * subtitleWeight={600}
+   * subtitleWeight="semibold"
+   */
+  subtitleWeight?: number | string;
+
+  /**
+   * Subtitle letter spacing
+   * @default "-0.01em"
+   * @example
+   * subtitleLetterSpacing="0"
+   * subtitleLetterSpacing="0.02em"
+   */
+  subtitleLetterSpacing?: string;
+
+  /**
+   * Subtitle max width
+   * @default undefined
+   * @example
+   * subtitleMaxWidth="700px"
+   * subtitleMaxWidth="70ch"
+   */
+  subtitleMaxWidth?: string;
+
+  /**
+   * Subtitle opacity
+   * @default 1
+   * @example
+   * subtitleOpacity={0.9}
+   */
+  subtitleOpacity?: number;
+
+  /**
+   * Subtitle line height
+   * @default "1.4"
+   * @example
+   * subtitleLineHeight={1.5}
+   * subtitleLineHeight="1.6"
+   */
+  subtitleLineHeight?: number | string;
+
+  /**
+   * Description size scale multiplier
+   * Multiplies the base clamp values (1rem, 2vw, 1.125rem)
+   * @default 1
+   * @recommended Use values between 0.5 and 2.0 for best results
+   * @example
+   * descriptionSize={0.9} - 90% of default size
+   * descriptionSize={1.1} - 110% of default size
+   */
+  descriptionSize?: number;
+
+  /**
+   * Description text color (CSS color or design token)
+   * @default "var(--theme-text-secondary)"
+   * @example
+   * descriptionColor="var(--theme-text)"
+   */
+  descriptionColor?: string;
+
+  /**
+   * Description font weight
+   * @default "var(--theme-font-weight-regular)"
+   * @example
+   * descriptionWeight={500}
+   * descriptionWeight="medium"
+   */
+  descriptionWeight?: number | string;
+
+  /**
+   * Description letter spacing
+   * @default "0"
+   * @example
+   * descriptionLetterSpacing="0.01em"
+   */
+  descriptionLetterSpacing?: string;
+
+  /**
+   * Description max width
+   * @default "65ch"
+   * @example
+   * descriptionMaxWidth="800px"
+   * descriptionMaxWidth="70ch"
+   */
+  descriptionMaxWidth?: string;
+
+  /**
+   * Description opacity
+   * @default 1
+   * @example
+   * descriptionOpacity={0.85}
+   */
+  descriptionOpacity?: number;
+
+  /**
+   * Description line height
+   * @default "1.7"
+   * @example
+   * descriptionLineHeight={1.8}
+   * descriptionLineHeight="2"
+   */
+  descriptionLineHeight?: number | string;
+
+  /**
+   * Stats value size scale multiplier
+   * Multiplies the base clamp values (2rem, 4vw, 3rem)
+   * @default 1
+   * @recommended Use values between 0.5 and 2.0 for best results
+   * @example
+   * statsValueSize={1.2} - 120% of default size
+   */
+  statsValueSize?: number;
+
+  /**
+   * Stats value color
+   * @default "var(--theme-primary)"
+   * @example
+   * statsValueColor="var(--theme-text)"
+   */
+  statsValueColor?: string;
+
+  /**
+   * Stats value font weight
+   * @default "var(--theme-font-weight-bold)"
+   * @example
+   * statsValueWeight={800}
+   */
+  statsValueWeight?: number | string;
+
+  /**
+   * Stats label size (direct CSS value, NOT a multiplier)
+   * Unlike titleSize, subtitleSize, etc., this accepts a direct font-size value
+   * @default "var(--theme-font-size-sm)"
+   * @example
+   * statsLabelSize="1rem"
+   * statsLabelSize="16px"
+   * statsLabelSize="var(--theme-font-size-base)"
+   */
+  statsLabelSize?: string;
+
+  /**
+   * Stats label color
+   * @default "var(--theme-text-secondary)"
+   * @example
+   * statsLabelColor="var(--theme-text)"
+   */
+  statsLabelColor?: string;
+
+  /**
+   * Stats label font weight
+   * @default "var(--theme-font-weight-semibold)"
+   * @example
+   * statsLabelWeight={500}
+   */
+  statsLabelWeight?: number | string;
+
+  /**
+   * Stats label text transform
+   * @default "uppercase"
+   * @example
+   * statsLabelTransform="none"
+   */
+  statsLabelTransform?: "none" | "uppercase" | "lowercase" | "capitalize";
+
+  /**
+   * Stats value line height
+   * @default "1"
+   * @example
+   * statsValueLineHeight={1.2}
+   * statsValueLineHeight="1.3"
+   */
+  statsValueLineHeight?: number | string;
+
+  /**
+   * Stats label line height
+   * @default "1.3"
+   * @example
+   * statsLabelLineHeight={1.5}
+   * statsLabelLineHeight="normal"
+   */
+  statsLabelLineHeight?: number | string;
+
+  /**
+   * Stats value letter spacing
+   * @default "-0.02em"
+   * @example
+   * statsValueLetterSpacing="0"
+   * statsValueLetterSpacing="0.05em"
+   */
+  statsValueLetterSpacing?: string;
+
+  /**
+   * Stats label letter spacing
+   * @default "0.05em"
+   * @example
+   * statsLabelLetterSpacing="0.1em"
+   * statsLabelLetterSpacing="normal"
+   */
+  statsLabelLetterSpacing?: string;
 
   /**
    * Overlay intensity for media backgrounds

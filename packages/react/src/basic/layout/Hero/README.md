@@ -1,4 +1,4 @@
-# Hero Component
+# Hero Component 0.4.6
 
 A reusable, animated Hero component that serves as a prominent entry point for landing pages. Features multiple layout variants, modern UI/UX elements, smooth animations, and sophisticated visual effects following Spexop principles.
 
@@ -12,8 +12,9 @@ A reusable, animated Hero component that serves as a prominent entry point for l
 - ✅ **Feature Showcase**: Grid-based feature cards with icons and hover effects
 - ✅ **WCAG AA+ Compliant**: Full accessibility with semantic HTML and ARIA
 - ✅ **Responsive Design**: Optimized for mobile, tablet, and desktop
-- ✅ **Enhanced Typography**: Clear hierarchy with design tokens
-- ✅ **Title Size Control**: Flexible title scaling with multiplier prop
+- ✅ **Complete Typography Control**: 32 props for title, subtitle, description, and stats styling
+- ✅ **Flexible Sizing**: Size multipliers for responsive scaling
+- ✅ **Design Token Integration**: Uses Spexop design tokens for consistency
 - ✅ **Overlay Intensity**: Adjustable media overlay opacity (0-1)
 - ✅ **Spexop Button Integration**: Uses proper Button variants with custom Hero styling
 - ✅ **Type-Safe**: Comprehensive TypeScript support
@@ -572,6 +573,215 @@ When using background media with an overlay, control the opacity of the overlay 
 
 Note: The `overlayIntensity` prop only takes effect when `media.overlay` is set to `true`.
 
+## Typography Control
+
+The Hero component provides comprehensive typography control with 32 dedicated props for customizing the appearance of titles, subtitles, descriptions, and stats.
+
+### Title Typography
+
+Control every aspect of the title styling:
+
+```tsx
+<Hero
+  title="Customized Hero Title"
+  
+  // Size
+  titleSize={1.2}                    // Scale multiplier (recommended: 0.5-2.0)
+  
+  // Color
+  titleColor="var(--theme-primary)"  // Design token or CSS color
+  
+  // Typography
+  titleWeight={800}                  // Font weight (number or string)
+  titleLetterSpacing="-0.03em"       // Letter spacing
+  titleLineHeight={1.1}              // Line height
+  
+  // Layout
+  titleMaxWidth="800px"              // Max width with auto-centering
+  titleOpacity={0.95}                // Opacity (0-1)
+/>
+```
+
+### Subtitle Typography
+
+Full control over subtitle styling:
+
+```tsx
+<Hero
+  title="Main Title"
+  subtitle="Customized Subtitle"
+  
+  // Size
+  subtitleSize={1.1}                      // Scale multiplier
+  
+  // Color
+  subtitleColor="var(--theme-text)"       // Design token or CSS color
+  
+  // Typography
+  subtitleWeight={600}                    // Font weight
+  subtitleLetterSpacing="0"               // Letter spacing
+  subtitleLineHeight={1.5}                // Line height
+  
+  // Layout
+  subtitleMaxWidth="700px"                // Max width with auto-centering
+  subtitleOpacity={0.9}                   // Opacity
+/>
+```
+
+### Description Typography
+
+Customize description text styling:
+
+```tsx
+<Hero
+  title="Title"
+  description="Customized description text"
+  
+  // Size
+  descriptionSize={1.05}                      // Scale multiplier
+  
+  // Color
+  descriptionColor="var(--theme-text-secondary)"  // Design token or CSS color
+  
+  // Typography
+  descriptionWeight={400}                     // Font weight
+  descriptionLetterSpacing="0.01em"           // Letter spacing
+  descriptionLineHeight={1.8}                 // Line height
+  
+  // Layout
+  descriptionMaxWidth="600px"                 // Max width
+  descriptionOpacity={0.85}                   // Opacity
+/>
+```
+
+### Stats Typography
+
+Customize stats appearance with fine-grained control:
+
+```tsx
+<Hero
+  title="Platform Statistics"
+  stats={[
+    { value: "10K+", label: "Users" },
+    { value: "99.9%", label: "Uptime" }
+  ]}
+  
+  // Stats Value Styling
+  statsValueSize={1.3}                         // Scale multiplier
+  statsValueColor="var(--theme-primary)"       // Color
+  statsValueWeight={900}                       // Font weight
+  statsValueLineHeight={1.2}                   // Line height
+  statsValueLetterSpacing="-0.02em"            // Letter spacing
+  
+  // Stats Label Styling
+  statsLabelSize="1rem"                        // Direct CSS size (not multiplier!)
+  statsLabelColor="var(--theme-text)"          // Color
+  statsLabelWeight={600}                       // Font weight
+  statsLabelLineHeight={1.4}                   // Line height
+  statsLabelLetterSpacing="0.05em"             // Letter spacing
+  statsLabelTransform="capitalize"             // "none" | "uppercase" | "lowercase" | "capitalize"
+/>
+```
+
+### Complete Typography Example
+
+```tsx
+<Hero
+  variant="centered-spacious"
+  
+  // Title with custom styling
+  title="Build Amazing Products"
+  titleSize={1.4}
+  titleColor="var(--theme-primary)"
+  titleWeight={800}
+  titleLetterSpacing="-0.03em"
+  titleLineHeight={1.1}
+  titleMaxWidth="900px"
+  
+  // Subtitle with custom styling
+  subtitle="With complete design control"
+  subtitleSize={1.1}
+  subtitleColor="var(--theme-text)"
+  subtitleWeight={600}
+  subtitleLineHeight={1.4}
+  subtitleMaxWidth="800px"
+  
+  // Description with custom styling
+  description="Full typography control for every text element"
+  descriptionSize={1.05}
+  descriptionColor="var(--theme-text-secondary)"
+  descriptionLineHeight={1.8}
+  descriptionMaxWidth="700px"
+  descriptionOpacity={0.9}
+  
+  // Stats with custom styling
+  stats={[
+    { value: "245+", label: "Components" },
+    { value: "100%", label: "Type Safe" }
+  ]}
+  statsValueSize={1.3}
+  statsValueColor="var(--theme-primary)"
+  statsValueWeight={900}
+  statsLabelSize="1rem"
+  statsLabelColor="var(--theme-text)"
+  statsLabelTransform="capitalize"
+  
+  primaryAction={{
+    label: "Get Started",
+    onClick: handleStart
+  }}
+/>
+```
+
+### Typography Best Practices
+
+**Size Multipliers:**
+
+- Recommended range: 0.5 to 2.0
+- Default is always 1.0
+- Scales responsively across all breakpoints
+
+**Design Tokens:**
+
+Following Spexop's "Tokens before magic numbers" principle:
+
+```tsx
+// ✅ GOOD - Using design tokens
+titleColor="var(--theme-primary)"
+titleWeight="var(--theme-font-weight-bold)"
+subtitleColor="var(--theme-text-secondary)"
+
+// ❌ AVOID - Magic numbers
+titleColor="#FF5733"
+titleWeight={700}
+```
+
+**Accessibility:**
+
+- Maintain WCAG AA contrast ratios (4.5:1 minimum)
+- Test opacity values for readability
+- Use semantic font weights (400, 600, 700, 900)
+
+**MaxWidth and Alignment:**
+
+- MaxWidth automatically centers when `align="center"`
+- MaxWidth with `align="right"` pushes to right edge
+- Use `ch` units for text-based widths: `titleMaxWidth="60ch"`
+
+**Stats Label Size:**
+
+Note: Unlike other size props, `statsLabelSize` accepts a direct CSS value (not a multiplier):
+
+```tsx
+// Other sizes use multipliers
+titleSize={1.5}          // 150% of default
+subtitleSize={1.2}       // 120% of default
+
+// Stats label uses direct CSS value
+statsLabelSize="1rem"    // Direct size
+statsLabelSize="var(--theme-font-size-base)"  // Token
+```
+
 ## With Icons
 
 Add icons to action buttons for better visual hierarchy:
@@ -641,7 +851,38 @@ The Hero component is built with accessibility in mind:
 | `animation` | `HeroAnimationConfig` | - | Animation configuration |
 | `backgroundPattern` | `HeroBackgroundPattern` | - | Animated background pattern |
 | `titleLevel` | `1 \| 2` | `1` | Heading level |
-| `titleSize` | `number` | `1` | Title size scale multiplier |
+| `titleSize` | `number` | `1` | Title size scale multiplier (0.5-2.0) |
+| `titleColor` | `string` | - | Title text color |
+| `titleWeight` | `number \| string` | - | Title font weight |
+| `titleLetterSpacing` | `string` | - | Title letter spacing |
+| `titleLineHeight` | `number \| string` | - | Title line height |
+| `titleMaxWidth` | `string` | - | Title max width (auto-centers) |
+| `titleOpacity` | `number` | - | Title opacity (0-1) |
+| `subtitleSize` | `number` | `1` | Subtitle size scale multiplier (0.5-2.0) |
+| `subtitleColor` | `string` | - | Subtitle text color |
+| `subtitleWeight` | `number \| string` | - | Subtitle font weight |
+| `subtitleLetterSpacing` | `string` | - | Subtitle letter spacing |
+| `subtitleLineHeight` | `number \| string` | - | Subtitle line height |
+| `subtitleMaxWidth` | `string` | - | Subtitle max width (auto-centers) |
+| `subtitleOpacity` | `number` | - | Subtitle opacity (0-1) |
+| `descriptionSize` | `number` | `1` | Description size scale multiplier (0.5-2.0) |
+| `descriptionColor` | `string` | - | Description text color |
+| `descriptionWeight` | `number \| string` | - | Description font weight |
+| `descriptionLetterSpacing` | `string` | - | Description letter spacing |
+| `descriptionLineHeight` | `number \| string` | - | Description line height |
+| `descriptionMaxWidth` | `string` | - | Description max width (auto-centers) |
+| `descriptionOpacity` | `number` | - | Description opacity (0-1) |
+| `statsValueSize` | `number` | `1` | Stats value size multiplier (0.5-2.0) |
+| `statsValueColor` | `string` | - | Stats value color |
+| `statsValueWeight` | `number \| string` | - | Stats value font weight |
+| `statsValueLineHeight` | `number \| string` | - | Stats value line height |
+| `statsValueLetterSpacing` | `string` | - | Stats value letter spacing |
+| `statsLabelSize` | `string` | - | Stats label size (direct CSS value) |
+| `statsLabelColor` | `string` | - | Stats label color |
+| `statsLabelWeight` | `number \| string` | - | Stats label font weight |
+| `statsLabelLineHeight` | `number \| string` | - | Stats label line height |
+| `statsLabelLetterSpacing` | `string` | - | Stats label letter spacing |
+| `statsLabelTransform` | `"none" \| "uppercase" \| "lowercase" \| "capitalize"` | - | Stats label text transform |
 | `overlayIntensity` | `number` | - | Media overlay opacity (0-1) |
 | `ariaLabel` | `string` | - | ARIA label |
 | `className` | `string` | - | Additional CSS class |
@@ -931,8 +1172,47 @@ contentPosition?: "top" | "center" | "bottom"
 subtitle?: string
 description?: string
 eyebrow?: ReactNode
-titleSize?: number  // 0.5 - 2+
 titleLevel?: 1 | 2
+
+// Typography - Title (7 props)
+titleSize?: number                    // Scale multiplier (0.5-2.0)
+titleColor?: string                   // Color
+titleWeight?: number | string         // Font weight
+titleLetterSpacing?: string           // Letter spacing
+titleLineHeight?: number | string     // Line height
+titleMaxWidth?: string                // Max width (auto-centers)
+titleOpacity?: number                 // Opacity (0-1)
+
+// Typography - Subtitle (7 props)
+subtitleSize?: number
+subtitleColor?: string
+subtitleWeight?: number | string
+subtitleLetterSpacing?: string
+subtitleLineHeight?: number | string
+subtitleMaxWidth?: string
+subtitleOpacity?: number
+
+// Typography - Description (7 props)
+descriptionSize?: number
+descriptionColor?: string
+descriptionWeight?: number | string
+descriptionLetterSpacing?: string
+descriptionLineHeight?: number | string
+descriptionMaxWidth?: string
+descriptionOpacity?: number
+
+// Typography - Stats (11 props)
+statsValueSize?: number
+statsValueColor?: string
+statsValueWeight?: number | string
+statsValueLineHeight?: number | string
+statsValueLetterSpacing?: string
+statsLabelSize?: string               // Direct CSS value!
+statsLabelColor?: string
+statsLabelWeight?: number | string
+statsLabelLineHeight?: number | string
+statsLabelLetterSpacing?: string
+statsLabelTransform?: "none" | "uppercase" | "lowercase" | "capitalize"
 
 // Media
 media?: HeroMedia

@@ -100,6 +100,58 @@
   background: transparent;
 }
 
+/* Transparent background with feature-showcase: Glassmorphic cards */
+.hero--transparent.hero--feature-showcase .heroFeature {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.hero--transparent.hero--feature-showcase .heroFeature::before {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.hero--transparent.hero--feature-showcase .heroFeatureTitle {
+  color: white;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+.hero--transparent.hero--feature-showcase .heroFeatureDescription {
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+.hero--transparent.hero--feature-showcase .heroFeatureIcon {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+.hero--transparent.hero--feature-showcase .heroFeature:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.hero--transparent.hero--feature-showcase .heroFeature:hover .heroFeatureIcon {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+  color: white;
+}
+
+/* Dark mode support for transparent feature-showcase */
+@media (prefers-color-scheme: dark) {
+  .hero--transparent.hero--feature-showcase .heroFeature {
+    background: rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .hero--transparent.hero--feature-showcase .heroFeature:hover {
+    background: rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+}
+
 /* ===== Layout Variants ===== */
 
 /* Centered Compact Variant - Minimal spacing */

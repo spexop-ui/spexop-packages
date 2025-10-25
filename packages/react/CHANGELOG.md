@@ -5,14 +5,190 @@ All notable changes to @spexop/react will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.6] - 2025-10-24
+
+### Added - Hero Typography System
+
+Comprehensive typography control system for Hero component with 32 new props.
+
+#### New Props
+
+**Title Typography (7 props):**
+
+- `titleSize` - Size multiplier for responsive scaling (default: 1)
+- `titleColor` - Text color (design token or CSS color)
+- `titleWeight` - Font weight (number or string)
+- `titleLetterSpacing` - Letter spacing control
+- `titleLineHeight` - Line height control
+- `titleMaxWidth` - Maximum width with automatic centering
+- `titleOpacity` - Opacity control (0-1)
+
+**Subtitle Typography (7 props):**
+
+- `subtitleSize` - Size multiplier (default: 1, recommended: 0.5-2.0)
+- `subtitleColor` - Text color
+- `subtitleWeight` - Font weight
+- `subtitleLetterSpacing` - Letter spacing control
+- `subtitleLineHeight` - Line height control
+- `subtitleMaxWidth` - Maximum width with automatic centering
+- `subtitleOpacity` - Opacity control (0-1)
+
+**Description Typography (7 props):**
+
+- `descriptionSize` - Size multiplier (default: 1)
+- `descriptionColor` - Text color
+- `descriptionWeight` - Font weight
+- `descriptionLetterSpacing` - Letter spacing control
+- `descriptionLineHeight` - Line height control
+- `descriptionMaxWidth` - Maximum width with automatic centering
+- `descriptionOpacity` - Opacity control (0-1)
+
+**Stats Typography (11 props):**
+
+Value Controls:
+
+- `statsValueSize` - Size multiplier for stat values (default: 1)
+- `statsValueColor` - Stat value color
+- `statsValueWeight` - Stat value font weight
+- `statsValueLineHeight` - Stat value line height
+- `statsValueLetterSpacing` - Stat value letter spacing
+
+Label Controls:
+
+- `statsLabelSize` - Stat label font size (direct CSS value, not multiplier)
+- `statsLabelColor` - Stat label color
+- `statsLabelWeight` - Stat label font weight
+- `statsLabelLineHeight` - Stat label line height
+- `statsLabelLetterSpacing` - Stat label letter spacing
+- `statsLabelTransform` - Text transform (none, uppercase, lowercase, capitalize)
+
+#### Features
+
+- Responsive sizing using clamp() with multipliers
+- Auto-centering for maxWidth props when align="center"
+- Right-edge alignment for maxWidth props when align="right"
+- Uses `!important` for font-size to override variant-specific CSS
+- All props are optional with sensible defaults
+- Full TypeScript support with comprehensive JSDoc documentation
+- 100% backward compatible
+- Follows Spexop's "Tokens before magic numbers" principle
+
+#### Implementation Details
+
+**Responsive Sizing Formulas:**
+
+- Title: `clamp(2.5 * titleSize, 8 * titleSize, 5 * titleSize)`
+- Subtitle: `clamp(1.25 * subtitleSize, 3 * subtitleSize, 1.75 * subtitleSize)`
+- Description: `clamp(1 * descriptionSize, 2 * descriptionSize, 1.125 * descriptionSize)`
+- Stats Value: `clamp(2 * statsValueSize, 4 * statsValueSize, 3 * statsValueSize)`
+
+**MaxWidth Auto-Centering:**
+
+```tsx
+// Automatically centers when align="center"
+titleMaxWidth="800px"  // Applies marginInline: "auto"
+
+// Automatically aligns right when align="right"
+titleMaxWidth="800px"  // Applies marginLeft: "auto"
+```
+
+#### Documentation
+
+- Updated `README.md` with Typography Control section
+- Updated `USAGE-GUIDE.md` with comprehensive typography examples
+- Added all 32 props to Props API table
+- Included best practices for design tokens and accessibility
+- Added recommended ranges for size multipliers (0.5-2.0)
+
+#### Example Usage
+
+```tsx
+<Hero
+  variant="centered-spacious"
+  
+  // Title styling
+  title="Build Amazing Products"
+  titleSize={1.3}
+  titleColor="var(--theme-primary)"
+  titleWeight={800}
+  titleLineHeight={1.2}
+  titleMaxWidth="900px"
+  
+  // Subtitle styling
+  subtitle="With Complete Control"
+  subtitleSize={1.1}
+  subtitleColor="var(--theme-text)"
+  subtitleWeight={600}
+  
+  // Description styling
+  description="Full typography control"
+  descriptionSize={1.05}
+  descriptionLineHeight={1.8}
+  descriptionMaxWidth="700px"
+  
+  // Stats styling
+  stats={[
+    { value: "245+", label: "Components" }
+  ]}
+  statsValueSize={1.3}
+  statsValueColor="var(--theme-primary)"
+  statsLabelSize="1rem"
+  statsLabelTransform="capitalize"
+/>
+```
+
+### Fixed
+
+- Fixed right-alignment issue with maxWidth props
+- MaxWidth now correctly aligns elements when align="right"
+
+## [0.4.5] - 2025-10-24
+
+### Fixed - Hero Feature Showcase
+
+- **Feature Showcase Transparent Background**: Added glassmorphic styling for feature-showcase variant with `background="transparent"`
+  - Feature cards now properly display with transparent/glassmorphic backgrounds when using video backgrounds
+  - Added `backdrop-filter: blur(10px)` for glassmorphism effect
+  - White text with proper text shadows for readability over video backgrounds
+  - Transparent borders and hover states that work with dark video backgrounds
+  - Dark mode support with adjusted opacity values
+  - Automatic styling when combining `.hero--transparent` with `.hero--feature-showcase`
+
+**Usage:**
+
+```tsx
+<Hero
+  variant="feature-showcase"
+  background="transparent"  // Now properly applies to feature cards
+  backgroundMedia={{
+    type: "video",
+    src: "/video.mp4",
+    autoplay: true,
+    overlay: true
+  }}
+  overlayIntensity={0.6}
+  features={[...]}
+/>
+```
+
+## [0.4.4] - 2025-10-24
+
+### Fixed - Build Issue
+
+- **Build Issue**: Republish of v0.4.3 with proper build
+  - v0.4.3 was published without running build, causing dist files to be outdated
+  - All v0.4.3 fixes are now properly included in the built distribution
+  - Background media autoplay intersection observer logic now correctly bundled
+
 ## [0.4.3] - 2025-10-24
 
-### Fixed in v0.4.3
+### Fixed - Hero Background Media
 
 - **Critical**: Background media videos now properly autoplay with intersection observer
   - Added `backgroundVideoRef` ref and autoplay logic for `backgroundMedia` prop
   - Videos automatically pause when out of viewport for performance optimization
   - Matches existing behavior of `media` prop videos
+  - **Note**: This fix was not properly built in v0.4.3 release, fixed in v0.4.4
 
 ## [0.4.2] - 2025-10-24
 
@@ -402,12 +578,12 @@ See [Migration Guide](../../docs/migrations/from-v0.3-to-v0.4.md) for detailed m
 
 ## [0.3.1] - 2025-10-21
 
-### Fixed in v0.3.1
+### Fixed - Repository Metadata
 
 - Corrected repository URL in package.json (github.com/spexop-ui/spexop-public)
 - Updated bug tracker URL to point to correct repository
 
-### Note in v0.3.1
+### Note
 
 This is a metadata-only patch release. No code changes from v0.3.0. Users on v0.3.0 can continue using it without any issues - this update only corrects the repository links in package.json for better discoverability.
 
@@ -437,7 +613,7 @@ This is a metadata-only patch release. No code changes from v0.3.0. Users on v0.
 - Link - Standalone link component with variants
 - Code - Inline code formatting
 
-### Added - New Advanced Components
+### Added - New Advanced Components in v0.3.0
 
 - **Carousel** - Slideshow component with touch/swipe, keyboard navigation, thumbnails, auto-play
   - Borders before shadows (3px bold borders, zero shadows)
@@ -846,7 +1022,7 @@ Initial release of @spexop/react with 60+ production-ready components.
 - ThemeProvider - Theme context and management
 - DebugProvider - Debug mode and utilities
 
-#### Features
+#### Features in v0.1.0
 
 - Full TypeScript support with comprehensive type definitions
 - CSS Modules for scoped styling

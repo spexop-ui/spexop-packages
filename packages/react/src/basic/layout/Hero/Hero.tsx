@@ -39,6 +39,37 @@ export function Hero({
   backgroundPattern,
   titleLevel = 1,
   titleSize = 1,
+  titleColor,
+  titleWeight,
+  titleLetterSpacing,
+  titleMaxWidth,
+  titleOpacity,
+  titleLineHeight,
+  subtitleSize = 1,
+  subtitleColor,
+  subtitleWeight,
+  subtitleLetterSpacing,
+  subtitleMaxWidth,
+  subtitleOpacity,
+  subtitleLineHeight,
+  descriptionSize = 1,
+  descriptionColor,
+  descriptionWeight,
+  descriptionLetterSpacing,
+  descriptionMaxWidth,
+  descriptionOpacity,
+  descriptionLineHeight,
+  statsValueSize = 1,
+  statsValueColor,
+  statsValueWeight,
+  statsValueLineHeight,
+  statsValueLetterSpacing,
+  statsLabelSize,
+  statsLabelColor,
+  statsLabelWeight,
+  statsLabelTransform,
+  statsLabelLineHeight,
+  statsLabelLetterSpacing,
   overlayIntensity,
   contentPosition = "center",
   features,
@@ -149,8 +180,18 @@ export function Hero({
 
   // Render title
   const renderTitle = () => {
-    const titleStyle = {
-      fontSize: `clamp(${2.5 * titleSize}rem, ${8 * titleSize}vw, ${5 * titleSize}rem)`,
+    const titleStyle: React.CSSProperties = {
+      fontSize: `clamp(${2.5 * titleSize}rem, ${8 * titleSize}vw, ${5 * titleSize}rem) !important`,
+      ...(titleColor && { color: titleColor }),
+      ...(titleWeight && { fontWeight: titleWeight }),
+      ...(titleLetterSpacing && { letterSpacing: titleLetterSpacing }),
+      ...(titleLineHeight && { lineHeight: titleLineHeight }),
+      ...(titleMaxWidth && {
+        maxWidth: titleMaxWidth,
+        ...(align === "center" && { marginInline: "auto" }),
+        ...(align === "right" && { marginLeft: "auto" }),
+      }),
+      ...(titleOpacity !== undefined && { opacity: titleOpacity }),
     };
 
     if (animationConfig.disabled) {
@@ -182,8 +223,26 @@ export function Hero({
   const renderSubtitle = () => {
     if (!subtitle) return null;
 
+    const subtitleStyle: React.CSSProperties = {
+      fontSize: `clamp(${1.25 * subtitleSize}rem, ${3 * subtitleSize}vw, ${1.75 * subtitleSize}rem) !important`,
+      ...(subtitleColor && { color: subtitleColor }),
+      ...(subtitleWeight && { fontWeight: subtitleWeight }),
+      ...(subtitleLetterSpacing && { letterSpacing: subtitleLetterSpacing }),
+      ...(subtitleLineHeight && { lineHeight: subtitleLineHeight }),
+      ...(subtitleMaxWidth && {
+        maxWidth: subtitleMaxWidth,
+        ...(align === "center" && { marginInline: "auto" }),
+        ...(align === "right" && { marginLeft: "auto" }),
+      }),
+      ...(subtitleOpacity !== undefined && { opacity: subtitleOpacity }),
+    };
+
     if (animationConfig.disabled) {
-      return <p className={styles.heroSubtitle}>{subtitle}</p>;
+      return (
+        <p className={styles.heroSubtitle} style={subtitleStyle}>
+          {subtitle}
+        </p>
+      );
     }
 
     return (
@@ -196,7 +255,9 @@ export function Hero({
         }
         duration={600}
       >
-        <p className={styles.heroSubtitle}>{subtitle}</p>
+        <p className={styles.heroSubtitle} style={subtitleStyle}>
+          {subtitle}
+        </p>
       </FadeIn>
     );
   };
@@ -205,8 +266,28 @@ export function Hero({
   const renderDescription = () => {
     if (!description) return null;
 
+    const descriptionStyle: React.CSSProperties = {
+      fontSize: `clamp(${1 * descriptionSize}rem, ${2 * descriptionSize}vw, ${1.125 * descriptionSize}rem) !important`,
+      ...(descriptionColor && { color: descriptionColor }),
+      ...(descriptionWeight && { fontWeight: descriptionWeight }),
+      ...(descriptionLetterSpacing && {
+        letterSpacing: descriptionLetterSpacing,
+      }),
+      ...(descriptionLineHeight && { lineHeight: descriptionLineHeight }),
+      ...(descriptionMaxWidth && {
+        maxWidth: descriptionMaxWidth,
+        ...(align === "center" && { marginInline: "auto" }),
+        ...(align === "right" && { marginLeft: "auto" }),
+      }),
+      ...(descriptionOpacity !== undefined && { opacity: descriptionOpacity }),
+    };
+
     if (animationConfig.disabled) {
-      return <p className={styles.heroDescription}>{description}</p>;
+      return (
+        <p className={styles.heroDescription} style={descriptionStyle}>
+          {description}
+        </p>
+      );
     }
 
     return (
@@ -219,7 +300,9 @@ export function Hero({
         }
         duration={600}
       >
-        <p className={styles.heroDescription}>{description}</p>
+        <p className={styles.heroDescription} style={descriptionStyle}>
+          {description}
+        </p>
       </FadeIn>
     );
   };
@@ -292,12 +375,39 @@ export function Hero({
   const renderStats = () => {
     if (!stats || stats.length === 0) return null;
 
+    // Stats value styles
+    const statsValueStyle: React.CSSProperties = {
+      fontSize: `clamp(${2 * statsValueSize}rem, ${4 * statsValueSize}vw, ${3 * statsValueSize}rem) !important`,
+      ...(statsValueColor && { color: statsValueColor }),
+      ...(statsValueWeight && { fontWeight: statsValueWeight }),
+      ...(statsValueLineHeight && { lineHeight: statsValueLineHeight }),
+      ...(statsValueLetterSpacing && {
+        letterSpacing: statsValueLetterSpacing,
+      }),
+    };
+
+    // Stats label styles
+    const statsLabelStyle: React.CSSProperties = {
+      ...(statsLabelSize && { fontSize: statsLabelSize }),
+      ...(statsLabelColor && { color: statsLabelColor }),
+      ...(statsLabelWeight && { fontWeight: statsLabelWeight }),
+      ...(statsLabelTransform && { textTransform: statsLabelTransform }),
+      ...(statsLabelLineHeight && { lineHeight: statsLabelLineHeight }),
+      ...(statsLabelLetterSpacing && {
+        letterSpacing: statsLabelLetterSpacing,
+      }),
+    };
+
     const statsContent = (
       <div className={styles.heroStats}>
         {stats.map((stat) => (
           <div key={`${stat.value}-${stat.label}`} className={styles.heroStat}>
-            <div className={styles.heroStatValue}>{stat.value}</div>
-            <div className={styles.heroStatLabel}>{stat.label}</div>
+            <div className={styles.heroStatValue} style={statsValueStyle}>
+              {stat.value}
+            </div>
+            <div className={styles.heroStatLabel} style={statsLabelStyle}>
+              {stat.label}
+            </div>
           </div>
         ))}
       </div>
@@ -319,8 +429,12 @@ export function Hero({
               key={`${stat.value}-${stat.label}`}
               className={styles.heroStat}
             >
-              <div className={styles.heroStatValue}>{stat.value}</div>
-              <div className={styles.heroStatLabel}>{stat.label}</div>
+              <div className={styles.heroStatValue} style={statsValueStyle}>
+                {stat.value}
+              </div>
+              <div className={styles.heroStatLabel} style={statsLabelStyle}>
+                {stat.label}
+              </div>
             </div>
           ))}
         </Stagger>

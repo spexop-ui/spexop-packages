@@ -785,6 +785,205 @@ import { Zap, Shield, Cpu, Globe, Lock, Sparkles } from '@spexop/icons';
 />
 ```
 
+## Typography Control
+
+The Hero component provides comprehensive typography control with 32 props for customizing every text element.
+
+### Title Typography Customization
+
+```tsx
+<Hero
+  title="Custom Styled Title"
+  titleSize={1.3}                         // 130% of default size
+  titleColor="var(--theme-primary)"       // Primary color
+  titleWeight={800}                       // Extra bold
+  titleLetterSpacing="-0.03em"            // Tighter spacing
+  titleLineHeight={1.2}                   // Custom line height
+  titleMaxWidth="900px"                   // Auto-centers when align="center"
+  titleOpacity={0.95}                     // Slightly transparent
+/>
+```
+
+### Subtitle Typography Customization
+
+```tsx
+<Hero
+  title="Main Title"
+  subtitle="Custom Styled Subtitle"
+  subtitleSize={1.15}                     // Slightly larger
+  subtitleColor="var(--theme-text)"       // High contrast
+  subtitleWeight={600}                    // Semibold
+  subtitleLetterSpacing="0"               // Normal spacing
+  subtitleLineHeight={1.5}                // Relaxed line height
+  subtitleMaxWidth="800px"                // Auto-centers
+  subtitleOpacity={0.9}                   // Subtle transparency
+/>
+```
+
+### Description Typography Customization
+
+```tsx
+<Hero
+  title="Title"
+  description="Fully customized description text"
+  descriptionSize={1.05}                  // Slightly larger
+  descriptionColor="var(--theme-text-secondary)"
+  descriptionWeight={400}                 // Regular weight
+  descriptionLetterSpacing="0.01em"       // Slightly loose
+  descriptionLineHeight={1.8}             // Very readable
+  descriptionMaxWidth="700px"             // Narrower for readability
+  descriptionOpacity={0.85}               // Subtle transparency
+/>
+```
+
+### Stats Typography Customization
+
+```tsx
+<Hero
+  title="Platform Statistics"
+  stats={[
+    { value: "10K+", label: "Active Users" },
+    { value: "99.9%", label: "Uptime" }
+  ]}
+  
+  // Stats Value Customization
+  statsValueSize={1.4}                    // Larger numbers
+  statsValueColor="var(--theme-primary)"  // Brand color
+  statsValueWeight={900}                  // Extra bold
+  statsValueLineHeight={1.1}              // Tight
+  statsValueLetterSpacing="-0.03em"       // Tight spacing
+  
+  // Stats Label Customization
+  statsLabelSize="1rem"                   // Direct CSS value (not multiplier!)
+  statsLabelColor="var(--theme-text)"     // High contrast
+  statsLabelWeight={600}                  // Semibold
+  statsLabelLineHeight={1.4}              // Relaxed
+  statsLabelLetterSpacing="0.08em"        // Loose spacing
+  statsLabelTransform="capitalize"        // "none" | "uppercase" | "lowercase" | "capitalize"
+/>
+```
+
+### Complete Typography Example
+
+```tsx
+<Hero
+  variant="centered-spacious"
+  
+  // Title
+  title="Transform Your Business"
+  titleSize={1.5}
+  titleColor="var(--theme-primary)"
+  titleWeight={900}
+  titleLetterSpacing="-0.04em"
+  titleLineHeight={1.1}
+  titleMaxWidth="900px"
+  
+  // Subtitle
+  subtitle="With Complete Design Control"
+  subtitleSize={1.2}
+  subtitleColor="var(--theme-text)"
+  subtitleWeight={700}
+  subtitleLetterSpacing="-0.02em"
+  subtitleLineHeight={1.3}
+  subtitleMaxWidth="800px"
+  
+  // Description
+  description="Every text element is fully customizable with dedicated typography props"
+  descriptionSize={1.1}
+  descriptionColor="var(--theme-text-secondary)"
+  descriptionWeight={400}
+  descriptionLetterSpacing="0.01em"
+  descriptionLineHeight={1.9}
+  descriptionMaxWidth="700px"
+  descriptionOpacity={0.9}
+  
+  // Stats
+  stats={[
+    { value: "245+", label: "Components" },
+    { value: "100%", label: "Type Safe" }
+  ]}
+  statsValueSize={1.5}
+  statsValueColor="var(--theme-primary)"
+  statsValueWeight={900}
+  statsValueLineHeight={1}
+  statsValueLetterSpacing="-0.02em"
+  statsLabelSize="1.125rem"
+  statsLabelColor="var(--theme-text)"
+  statsLabelWeight={600}
+  statsLabelLineHeight={1.3}
+  statsLabelLetterSpacing="0.1em"
+  statsLabelTransform="capitalize"
+  
+  primaryAction={{
+    label: "Get Started",
+    onClick: handleStart
+  }}
+/>
+```
+
+### Typography Props Summary
+
+### *Total: 32 Typography Props*
+
+### *Title* (7 props)
+
+- `titleSize`, `titleColor`, `titleWeight`, `titleLetterSpacing`, `titleLineHeight`, `titleMaxWidth`, `titleOpacity`
+
+### *Subtitle* (7 props)
+
+- `subtitleSize`, `subtitleColor`, `subtitleWeight`, `subtitleLetterSpacing`, `subtitleLineHeight`, `subtitleMaxWidth`, `subtitleOpacity`
+
+### *Description* (7 props)
+
+- `descriptionSize`, `descriptionColor`, `descriptionWeight`, `descriptionLetterSpacing`, `descriptionLineHeight`, `descriptionMaxWidth`, `descriptionOpacity`
+
+### *Stats* (11 props)
+
+- *Value*: `statsValueSize`, `statsValueColor`, `statsValueWeight`, `statsValueLineHeight`, `statsValueLetterSpacing`
+- *Label*: `statsLabelSize`, `statsLabelColor`, `statsLabelWeight`, `statsLabelLineHeight`, `statsLabelLetterSpacing`, `statsLabelTransform`
+
+### Typography Best Practices
+
+### *Size Multipliers:*
+
+- Recommended range: 0.5 to 2.0
+- Default is 1.0 for all size props
+- Scales responsively across breakpoints
+
+### *Design Tokens (Recommended):*
+
+```tsx
+// ✅ GOOD - Design tokens
+titleColor="var(--theme-primary)"
+titleWeight="var(--theme-font-weight-bold)"
+subtitleColor="var(--theme-text-secondary)"
+
+// ❌ AVOID - Magic numbers
+titleColor="#FF5733"
+titleWeight={700}
+```
+
+### *Accessibility:*
+
+- Maintain WCAG AA contrast (4.5:1 minimum)
+- Test opacity values for readability
+- Use semantic font weights (400, 600, 700, 900)
+
+### *MaxWidth Behavior:*
+
+- Auto-centers when `align="center"`
+- Aligns right when `align="right"`
+- Use `ch` units for readability: `titleMaxWidth="60ch"`
+
+### *Important Note:*
+
+`statsLabelSize` accepts a direct CSS value (not a multiplier):
+
+```tsx
+titleSize={1.5}              // Multiplier
+statsLabelSize="1.5rem"      // Direct CSS value
+```
+
 ## Advanced Features
 
 ### Universal Background Media
