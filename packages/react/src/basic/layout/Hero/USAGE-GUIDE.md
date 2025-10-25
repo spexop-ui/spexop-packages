@@ -785,6 +785,96 @@ import { Zap, Shield, Cpu, Globe, Lock, Sparkles } from '@spexop/icons';
 />
 ```
 
+## Smart Auto-White Text (NEW in v0.4.7)
+
+The Hero component automatically detects background media and applies white text for optimal readability.
+
+### Automatic White Text with Background Media
+
+```tsx
+// No color props needed - automatically white!
+<Hero
+  variant="minimal"
+  title="Welcome to Spexop"
+  subtitle="Build beautiful interfaces"
+  description="A comprehensive design system with 75+ components"
+  backgroundMedia={{
+    type: "video",
+    src: "/hero-video.mp4",
+    overlay: true,
+    autoplay: true,
+  }}
+  overlayIntensity={0.6}
+  stats={[
+    { value: "75+", label: "Components" },
+    { value: "WCAG AA+", label: "Accessibility" },
+    { value: "TypeScript", label: "Type Safety" },
+  ]}
+/>
+```
+
+**Auto-applied colors:**
+- Title: `#ffffff`
+- Subtitle: `rgba(255, 255, 255, 0.9)`
+- Description: `rgba(255, 255, 255, 0.85)`
+- Stats Value: `#ffffff`
+- Stats Label: `rgba(255, 255, 255, 0.8)`
+
+### Mixed Auto and Custom Colors
+
+Each element is independent - override specific colors while others remain auto-white:
+
+```tsx
+<Hero
+  backgroundMedia={{ type: "video", src: "/video.mp4" }}
+  
+  // Custom title color
+  titleColor="cyan"
+  titleWeight={700}
+  
+  // Subtitle uses auto-white (no color prop)
+  subtitleWeight={600}
+  
+  // Custom description color
+  descriptionColor="yellow"
+  
+  // Stats use auto-white
+  stats={[
+    { value: "100%", label: "Satisfaction" },
+  ]}
+/>
+```
+
+### Image Background Example
+
+```tsx
+<Hero
+  title="Stunning Visuals"
+  subtitle="High-quality imagery"
+  backgroundMedia={{
+    type: "image",
+    src: "/hero-bg.jpg",
+    alt: "Hero background",
+    overlay: true,
+  }}
+  overlayIntensity={0.7}
+  // All text automatically white! ✅
+/>
+```
+
+### Without Background Media
+
+When no `backgroundMedia` is present, uses theme variables for light/dark mode:
+
+```tsx
+<Hero
+  title="Light Mode Compatible"
+  subtitle="Respects theme settings"
+  // Uses var(--theme-text) automatically
+  // Adapts to light/dark mode ✅
+/>
+```
+
 ## Typography Control
 
 The Hero component provides comprehensive typography control with 32 props for customizing every text element.

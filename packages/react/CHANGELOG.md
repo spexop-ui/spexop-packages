@@ -5,6 +5,49 @@ All notable changes to @spexop/react will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.7] - 2025-10-25
+
+### Fixed - Hero Auto-White Text
+
+**Smart Background Detection:**
+
+Hero component now automatically applies white/light text colors when `backgroundMedia` prop is present, solving the common dark-text-on-dark-background issue.
+
+**Auto-Applied Colors:**
+
+- Title: `#ffffff` (pure white)
+- Subtitle: `rgba(255, 255, 255, 0.9)` (90% white)
+- Description: `rgba(255, 255, 255, 0.85)` (85% white)
+- Stats Value: `#ffffff` (pure white)
+- Stats Label: `rgba(255, 255, 255, 0.8)` (80% white)
+
+**Independent Control:**
+
+Each text element checks its own color prop independently. Custom color props override auto-white behavior while other elements remain auto-white.
+
+**Example:**
+
+```tsx
+// Automatically uses white text with video backgrounds
+<Hero
+  backgroundMedia={{ type: "video", src: "/video.mp4" }}
+  // All text automatically white! ✅
+/>
+
+// Mix custom and auto colors
+<Hero
+  backgroundMedia={{ type: "video", src: "/video.mp4" }}
+  titleColor="cyan"         // Custom
+  // subtitle auto-white    ✅
+  descriptionColor="yellow" // Custom
+  // stats auto-white       ✅
+/>
+```
+
+**Fallback Behavior:**
+
+When no `backgroundMedia` is present, colors fall back to CSS theme variables (`var(--theme-text)`) for proper light/dark mode support.
+
 ## [0.4.6] - 2025-10-24
 
 ### Added - Hero Typography System
@@ -136,11 +179,6 @@ titleMaxWidth="800px"  // Applies marginLeft: "auto"
   statsLabelTransform="capitalize"
 />
 ```
-
-### Fixed
-
-- Fixed right-alignment issue with maxWidth props
-- MaxWidth now correctly aligns elements when align="right"
 
 ## [0.4.5] - 2025-10-24
 

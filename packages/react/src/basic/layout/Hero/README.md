@@ -1,4 +1,4 @@
-# Hero Component 0.4.6
+# Hero Component 0.4.7
 
 A reusable, animated Hero component that serves as a prominent entry point for landing pages. Features multiple layout variants, modern UI/UX elements, smooth animations, and sophisticated visual effects following Spexop principles.
 
@@ -6,6 +6,7 @@ A reusable, animated Hero component that serves as a prominent entry point for l
 
 - ✅ **9 Layout Variants**: centered-compact, centered-spacious, split, minimal, full-bleed, modern, elegant, feature-showcase, title
 - ✅ **Universal Media Backgrounds**: All variants support photo/video backgrounds
+- ✅ **Smart Auto-White Text**: Automatically applies white text with background media (NEW in v0.4.7)
 - ✅ **Content Overlay Positioning**: Top, center, or bottom positioning for split/full-bleed variants
 - ✅ **Smooth Animations**: FadeIn, ScaleUp, Stagger with reduced motion support
 - ✅ **Modern UI Elements**: Accent bars, parallax effects, glassmorphism, interactive stats
@@ -572,6 +573,67 @@ When using background media with an overlay, control the opacity of the overlay 
 ```
 
 Note: The `overlayIntensity` prop only takes effect when `media.overlay` is set to `true`.
+
+## Smart Auto-White Text (NEW in v0.4.7)
+
+The Hero component automatically detects when `backgroundMedia` is present and applies white/light text colors to ensure readability on dark video or image backgrounds. This solves the common issue of dark text appearing on dark backgrounds.
+
+### How It Works
+
+```tsx
+// Automatically uses white text - no color props needed!
+<Hero
+  title="Welcome to Spexop"
+  subtitle="Build beautiful interfaces"
+  description="A comprehensive design system for modern React applications"
+  backgroundMedia={{
+    type: "video",
+    src: "/hero-video.mp4",
+    overlay: true,
+    autoplay: true,
+  }}
+  stats={[
+    { value: "75+", label: "Components" },
+    { value: "WCAG AA+", label: "Accessibility" },
+  ]}
+/>
+```
+
+### Auto-Applied Colors
+
+When `backgroundMedia` is present, the following colors are automatically applied:
+
+- **Title**: `#ffffff` (pure white)
+- **Subtitle**: `rgba(255, 255, 255, 0.9)` (90% white)
+- **Description**: `rgba(255, 255, 255, 0.85)` (85% white)
+- **Stats Value**: `#ffffff` (pure white)
+- **Stats Label**: `rgba(255, 255, 255, 0.8)` (80% white)
+
+### Independent Control
+
+Each text element checks its own color prop independently. You can override specific elements while others remain auto-white:
+
+```tsx
+<Hero
+  backgroundMedia={{ type: "video", src: "/video.mp4" }}
+  titleColor="cyan"         // Custom color for title
+  // subtitle auto-white    ✅
+  descriptionColor="yellow" // Custom color for description
+  // stats auto-white       ✅
+/>
+```
+
+### Fallback Behavior
+
+When no `backgroundMedia` is present, colors fall back to CSS theme variables for proper light/dark mode support:
+
+```tsx
+// Without backgroundMedia, uses theme colors
+<Hero
+  title="Welcome"
+  // Uses var(--theme-text) automatically
+/>
+```
 
 ## Typography Control
 

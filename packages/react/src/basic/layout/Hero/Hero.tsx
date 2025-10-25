@@ -178,11 +178,16 @@ export function Hero({
     );
   };
 
+  // Auto-detect if we need light text (for dark backgrounds)
+  const hasBackgroundMedia = Boolean(backgroundMedia);
+
   // Render title
   const renderTitle = () => {
     const titleStyle: React.CSSProperties = {
       fontSize: `clamp(${2.5 * titleSize}rem, ${8 * titleSize}vw, ${5 * titleSize}rem) !important`,
-      ...(titleColor && { color: titleColor }),
+      ...(titleColor
+        ? { color: titleColor }
+        : hasBackgroundMedia && { color: "#ffffff" }),
       ...(titleWeight && { fontWeight: titleWeight }),
       ...(titleLetterSpacing && { letterSpacing: titleLetterSpacing }),
       ...(titleLineHeight && { lineHeight: titleLineHeight }),
@@ -225,7 +230,9 @@ export function Hero({
 
     const subtitleStyle: React.CSSProperties = {
       fontSize: `clamp(${1.25 * subtitleSize}rem, ${3 * subtitleSize}vw, ${1.75 * subtitleSize}rem) !important`,
-      ...(subtitleColor && { color: subtitleColor }),
+      ...(subtitleColor
+        ? { color: subtitleColor }
+        : hasBackgroundMedia && { color: "rgba(255, 255, 255, 0.9)" }),
       ...(subtitleWeight && { fontWeight: subtitleWeight }),
       ...(subtitleLetterSpacing && { letterSpacing: subtitleLetterSpacing }),
       ...(subtitleLineHeight && { lineHeight: subtitleLineHeight }),
@@ -268,7 +275,9 @@ export function Hero({
 
     const descriptionStyle: React.CSSProperties = {
       fontSize: `clamp(${1 * descriptionSize}rem, ${2 * descriptionSize}vw, ${1.125 * descriptionSize}rem) !important`,
-      ...(descriptionColor && { color: descriptionColor }),
+      ...(descriptionColor
+        ? { color: descriptionColor }
+        : hasBackgroundMedia && { color: "rgba(255, 255, 255, 0.85)" }),
       ...(descriptionWeight && { fontWeight: descriptionWeight }),
       ...(descriptionLetterSpacing && {
         letterSpacing: descriptionLetterSpacing,
@@ -378,7 +387,9 @@ export function Hero({
     // Stats value styles
     const statsValueStyle: React.CSSProperties = {
       fontSize: `clamp(${2 * statsValueSize}rem, ${4 * statsValueSize}vw, ${3 * statsValueSize}rem) !important`,
-      ...(statsValueColor && { color: statsValueColor }),
+      ...(statsValueColor
+        ? { color: statsValueColor }
+        : hasBackgroundMedia && { color: "#ffffff" }),
       ...(statsValueWeight && { fontWeight: statsValueWeight }),
       ...(statsValueLineHeight && { lineHeight: statsValueLineHeight }),
       ...(statsValueLetterSpacing && {
@@ -389,7 +400,9 @@ export function Hero({
     // Stats label styles
     const statsLabelStyle: React.CSSProperties = {
       ...(statsLabelSize && { fontSize: statsLabelSize }),
-      ...(statsLabelColor && { color: statsLabelColor }),
+      ...(statsLabelColor
+        ? { color: statsLabelColor }
+        : hasBackgroundMedia && { color: "rgba(255, 255, 255, 0.8)" }),
       ...(statsLabelWeight && { fontWeight: statsLabelWeight }),
       ...(statsLabelTransform && { textTransform: statsLabelTransform }),
       ...(statsLabelLineHeight && { lineHeight: statsLabelLineHeight }),
