@@ -28,7 +28,6 @@ pnpm install
 # Build packages
 pnpm build:icons && pnpm build:theme && pnpm build:react
 ```
-
 ### With Pre-built Theme
 
 ```typescript
@@ -182,3 +181,4 @@ MIT © Spexop Team
 **Spexop Design System** • Built with TypeScript & React
 
 [GitHub](https://github.com/spexop-ui/spexop-packages) • [npm](https://www.npmjs.com/org/spexop) • [Website](https://spexop.com)
+

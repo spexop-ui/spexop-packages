@@ -44,15 +44,20 @@ export default defineConfig({
           "@spexop/theme": "SpexopTheme",
         },
         assetFileNames: (assetInfo) => {
-          if (assetInfo.name === "style.css") {
+          // Rename CSS file to index.css
+          if (assetInfo.name?.endsWith(".css")) {
             return "index.css";
           }
-          return assetInfo.name;
+          // Handle sourcemaps
+          if (assetInfo.name?.endsWith(".css.map")) {
+            return "index.css.map";
+          }
+          return assetInfo.name || "assets/[name].[ext]";
         },
       },
     },
     cssCodeSplit: false,
-    sourcemap: true,
+    sourcemap: false,
     minify: false,
   },
   css: {

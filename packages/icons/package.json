@@ -1,56 +1,30 @@
 {
   "name": "@spexop/icons",
-  "version": "0.1.0",
-  "description": "Lightweight, framework-agnostic SVG icon library with zero dependencies",
+  "version": "0.6.0",
+  "description": "Professional icon library with 274 carefully curated icons for modern web applications. Includes filled variants and popular brand icons.",
   "author": "Spexop Team",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/spexop-ui/design-system.git",
+    "url": "https://github.com/spexop-ui/spexop-packages.git",
     "directory": "packages/icons"
   },
   "homepage": "https://www.spexop.com",
   "bugs": {
-    "url": "https://github.com/spexop-ui/design-system/issues"
+    "url": "https://github.com/spexop-ui/spexop-packages/issues"
   },
   "publishConfig": {
     "access": "public"
   },
   "type": "module",
   "main": "dist/index.js",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    },
-    "./alert": {
-      "types": "./dist/alert.d.ts",
-      "import": "./dist/alert.js"
-    },
-    "./navigation": {
-      "types": "./dist/navigation.d.ts",
-      "import": "./dist/navigation.js"
-    },
-    "./actions": {
-      "types": "./dist/actions.d.ts",
-      "import": "./dist/actions.js"
-    },
-    "./ui": {
-      "types": "./dist/ui.d.ts",
-      "import": "./dist/ui.js"
-    },
-    "./files": {
-      "types": "./dist/files.d.ts",
-      "import": "./dist/files.js"
-    },
-    "./communication": {
-      "types": "./dist/communication.d.ts",
-      "import": "./dist/communication.js"
-    },
-    "./social": {
-      "types": "./dist/social.d.ts",
-      "import": "./dist/social.js"
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
     }
   },
   "scripts": {
@@ -62,28 +36,28 @@
     "test:watch": "vitest",
     "test:coverage": "vitest --coverage"
   },
-  "files": [
-    "dist/**/*",
-    "README.md"
-  ],
+  "files": ["dist/**/*", "README.md", "ICONS.md"],
   "keywords": [
+    "react",
     "icons",
     "svg",
     "spexop",
     "design-system",
-    "ui",
+    "components",
     "typescript",
-    "react",
-    "vue",
-    "angular",
-    "svelte",
-    "framework-agnostic",
-    "accessible",
     "tree-shakeable",
-    "zero-dependencies"
+    "accessible",
+    "brand-icons",
+    "social-media",
+    "ui-icons"
   ],
+  "peerDependencies": {
+    "react": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0"
+  },
   "devDependencies": {
     "@spexop/tsconfig": "workspace:*",
+    "@types/react": "^18.0.0",
+    "react": "^18.3.1",
     "tsup": "^8.0.0",
     "typescript": "^5.0.0",
     "vitest": "^1.6.0"

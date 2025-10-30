@@ -157,7 +157,7 @@ export const Reveal: React.FC<RevealProps> = ({
 
   return (
     <div
-      ref={ref}
+      ref={ref as React.LegacyRef<HTMLDivElement>}
       className={`spex-reveal spex-reveal--${variant} ${className}`}
       style={animationStyles}
       // Accessibility attributes

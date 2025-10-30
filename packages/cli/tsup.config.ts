@@ -7,10 +7,7 @@ export default defineConfig({
   clean: true,
   sourcemap: true,
   target: "es2020",
-  banner: {
-    js: "#!/usr/bin/env node",
-  },
+  // Note: Shebang is already in src/index.ts, don't duplicate it
   splitting: false,
   treeshake: true,
 });
-

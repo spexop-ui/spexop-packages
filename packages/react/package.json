@@ -88,7 +88,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@spexop/icons": "^0.1.1",
+    "@spexop/icons": "^0.6.0",
     "@spexop/theme": "^0.4.0",
     "@tiptap/extension-link": "^3.6.3",
     "@tiptap/extension-placeholder": "^3.6.3",

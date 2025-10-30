@@ -10,8 +10,8 @@ import type {
  * Defines the expected shape of icon components from @spexop/icons
  */
 export interface IconProps {
-  size?: number;
-  strokeWidth?: number;
+  size?: number | string;
+  strokeWidth?: number | string;
   color?: string;
 }
 
