@@ -37,6 +37,11 @@
     "typescript": "^5.3.0",
     "vitest": "^4.0.5"
   },
+  "pnpm": {
+    "overrides": {
+      "esbuild": "^0.25.0"
+    }
+  },
   "engines": {
     "node": ">=18.0.0",
     "pnpm": ">=9.0.0"
