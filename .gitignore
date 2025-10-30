@@ -79,3 +79,6 @@ public/
 
 # Markdownlint
 .markdownlint-cli2.jsonc
+
+# Wiki repository (separate git repo)
+spexop-packages.wiki/
