@@ -256,11 +256,24 @@ export function isValidRgbColor(color: string): boolean {
  * Validate HSL/HSLA color format
  */
 export function isValidHslColor(color: string): boolean {
-  // hsl(h, s%, l%) or hsla(h, s%, l%, a)
-  // Also support hsl(h s% l%) and hsl(h s% l% / a) modern syntax
-  const hslPattern =
-    /^hsla?\(\s*(\d+(?:\.\d+)?)\s*,?\s*(\d+(?:\.\d+)?)%\s*,?\s*(\d+(?:\.\d+)?)%\s*(?:[,\/]\s*([\d.]+)\s*)?\)$/i;
-  const match = color.match(hslPattern);
+  // Limit input length to prevent ReDoS attacks
+  if (color.length > 100) {
+    return false;
+  }
+
+  // hsl(h, s%, l%) or hsla(h, s%, l%, a) - comma-separated syntax
+  // Also support hsl(h s% l%) and hsl(h s% l% / a) modern syntax - space-separated
+  // Split into two patterns to avoid ambiguous regex that can cause ReDoS
+
+  // Comma-separated pattern: hsl(h, s%, l%) or hsla(h, s%, l%, a)
+  const commaPattern =
+    /^hsla?\(\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)%\s*,\s*(\d+(?:\.\d+)?)%\s*(?:,\s*([\d.]+)\s*)?\)$/i;
+
+  // Space-separated pattern: hsl(h s% l%) or hsl(h s% l% / a)
+  const spacePattern =
+    /^hsla?\(\s*(\d+(?:\.\d+)?)\s+(\d+(?:\.\d+)?)%\s+(\d+(?:\.\d+)?)%\s*(?:\/\s*([\d.]+)\s*)?\)$/i;
+
+  const match = color.match(commaPattern) || color.match(spacePattern);
 
   if (!match) return false;
 
