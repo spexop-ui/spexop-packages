@@ -42,8 +42,20 @@ function validateRequired(value: unknown, rule: RequiredRule): string | null {
 function validateEmail(value: unknown, rule: EmailRule): string | null {
   if (!value) return null;
 
+  const emailStr = String(value);
+
+  // Limit input length to prevent ReDoS attacks (RFC 5321 specifies max 254 chars)
+  if (emailStr.length > 254) {
+    return rule.message || "Invalid email address";
+  }
+
+  // Email regex with length limit to prevent ReDoS attacks
+  // The pattern [^\s@]+\.[^\s@]+ can be slow on malicious inputs, but with
+  // the 254 character limit above, worst-case performance is bounded and acceptable.
+  // Input length limit is the primary defense against ReDoS for this pattern.
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(String(value))) {
+
+  if (!emailRegex.test(emailStr)) {
     return rule.message || "Invalid email address";
   }
   return null;
