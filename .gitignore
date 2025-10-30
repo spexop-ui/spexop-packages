@@ -68,4 +68,14 @@ docs-dev/
 #Code Workspace
 spexop-packages.code-workspace
 
+# Compiled JS files in src (should only be .ts/.tsx)
+src/**/*.js
+!src/**/*.config.js
 
+# Apps - excluded from repository publishing
+apps/
+examples/
+public/
+
+# Markdownlint
+.markdownlint-cli2.jsonc

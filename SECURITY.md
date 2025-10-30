@@ -6,13 +6,13 @@ We release patches for security vulnerabilities. Currently supported versions:
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 0.3.x   | :white_check_mark: |
-| 0.2.x   | :white_check_mark: |
-| < 0.2   | :x:                |
+| 0.6.x   | :white_check_mark: |
+| 0.5.x   | :white_check_mark: |
+| < 0.5   | :x:                |
 
 ## Reporting a Vulnerability
 
-We take the security of @spexop/theme seriously. If you believe you have found a security vulnerability, please report it to us as described below.
+We take the security of all Spexop packages (@spexop/react, @spexop/theme, @spexop/icons, @spexop/cli) seriously. If you believe you have found a security vulnerability, please report it to us as described below.
 
 **Please do not report security vulnerabilities through public GitHub issues.**
 
@@ -42,4 +42,4 @@ We prefer all communications to be in English.
 
 We follow the principle of [Coordinated Vulnerability Disclosure](https://vuls.cert.org/confluence/display/CVD).
 
-Thank you for helping keep @spexop/theme and our users safe!
+Thank you for helping keep Spexop packages and our users safe!

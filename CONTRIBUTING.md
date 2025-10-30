@@ -50,11 +50,9 @@ spexop-packages/
 ├── packages/
 │   ├── react/          # 60+ React components
 │   ├── theme/          # Theme system with 13 presets
+│   ├── icons/          # 269 icon library
 │   ├── cli/            # CLI tool for scaffolding
 │   └── tsconfig/       # Shared TypeScript configs
-├── apps/
-│   └── spexop-docs/    # Documentation site
-├── examples/           # Example projects
 └── docs/               # Core documentation
 ```
 
@@ -281,7 +279,11 @@ Every component must have a README.md with:
 
 - Update `/docs/` for major features
 - Keep README files current
+<<<<<<< HEAD
 - Do NOT create status documents or summaries in `/docs-dev/` unless explicitly requested
+=======
+- Component documentation should be in component README.md files
+>>>>>>> b880ef0 (docs: update documentation for v0.6.0 release)
 
 ## Submitting Changes
 
