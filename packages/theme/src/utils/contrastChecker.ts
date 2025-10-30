@@ -188,10 +188,16 @@ export function checkMultipleContrasts(
 export function generateContrastMatrix(
   colors: string[],
 ): Record<string, Record<string, ContrastResult>> {
-  const matrix: Record<string, Record<string, ContrastResult>> = {};
+  // Use Object.create(null) to prevent prototype pollution attacks
+  // This creates objects without Object.prototype, so __proto__ cannot be used
+  const matrix = Object.create(null) as Record<
+    string,
+    Record<string, ContrastResult>
+  >;
 
   for (const fgColor of colors) {
-    matrix[fgColor] = {};
+    // Create prototype-less inner objects as well
+    matrix[fgColor] = Object.create(null) as Record<string, ContrastResult>;
     for (const bgColor of colors) {
       matrix[fgColor][bgColor] = checkContrast(fgColor, bgColor);
     }
