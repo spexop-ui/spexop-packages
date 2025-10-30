@@ -53,8 +53,17 @@ export function importFromCSS(cssString: string): Partial<SpexopThemeConfig> {
 export function parseCSSVariables(cssString: string): Map<string, string> {
   const variables = new Map<string, string>();
 
+  // Limit input length to prevent ReDoS attacks
+  if (cssString.length > 100000) {
+    return variables;
+  }
+
   // Match CSS custom properties: --name: value;
-  const regex = /--([\w-]+):\s*([^;]+);/g;
+  // Use more specific pattern to avoid ReDoS:
+  // - Variable name: word chars followed by optional hyphens and word chars (non-ambiguous)
+  // - Value: non-semicolon characters (bounded by semicolon to prevent excessive backtracking)
+  // Pattern rewritten to remove ambiguity: [\w]+ matches word chars first, then optional hyphens
+  const regex = /--([a-zA-Z_][\w-]*):\s*([^;]+?);/g;
   let match: RegExpExecArray | null;
 
   // biome-ignore lint/suspicious/noAssignInExpressions: regex exec pattern requires assignment in expression
