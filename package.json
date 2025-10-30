@@ -7,11 +7,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/spexop-ui/spexop-public.git"
+    "url": "https://github.com/spexop-ui/spexop-packages.git"
   },
   "homepage": "https://www.spexop.com",
   "bugs": {
-    "url": "https://github.com/spexop-ui/spexop-public/issues"
+    "url": "https://github.com/spexop-ui/spexop-packages/issues"
   },
   "scripts": {
     "build": "pnpm -r build",
@@ -24,12 +24,18 @@
     "lint": "biome check .",
     "lint:fix": "biome check --write ."
   },
-  "keywords": ["design-system", "react", "components", "theme", "spexop"],
+  "keywords": [
+    "design-system",
+    "react",
+    "components",
+    "theme",
+    "spexop"
+  ],
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@testing-library/jest-dom": "^6.1.0",
     "typescript": "^5.3.0",
-    "vitest": "^3.2.4"
+    "vitest": "^4.0.5"
   },
   "engines": {
     "node": ">=18.0.0",
