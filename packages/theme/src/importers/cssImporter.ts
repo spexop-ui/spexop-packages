@@ -60,10 +60,11 @@ export function parseCSSVariables(cssString: string): Map<string, string> {
 
   // Match CSS custom properties: --name: value;
   // Use more specific pattern to avoid ReDoS:
-  // - Variable name: word chars followed by optional hyphens and word chars (non-ambiguous)
-  // - Value: non-semicolon characters (bounded by semicolon to prevent excessive backtracking)
-  // Pattern rewritten to remove ambiguity: [\w]+ matches word chars first, then optional hyphens
-  const regex = /--([a-zA-Z_][\w-]*):\s*([^;]+?);/g;
+  // - Variable name: must start with letter/underscore, then word chars, then optional hyphen-word sequences
+  //   Pattern [a-zA-Z_]\w*(?:-\w+)* avoids ambiguity: word chars first, then explicit hyphen-word pairs
+  //   This prevents backtracking on patterns like '---name' or '---'
+  // - Value: non-greedy match to first semicolon (prevents excessive backtracking)
+  const regex = /--([a-zA-Z_]\w*(?:-\w+)*):\s*([^;]+?);/g;
   let match: RegExpExecArray | null;
 
   // biome-ignore lint/suspicious/noAssignInExpressions: regex exec pattern requires assignment in expression
