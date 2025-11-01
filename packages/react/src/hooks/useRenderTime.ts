@@ -8,11 +8,24 @@
  * @since 2025-10-24
  */
 
-import { useContext, useEffect, useRef } from "react";
-import { PerformanceContext } from "../providers/PerformanceProvider/PerformanceContext.js";
+import { useEffect, useRef } from "react";
+import { usePerformanceUtil } from "../utils/performance.js";
 
+/**
+ * useRenderTime Hook
+ * Measure component render time using performance utility
+ *
+ * @example
+ * ```tsx
+ * function MyComponent() {
+ *   useRenderTime('MyComponent');
+ *
+ *   return <div>Content</div>;
+ * }
+ * ```
+ */
 export function useRenderTime(componentName: string): void {
-  const context = useContext(PerformanceContext);
+  const { track } = usePerformanceUtil();
   const startTimeRef = useRef<number>(0);
 
   // Mark render start
@@ -22,9 +35,7 @@ export function useRenderTime(componentName: string): void {
     // Calculate render time
     const renderTime = performance.now() - startTimeRef.current;
 
-    // Track in context if available
-    if (context?.isEnabled) {
-      context.track(componentName, renderTime);
-    }
+    // Track render time
+    track(componentName, renderTime);
   });
 }

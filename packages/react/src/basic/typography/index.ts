@@ -6,4 +6,5 @@
  */
 
 export * from "./Heading/index.js";
+export * from "./PageTitle/index.js";
 export * from "./Text/index.js";

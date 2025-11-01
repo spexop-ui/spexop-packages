@@ -8,8 +8,7 @@
  * @since 2025-10-24
  */
 
-import { useContext } from "react";
-import { PerformanceContext } from "../providers/PerformanceProvider/PerformanceContext.js";
+import { usePerformanceUtil } from "../utils/performance.js";
 import { useRenderCount } from "./useRenderCount.js";
 import { useRenderTime } from "./useRenderTime.js";
 
@@ -19,15 +18,28 @@ export interface ComponentPerfResult {
   averageRenderTime?: number;
 }
 
+/**
+ * useComponentPerf Hook
+ * Complete component performance tracking using performance utility
+ *
+ * @example
+ * ```tsx
+ * function MyComponent() {
+ *   const perf = useComponentPerf('MyComponent');
+ *
+ *   return <div>Renders: {perf.renderCount}</div>;
+ * }
+ * ```
+ */
 export function useComponentPerf(componentName: string): ComponentPerfResult {
-  const context = useContext(PerformanceContext);
+  const { getMetric } = usePerformanceUtil();
   const renderCount = useRenderCount();
 
   // Track render time
   useRenderTime(componentName);
 
-  // Get metrics from context
-  const metric = context?.getMetric(componentName);
+  // Get metrics from utility
+  const metric = getMetric(componentName);
 
   return {
     renderCount,

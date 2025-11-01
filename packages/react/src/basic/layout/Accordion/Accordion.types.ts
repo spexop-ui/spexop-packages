@@ -32,6 +32,15 @@ export interface AccordionProps {
   /** Default expanded item IDs (uncontrolled) */
   defaultExpandedItems?: string[];
 
+  /** Active item ID (controlled, simpler API for single-open mode) */
+  activeItem?: string | null;
+
+  /** Callback when active item changes (simpler API for single-open mode) */
+  onItemChange?: (itemId: string | null) => void;
+
+  /** Default active item ID (uncontrolled, for single-open mode) */
+  defaultActiveItem?: string | null;
+
   /** Whether multiple items can be expanded */
   allowMultiple?: boolean;
 

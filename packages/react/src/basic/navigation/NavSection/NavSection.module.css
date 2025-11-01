@@ -20,7 +20,7 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: var(--theme-spacing-4) var(--theme-spacing-5);
+  padding: var(--theme-spacing-3) var(--theme-spacing-5);
   background: transparent;
   border: none;
   cursor: pointer;

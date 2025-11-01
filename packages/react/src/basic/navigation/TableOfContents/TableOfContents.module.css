@@ -1,0 +1,122 @@
+/**
+ * TableOfContents Styles
+ * Following "The Spexop Way":
+ * - Borders before shadows (2px borders, no shadows)
+ * - Typography before decoration (font weight for hierarchy)
+ * - Tokens before magic numbers (all values use design tokens)
+ */
+
+/* Container */
+.container {
+	width: 100%;
+	height: fit-content;
+	min-width: 0;
+	display: block;
+}
+
+.sticky {
+	position: -webkit-sticky; /* Safari support */
+	position: sticky;
+	align-self: flex-start;
+	z-index: 10;
+}
+
+.content {
+	padding: var(--theme-spacing-4);
+	background: var(--theme-surface);
+	border: var(--theme-border-width) solid var(--theme-border);
+	border-radius: var(--theme-radius-lg);
+}
+
+/* Title */
+.title {
+	margin: 0 0 var(--theme-spacing-3) 0;
+	padding: 0 var(--theme-spacing-2);
+	font-size: var(--theme-font-size-xs);
+	font-weight: var(--theme-font-weight-semibold);
+	color: var(--theme-text-muted);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	line-height: var(--theme-line-height-tight);
+}
+
+/* Lists */
+.list,
+.nested-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.nested-list {
+	margin-top: var(--theme-spacing-1);
+	margin-left: var(--theme-spacing-3);
+	padding-left: var(--theme-spacing-3);
+	border-left: 2px solid var(--theme-border);
+}
+
+.item-wrapper {
+	margin-bottom: var(--theme-spacing-1);
+}
+
+/* Items */
+.item {
+	display: block;
+	padding: var(--theme-spacing-2);
+	color: var(--theme-text-secondary);
+	font-size: var(--theme-font-size-sm);
+	font-weight: var(--theme-font-weight-medium);
+	line-height: var(--theme-line-height-normal);
+	text-decoration: none;
+	border-radius: var(--theme-radius-sm);
+	transition: all 0.15s ease;
+	cursor: pointer;
+}
+
+.item:hover {
+	color: var(--theme-text);
+	background: var(--theme-surface-hover);
+}
+
+.item:focus {
+	outline: 2px solid var(--theme-primary);
+	outline-offset: 2px;
+}
+
+/* Active State */
+.item.active {
+	color: var(--theme-primary);
+	font-weight: var(--theme-font-weight-semibold);
+	background: var(--theme-surface-hover);
+	border-left: 2px solid var(--theme-primary);
+	padding-left: calc(var(--theme-spacing-2) - 2px);
+}
+
+/* Level-based indentation */
+.item.level-1 {
+	padding-left: var(--theme-spacing-2);
+}
+
+.item.level-2 {
+	font-size: var(--theme-font-size-sm);
+}
+
+.item.level-3 {
+	font-size: var(--theme-font-size-xs);
+}
+
+.item.level-4,
+.item.level-5,
+.item.level-6 {
+	font-size: var(--theme-font-size-xs);
+	opacity: 0.9; /* High visibility for active state */
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+	.container.sticky {
+		position: static;
+	}
+}
+
+

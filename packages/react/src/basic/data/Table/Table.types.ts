@@ -46,10 +46,34 @@ export interface TableProps {
   children?: ReactNode;
 
   /**
-   * Visual style variant
+   * Visual style variant (convenience prop, use boolean props for combinations)
    * @default 'default'
    */
   variant?: TableVariant;
+
+  /**
+   * Add borders to all cells (can be combined with other boolean props)
+   * @default false
+   */
+  bordered?: boolean;
+
+  /**
+   * Add striped row backgrounds (can be combined with other boolean props)
+   * @default false
+   */
+  striped?: boolean;
+
+  /**
+   * Enable row hover effects (can be combined with other boolean props)
+   * @default false
+   */
+  hoverable?: boolean;
+
+  /**
+   * Use compact padding (can be combined with other boolean props)
+   * @default false
+   */
+  compact?: boolean;
 
   /**
    * Table size

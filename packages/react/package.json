@@ -1,6 +1,6 @@
 {
   "name": "@spexop/react",
-  "version": "0.4.7",
+  "version": "0.6.0",
   "description": "React component library with TypeScript and accessibility. 60+ components following the Primitives-First philosophy. Grid primitives, navigation, forms, buttons, cards, data, feedback, and more.",
   "keywords": [
     "react",

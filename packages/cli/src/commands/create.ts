@@ -144,7 +144,10 @@ async function scaffoldProject(options: ScaffoldOptions): Promise<string> {
   } = options;
 
   // Create project directory
-  const projectPath = path.join(process.cwd(), projectName);
+  // Use PWD or INIT_CWD to get the directory where the command was run
+  // (pnpm changes process.cwd() to workspace root when using pnpm exec)
+  const baseDir = process.env.PWD || process.env.INIT_CWD || process.cwd();
+  const projectPath = path.join(baseDir, projectName);
   await fs.ensureDir(projectPath);
 
   // Read template files
@@ -231,27 +234,41 @@ async function createAction(
     // Install dependencies
     if (options.install) {
       const installSpinner = p.spinner();
-      installSpinner.start("Installing dependencies");
+      installSpinner.start("Installing dependencies...");
 
       try {
-        // Detect package manager
-        let packageManager = "pnpm";
-        if (
-          await fs.pathExists(path.join(process.cwd(), "package-lock.json"))
+        // Detect package manager from root workspace
+        let packageManager = "npm";
+        const rootDir = process.cwd();
+
+        if (await fs.pathExists(path.join(rootDir, "pnpm-lock.yaml"))) {
+          packageManager = "pnpm";
+        } else if (
+          await fs.pathExists(path.join(rootDir, "pnpm-workspace.yaml"))
+        ) {
+          packageManager = "pnpm";
+        } else if (await fs.pathExists(path.join(rootDir, "yarn.lock"))) {
+          packageManager = "yarn";
+        } else if (
+          await fs.pathExists(path.join(rootDir, "package-lock.json"))
         ) {
           packageManager = "npm";
-        } else if (await fs.pathExists(path.join(process.cwd(), "yarn.lock"))) {
-          packageManager = "yarn";
         }
 
+        // Run install with proper stdio to show output
         await execa(packageManager, ["install"], {
           cwd: projectPath,
-          stdio: useInteractive ? "inherit" : "pipe",
+          stdio: "inherit", // Always show output
         });
 
         installSpinner.stop("Dependencies installed!");
       } catch (error) {
         installSpinner.stop("Failed to install dependencies");
+        console.error(
+          pc.red(
+            `\nError: ${error instanceof Error ? error.message : "Unknown error"}`,
+          ),
+        );
         console.error(
           pc.yellow(
             `\n⚠️  Run '${pc.cyan(`cd ${options.projectName} && pnpm install`)}' manually`,

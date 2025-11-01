@@ -1,18 +1,14 @@
-import { forwardRef } from "react";
-import { Icon, type IconProps } from "../Icon";
+import { forwardRef } from 'react';
+import { Icon, type IconProps } from '../Icon';
 
 export const ThumbsUpFilled = forwardRef<SVGSVGElement, IconProps>(
   (props, ref) => {
     return (
       <Icon ref={ref} {...props}>
-        <path
-          d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"
-          fill="currentColor"
-          stroke="none"
-        />
+        <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3" fill="currentColor" stroke="none"/>
       </Icon>
     );
-  },
+  }
 );
 
-ThumbsUpFilled.displayName = "ThumbsUpFilled";
+ThumbsUpFilled.displayName = 'ThumbsUpFilled';

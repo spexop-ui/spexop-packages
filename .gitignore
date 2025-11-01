@@ -82,3 +82,6 @@ public/
 
 # Wiki repository (separate git repo)
 spexop-packages.wiki/
+
+# Do not commit raw icon assets
+packages/icons/assets/

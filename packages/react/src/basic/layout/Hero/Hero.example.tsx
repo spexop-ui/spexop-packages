@@ -21,7 +21,7 @@ export function CenteredHeroExample() {
       secondaryAction={{
         label: "View Docs",
         onClick: () => console.log("View Docs clicked"),
-        variant: "outlined",
+        variant: "outline",
       }}
       stats={[
         { value: "245+", label: "Design Tokens" },
@@ -65,7 +65,7 @@ export function MinimalHeroExample() {
       primaryAction={{
         label: "Read Announcement",
         onClick: () => console.log("Read announcement clicked"),
-        variant: "tonal",
+        variant: "secondary",
       }}
     />
   );
@@ -88,7 +88,7 @@ export function FullBleedHeroExample() {
       primaryAction={{
         label: "Watch Demo",
         onClick: () => console.log("Watch demo clicked"),
-        variant: "elevated",
+        variant: "primary",
       }}
       animation={{
         sequence: "sequential",
@@ -159,12 +159,12 @@ export function ContemporaryHeroExample() {
       primaryAction={{
         label: "Explore Features",
         onClick: () => console.log("Explore clicked"),
-        variant: "elevated",
+        variant: "primary",
       }}
       secondaryAction={{
         label: "View Examples",
         onClick: () => console.log("View examples clicked"),
-        variant: "tonal",
+        variant: "secondary",
       }}
       stats={[
         { value: "60fps", label: "Smooth Animations" },

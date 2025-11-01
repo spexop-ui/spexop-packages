@@ -1,0 +1,114 @@
+/**
+ * AppLayout Styles
+ *
+ * Following "The Spexop Way":
+ * - Principle 1: Primitives before patterns
+ * - Principle 4: Tokens before magic numbers
+ * - Principle 6: Standards before frameworks
+ * - Principle 7: Accessibility before aesthetics
+ *
+ * Use primitives (Container, Stack) for page content margins
+ */
+
+.appLayout {
+  min-height: 100vh;
+  position: relative;
+}
+
+.main {
+  /* Base styles for main content area */
+  position: relative;
+  overflow-x: hidden;
+  
+  /* No padding here - use Container primitive for content margins */
+  /* Width and margins are set via inline styles from component */
+  
+  /* Accessibility: Focus outline */
+  &:focus-visible {
+    outline: 2px solid var(--theme-color-primary-500, #3b82f6);
+    outline-offset: -2px;
+  }
+}
+
+/* Smooth scroll behavior */
+.smoothScroll {
+  scroll-behavior: smooth;
+}
+
+/* Debug mode */
+.debug {
+  outline: 2px dashed var(--theme-color-warning-500, #f59e0b);
+  outline-offset: -2px;
+  position: relative;
+  
+  &::before {
+    content: "AppLayout Main";
+    position: absolute;
+    top: var(--theme-spacing-2, 8px);
+    left: var(--theme-spacing-2, 8px);
+    padding: var(--theme-spacing-1, 4px) var(--theme-spacing-2, 8px);
+    background: var(--theme-color-warning-500, #f59e0b);
+    color: var(--theme-color-white, #ffffff);
+    font-size: var(--theme-font-size-xs, 12px);
+    font-weight: var(--theme-font-weight-semibold, 600);
+    border-radius: var(--theme-radius-sm, 4px);
+    z-index: 9999;
+    pointer-events: none;
+  }
+}
+
+.debugInfo {
+  position: fixed;
+  bottom: var(--theme-spacing-4, 16px);
+  right: var(--theme-spacing-4, 16px);
+  padding: var(--theme-spacing-4, 16px);
+  background: var(--theme-color-neutral-900, #1f2937);
+  color: var(--theme-color-white, #ffffff);
+  border: 2px solid var(--theme-color-warning-500, #f59e0b);
+  border-radius: var(--theme-radius-md, 8px);
+  font-size: var(--theme-font-size-xs, 12px);
+  font-family: var(--theme-font-mono, "Monaco", "Courier New", monospace);
+  z-index: 10000;
+  box-shadow: var(--theme-shadow-lg, 0 10px 15px -3px rgba(0, 0, 0, 0.1));
+  
+  p {
+    margin: var(--theme-spacing-1, 4px) 0;
+    line-height: 1.5;
+  }
+  
+  p:first-child {
+    margin-top: 0;
+  }
+  
+  p:last-child {
+    margin-bottom: 0;
+  }
+}
+
+/* Responsive behavior */
+@media (max-width: 768px) {
+  .responsive.main {
+    margin-left: 0 !important; /* Override sidebar margin on mobile */
+  }
+}
+
+/* Print styles */
+@media print {
+  .main {
+    margin: 0 !important;
+    min-height: auto;
+  }
+  
+  .debugInfo {
+    display: none;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .smoothScroll {
+    scroll-behavior: auto;
+  }
+}
+
+

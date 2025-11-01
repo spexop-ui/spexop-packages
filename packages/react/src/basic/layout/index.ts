@@ -6,6 +6,7 @@
  */
 
 export * from "./Accordion/index.js";
+export * from "./AppLayout/index.js";
 export * from "./Footer/index.js";
 export * from "./Hero/index.js";
 export * from "./PageLayout/index.js";

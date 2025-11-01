@@ -1,57 +1,34 @@
 /**
  * NavLink Component Styles
- * Theme-driven with Spexop architecture
+ * Enhanced theme-driven styles with full customization support
  * 
  * @component NavLink
  * @packageName @spexop/react
- * @description Sidebar navigation link with active state
- * @version 0.3.0
- * @updated 2025-10-18 - Migrated to theme system
+ * @description Enhanced sidebar navigation link with extensive customization
+ * @version 0.4.0
+ * @updated 2025-01-XX - Enhanced with full customization support
  */
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
 
 .navLink {
   display: flex;
   align-items: center;
-  min-height: 48px;
-  padding: var(--theme-spacing-3) var(--theme-spacing-5) var(--theme-spacing-3) var(--theme-spacing-8);
+  gap: var(--theme-spacing-2);
+  min-height: var(--theme-touch-target-mobile);
+  padding: var(--theme-spacing-2) var(--theme-spacing-5) var(--theme-spacing-2) var(--theme-spacing-8);
   font-size: var(--theme-font-size-sm);
-  font-weight: var(--theme-font-weight-regular);
+  font-weight: var(--theme-font-weight-medium);
   color: var(--theme-text-secondary);
   text-decoration: none;
-  border-left: 3px solid transparent;
+  border-left: var(--border-width-left, 3px) solid transparent;
   transition: all 150ms ease;
   position: relative;
+  cursor: pointer;
 }
 
-/* Hover */
-.navLink:hover {
-  background: var(--theme-surface-secondary);
-  color: var(--theme-text);
-}
-
-/* Active */
-.navLink.active {
-  color: var(--theme-primary);
-  font-weight: var(--theme-font-weight-bold);
-  border-left-color: var(--theme-primary);
-  background: var(--theme-surface-secondary);
-  border-left-width: 4px;
-}
-
-/* Disabled */
-.navLink.disabled {
-  color: var(--theme-text-muted);
-  cursor: not-allowed;
-  opacity: 0.5;
-  pointer-events: none;
-}
-
-.navLink.disabled:hover {
-  background: transparent;
-  color: var(--theme-text-muted);
-}
-
-/* Focus */
 .navLink:focus {
   outline: var(--theme-border-width) solid var(--theme-primary);
   outline-offset: -2px;
@@ -63,39 +40,349 @@
   outline-offset: -2px;
 }
 
-/* Active + Hover */
-.navLink.active:hover {
+/* Content wrapper */
+.navLink .content {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ============================================
+   SIZE VARIANTS
+   ============================================ */
+
+.navLink.size-sm {
+  min-height: 36px;
+  padding: var(--theme-spacing-1) var(--theme-spacing-4) var(--theme-spacing-1) var(--theme-spacing-6);
+  font-size: var(--theme-font-size-xs);
+}
+
+.navLink.size-md {
+  min-height: var(--theme-touch-target-mobile);
+  padding: var(--theme-spacing-2) var(--theme-spacing-5) var(--theme-spacing-2) var(--theme-spacing-8);
+  font-size: var(--theme-font-size-sm);
+}
+
+.navLink.size-lg {
+  min-height: 56px;
+  padding: var(--theme-spacing-3) var(--theme-spacing-6) var(--theme-spacing-3) var(--theme-spacing-10);
+  font-size: var(--theme-font-size-base);
+}
+
+/* ============================================
+   VARIANT STYLES
+   ============================================ */
+
+.navLink.variant-default {
+  /* Default styles already applied */
+}
+
+.navLink.variant-minimal {
+  padding-left: var(--theme-spacing-5);
+  border-left: none;
+}
+
+.navLink.variant-minimal.active {
+  border-left: none;
+  background: transparent;
+}
+
+.navLink.variant-highlighted {
   background: var(--theme-surface-secondary);
 }
 
-/* Dark Theme */
+.navLink.variant-highlighted.active {
+  background: var(--theme-primary);
+  color: var(--theme-surface);
+}
+
+.navLink.variant-outlined {
+  border: var(--theme-border-width) solid var(--theme-border);
+  border-radius: var(--theme-radius-md);
+  margin: var(--theme-spacing-1) var(--theme-spacing-2);
+}
+
+.navLink.variant-outlined.active {
+  border-color: var(--theme-primary);
+  background: var(--theme-surface-secondary);
+}
+
+/* ============================================
+   HOVER EFFECTS
+   ============================================ */
+
+/* Background hover (default) */
+.navLink.hover-background:hover {
+  background: var(--hover-bg, var(--theme-surface-secondary));
+  color: var(--hover-color, var(--theme-text));
+}
+
+/* Underline hover */
+.navLink.hover-underline {
+  position: relative;
+}
+
+.navLink.hover-underline::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: var(--theme-spacing-8);
+  right: var(--theme-spacing-5);
+  height: 2px;
+  background: var(--theme-primary);
+  transform: scaleX(0);
+  transition: transform 150ms ease;
+}
+
+.navLink.hover-underline:hover::after {
+  transform: scaleX(1);
+}
+
+.navLink.hover-underline.active::after {
+  transform: scaleX(1);
+}
+
+/* Scale hover */
+.navLink.hover-scale:hover {
+  transform: scale(1.02);
+  background: var(--hover-bg, var(--theme-surface-secondary));
+}
+
+/* Slide hover */
+.navLink.hover-slide {
+  overflow: hidden;
+  position: relative;
+}
+
+.navLink.hover-slide::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: var(--hover-bg, var(--theme-surface-secondary));
+  transition: left 200ms ease;
+  z-index: -1;
+}
+
+.navLink.hover-slide:hover::before {
+  left: 0;
+}
+
+.navLink.hover-slide:hover {
+  color: var(--hover-color, var(--theme-text));
+}
+
+/* Glow hover */
+.navLink.hover-glow:hover {
+  box-shadow: 0 0 8px var(--theme-primary);
+  background: var(--hover-bg, var(--theme-surface-secondary));
+}
+
+/* None hover */
+.navLink.hover-none:hover {
+  /* No hover effect */
+}
+
+/* ============================================
+   BORDER POSITIONS
+   ============================================ */
+
+.navLink[data-border-position="left"] {
+  border-left: var(--border-width-left, 3px) solid transparent;
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+}
+
+.navLink[data-border-position="left"].active {
+  border-left-color: var(--border-color-left-active, var(--theme-primary));
+  border-left-width: var(--border-width-left-active, 4px);
+}
+
+.navLink[data-border-position="right"] {
+  border-right: var(--border-width-right, 3px) solid transparent;
+  border-top: none;
+  border-left: none;
+  border-bottom: none;
+}
+
+.navLink[data-border-position="right"].active {
+  border-right-color: var(--border-color-right-active, var(--theme-primary));
+  border-right-width: var(--border-width-right-active, 4px);
+}
+
+.navLink[data-border-position="top"] {
+  border-top: var(--border-width-top, 3px) solid transparent;
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+}
+
+.navLink[data-border-position="top"].active {
+  border-top-color: var(--border-color-top-active, var(--theme-primary));
+  border-top-width: var(--border-width-top-active, 4px);
+}
+
+.navLink[data-border-position="bottom"] {
+  border-bottom: var(--border-width-bottom, 3px) solid transparent;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+
+.navLink[data-border-position="bottom"].active {
+  border-bottom-color: var(--border-color-bottom-active, var(--theme-primary));
+  border-bottom-width: var(--border-width-bottom-active, 4px);
+}
+
+.navLink[data-border-position="all"] {
+  border: var(--border-width-all, 2px) solid transparent;
+  border-radius: var(--theme-radius-md);
+}
+
+.navLink[data-border-position="all"].active {
+  border-color: var(--border-color-all-active, var(--theme-primary));
+  border-width: var(--border-width-all-active, 3px);
+}
+
+/* ============================================
+   ICON SUPPORT
+   ============================================ */
+
+.navLink .icon,
+.navLink .iconRight {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+}
+
+.navLink.hasIcon {
+  padding-left: var(--theme-spacing-6);
+}
+
+.navLink.hasIconRight {
+  padding-right: var(--theme-spacing-6);
+}
+
+/* ============================================
+   BADGE SUPPORT
+   ============================================ */
+
+.navLink .badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 var(--theme-spacing-2);
+  font-size: var(--theme-font-size-xs);
+  font-weight: var(--theme-font-weight-bold);
+  color: var(--theme-surface);
+  background: var(--theme-primary);
+  border-radius: var(--theme-radius-full);
+  flex-shrink: 0;
+}
+
+.navLink.hasBadge {
+  padding-right: var(--theme-spacing-4);
+}
+
+/* ============================================
+   ACTIVE STATE
+   ============================================ */
+
+.navLink.active {
+  color: var(--theme-primary);
+  font-weight: var(--theme-font-weight-bold);
+  background: var(--theme-surface-secondary);
+}
+
+.navLink.active:hover {
+  background: var(--hover-bg, var(--theme-surface-secondary));
+  color: var(--hover-color, var(--theme-primary));
+}
+
+/* ============================================
+   DISABLED STATE
+   ============================================ */
+
+.navLink.disabled {
+  color: var(--theme-text-muted);
+  cursor: not-allowed;
+  opacity: var(--theme-opacity-disabled-alt);
+  pointer-events: none;
+}
+
+.navLink.disabled:hover {
+  background: transparent;
+  color: var(--theme-text-muted);
+}
+
+/* ============================================
+   DARK THEME
+   ============================================ */
+
 [data-theme="dark"] .navLink {
   color: var(--theme-text-secondary);
 }
 
 [data-theme="dark"] .navLink:hover {
-  background: var(--theme-surface-hover);
-  color: var(--theme-text);
+  background: var(--hover-bg, var(--theme-surface-hover));
+  color: var(--hover-color, var(--theme-text));
 }
 
 [data-theme="dark"] .navLink.active {
   color: var(--theme-primary);
   background: var(--theme-surface);
-  border-left-color: var(--theme-primary);
 }
 
 [data-theme="dark"] .navLink.active:hover {
-  background: var(--theme-surface-hover);
+  background: var(--hover-bg, var(--theme-surface-hover));
 }
 
-/* Mobile optimizations */
+[data-theme="dark"] .navLink.variant-highlighted {
+  background: var(--theme-surface);
+}
+
+[data-theme="dark"] .navLink.variant-highlighted.active {
+  background: var(--theme-primary);
+  color: var(--theme-surface);
+}
+
+[data-theme="dark"] .navLink.variant-outlined {
+  border-color: var(--theme-border);
+}
+
+[data-theme="dark"] .navLink.variant-outlined.active {
+  border-color: var(--theme-primary);
+  background: var(--theme-surface);
+}
+
+/* ============================================
+   MOBILE OPTIMIZATIONS
+   ============================================ */
+
 @media (max-width: 768px) {
   .navLink {
-    min-height: 48px;
-    padding: var(--theme-spacing-4) var(--theme-spacing-6) var(--theme-spacing-4) var(--theme-spacing-8);
-    font-size: var(--theme-font-size-base);
+    min-height: var(--theme-touch-target-mobile);
+    padding: var(--theme-spacing-3) var(--theme-spacing-6) var(--theme-spacing-3) var(--theme-spacing-8);
+    font-size: var(--theme-font-size-sm);
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
+  }
+  
+  .navLink.size-sm {
+    min-height: 44px;
+    padding: var(--theme-spacing-2) var(--theme-spacing-5);
+  }
+  
+  .navLink.size-lg {
+    min-height: 56px;
+    padding: var(--theme-spacing-4) var(--theme-spacing-6);
   }
   
   .navLink:active {
@@ -104,18 +391,33 @@
     transition-duration: 80ms;
   }
   
-  .navLink.active {
+  .navLink[data-border-position="left"].active {
     border-left-width: 6px;
   }
 }
 
-/* Accessibility */
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
 @media (prefers-reduced-motion: reduce) {
   .navLink {
     transition: none;
   }
   
   .navLink:active {
+    transform: none;
+  }
+  
+  .navLink.hover-underline::after {
+    transition: none;
+  }
+  
+  .navLink.hover-slide::before {
+    transition: none;
+  }
+  
+  .navLink.hover-scale:hover {
     transform: none;
   }
 }

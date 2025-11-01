@@ -9,5 +9,9 @@
  * @since 2025-10-13
  */
 
-export type { SidebarFooterProps } from "./SidebarFooter.js";
 export { SidebarFooter } from "./SidebarFooter.js";
+export type {
+  SidebarFooterProps,
+  SidebarFooterUser,
+  SidebarFooterAction,
+} from "./SidebarFooter.types.js";

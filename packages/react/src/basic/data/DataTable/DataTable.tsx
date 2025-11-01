@@ -60,6 +60,10 @@ import type {
   SortDirection,
   SortState,
 } from "./DataTable.types.js";
+import {
+  isSimpleColumn,
+  normalizeColumns,
+} from "./DataTable.types.js";
 
 /**
  * Main DataTable component
@@ -96,6 +100,9 @@ export function DataTable<T = unknown>({
   className = "",
   "aria-label": ariaLabel,
 }: DataTableProps<T>) {
+  // Normalize columns - convert SimpleColumn to Column
+  const normalizedColumns = useMemo(() => normalizeColumns(columns), [columns]);
+
   // State management - support controlled and uncontrolled
   const [internalSort, setInternalSort] = useState<SortState>(
     defaultSort || { columnId: null, direction: null },
@@ -117,7 +124,7 @@ export function DataTable<T = unknown>({
   const handleSortChange = (columnId: string) => {
     if (!sortable) return;
 
-    const column = columns.find((col) => col.id === columnId);
+    const column = normalizedColumns.find((col) => col.id === columnId);
     if (!column || column.sortable === false) return;
 
     let newDirection: SortDirection = "asc";
@@ -218,7 +225,7 @@ export function DataTable<T = unknown>({
       // Global filter
       if (filterState.global) {
         result = result.filter((row) => {
-          return columns.some((col) => {
+          return normalizedColumns.some((col) => {
             const value = getCellValue(row, col);
             return String(value)
               .toLowerCase()
@@ -232,7 +239,7 @@ export function DataTable<T = unknown>({
         filterState.columns,
       )) {
         if (filterValue) {
-          const column = columns.find((col) => col.id === columnId);
+          const column = normalizedColumns.find((col) => col.id === columnId);
           if (column) {
             result = result.filter((row) => {
               if (column.filterFn) {
@@ -250,7 +257,7 @@ export function DataTable<T = unknown>({
 
     // Apply sorting
     if (sortable && sortState.columnId && sortState.direction) {
-      const column = columns.find((col) => col.id === sortState.columnId);
+      const column = normalizedColumns.find((col) => col.id === sortState.columnId);
       if (column) {
         result.sort((a, b) => {
           if (column.sortFn) {
@@ -273,7 +280,7 @@ export function DataTable<T = unknown>({
     }
 
     return result;
-  }, [data, columns, filterState, sortState, sortable, filterable]);
+  }, [data, normalizedColumns, filterState, sortState, sortable, filterable]);
 
   // Paginate data
   const paginatedData = useMemo(() => {
@@ -343,7 +350,7 @@ export function DataTable<T = unknown>({
       {/* Column Filters */}
       {filterable && showColumnFilters && (
         <div className={styles.columnFilters}>
-          {columns
+          {normalizedColumns
             .filter((col) => col.filterable !== false)
             .map((col) => (
               <div key={col.id} className={styles.filterGroup}>
@@ -388,7 +395,7 @@ export function DataTable<T = unknown>({
                   />
                 </TableCell>
               )}
-              {columns.map((col) => (
+              {normalizedColumns.map((col) => (
                 <TableCell
                   key={col.id}
                   header
@@ -437,7 +444,7 @@ export function DataTable<T = unknown>({
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={columns.length + (selectable ? 1 : 0)}>
+                <TableCell colSpan={normalizedColumns.length + (selectable ? 1 : 0)}>
                   <div className={styles.loadingContainer}>
                     <div className={styles.loadingSpinner} />
                     <div>{loadingMessage}</div>
@@ -446,7 +453,7 @@ export function DataTable<T = unknown>({
               </TableRow>
             ) : paginatedData.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={columns.length + (selectable ? 1 : 0)}>
+                <TableCell colSpan={normalizedColumns.length + (selectable ? 1 : 0)}>
                   <div className={styles.emptyContainer}>
                     <div className={styles.emptyIcon}>📋</div>
                     <div>{emptyMessage}</div>
@@ -471,7 +478,7 @@ export function DataTable<T = unknown>({
                         />
                       </TableCell>
                     )}
-                    {columns.map((col) => {
+                    {normalizedColumns.map((col) => {
                       const value = getCellValue(row, col);
                       const content = col.cell
                         ? col.cell(value, row, rowIndex)

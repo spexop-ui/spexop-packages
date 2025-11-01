@@ -119,31 +119,38 @@ export function Sidebar({
     </aside>
   );
 
-  // Mobile: Render with portal and backdrop
-  if (isMobile && isBrowser()) {
-    return createPortal(
-      <>
-        {/* Backdrop */}
-        {isOpen && (
-          <div
-            className={styles.backdrop}
-            onClick={handleBackdropClick}
-            onKeyDown={(e) => {
-              if (e.key === "Escape") {
-                handleBackdropClick();
-              }
-            }}
-            aria-hidden="true"
-          />
-        )}
+  // Render with portal to ensure fixed positioning works correctly
+  // (prevents issues when parent elements have transform/opacity/etc)
+  if (isBrowser()) {
+    // Mobile: Include backdrop
+    if (isMobile) {
+      return createPortal(
+        <>
+          {/* Backdrop */}
+          {isOpen && (
+            <div
+              className={styles.backdrop}
+              onClick={handleBackdropClick}
+              onKeyDown={(e) => {
+                if (e.key === "Escape") {
+                  handleBackdropClick();
+                }
+              }}
+              aria-hidden="true"
+            />
+          )}
 
-        {/* Sidebar Overlay */}
-        {sidebarContent}
-      </>,
-      document.body,
-    );
+          {/* Sidebar Overlay */}
+          {sidebarContent}
+        </>,
+        document.body,
+      );
+    }
+
+    // Desktop: No backdrop, but still use portal
+    return createPortal(sidebarContent, document.body);
   }
 
-  // Desktop: Render normally (no portal)
+  // Fallback for SSR
   return sidebarContent;
 }

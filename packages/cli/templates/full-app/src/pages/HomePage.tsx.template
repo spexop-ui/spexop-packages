@@ -1,0 +1,206 @@
+import {
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Grid,
+  GridItem,
+  Hero,
+  Stack,
+  Footer,
+  Container,
+} from "@spexop/react";
+
+interface HomePageProps {
+  toast?: {
+    success: (message: string) => string;
+    error: (message: string) => string;
+    warning: (message: string) => string;
+    info: (message: string) => string;
+  };
+}
+
+export default function HomePage({ toast }: HomePageProps = {}) {
+  const currentYear = new Date().getFullYear();
+
+  return (
+    <>
+      <Hero
+        variant="split"
+        title="Welcome to {{PROJECT_NAME}}"
+        subtitle="Built with Spexop Design System"
+        description="A modern web application using the {{THEME}} theme preset. Build beautiful, accessible interfaces with our comprehensive component library."
+        primaryAction={{
+          label: "Get Started",
+          onClick: () => toast?.success("Let's build something amazing!"),
+          variant: "primary",
+        }}
+        secondaryAction={{
+          label: "View Documentation",
+          onClick: () =>
+            window.open("https://npmjs.com/package/@spexop/react", "_blank"),
+          variant: "outline",
+        }}
+        stats={[
+          { value: "60+", label: "Components" },
+          { value: "13", label: "Theme Presets" },
+          { value: "WCAG AA+", label: "Accessible" },
+          { value: "100%", label: "TypeScript" },
+        ]}
+        animateStats={true}
+        background="gradient"
+      />
+
+      <div style={{ marginTop: "4rem" }}>
+        <Grid columns={{ xs: 1, md: 2, lg: 3 }} gap={6}>
+          <GridItem>
+            <Card fullHeight>
+              <CardHeader
+                title="Primitives First"
+                subtitle="Grid, Stack, Container"
+              />
+              <CardBody>
+                <p>
+                  Build complex layouts using simple, composable primitives.
+                  Master Grid, Stack, and Container before complex components.
+                </p>
+              </CardBody>
+            </Card>
+          </GridItem>
+
+          <GridItem>
+            <Card fullHeight>
+              <CardHeader title="{{THEME}} Theme" subtitle="Modern Design" />
+              <CardBody>
+                <p>
+                  Your app uses the {{THEME}} theme preset, optimized for modern
+                  web applications with accessibility built-in.
+                </p>
+                <ul
+                  style={{
+                    marginTop: "1rem",
+                    paddingLeft: "1.5rem",
+                    lineHeight: 1.8,
+                  }}
+                >
+                  <li>High contrast for readability</li>
+                  <li>Professional color scheme</li>
+                  <li>WCAG AA+ compliant</li>
+                </ul>
+              </CardBody>
+            </Card>
+          </GridItem>
+
+          <GridItem>
+            <Card fullHeight>
+              <CardHeader
+                title="Toast Notifications"
+                subtitle="Test Variants"
+              />
+              <CardBody>
+                <p style={{ marginBottom: "1rem" }}>
+                  Click any button to test toast notifications:
+                </p>
+                <Stack direction="vertical" gap={3}>
+                  <Button
+                    variant="filled"
+                    onClick={() =>
+                      toast?.success("Operation completed successfully!")
+                    }
+                    style={{
+                      background: "var(--theme-success)",
+                      borderColor: "var(--theme-success)",
+                    }}
+                  >
+                    ✓ Success
+                  </Button>
+                  <Button
+                    variant="filled"
+                    onClick={() => toast?.error("An error occurred!")}
+                    style={{
+                      background: "var(--theme-error)",
+                      borderColor: "var(--theme-error)",
+                    }}
+                  >
+                    ✕ Error
+                  </Button>
+                  <Button
+                    variant="filled"
+                    onClick={() => toast?.warning("Please check your input!")}
+                    style={{
+                      background: "var(--theme-warning)",
+                      borderColor: "var(--theme-warning)",
+                    }}
+                  >
+                    ⚠ Warning
+                  </Button>
+                  <Button
+                    variant="filled"
+                    onClick={() => toast?.info("New update available!")}
+                    style={{
+                      background: "var(--theme-info)",
+                      borderColor: "var(--theme-info)",
+                    }}
+                  >
+                    ℹ Info
+                  </Button>
+                </Stack>
+              </CardBody>
+            </Card>
+          </GridItem>
+        </Grid>
+      </div>
+
+      {/* Footer */}
+      <Footer
+        variant="default"
+        padding={8}
+        marginTop={16}
+        withBorder={true}
+        columns={[
+          {
+            title: "Product",
+            links: [
+              { label: "Features", href: "#features" },
+              { label: "Documentation", href: "#documentation" },
+              { label: "Examples", href: "#examples" },
+              { label: "Changelog", href: "#changelog" },
+            ],
+          },
+          {
+            title: "Resources",
+            links: [
+              { label: "Getting Started", href: "/" },
+              { label: "Components", href: "#components" },
+              { label: "Themes", href: "#themes" },
+              { label: "GitHub", href: "https://github.com/spexop-ui" },
+            ],
+          },
+          {
+            title: "Community",
+            links: [
+              { label: "Discord", href: "#discord" },
+              { label: "Twitter", href: "#twitter" },
+              { label: "Blog", href: "#blog" },
+              { label: "Support", href: "#support" },
+            ],
+          },
+        ]}
+        copyright={`© ${currentYear} {{PROJECT_NAME}}. Built with Spexop Design System.`}
+        socialLinks={[
+          {
+            platform: "github",
+            url: "https://github.com/spexop-ui",
+            ariaLabel: "GitHub",
+          },
+          {
+            platform: "twitter",
+            url: "https://twitter.com/spexop",
+            ariaLabel: "Twitter",
+          },
+        ]}
+      />
+    </>
+  );
+}
+

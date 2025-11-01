@@ -27,6 +27,15 @@ export async function readTemplateFiles(
   templateName: string,
 ): Promise<TemplateFile[]> {
   const templateDir = path.join(getTemplatesDir(), templateName);
+
+  // Check if template directory exists
+  if (!(await fs.pathExists(templateDir))) {
+    throw new Error(
+      `Template "${templateName}" not found at ${templateDir}. ` +
+        "Templates directory may be missing. Ensure templates are included in the package.",
+    );
+  }
+
   const files: TemplateFile[] = [];
 
   async function walkDir(dir: string, baseDir: string): Promise<void> {

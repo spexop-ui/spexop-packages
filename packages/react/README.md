@@ -32,9 +32,9 @@ This is an active development release (v0.3.0). While components follow "The Spe
 - 🔧 **CSS Modules** - Scoped styling with zero runtime overhead
 - 📱 **Responsive** - Mobile-first with breakpoint utilities
 - 🌳 **Tree-Shakeable** - Import only what you need
-- 🎭 **Theme Support** - Light/dark modes with ThemeProvider
+- 🎭 **Theme Support** - Light/dark modes with utilities (provider-free)
 - 🪝 **36+ React Hooks** - Utilities for common patterns
-- 🔌 **5 Providers** - Theme, Debug, Accessibility, Modal, Toast management
+- 🔧 **8 Utility Hooks** - Toast, Modal, Form, i18n, Performance, Debug, Accessibility, Theme (no providers needed)
 - 📚 **100% Documentation** - Every component has README + USAGE-GUIDE + tests
 
 ## Installation
@@ -100,18 +100,23 @@ function App() {
 
 ### 3. Add Theme System (Optional)
 
-Spexop uses a unified theme provider that handles both light/dark mode and full theme configuration.
+Spexop uses utility-based theme management for light/dark mode and CSS variable injection for full theme configuration.
 
-#### Quick Start: Light/Dark Mode
+#### Quick Start: Light/Dark Mode (Recommended)
 
 ```typescript
-import { ThemeProvider } from '@spexop/react';
+import { useThemeUtil } from '@spexop/react';
 
 function App() {
+  const { resolvedMode, setMode } = useThemeUtil({ defaultMode: 'auto' });
+  
   return (
-    <ThemeProvider mode="auto">
+    <>
       <YourApp />
-    </ThemeProvider>
+      <button onClick={() => setMode(resolvedMode === 'dark' ? 'light' : 'dark')}>
+        Toggle Theme
+      </button>
+    </>
   );
 }
 ```
@@ -119,17 +124,34 @@ function App() {
 #### With Full Theme Config
 
 ```typescript
-import { ThemeProvider } from '@spexop/react';
-import { techPreset } from '@spexop/theme';
+import { useThemeUtil } from '@spexop/react';
+import { generateCSS, techPreset } from '@spexop/theme';
+import { useEffect } from 'react';
 
 function App() {
+  // Inject theme CSS variables
+  useEffect(() => {
+    const css = generateCSS(techPreset);
+    const style = document.createElement('style');
+    style.textContent = css;
+    document.head.appendChild(style);
+  }, []);
+
+  // Use theme mode utility
+  const { resolvedMode, setMode } = useThemeUtil({ defaultMode: 'auto' });
+  
   return (
-    <ThemeProvider theme={techPreset} mode="auto">
+    <>
       <YourApp />
-    </ThemeProvider>
+      <button onClick={() => setMode(resolvedMode === 'dark' ? 'light' : 'dark')}>
+        Toggle Theme
+      </button>
+    </>
   );
 }
 ```
+
+> **Note**: `ThemeProvider` is deprecated but still functional for theme config injection. For theme mode only, use `useThemeUtil`. See [Migration Guide](../../docs/migrations/from-providers-to-utilities.md).
 
 [→ Complete theming guide](../../docs/theme-system/README.md) | [→ Migration guide](../../docs/theme-system/unified-theme-provider.md)
 
@@ -622,25 +644,48 @@ import {
 } from '@spexop/react';
 ```
 
-### Providers (5)
+### Utilities (8) - Provider-Free Approach
 
-Context providers for theme, debug, accessibility, modals, and toasts.
+Utility hooks for toast, modal, form, i18n, performance, debug, accessibility, and theme management. No provider wrappers needed!
 
 ```typescript
-import { 
-  ThemeProvider, 
-  DebugProvider, 
-  AccessibilityProvider,
-  ModalProvider,
-  ToastProvider 
+import {
+  useToastUtil,
+  useModalUtil,
+  useFormUtil,
+  useI18nUtil,
+  usePerformanceUtil,
+  useDebugUtil,
+  useAccessibilityUtil,
+  useThemeUtil
 } from '@spexop/react';
+
+// Example: No providers needed!
+function App() {
+  const { toast, renderToasts } = useToastUtil();
+  const { openModal, renderModals } = useModalUtil();
+  const { resolvedMode, setMode } = useThemeUtil({ defaultMode: 'auto' });
+  
+  return (
+    <>
+      <YourComponents />
+      {renderToasts()}
+      {renderModals()}
+    </>
+  );
+}
 ```
 
-- **ThemeProvider** - Theme context and light/dark mode management
-- **DebugProvider** - Debug mode and development utilities
-- **AccessibilityProvider** - Global accessibility settings and announcements
-- **ModalProvider** - Modal/dialog management with stacking
-- **ToastProvider** - Toast notification system with queue management
+- **useToastUtil** - Toast notification system with queue management
+- **useModalUtil** - Modal/dialog management with stacking
+- **useFormUtil** - Standalone form state, validation, and submission
+- **useI18nUtil** - Internationalization with translations and formatting
+- **usePerformanceUtil** - Component performance tracking
+- **useDebugUtil** - Debug mode and development utilities
+- **useAccessibilityUtil** - Global accessibility settings and announcements
+- **useThemeUtil** - Theme mode management (light/dark/auto)
+
+> **Note**: Providers are deprecated in v0.6.0+. See [Migration Guide: Providers to Utilities](../../docs/migrations/from-providers-to-utilities.md) for details.
 
 ## Documentation
 

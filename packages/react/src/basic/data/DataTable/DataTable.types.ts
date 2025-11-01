@@ -23,7 +23,64 @@ export type SortDirection = "asc" | "desc" | null;
 export type ColumnAlign = "left" | "center" | "right";
 
 /**
- * Column definition
+ * Simplified column definition (auto-generates accessor from key)
+ */
+export interface SimpleColumn<T = unknown> {
+  /**
+   * Column key (used as both id and accessor)
+   */
+  key: keyof T;
+
+  /**
+   * Column label (displayed in header)
+   */
+  label: string | ReactNode;
+
+  /**
+   * Column alignment
+   * @default 'left'
+   */
+  align?: ColumnAlign;
+
+  /**
+   * Column width (CSS value)
+   */
+  width?: string;
+}
+
+/**
+ * Type guard to check if column is SimpleColumn
+ */
+export function isSimpleColumn<T>(
+  column: Column<T> | SimpleColumn<T>,
+): column is SimpleColumn<T> {
+  return "key" in column && !("id" in column);
+}
+
+/**
+ * Normalize columns - convert SimpleColumn to Column
+ */
+export function normalizeColumns<T>(
+  columns: (Column<T> | SimpleColumn<T>)[],
+): Column<T>[] {
+  return columns.map((col) => {
+    if (isSimpleColumn(col)) {
+      return {
+        id: String(col.key),
+        header: col.label,
+        accessor: col.key,
+        align: col.align,
+        width: col.width,
+        sortable: true,
+        filterable: true,
+      };
+    }
+    return col;
+  });
+}
+
+/**
+ * Full column definition (for advanced usage)
  */
 export interface Column<T = unknown> {
   /**
@@ -151,9 +208,11 @@ export interface SelectionState {
  */
 export interface DataTableProps<T = unknown> {
   /**
-   * Column definitions
+   * Column definitions (supports both simple and full format)
+   * Simple: { key, label } - auto-generates accessor
+   * Full: { id, header, accessor } - complete control
    */
-  columns: Column<T>[];
+  columns: (Column<T> | SimpleColumn<T>)[];
 
   /**
    * Table data

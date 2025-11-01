@@ -65,7 +65,7 @@
 }
 
 .title {
-  font-size: 18px;
+  font-size: var(--theme-font-size-lg, 18px);
   font-weight: var(--theme-font-weight-semibold);
   color: var(--theme-text);
   margin: 0;
@@ -76,7 +76,7 @@
 }
 
 .languageBadge {
-  font-size: 12px;
+  font-size: var(--theme-font-size-xs, 12px);
   font-weight: var(--theme-font-weight-bold);
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -92,7 +92,7 @@
 }
 
 .meta {
-  font-size: 14px;
+  font-size: var(--theme-font-size-sm, 14px);
   font-weight: var(--theme-font-weight-semibold);
   color: var(--theme-text-secondary);
   white-space: nowrap;
@@ -390,7 +390,7 @@
   min-width: 44px; /* WCAG touch target minimum */
   
   /* Typography - Hierarchy through weight */
-  font-size: 14px;
+  font-size: var(--theme-font-size-sm, 14px);
   font-weight: var(--theme-font-weight-semibold);
   
   /* Borders Before Shadows */
@@ -473,7 +473,7 @@
 
 /* Info badge */
 .infoBadge {
-  font-size: 12px;
+  font-size: var(--theme-font-size-xs, 12px);
   font-weight: var(--theme-font-weight-semibold);
   color: var(--theme-text-secondary);
   padding: var(--theme-spacing-1) var(--theme-spacing-2);
@@ -504,7 +504,7 @@
 
 .codeblock--compact .code {
   padding: var(--theme-spacing-3);
-  font-size: 12px;
+  font-size: var(--theme-font-size-xs, 12px);
   line-height: 1.3;
 }
 
@@ -518,7 +518,7 @@
 
 .codeblock--minimal .code {
   padding: var(--theme-spacing-2) var(--theme-spacing-3);
-  font-size: 12px;
+  font-size: var(--theme-font-size-xs, 12px);
   line-height: 1.3;
 }
 
@@ -617,7 +617,7 @@
 
   .code {
     padding: var(--theme-spacing-3);
-    font-size: 12px;
+    font-size: var(--theme-font-size-xs, 12px);
     line-height: 1.3;
     width: 100%;
     max-width: 100%;

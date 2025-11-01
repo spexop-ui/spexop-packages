@@ -1,0 +1,191 @@
+/**
+ * MobileMenu Styles
+ * Following "The Spexop Way" - borders before shadows, high contrast
+ */
+
+/* Backdrop */
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+  animation: fadeIn 200ms ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Mobile Menu Container */
+.mobileMenu {
+  position: fixed;
+  background: var(--theme-surface, #ffffff);
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  max-height: 90vh;
+}
+
+/* Position variants */
+.mobileMenu.left {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  max-width: 400px;
+  border-right: 2px solid var(--theme-border, #e5e5e5);
+  transform: translateX(-100%);
+}
+
+.mobileMenu.right {
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  max-width: 400px;
+  border-left: 2px solid var(--theme-border, #e5e5e5);
+  transform: translateX(100%);
+}
+
+.mobileMenu.top {
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  border-bottom: 2px solid var(--theme-border, #e5e5e5);
+  transform: translateY(-100%);
+  max-height: none;
+  height: auto;
+}
+
+/* When used with MobileHeader, position below header */
+.mobileMenu.top.belowHeader {
+  top: 60px;
+  transform: translateY(calc(-100% - 60px));
+}
+
+.mobileMenu.top.belowHeader.open {
+  transform: translateY(0);
+}
+
+/* Open state */
+.mobileMenu.open {
+  transform: translateX(0);
+}
+
+.mobileMenu.top.open {
+  transform: translateY(0);
+}
+
+/* Header */
+.header {
+  padding: var(--theme-spacing-4, 1rem) var(--theme-spacing-6, 1.5rem);
+  border-bottom: 2px solid var(--theme-border, #e5e5e5);
+  background: var(--theme-surface, #ffffff);
+  flex-shrink: 0;
+  min-height: 64px;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--theme-font-size-lg, 1.125rem);
+  font-weight: var(--theme-font-weight-bold, 700);
+  color: var(--theme-text, #0a0a0a);
+  line-height: 1.2;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  height: 32px;
+}
+
+.logo img {
+  height: 100%;
+  width: auto;
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .logo {
+    height: 40px;
+  }
+}
+
+.closeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 2px solid var(--theme-border, #e5e5e5);
+  border-radius: var(--theme-radius-md, 8px);
+  background: transparent;
+  color: var(--theme-text, #0a0a0a);
+  cursor: pointer;
+  transition: all 200ms ease;
+  flex-shrink: 0;
+}
+
+.closeButton:hover {
+  background: var(--theme-surface-hover, #f5f5f5);
+  border-color: var(--theme-text-secondary, #525252);
+}
+
+.closeButton:focus-visible {
+  outline: 2px solid var(--theme-primary, #3b82f6);
+  outline-offset: 2px;
+}
+
+/* Content */
+.content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--theme-spacing-4, 1rem);
+  -webkit-overflow-scrolling: touch;
+}
+
+/* For top position, no need for flex: 1, just auto height */
+.mobileMenu.top .content {
+  flex: 0 1 auto;
+  max-height: calc(90vh - 64px);
+}
+
+/* Scrollbar styling */
+.content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.content::-webkit-scrollbar-track {
+  background: var(--theme-surface, #ffffff);
+}
+
+.content::-webkit-scrollbar-thumb {
+  background: var(--theme-border, #e5e5e5);
+  border-radius: 4px;
+}
+
+.content::-webkit-scrollbar-thumb:hover {
+  background: var(--theme-text-secondary, #525252);
+}
+
+/* Mobile specific */
+@media (max-width: 480px) {
+  .mobileMenu.left,
+  .mobileMenu.right {
+    max-width: 100%;
+  }
+}
+

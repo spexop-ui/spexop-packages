@@ -16,6 +16,7 @@ export default defineConfig({
   sourcemap: true,
   esbuildPlugins: [
     cssModulesPlugin({
+      // @ts-expect-error - generateScopedName and localsConvention are valid options but types may not reflect it
       generateScopedName: "[name]__[local]___[hash:base64:5]",
       localsConvention: "camelCase",
     }),

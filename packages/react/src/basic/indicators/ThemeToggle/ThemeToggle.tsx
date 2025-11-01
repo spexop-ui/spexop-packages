@@ -114,6 +114,7 @@ import type { ThemeToggleProps } from "./ThemeToggle.types.js";
  */
 export function ThemeToggle({
   currentTheme,
+  onChange,
   onThemeChange,
   variant = "icon",
   size = "md",
@@ -125,14 +126,15 @@ export function ThemeToggle({
 
   const themeLabel = `Theme: ${currentTheme}`;
 
-  // Cycle to next theme
+  // Cycle to next theme - use onChange if provided, fallback to onThemeChange
+  const handleChange = onChange || onThemeChange;
   const cycleTheme = () => {
     const themes: Array<"light" | "dark" | "auto"> = ["light", "dark", "auto"];
     const currentIndex = themes.indexOf(currentTheme);
     const nextIndex = (currentIndex + 1) % themes.length;
     const nextTheme = themes[nextIndex];
-    if (nextTheme) {
-      onThemeChange(nextTheme);
+    if (nextTheme && handleChange) {
+      handleChange(nextTheme);
     }
   };
 

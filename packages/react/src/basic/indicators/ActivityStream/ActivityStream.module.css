@@ -1,0 +1,161 @@
+/* ActivityStream Component Styles */
+
+.activityStream {
+  display: flex;
+  flex-direction: column;
+  gap: var(--theme-spacing-4);
+  position: relative;
+  padding: 0;
+}
+
+/* Vertical orientation (default) */
+.activityStreamVertical {
+  flex-direction: column;
+}
+
+.activityStreamHorizontal {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+/* Density variants */
+.densityCompact {
+  gap: var(--theme-spacing-2);
+}
+
+.densityNormal {
+  gap: var(--theme-spacing-4);
+}
+
+.densitySpacious {
+  gap: var(--theme-spacing-8);
+}
+
+/* Activity Item */
+.activityItem {
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+  gap: var(--theme-spacing-3);
+}
+
+/* Icon position variants */
+.iconLeft {
+  flex-direction: row;
+}
+
+.iconRight {
+  flex-direction: row-reverse;
+}
+
+/* Icon/Indicator container */
+.iconContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--theme-spacing-8);
+  height: var(--theme-spacing-8);
+  border: 2px solid var(--theme-border);
+  border-radius: 50%;
+  background: var(--theme-surface);
+  color: var(--theme-text);
+  font-weight: var(--theme-font-weight-semibold);
+  position: relative;
+  z-index: 1;
+}
+
+/* Icon variants */
+.iconDefault {
+  border-color: var(--theme-border);
+  background: var(--theme-surface);
+  color: var(--theme-text);
+}
+
+.iconSuccess {
+  border-color: var(--theme-success);
+  background: var(--theme-surface);
+  color: var(--theme-success);
+}
+
+.iconWarning {
+  border-color: var(--theme-warning);
+  background: var(--theme-surface);
+  color: var(--theme-warning);
+}
+
+.iconError {
+  border-color: var(--theme-error);
+  background: var(--theme-surface);
+  color: var(--theme-error);
+}
+
+.iconInfo {
+  border-color: var(--theme-info);
+  background: var(--theme-surface);
+  color: var(--theme-info);
+}
+
+/* Connecting line */
+.line {
+  position: absolute;
+  background: var(--theme-border);
+  z-index: 0;
+}
+
+.lineVertical {
+  left: var(--theme-spacing-4);
+  top: var(--theme-spacing-8);
+  width: 2px;
+  bottom: calc(var(--theme-spacing-4) * -1);
+}
+
+.lineHorizontal {
+  display: none; /* Horizontal lines not implemented yet */
+}
+
+.lineHidden {
+  display: none;
+}
+
+.lineLast {
+  display: none; /* Hide line for last item */
+}
+
+/* Content area */
+.contentArea {
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  font-size: var(--theme-font-size-sm);
+  font-weight: var(--theme-font-weight-semibold);
+  color: var(--theme-text);
+  margin: 0 0 var(--theme-spacing-1) 0;
+}
+
+.description {
+  font-size: var(--theme-font-size-xs);
+  color: var(--theme-text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.timestamp {
+  font-size: var(--theme-font-size-xs);
+  color: var(--theme-text-muted);
+  margin-top: var(--theme-spacing-1);
+}
+
+/* Custom content */
+.customContent {
+  margin-top: var(--theme-spacing-2);
+}
+
+/* Keyboard focus styles */
+.activityItem:focus-within .iconContainer {
+  outline: 2px solid var(--theme-primary);
+  outline-offset: 2px;
+}
+

@@ -6,12 +6,15 @@
 import { agencyPreset } from "./agency.js";
 import { corporatePreset } from "./corporate.js";
 import { darkPreset } from "./dark.js";
+import { documentationPreset } from "./documentation.js";
+import { docsPreset } from "./docs.js";
 import { ecommercePreset } from "./ecommerce.js";
 import { educationPreset } from "./education.js";
 import { financePreset } from "./finance.js";
 import { healthcarePreset } from "./healthcare.js";
 import { minimalPreset } from "./minimal.js";
 import { pastelPreset } from "./pastel.js";
+import { spexopPreset } from "./spexop.js";
 import { startupPreset } from "./startup.js";
 import { techPreset } from "./tech.js";
 import { vibrantPreset } from "./vibrant.js";
@@ -23,9 +26,12 @@ export { darkPreset } from "./dark.js";
 export { ecommercePreset } from "./ecommerce.js";
 export { educationPreset } from "./education.js";
 export { financePreset } from "./finance.js";
+export { documentationPreset } from "./documentation.js";
+export { docsPreset } from "./docs.js";
 export { healthcarePreset } from "./healthcare.js";
 export { minimalPreset } from "./minimal.js";
 export { pastelPreset } from "./pastel.js";
+export { spexopPreset } from "./spexop.js";
 export { startupPreset } from "./startup.js";
 export { techPreset } from "./tech.js";
 export { vibrantPreset } from "./vibrant.js";
@@ -34,6 +40,7 @@ export { vibrantPreset } from "./vibrant.js";
  * All available preset themes
  */
 export const presets = {
+  spexop: spexopPreset,
   tech: techPreset,
   agency: agencyPreset,
   finance: financePreset,
@@ -41,6 +48,8 @@ export const presets = {
   ecommerce: ecommercePreset,
   education: educationPreset,
   corporate: corporatePreset,
+  docs: docsPreset,
+  documentation: documentationPreset,
   minimal: minimalPreset,
   dark: darkPreset,
   vibrant: vibrantPreset,
@@ -117,6 +126,18 @@ export const presetMeta = {
     industry: "Enterprise",
     colors: ["#1e40af", "#64748b"],
   },
+  docs: {
+    name: "Spexop Docs",
+    description: "Compact documentation theme using Spexop brand colors",
+    industry: "Developer Tools",
+    colors: ["#06b6d4", "#11171b"],
+  },
+  documentation: {
+    name: "Documentation",
+    description: "Clean, readable theme optimized for docs and code",
+    industry: "Developer Tools",
+    colors: ["#2563eb", "#475569"],
+  },
   minimal: {
     name: "Minimal",
     description: "Clean monochrome theme",
@@ -146,5 +167,11 @@ export const presetMeta = {
     description: "Modern innovative theme with gradients",
     industry: "Startups",
     colors: ["#6366f1", "#fb7185"],
+  },
+  spexop: {
+    name: "Spexop",
+    description: "Custom Spexop brand theme matching logo colors",
+    industry: "Design System",
+    colors: ["#11171b", "#06b6d4"],
   },
 } as const;

@@ -1,0 +1,35 @@
+# Test files
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+**/__tests__/**
+**/__mocks__/**
+**/*.test.d.ts
+**/*.spec.d.ts
+
+# Test configuration
+vitest.config.ts
+vitest.config.js
+tsconfig.test.json
+
+# Development files
+*.config.ts
+*.config.js
+!tsup.config.ts
+!vite.config.ts
+coverage/
+test-results.txt
+
+# Apps (development examples)
+apps/
+examples/
+
+# Source maps (optional - uncomment if you don't want to publish them)
+# **/*.map
+
+# Development documentation
+*.example.tsx
+*.example.ts
+
+

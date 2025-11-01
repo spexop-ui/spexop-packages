@@ -325,180 +325,194 @@ export const SettingsPanel = React.forwardRef<
           </Card>
 
           {/* SECTION: Color Palette */}
-          <Card title="COLOR PALETTE" description="Choose your accent color">
-            <ButtonGroup
-              direction="horizontal"
-              aria-label="Color palette selection"
-            >
-              {COLOR_PALETTE_OPTIONS.map((option) => (
-                <Button
-                  key={option.value}
-                  variant={
-                    colorPalette === option.value ? "primary" : "outline"
-                  }
-                  size="md"
-                  onClick={() => onColorPaletteChange?.(option.value)}
-                  aria-pressed={colorPalette === option.value}
-                >
-                  <div
-                    style={{
-                      width: 16,
-                      height: 16,
-                      borderRadius: "50%",
-                      backgroundColor: option.color,
-                      border: "2px solid currentColor",
-                    }}
-                  />
-                  {option.label}
-                </Button>
-              ))}
-            </ButtonGroup>
-          </Card>
+          {onColorPaletteChange && (
+            <Card title="COLOR PALETTE" description="Choose your accent color">
+              <ButtonGroup
+                direction="horizontal"
+                aria-label="Color palette selection"
+              >
+                {COLOR_PALETTE_OPTIONS.map((option) => (
+                  <Button
+                    key={option.value}
+                    variant={
+                      colorPalette === option.value ? "primary" : "outline"
+                    }
+                    size="md"
+                    onClick={() => onColorPaletteChange?.(option.value)}
+                    aria-pressed={colorPalette === option.value}
+                  >
+                    <div
+                      style={{
+                        width: 16,
+                        height: 16,
+                        borderRadius: "50%",
+                        backgroundColor: option.color,
+                        border: "2px solid currentColor",
+                      }}
+                    />
+                    {option.label}
+                  </Button>
+                ))}
+              </ButtonGroup>
+            </Card>
+          )}
 
           {/* SECTION: Layout Width */}
-          <Card
-            title="LAYOUT WIDTH"
-            description="Standard responsive behavior with sensible breakpoints"
-          >
-            <ButtonGroup
-              direction="horizontal"
-              aria-label="Layout width selection"
+          {onLayoutVariantChange && (
+            <Card
+              title="LAYOUT WIDTH"
+              description="Standard responsive behavior with sensible breakpoints"
             >
-              {LAYOUT_VARIANT_OPTIONS.map((option) => (
-                <Button
-                  key={option.value}
-                  variant={
-                    layoutVariant === option.value ? "primary" : "outline"
-                  }
-                  size="md"
-                  onClick={() => handleLayoutVariantChange(option.value)}
-                  aria-pressed={layoutVariant === option.value}
-                >
-                  {option.label}
-                </Button>
-              ))}
-            </ButtonGroup>
-          </Card>
+              <ButtonGroup
+                direction="horizontal"
+                aria-label="Layout width selection"
+              >
+                {LAYOUT_VARIANT_OPTIONS.map((option) => (
+                  <Button
+                    key={option.value}
+                    variant={
+                      layoutVariant === option.value ? "primary" : "outline"
+                    }
+                    size="md"
+                    onClick={() => handleLayoutVariantChange(option.value)}
+                    aria-pressed={layoutVariant === option.value}
+                  >
+                    {option.label}
+                  </Button>
+                ))}
+              </ButtonGroup>
+            </Card>
+          )}
 
           {/* SECTION: Content Width */}
-          <Card
-            title="CONTENT WIDTH"
-            description="Optimize reading line length for better readability"
-          >
-            <ButtonGroup
-              direction="horizontal"
-              aria-label="Content width selection"
+          {onContentMaxWidthChange && (
+            <Card
+              title="CONTENT WIDTH"
+              description="Optimize reading line length for better readability"
             >
-              {CONTENT_MAX_WIDTH_OPTIONS.map((option) => (
-                <Button
-                  key={option.value}
-                  variant={
-                    contentMaxWidth === option.value ? "primary" : "outline"
-                  }
-                  size="md"
-                  onClick={() => handleContentMaxWidthChange(option.value)}
-                  aria-pressed={contentMaxWidth === option.value}
-                >
-                  {option.label}
-                </Button>
-              ))}
-            </ButtonGroup>
-          </Card>
+              <ButtonGroup
+                direction="horizontal"
+                aria-label="Content width selection"
+              >
+                {CONTENT_MAX_WIDTH_OPTIONS.map((option) => (
+                  <Button
+                    key={option.value}
+                    variant={
+                      contentMaxWidth === option.value ? "primary" : "outline"
+                    }
+                    size="md"
+                    onClick={() => handleContentMaxWidthChange(option.value)}
+                    aria-pressed={contentMaxWidth === option.value}
+                  >
+                    {option.label}
+                  </Button>
+                ))}
+              </ButtonGroup>
+            </Card>
+          )}
 
           {/* SECTION: Spacing */}
-          <Card
-            title="SPACING"
-            description="Balanced spacing for all screen sizes"
-          >
-            <ButtonGroup
-              direction="horizontal"
-              aria-label="Spacing density selection"
+          {onSpacingChange && (
+            <Card
+              title="SPACING"
+              description="Balanced spacing for all screen sizes"
             >
-              {SPACING_OPTIONS.map((option) => (
-                <Button
-                  key={option.value}
-                  variant={spacing === option.value ? "primary" : "outline"}
-                  size="md"
-                  onClick={() => handleSpacingChange(option.value)}
-                  aria-pressed={spacing === option.value}
-                >
-                  {option.label}
-                </Button>
-              ))}
-            </ButtonGroup>
-          </Card>
+              <ButtonGroup
+                direction="horizontal"
+                aria-label="Spacing density selection"
+              >
+                {SPACING_OPTIONS.map((option) => (
+                  <Button
+                    key={option.value}
+                    variant={spacing === option.value ? "primary" : "outline"}
+                    size="md"
+                    onClick={() => handleSpacingChange(option.value)}
+                    aria-pressed={spacing === option.value}
+                  >
+                    {option.label}
+                  </Button>
+                ))}
+              </ButtonGroup>
+            </Card>
+          )}
 
           {/* SECTION: Sidebar Position */}
-          <Card
-            title="SIDEBAR POSITION"
-            description="Sidebar appears on the left side. Standard layout for most applications."
-          >
-            <ButtonGroup
-              direction="horizontal"
-              aria-label="Sidebar position selection"
+          {onSidebarPositionChange && (
+            <Card
+              title="SIDEBAR POSITION"
+              description="Sidebar appears on the left side. Standard layout for most applications."
             >
-              {SIDEBAR_POSITION_OPTIONS.map((option) => (
-                <Button
-                  key={option.value}
-                  variant={
-                    sidebarPosition === option.value ? "primary" : "outline"
-                  }
-                  size="md"
-                  onClick={() => handleSidebarPositionChange(option.value)}
-                  aria-pressed={sidebarPosition === option.value}
-                >
-                  {option.label}
-                </Button>
-              ))}
-            </ButtonGroup>
-          </Card>
+              <ButtonGroup
+                direction="horizontal"
+                aria-label="Sidebar position selection"
+              >
+                {SIDEBAR_POSITION_OPTIONS.map((option) => (
+                  <Button
+                    key={option.value}
+                    variant={
+                      sidebarPosition === option.value ? "primary" : "outline"
+                    }
+                    size="md"
+                    onClick={() => handleSidebarPositionChange(option.value)}
+                    aria-pressed={sidebarPosition === option.value}
+                  >
+                    {option.label}
+                  </Button>
+                ))}
+              </ButtonGroup>
+            </Card>
+          )}
 
           {/* SECTION: Show Sidebar */}
-          <Card
-            title="SHOW SIDEBAR"
-            description="Control sidebar visibility. When enabled, sidebar shows icons and labels. When disabled, sidebar is completely hidden."
-          >
-            <ButtonGroup
-              direction="horizontal"
-              aria-label="Sidebar visibility selection"
+          {onSidebarStateChange && (
+            <Card
+              title="SHOW SIDEBAR"
+              description="Control sidebar visibility. When enabled, sidebar shows icons and labels. When disabled, sidebar is completely hidden."
             >
-              {SIDEBAR_VISIBILITY_OPTIONS.map((option) => (
-                <Button
-                  key={option.value}
-                  variant={
-                    sidebarState === option.value ? "primary" : "outline"
-                  }
-                  size="md"
-                  onClick={() => handleSidebarStateChange(option.value)}
-                  aria-pressed={sidebarState === option.value}
-                >
-                  {option.label}
-                </Button>
-              ))}
-            </ButtonGroup>
-          </Card>
+              <ButtonGroup
+                direction="horizontal"
+                aria-label="Sidebar visibility selection"
+              >
+                {SIDEBAR_VISIBILITY_OPTIONS.map((option) => (
+                  <Button
+                    key={option.value}
+                    variant={
+                      sidebarState === option.value ? "primary" : "outline"
+                    }
+                    size="md"
+                    onClick={() => handleSidebarStateChange(option.value)}
+                    aria-pressed={sidebarState === option.value}
+                  >
+                    {option.label}
+                  </Button>
+                ))}
+              </ButtonGroup>
+            </Card>
+          )}
 
           {/* SECTION: Text Zoom */}
-          <Card
-            title="TEXT ZOOM"
-            description="Adjust text size for better readability. WCAG 2.2 AA requires support up to 200%."
-          >
-            <Slider
-              id={zoomSelectId}
-              value={Number.parseInt(textZoom, 10)}
-              min={100}
-              max={200}
-              step={10}
-              onChange={(value) =>
-                handleTextZoomChange(
-                  value.toString() as "100" | "130" | "150" | "200",
-                )
-              }
-              showValue={true}
-              formatValue={(value) => `${value}%`}
-              aria-label="Text zoom selection"
-            />
-          </Card>
+          {onTextZoomChange && (
+            <Card
+              title="TEXT ZOOM"
+              description="Adjust text size for better readability. WCAG 2.2 AA requires support up to 200%."
+            >
+              <Slider
+                id={zoomSelectId}
+                value={Number.parseInt(textZoom, 10)}
+                min={100}
+                max={200}
+                step={10}
+                onChange={(value) =>
+                  handleTextZoomChange(
+                    value.toString() as "100" | "130" | "150" | "200",
+                  )
+                }
+                showValue={true}
+                formatValue={(value) => `${value}%`}
+                aria-label="Text zoom selection"
+              />
+            </Card>
+          )}
 
           {/* Reset to Defaults Button */}
           {onResetToDefaults && (

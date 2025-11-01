@@ -67,6 +67,8 @@ export {
   agencyPreset,
   corporatePreset,
   darkPreset,
+  docsPreset,
+  documentationPreset,
   ecommercePreset,
   educationPreset,
   financePreset,
@@ -78,20 +80,60 @@ export {
   pastelPreset,
   presetMeta,
   presets,
+  spexopPreset,
   startupPreset,
   techPreset,
   vibrantPreset,
 } from "./presets/index.js";
+// Type-Safe Tokens (13 themes)
+export {
+  // Main export (Tech theme)
+  tokens,
+  // Individual theme tokens
+  techTokens,
+  minimalTokens,
+  darkTokens,
+  financeTokens,
+  healthcareTokens,
+  ecommerceTokens,
+  educationTokens,
+  corporateTokens,
+  agencyTokens,
+  vibrantTokens,
+  pastelTokens,
+  startupTokens,
+} from "./tokens/index.js";
+
+// Token Types
+export type {
+  TechTokens,
+  MinimalTokens,
+  DarkTokens,
+  FinanceTokens,
+  HealthcareTokens,
+  EcommerceTokens,
+  EducationTokens,
+  CorporateTokens,
+  AgencyTokens,
+  VibrantTokens,
+  PastelTokens,
+  StartupTokens,
+} from "./tokens/index.js";
 // Types
 export type {
   Breakpoints,
   ButtonVariantStyle,
+  ThemeAnimations,
   DarkModeConfig,
   FluidTypography,
   FontWeights,
   LineHeights,
   SpacingValues,
   SpexopThemeConfig,
+  ThemeGrid,
+  ThemeOpacity,
+  ThemeRadii,
+  ThemeShadows,
   ThemeBorders,
   ThemeButtons,
   ThemeCards,
@@ -100,6 +142,7 @@ export type {
   ThemeMeta,
   ThemeModals,
   ThemeNavigation,
+  ThemeZIndex,
   ThemeSpacing,
   ThemeTypography,
   TypographySizes,
@@ -208,6 +251,13 @@ export {
   resolveButtonTokens,
   resolveToken,
 } from "./utils/tokenResolver.js";
+// Semantic pair detector utilities
+export type { SemanticColorPair } from "./utils/semanticPairDetector.js";
+export {
+  countSemanticPairs,
+  detectSemanticPairs,
+  hasSemanticPairs,
+} from "./utils/semanticPairDetector.js";
 export type {
   ValidationError,
   ValidationOptions,

@@ -1,0 +1,243 @@
+/**
+ * {{PROJECT_NAME}}
+ * Created with Spexop CLI
+ * 
+ * Enhanced with AppLayout, static Sidebar, SearchModal (Cmd+K), and SettingsPanel
+ */
+
+import "@spexop/react/dist/index.css";
+import "{{THEME_CSS}}";
+import { useState } from "react";
+import { 
+  AppLayout,
+  TopBar,
+  Sidebar,
+  NavSection,
+  NavLink,
+  Button,
+  Stack,
+  SearchModal,
+  SettingsPanel
+} from "@spexop/react";
+import { useHash, useThemeUtil, useToastUtil } from "@spexop/react";
+import ReactDOM from "react-dom/client";
+import HomePage from "./pages/HomePage";
+import SettingsPage from "./pages/SettingsPage";
+
+// Navigation structure
+const navigationSections = [
+  {
+    label: "Getting Started",
+    defaultOpen: true,
+    links: [
+      { href: "/", label: "🏠 Home" },
+      { href: "/about", label: "ℹ️ About" },
+    ],
+  },
+  {
+    label: "Application",
+    defaultOpen: false,
+    links: [
+      { href: "/settings", label: "⚙️ Settings" },
+      { href: "/documentation", label: "📚 Documentation" },
+    ],
+  },
+  {
+    label: "Resources",
+    defaultOpen: false,
+    links: [
+      { href: "/examples", label: "💡 Examples" },
+      { href: "/help", label: "❓ Help" },
+    ],
+  },
+];
+
+// Search quick links
+const searchQuickLinks = [
+  { label: "Home", description: "Main page", href: "/" },
+  { label: "Settings", description: "Configure app", href: "/settings" },
+  { label: "Documentation", description: "Learn more", href: "/documentation" },
+];
+
+function App() {
+  // Hash-based routing
+  const [hash, setHash] = useHash();
+  const currentPath = hash || "/";
+
+  // Theme utilities
+  const { resolvedMode, setMode } = useThemeUtil({ 
+    defaultMode: "auto" 
+  });
+
+  // Toast notifications
+  const { toast, renderToasts } = useToastUtil({
+    position: "top-right",
+    duration: 3000,
+  });
+
+  // Search modal state
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Settings panel state
+  const [settingsOpen, setSettingsOpen] = useState(false);
+
+  // Keyboard shortcut for search (Cmd+K / Ctrl+K)
+  useState(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  });
+
+  // Navigation helper
+  const navigate = (path: string) => {
+    setHash(path);
+    setSearchOpen(false); // Close search if open
+    toast.info(`Navigated to ${path}`);
+  };
+
+  // Search handler
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    // You can add actual search logic here
+    toast.info(`Searching for: ${query}`);
+  };
+
+  // Search result selection
+  const handleResultSelect = (result: any) => {
+    if (result.href) {
+      navigate(result.href);
+    }
+  };
+
+  // Render current page
+  const renderPage = () => {
+    switch (currentPath) {
+      case "/settings":
+        return <SettingsPage toast={toast} />;
+      case "/about":
+        return (
+          <div style={{ padding: "var(--theme-spacing-6)" }}>
+            <h1>About {{PROJECT_NAME}}</h1>
+            <p>This app was created with Spexop CLI using the full-app template.</p>
+          </div>
+        );
+      case "/documentation":
+        return (
+          <div style={{ padding: "var(--theme-spacing-6)" }}>
+            <h1>Documentation</h1>
+            <p>Visit <a href="https://npmjs.com/package/@spexop/react" target="_blank" rel="noopener noreferrer">@spexop/react on npm</a> for full documentation.</p>
+          </div>
+        );
+      case "/examples":
+        return (
+          <div style={{ padding: "var(--theme-spacing-6)" }}>
+            <h1>Examples</h1>
+            <p>Example pages coming soon...</p>
+          </div>
+        );
+      case "/help":
+        return (
+          <div style={{ padding: "var(--theme-spacing-6)" }}>
+            <h1>Help</h1>
+            <p>Need help? Check the documentation or open an issue on GitHub.</p>
+          </div>
+        );
+      default:
+        return <HomePage toast={toast} />;
+    }
+  };
+
+  // TopBar component
+  const topBar = (
+    <TopBar
+      logoText="{{PROJECT_NAME}}"
+      onLogoClick={() => navigate("/")}
+      onSearchClick={() => setSearchOpen(true)}
+      onThemeToggle={() => {
+        const modes: Array<"light" | "dark" | "auto"> = ["light", "dark", "auto"];
+        const currentIndex = modes.indexOf(resolvedMode as any);
+        const nextMode = modes[(currentIndex + 1) % modes.length];
+        setMode(nextMode);
+        toast.success(`Theme: ${nextMode}`);
+      }}
+      onSettingsClick={() => setSettingsOpen(true)}
+      currentTheme={resolvedMode as "light" | "dark" | "auto"}
+    />
+  );
+
+  // Sidebar component (static on desktop)
+  const sidebar = (
+    <Sidebar isOpen={true} showHeader={false}>
+      <Stack gap={1}>
+        {navigationSections.map((section) => (
+          <NavSection
+            key={section.label}
+            label={section.label}
+            defaultOpen={section.defaultOpen}
+          >
+            {section.links.map((link) => (
+              <NavLink
+                key={link.href}
+                href={link.href}
+                active={currentPath === link.href}
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate(link.href);
+                }}
+              >
+                {link.label}
+              </NavLink>
+            ))}
+          </NavSection>
+        ))}
+      </Stack>
+    </Sidebar>
+  );
+
+  return (
+    <>
+      <AppLayout
+        topBar={topBar}
+        sidebar={sidebar}
+        hasSidebar={true}
+      >
+        {renderPage()}
+      </AppLayout>
+
+      {/* Search Modal (Cmd+K) */}
+      <SearchModal
+        isOpen={searchOpen}
+        onClose={() => setSearchOpen(false)}
+        quickLinks={searchQuickLinks}
+        placeholder="Search documentation... (Cmd+K)"
+        onSearch={handleSearch}
+        onResultSelect={handleResultSelect}
+        results={[]}
+      />
+
+      {/* Settings Panel */}
+      <SettingsPanel
+        isOpen={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
+        theme={resolvedMode as "light" | "dark" | "auto"}
+        onThemeChange={(theme) => {
+          setMode(theme);
+          toast.success(`Theme changed to ${theme}`);
+        }}
+      />
+
+      {/* Render toasts */}
+      {renderToasts()}
+    </>
+  );
+}
+
+// Mount app
+const root = ReactDOM.createRoot(document.getElementById("root")!);
+root.render(<App />);

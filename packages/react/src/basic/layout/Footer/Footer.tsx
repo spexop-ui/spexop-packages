@@ -31,6 +31,7 @@
  * ```
  */
 
+import type React from "react";
 import { useDebug, useResponsiveValue } from "../../../hooks/index.js";
 import { cn } from "../../../utils/index.js";
 import {
@@ -38,20 +39,42 @@ import {
   validateResponsiveKeys,
   validateSpacing,
 } from "../../../utils/validation.js";
+import { Container } from "../../primitives/Container/Container.js";
+import { Grid } from "../../primitives/Grid/Grid.js";
+import { Stack } from "../../primitives/Stack/Stack.js";
+import { Icon } from "../../indicators/Icon/Icon.js";
 import styles from "./Footer.module.css";
-import type { FooterProps } from "./Footer.types.js";
+import type { FooterColumn, FooterProps } from "./Footer.types.js";
 
 export function Footer({
   as: Component = "footer",
   variant = "default",
   padding,
-  paddingTop,
-  paddingBottom,
-  paddingLeft,
-  paddingRight,
+  paddingAll,
+  paddingTop: paddingTopProp,
+  paddingBottom: paddingBottomProp,
+  paddingLeft: paddingLeftProp,
+  paddingRight: paddingRightProp,
+  paddingY,
+  paddingX,
+  marginTop: marginTopProp,
+  marginBottom: marginBottomProp,
+  marginLeft: marginLeftProp,
+  marginRight: marginRightProp,
+  marginY,
+  marginX,
+  backgroundColor,
+  textColor,
+  linkColor,
+  borderColor,
+  borderWidth,
+  borderRadius,
   withBorder = false,
   withBackground = true,
   children,
+  columns,
+  copyright,
+  socialLinks,
   className,
   style,
   "aria-label": ariaLabel,
@@ -65,10 +88,19 @@ export function Footer({
   if (process.env.NODE_ENV === "development") {
     // Validate spacing values
     validateSpacing("Footer", "padding", padding);
-    validateSpacing("Footer", "paddingTop", paddingTop);
-    validateSpacing("Footer", "paddingBottom", paddingBottom);
-    validateSpacing("Footer", "paddingLeft", paddingLeft);
-    validateSpacing("Footer", "paddingRight", paddingRight);
+    validateSpacing("Footer", "paddingAll", paddingAll);
+    validateSpacing("Footer", "paddingTop", paddingTopProp);
+    validateSpacing("Footer", "paddingBottom", paddingBottomProp);
+    validateSpacing("Footer", "paddingLeft", paddingLeftProp);
+    validateSpacing("Footer", "paddingRight", paddingRightProp);
+    validateSpacing("Footer", "paddingY", paddingY);
+    validateSpacing("Footer", "paddingX", paddingX);
+    validateSpacing("Footer", "marginTop", marginTopProp);
+    validateSpacing("Footer", "marginBottom", marginBottomProp);
+    validateSpacing("Footer", "marginLeft", marginLeftProp);
+    validateSpacing("Footer", "marginRight", marginRightProp);
+    validateSpacing("Footer", "marginY", marginY);
+    validateSpacing("Footer", "marginX", marginX);
 
     // Check for responsive objects
     if (typeof padding === "object" && padding !== null) {
@@ -78,32 +110,46 @@ export function Footer({
         padding as Record<string, unknown>,
       );
     }
-    if (typeof paddingTop === "object" && paddingTop !== null) {
+    if (typeof paddingAll === "object" && paddingAll !== null) {
       validateResponsiveKeys(
         "Footer",
-        "paddingTop",
-        paddingTop as Record<string, unknown>,
+        "paddingAll",
+        paddingAll as Record<string, unknown>,
       );
     }
-    if (typeof paddingBottom === "object" && paddingBottom !== null) {
+    if (typeof paddingY === "object" && paddingY !== null) {
       validateResponsiveKeys(
         "Footer",
-        "paddingBottom",
-        paddingBottom as Record<string, unknown>,
+        "paddingY",
+        paddingY as Record<string, unknown>,
       );
     }
-    if (typeof paddingLeft === "object" && paddingLeft !== null) {
+    if (typeof paddingX === "object" && paddingX !== null) {
       validateResponsiveKeys(
         "Footer",
-        "paddingLeft",
-        paddingLeft as Record<string, unknown>,
+        "paddingX",
+        paddingX as Record<string, unknown>,
       );
     }
-    if (typeof paddingRight === "object" && paddingRight !== null) {
+    if (typeof marginTopProp === "object" && marginTopProp !== null) {
       validateResponsiveKeys(
         "Footer",
-        "paddingRight",
-        paddingRight as Record<string, unknown>,
+        "marginTop",
+        marginTopProp as Record<string, unknown>,
+      );
+    }
+    if (typeof marginY === "object" && marginY !== null) {
+      validateResponsiveKeys(
+        "Footer",
+        "marginY",
+        marginY as Record<string, unknown>,
+      );
+    }
+    if (typeof marginX === "object" && marginX !== null) {
+      validateResponsiveKeys(
+        "Footer",
+        "marginX",
+        marginX as Record<string, unknown>,
       );
     }
 
@@ -121,12 +167,142 @@ export function Footer({
     );
   }
 
-  // Resolve responsive values
-  const currentPadding = useResponsiveValue(padding);
-  const currentPaddingTop = useResponsiveValue(paddingTop);
-  const currentPaddingBottom = useResponsiveValue(paddingBottom);
-  const currentPaddingLeft = useResponsiveValue(paddingLeft);
-  const currentPaddingRight = useResponsiveValue(paddingRight);
+  // Resolve responsive values - padding: use paddingAll as alias for padding
+  const effectivePadding = paddingAll ?? padding;
+  const currentPadding = useResponsiveValue(effectivePadding);
+  const currentPaddingTop = useResponsiveValue(
+    paddingTopProp ?? paddingY,
+  );
+  const currentPaddingBottom = useResponsiveValue(
+    paddingBottomProp ?? paddingY,
+  );
+  const currentPaddingLeft = useResponsiveValue(
+    paddingLeftProp ?? paddingX,
+  );
+  const currentPaddingRight = useResponsiveValue(
+    paddingRightProp ?? paddingX,
+  );
+
+  // Resolve responsive values - margins
+  const currentMarginTop = useResponsiveValue(marginTopProp ?? marginY);
+  const currentMarginBottom = useResponsiveValue(marginBottomProp ?? marginY);
+  const currentMarginLeft = useResponsiveValue(marginLeftProp ?? marginX);
+  const currentMarginRight = useResponsiveValue(marginRightProp ?? marginX);
+
+  // Build inline styles for custom colors and border
+  const customStyle: React.CSSProperties = {
+    ...(backgroundColor && { backgroundColor }),
+    ...(textColor && { color: textColor }),
+    ...(borderColor && { borderColor }),
+    ...(borderWidth && { borderWidth }),
+    ...(borderRadius && { borderRadius }),
+    // Apply margin styles via CSS variables
+    ...(currentMarginTop !== undefined && {
+      marginTop: `var(--theme-spacing-${currentMarginTop})`,
+    }),
+    ...(currentMarginBottom !== undefined && {
+      marginBottom: `var(--theme-spacing-${currentMarginBottom})`,
+    }),
+    ...(currentMarginLeft !== undefined && {
+      marginLeft: `var(--theme-spacing-${currentMarginLeft})`,
+    }),
+    ...(currentMarginRight !== undefined && {
+      marginRight: `var(--theme-spacing-${currentMarginRight})`,
+    }),
+    ...style,
+  };
+
+  // Render structured layout if columns/copyright/socialLinks provided and no children
+  const renderStructuredLayout = (): React.ReactNode => {
+    if (children) return null; // Custom layout takes precedence
+
+    return (
+      <Container maxWidth="xl">
+        <Stack direction="vertical" gap={8}>
+          {/* Columns */}
+          {columns && columns.length > 0 && (
+            <Grid
+              columns={{
+                xs: 1,
+                sm: 2,
+                md: columns.length >= 3 ? 3 : columns.length,
+                lg: columns.length,
+              }}
+              gap={8}
+            >
+              {columns.map((column, index) => (
+                <div key={`footer-column-${index}-${column.title?.slice(0, 10)}`}>
+                  {column.title && (
+                    <h3 style={{ marginBottom: "var(--theme-spacing-4)" }}>
+                      {column.title}
+                    </h3>
+                  )}
+                  {column.content ? (
+                    column.content
+                  ) : (
+                    <Stack direction="vertical" gap={3}>
+                      {column.links?.map((link, linkIndex) => (
+                        <a
+                          key={`footer-link-${index}-${linkIndex}-${link.label?.slice(0, 10)}`}
+                          href={link.href}
+                          target={link.external ? "_blank" : undefined}
+                          rel={link.external ? "noopener noreferrer" : undefined}
+                          style={{
+                            color: linkColor || "var(--theme-text-secondary)",
+                          }}
+                        >
+                          {link.label}
+                        </a>
+                      ))}
+                    </Stack>
+                  )}
+                </div>
+              ))}
+            </Grid>
+          )}
+
+          {/* Social Links */}
+          {socialLinks && socialLinks.length > 0 && (
+            <Stack direction="horizontal" gap={4} align="center">
+              {socialLinks.map((socialLink, index) => (
+                <a
+                  key={`footer-social-link-${index}-${socialLink.name?.slice(0, 10)}`}
+                  href={socialLink.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={socialLink.label || socialLink.name}
+                  style={{
+                    color: linkColor || "var(--theme-text-secondary)",
+                  }}
+                >
+                  {socialLink.icon ? (
+                    <Icon name={socialLink.icon} />
+                  ) : (
+                    socialLink.name
+                  )}
+                </a>
+              ))}
+            </Stack>
+          )}
+
+          {/* Copyright */}
+          {copyright && (
+            <div
+              style={{
+                textAlign: "center",
+                color: textColor || "var(--theme-text-secondary)",
+              }}
+            >
+              {typeof copyright === "string" ? <p>{copyright}</p> : copyright}
+            </div>
+          )}
+        </Stack>
+      </Container>
+    );
+  };
+
+  // Determine content to render
+  const content = children || renderStructuredLayout();
 
   return (
     <Component
@@ -150,7 +326,7 @@ export function Footer({
         debugEnabled && showBoundaries && styles.debugBoundaries,
         className,
       )}
-      style={style}
+      style={customStyle}
       aria-label={ariaLabel}
       aria-labelledby={ariaLabelledBy}
       data-debug={debugEnabled ? "true" : undefined}
@@ -158,7 +334,21 @@ export function Footer({
       data-variant={debugEnabled ? variant : undefined}
       {...rest}
     >
-      {children}
+      {/* Apply link color via CSS variable if provided */}
+      {linkColor && (
+        <style>
+          {`
+            .${styles.footer} a {
+              color: ${linkColor};
+            }
+            .${styles.footer} a:hover {
+              color: ${linkColor};
+              opacity: 0.8;
+            }
+          `}
+        </style>
+      )}
+      {content}
     </Component>
   );
 }

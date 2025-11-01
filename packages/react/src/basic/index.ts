@@ -19,6 +19,7 @@ export * from "./cards/index.js";
 export * from "./data/index.js";
 // Display Components (6 components) - exclude IconProps to avoid conflict
 export {
+  ActivityStream,
   Avatar,
   Badge,
   Carousel,

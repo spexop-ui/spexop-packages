@@ -19,6 +19,7 @@ export default defineConfig({
     ],
     // Memory optimization settings - sequential execution
     pool: "forks",
+    // @ts-expect-error - poolOptions is valid in Vitest 4.0 but types may not reflect it
     poolOptions: {
       forks: {
         singleFork: false,

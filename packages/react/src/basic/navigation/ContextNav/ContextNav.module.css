@@ -27,6 +27,11 @@
   visibility: visible;
 }
 
+/* Mobile header positioning - no top offset needed */
+.contextNav[data-scope="page"] {
+  top: var(--spexop-context-nav-top, 80px);
+}
+
 /* Hidden before hero section is scrolled past */
 .hiddenBeforeHero {
   position: absolute;
@@ -116,8 +121,8 @@ html[data-theme="dark"] .divider {
   font-weight: var(--theme-font-weight-medium);
   border: 1px solid var(--theme-border);
   opacity: 0;
-  transform: scale(0.9) translateX(-5px);
-  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform: translateX(-12px);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   white-space: nowrap; /* Prevent text wrapping */
   flex-shrink: 0; /* Prevent links from shrinking */
 }
@@ -214,7 +219,7 @@ html[data-theme="dark"] .contextNav.hasNav.stuck {
 /* Cascade animation for individual links */
 .contextNav.stuck .navLink {
   opacity: 1;
-  transform: scale(1) translateX(0);
+  transform: translateX(0);
 }
 
 /* ==================== */
@@ -292,10 +297,15 @@ html[data-theme="dark"] .toggleButton:hover {
 @media (max-width: 1023px) {
   /* Mobile: Full-width bar with vertical expansion */
   .contextNav {
-    width: calc(100% - var(--theme-spacing-8));
+    width: 100%;
     max-width: none;
-    margin-left: var(--theme-spacing-4);
-    margin-right: var(--theme-spacing-4);
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    position: relative;
+    border-radius: 0;
+    border-right: none;
+    border-left: none;
   }
   
   /* Show toggle button on mobile */
@@ -312,35 +322,37 @@ html[data-theme="dark"] .toggleButton:hover {
   .navItems {
     position: absolute;
     top: calc(100% - 2px); /* Overlap border slightly */
-    left: -2px; /* Align with parent border */
-    right: -2px; /* Align with parent border */
+    left: 0;
+    right: 0;
     background: var(--theme-surface);
-    border: 3px solid var(--theme-primary);
+    border: 2px solid var(--theme-border);
     border-top: none;
-    border-radius: 0 0 var(--theme-radius-relaxed) var(--theme-radius-relaxed);
+    border-radius: 0;
     flex-direction: column;
     align-items: stretch;
     gap: 0;
     max-height: 0;
     opacity: 0;
     overflow: hidden;
-    transition: max-height 0.3s ease, opacity 0.2s ease;
+    transition: max-height 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
     padding: 0;
     margin-top: 0;
-    z-index: 1;
+    z-index: 50;
+    pointer-events: none;
   }
   
   html[data-theme="dark"] .navItems {
     background: var(--theme-surface);
-    border-color: var(--theme-primary);
+    border-color: var(--theme-border);
   }
   
   /* Expanded state on mobile */
   .contextNav.expanded .navItems {
-    max-height: 25rem;
+    max-height: 24rem;
     opacity: 1;
     overflow-y: auto;
     pointer-events: auto;
+    border-color: var(--theme-primary);
   }
   
   /* Mobile: Stack links vertically */
@@ -348,17 +360,18 @@ html[data-theme="dark"] .toggleButton:hover {
     width: 100%;
     text-align: left;
     padding: var(--theme-spacing-3) var(--theme-spacing-4);
-    border-radius: var(--theme-radius-relaxed);
+    border-radius: 0;
     border: none;
     border-bottom: 1px solid var(--theme-border);
     background: transparent;
-    font-size: 14px;
+    font-size: 13px;
+    font-weight: var(--theme-font-weight-normal);
     min-height: 44px; /* Touch-friendly WCAG minimum */
     display: flex;
     align-items: center;
     opacity: 1;
     transform: none;
-    transition: background 0.2s ease;
+    transition: background 0.15s ease, color 0.15s ease;
   }
   
   html[data-theme="dark"] .navLink {
@@ -371,15 +384,23 @@ html[data-theme="dark"] .toggleButton:hover {
   }
   
   .navLink:hover {
-    background: transparent;
-    border-color: var(--theme-primary);
+    background: var(--theme-surface-hover);
     color: var(--theme-primary);
+    border-color: transparent;
   }
   
   html[data-theme="dark"] .navLink:hover {
-    background: transparent;
-    border-color: var(--theme-primary);
+    background: var(--theme-surface-hover);
     color: var(--theme-primary);
+  }
+  
+  .navLink.active {
+    background: transparent;
+    color: var(--theme-primary);
+    font-weight: var(--theme-font-weight-semibold);
+    border-color: var(--theme-primary);
+    border-left: 3px solid var(--theme-primary);
+    padding-left: calc(var(--theme-spacing-4) - 3px);
   }
 }
 

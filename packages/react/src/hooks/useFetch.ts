@@ -20,10 +20,9 @@
  * ```
  */
 
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import { DataFetchContext } from "../providers/DataFetchProvider/DataFetchContext.js";
-import type { FetchOptions } from "../providers/DataFetchProvider/DataFetchProvider.types.js";
-import { dataCache } from "../providers/DataFetchProvider/cache.js";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { dataCache } from "../utils/dataCache.js";
+import type { FetchOptions } from "../utils/dataFetch.types.js";
 
 export interface UseFetchResult<T> {
   data: T | null;
@@ -91,11 +90,26 @@ async function retryFetch<T>(
   throw lastError;
 }
 
+/**
+ * useFetch Hook
+ * Standalone data fetching hook with caching and retry support
+ *
+ * @example
+ * ```tsx
+ * function ProductList() {
+ *   const { data, loading, error, refetch } = useFetch<Product[]>('/api/products');
+ *
+ *   if (loading) return <Spinner />;
+ *   if (error) return <Alert variant="error">{error.message}</Alert>;
+ *
+ *   return <div>{data?.map(product => <ProductCard key={product.id} {...product} />)}</div>;
+ * }
+ * ```
+ */
 export function useFetch<T = unknown>(
   url: string | null,
   options?: FetchOptions,
 ): UseFetchResult<T> {
-  const context = useContext(DataFetchContext);
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
@@ -103,20 +117,17 @@ export function useFetch<T = unknown>(
 
   // Fetch function
   const fetchData = useCallback(async () => {
-    // Merge options with defaults inside callback
+    // Merge options with defaults
     const mergedOptions: FetchOptions = {
-      ...context?.defaultOptions,
       ...options,
       cache: {
         ttl: 300000,
-        ...context?.defaultOptions?.cache,
         ...options?.cache,
       },
       retry: {
         count: 3,
         delay: 1000,
         exponentialBackoff: true,
-        ...context?.defaultOptions?.retry,
         ...options?.retry,
       },
     };
@@ -170,24 +181,11 @@ export function useFetch<T = unknown>(
 
     try {
       // Build full URL
-      const fullUrl = context?.baseURL ? `${context.baseURL}${url}` : url;
-
-      // Apply request interceptor
-      let requestUrl = fullUrl;
-      let requestOptions: FetchOptions = {
+      const requestUrl = url;
+      const requestOptions: FetchOptions = {
         ...mergedOptions,
         signal: abortControllerRef.current.signal,
       };
-
-      if (context?.onRequest) {
-        const intercepted = await context.onRequest(requestUrl, requestOptions);
-        requestUrl = intercepted.url;
-        requestOptions = {
-          ...requestOptions,
-          ...intercepted.options,
-          signal: abortControllerRef.current.signal,
-        };
-      }
 
       // Create fetch promise
       const fetchPromise = retryFetch(async () => {
@@ -219,12 +217,7 @@ export function useFetch<T = unknown>(
             throw errorObj;
           }
 
-          let responseData = await response.json();
-
-          // Apply response interceptor
-          if (context?.onResponse) {
-            responseData = await context.onResponse(response, responseData);
-          }
+          const responseData = await response.json();
 
           return responseData as T;
         } finally {
@@ -252,19 +245,14 @@ export function useFetch<T = unknown>(
         return;
       }
 
-      let finalError = err as Error;
-
-      // Apply error interceptor
-      if (context?.onError) {
-        finalError = await context.onError(finalError);
-      }
+      const finalError = err as Error;
 
       setError(finalError);
       setData(null);
     } finally {
       setLoading(false);
     }
-  }, [url, options, context]);
+  }, [url, options]);
 
   // Refetch function
   const refetch = useCallback(async () => {
@@ -279,7 +267,6 @@ export function useFetch<T = unknown>(
       // Update cache
       if (url && options?.cache?.ttl) {
         const mergedOptions: FetchOptions = {
-          ...context?.defaultOptions,
           ...options,
         };
         const cacheKey =
@@ -288,7 +275,7 @@ export function useFetch<T = unknown>(
         dataCache.set(cacheKey, newData, options.cache.ttl);
       }
     },
-    [url, options, context],
+    [url, options],
   );
 
   // Fetch on mount and when dependencies change

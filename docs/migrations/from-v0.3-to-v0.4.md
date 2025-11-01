@@ -524,7 +524,7 @@ import { Card } from '@spexop/react';
 
 **Solution**:
 
-1. Ensure theme provider is wrapping your app
+1. Ensure theme is configured (use `useThemeUtil` or `generateCSS` instead of deprecated `ThemeProvider`)
 2. Check CSS modules are being imported
 3. Verify theme tokens are available
 4. Check for CSS conflicts
@@ -699,7 +699,9 @@ Create a `types/spexop.d.ts` file:
 declare module '@spexop/react' {
   export * from '@spexop/react/basic';
   export * from '@spexop/react/hooks';
-  export * from '@spexop/react/providers';
+  // Providers are deprecated in v0.6.0+
+  // Use utilities instead: useToastUtil, useModalUtil, useThemeUtil, etc.
+  // See: docs/migrations/from-providers-to-utilities.md
   export * from '@spexop/react/utils';
 }
 

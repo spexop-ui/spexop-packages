@@ -10,15 +10,105 @@
  */
 
 .sidebarFooter {
-  padding: var(--theme-spacing-5);
+  padding: var(--theme-spacing-3);
   border-top: var(--theme-border-width) solid var(--theme-border);
   background: var(--theme-surface-secondary);
   flex-shrink: 0;
   margin-top: auto;
 }
 
+/* Density variants */
+.density-compact {
+  padding: var(--theme-spacing-2) var(--theme-spacing-3);
+}
+
+.density-spacious {
+  padding: var(--theme-spacing-4) var(--theme-spacing-3);
+}
+
 /* Dark Theme */
 [data-theme="dark"] .sidebarFooter {
   border-top-color: var(--theme-border);
   background: var(--theme-surface-hover);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   STRUCTURED CONTENT STYLES
+   ═══════════════════════════════════════════════════════════════════════════ */ 
+
+.userSection {
+  padding: var(--theme-spacing-3);
+  border-radius: var(--theme-radius-md);
+  background: var(--theme-surface);
+  border: var(--theme-border-width, 1px) solid var(--theme-border);
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--theme-spacing-3);
+}
+
+.avatar {
+  width: var(--theme-spacing-10, 40px);
+  height: var(--theme-spacing-10, 40px);
+  border-radius: var(--theme-radius-full);
+  object-fit: cover;
+  border: calc(var(--theme-border-width, 1px) * 2) solid var(--theme-border);
+}
+
+.userDetails {
+  flex: 1;
+  min-width: 0;
+}
+
+.userName {
+  font-size: var(--theme-font-size-sm);
+  font-weight: var(--theme-font-weight-semibold);
+  color: var(--theme-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.userSubtitle {
+  font-size: var(--theme-font-size-xs);
+  color: var(--theme-text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--theme-spacing-2);
+}
+
+.actionButton {
+  display: flex;
+  align-items: center;
+  gap: var(--theme-spacing-2);
+  padding: var(--theme-spacing-3) var(--theme-spacing-4);
+  background: var(--theme-surface);
+  border: var(--theme-border-width) solid var(--theme-border);
+  border-radius: var(--theme-radius-sm);
+  color: var(--theme-text);
+  font-size: var(--theme-font-size-sm);
+  font-weight: var(--theme-font-weight-semibold);
+  cursor: pointer;
+  transition: all var(--theme-duration-fast, 200ms) ease;
+  width: 100%;
+  text-align: left;
+}
+
+.actionButton:hover {
+  background: var(--theme-surface-hover);
+  border-color: var(--theme-primary);
+  border-width: var(--theme-border-width);
+}
+
+.actionButton:focus-visible {
+  outline: calc(var(--theme-border-width) * 2) solid var(--theme-primary);
+  outline-offset: var(--theme-spacing-1);
 }

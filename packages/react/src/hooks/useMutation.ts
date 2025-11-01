@@ -31,9 +31,8 @@
  * ```
  */
 
-import { useCallback, useContext, useState } from "react";
-import { DataFetchContext } from "../providers/DataFetchProvider/DataFetchContext.js";
-import type { FetchOptions } from "../providers/DataFetchProvider/DataFetchProvider.types.js";
+import { useCallback, useState } from "react";
+import type { FetchOptions } from "../utils/dataFetch.types.js";
 
 export interface UseMutationOptions<T, V = unknown> extends FetchOptions {
   onSuccess?: (data: T, variables: V) => void | Promise<void>;
@@ -58,7 +57,6 @@ export function useMutation<T = unknown, V = unknown>(
   url: string,
   options?: UseMutationOptions<T, V>,
 ): UseMutationResult<T, V> {
-  const context = useContext(DataFetchContext);
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
@@ -66,15 +64,13 @@ export function useMutation<T = unknown, V = unknown>(
   // Mutate function
   const mutateAsync = useCallback(
     async (variables: V): Promise<T> => {
-      // Merge options with defaults inside callback
+      // Merge options with defaults
       const mergedOptions: FetchOptions = {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          ...context?.defaultOptions?.headers,
           ...options?.headers,
         },
-        ...context?.defaultOptions,
         ...options,
       };
       setLoading(true);
@@ -82,27 +78,11 @@ export function useMutation<T = unknown, V = unknown>(
 
       try {
         // Build full URL
-        const fullUrl = context?.baseURL ? `${context.baseURL}${url}` : url;
-
-        // Apply request interceptor
-        let requestUrl = fullUrl;
-        let requestOptions: FetchOptions & { body: string } = {
+        const requestUrl = url;
+        const requestOptions: FetchOptions & { body: string } = {
           ...mergedOptions,
           body: JSON.stringify(variables),
         };
-
-        if (context?.onRequest) {
-          const intercepted = await context.onRequest(
-            requestUrl,
-            requestOptions,
-          );
-          requestUrl = intercepted.url;
-          requestOptions = {
-            ...requestOptions,
-            ...intercepted.options,
-            body: requestOptions.body,
-          };
-        }
 
         // Make request - extract our custom properties before passing to fetch
         const {
@@ -123,12 +103,7 @@ export function useMutation<T = unknown, V = unknown>(
           throw errorObj;
         }
 
-        let responseData = await response.json();
-
-        // Apply response interceptor
-        if (context?.onResponse) {
-          responseData = await context.onResponse(response, responseData);
-        }
+        const responseData = await response.json();
 
         setData(responseData);
 
@@ -144,12 +119,7 @@ export function useMutation<T = unknown, V = unknown>(
 
         return responseData as T;
       } catch (err) {
-        let finalError = err as Error;
-
-        // Apply error interceptor
-        if (context?.onError) {
-          finalError = await context.onError(finalError);
-        }
+        const finalError = err as Error;
 
         setError(finalError);
 
@@ -168,7 +138,7 @@ export function useMutation<T = unknown, V = unknown>(
         setLoading(false);
       }
     },
-    [url, context, options],
+    [url, options],
   );
 
   // Mutate function (non-throwing)

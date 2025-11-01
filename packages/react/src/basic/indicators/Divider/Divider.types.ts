@@ -15,6 +15,9 @@ export interface DividerProps {
   /** Label to display */
   label?: React.ReactNode;
 
+  /** Children to display (alternative to label) */
+  children?: React.ReactNode;
+
   /** Label alignment */
   labelAlign?: "left" | "center" | "right";
 

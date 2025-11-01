@@ -27,7 +27,7 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { FetchOptions } from "../providers/DataFetchProvider/DataFetchProvider.types.js";
+import type { FetchOptions } from "../utils/dataFetch.types.js";
 import { useFetch } from "./useFetch.js";
 
 export interface UseInfiniteScrollOptions extends FetchOptions {

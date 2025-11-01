@@ -1,0 +1,34 @@
+# Test files
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+**/__tests__/**
+**/__mocks__/**
+**/*.test.d.ts
+**/*.spec.d.ts
+
+# Test configuration
+vitest.config.ts
+vitest.config.js
+jest.config.ts
+jest.config.js
+
+# Source files (already excluded by package.json files, but explicit)
+src/
+
+# Development files
+*.config.ts
+*.config.js
+!tsup.config.ts
+coverage/
+tsconfig.json
+tsconfig.*.json
+
+# Source maps (optional - uncomment if you don't want to publish them)
+# **/*.map
+
+# Development scripts
+scripts/
+
+

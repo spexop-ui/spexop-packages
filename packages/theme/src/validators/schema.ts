@@ -201,18 +201,33 @@ export function validateThemeSchema(theme: unknown): SchemaValidationResult {
       });
     }
 
-    if (!("values" in spacing)) {
-      errors.push({
-        path: "$.spacing.values",
-        message: "spacing.values is required",
-      });
-    } else if (spacing.values !== null && typeof spacing.values !== "object") {
-      errors.push({
-        path: "$.spacing.values",
-        message: "spacing.values must be an object",
-        expected: "object",
-        received: typeof spacing.values,
-      });
+    // If provided, validate values is an object
+    if ("values" in spacing) {
+      if (spacing.values !== null && typeof spacing.values !== "object") {
+        errors.push({
+          path: "$.spacing.values",
+          message: "spacing.values must be an object",
+          expected: "object",
+          received: typeof spacing.values,
+        });
+      }
+    }
+
+    // If provided, validate scale is an array of numbers
+    if ("scale" in spacing) {
+      if (!Array.isArray(spacing.scale)) {
+        errors.push({
+          path: "$.spacing.scale",
+          message: "spacing.scale must be an array of numbers",
+          expected: "number[]",
+          received: typeof spacing.scale,
+        });
+      } else if (!spacing.scale.every((v) => typeof v === "number")) {
+        errors.push({
+          path: "$.spacing.scale",
+          message: "spacing.scale must contain only numbers",
+        });
+      }
     }
   }
 
@@ -220,6 +235,7 @@ export function validateThemeSchema(theme: unknown): SchemaValidationResult {
   if (config.borders && typeof config.borders === "object") {
     const borders = config.borders as Record<string, unknown>;
 
+    // Validate required numeric widths
     if (typeof borders.default !== "number") {
       errors.push({
         path: "$.borders.default",
@@ -227,19 +243,28 @@ export function validateThemeSchema(theme: unknown): SchemaValidationResult {
         expected: "number",
         received: typeof borders.default,
       });
-    } else if (borders.default < 1 || borders.default > 8) {
+    } else if ((borders.default as number) < 1 || (borders.default as number) > 8) {
       errors.push({
         path: "$.borders.default",
         message: `borders.default must be between 1 and 8, got ${borders.default}`,
       });
     }
 
-    if (typeof borders.strong !== "number") {
+    if (typeof borders.thin !== "number") {
       errors.push({
-        path: "$.borders.strong",
-        message: "borders.strong must be a number",
+        path: "$.borders.thin",
+        message: "borders.thin must be a number",
         expected: "number",
-        received: typeof borders.strong,
+        received: typeof borders.thin,
+      });
+    }
+
+    if (typeof borders.thick !== "number") {
+      errors.push({
+        path: "$.borders.thick",
+        message: "borders.thick must be a number",
+        expected: "number",
+        received: typeof borders.thick,
       });
     }
   }

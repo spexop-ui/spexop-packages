@@ -23,9 +23,8 @@ export function generatePackageJson(options: ScaffoldOptions) {
     dependencies: {
       react: "^18.3.1",
       "react-dom": "^18.3.1",
-      "@spexop/react": "^0.4.7",
-      "@spexop/theme": "^0.4.0",
-      "@spexop/icons": "^0.1.1",
+      "@spexop/react": "^0.6.0",
+      "@spexop/theme": "^0.6.0",
     } as Record<string, string>,
     devDependencies: {
       "@types/react": "^18.3.0",
@@ -52,9 +51,8 @@ export function getDependencies(
   const dependencies: Record<string, string> = {
     react: "^18.3.1",
     "react-dom": "^18.3.1",
-    "@spexop/react": "^0.4.7",
-    "@spexop/theme": "^0.4.0",
-    "@spexop/icons": "^0.1.1",
+    "@spexop/react": "^0.6.0",
+    "@spexop/theme": "^0.6.0",
   };
 
   const devDependencies: Record<string, string> = {

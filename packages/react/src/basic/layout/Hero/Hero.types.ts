@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
  */
 export type HeroVariant =
   | "split"
+  | "split-image"
   | "centered-compact"
   | "centered-spacious"
   | "minimal"
@@ -65,13 +66,78 @@ export interface ButtonConfig {
   /**
    * Button variant
    */
-  variant?: "elevated" | "filled" | "tonal" | "outlined" | "standard";
+  variant?:
+    | "primary"
+    | "secondary"
+    | "outline"
+    | "ghost"
+    | "text"
+    | "pill"
+    | "border-emphasis"
+    | "danger"
+    | "success"
+    | "warning"
+    | "info"
+    | "neutral";
+
+  /**
+   * Text color preference (useful for dark backgrounds)
+   * @default 'auto'
+   */
+  textColor?: "auto" | "light" | "dark";
+
+  /**
+   * Border weight (following "Borders before shadows" principle)
+   * @default 'normal'
+   */
+  borderWeight?: "thin" | "normal" | "thick";
+
+  /**
+   * Border style
+   * @default 'solid'
+   */
+  borderStyle?: "solid" | "dashed" | "dotted";
 
   /**
    * Accessibility label
    */
   ariaLabel?: string;
 }
+
+/**
+ * Image fit options for background images
+ */
+export type ImageFit = "cover" | "contain" | "fill" | "none" | "scale-down";
+
+/**
+ * Image position options for background images (CSS object-position values)
+ */
+export type ImagePosition =
+  | "center"
+  | "top"
+  | "bottom"
+  | "left"
+  | "right"
+  | "top left"
+  | "top right"
+  | "bottom left"
+  | "bottom right"
+  | string; // Allow custom values like "20% 80%"
+
+/**
+ * Overlay gradient position for background images
+ */
+export type OverlayPosition = "top" | "bottom" | "center";
+
+/**
+ * Parallax effect intensity for background images
+ */
+export type ParallaxIntensity = "none" | "subtle" | "medium" | "strong";
+
+/**
+ * Image size presets for convenient sizing
+ */
+export type ImageSizePreset = "compact" | "medium" | "large" | "full";
 
 /**
  * Media configuration for Hero
@@ -84,11 +150,24 @@ export interface HeroMedia {
 
   /**
    * Media source URL
+   * If srcLight or srcDark are provided, src is used as fallback
    */
   src: string;
 
   /**
-   * Alt text for images
+   * Light theme image source URL
+   * Overrides src when in light theme mode
+   */
+  srcLight?: string;
+
+  /**
+   * Dark theme image source URL
+   * Overrides src when in dark theme mode
+   */
+  srcDark?: string;
+
+  /**
+   * Alt text for images (required for accessibility)
    */
   alt?: string;
 
@@ -99,8 +178,300 @@ export interface HeroMedia {
 
   /**
    * Video autoplay (muted, looped)
+   * @default false
    */
   autoplay?: boolean;
+
+  /**
+   * Image fit behavior (CSS object-fit)
+   * Only applies to images, not videos
+   * @default "cover"
+   */
+  imageFit?: ImageFit;
+
+  /**
+   * Image position (CSS object-position)
+   * Controls which part of the image is visible when using cover/contain
+   * Only applies to images, not videos
+   * @default "center"
+   * @example
+   * imagePosition="top center" - Show top portion of image
+   * imagePosition="20% 80%" - Custom positioning
+   */
+  imagePosition?: ImagePosition;
+
+  /**
+   * Overlay gradient position for better text readability
+   * Only applies when overlay is true
+   * @default "center"
+   */
+  overlayPosition?: OverlayPosition;
+
+  /**
+   * Parallax effect for background images
+   * Creates subtle scroll-based movement effect
+   * Only applies to background images (backgroundMedia prop)
+   * @default "none"
+   */
+  parallax?: ParallaxIntensity;
+
+  /**
+   * Image size preset for convenient sizing
+   * Only applies to images in split/regular layouts (not backgroundMedia)
+   * @default "full"
+   * @example
+   * imageSize="compact" - Smaller, more compact image
+   * imageSize="medium" - Medium sized image
+   * imageSize="large" - Large image
+   * imageSize="full" - Full width/height (default)
+   */
+  imageSize?: ImageSizePreset;
+
+  /**
+   * Custom image width (CSS value)
+   * Overrides imageSize preset if provided
+   * Only applies to images in split/regular layouts (not backgroundMedia)
+   * @example
+   * imageWidth="400px"
+   * imageWidth="50%"
+   * imageWidth="30vw"
+   */
+  imageWidth?: string;
+
+  /**
+   * Custom image height (CSS value)
+   * Overrides imageSize preset if provided
+   * Only applies to images in split/regular layouts (not backgroundMedia)
+   * @example
+   * imageHeight="300px"
+   * imageHeight="50vh"
+   */
+  imageHeight?: string;
+
+  /**
+   * Maximum image width (CSS value)
+   * Constrains the maximum width of the image
+   * Only applies to images in split/regular layouts (not backgroundMedia)
+   * @example
+   * maxImageWidth="600px"
+   * maxImageWidth="80%"
+   */
+  maxImageWidth?: string;
+
+  /**
+   * Maximum image height (CSS value)
+   * Constrains the maximum height of the image
+   * Only applies to images in split/regular layouts (not backgroundMedia)
+   * @example
+   * maxImageHeight="500px"
+   * maxImageHeight="70vh"
+   */
+  maxImageHeight?: string;
+
+  /**
+   * Aspect ratio for the image container (CSS aspect-ratio value)
+   * Only applies to images in split/regular layouts (not backgroundMedia)
+   * @default undefined (natural aspect ratio)
+   * @example
+   * aspectRatio="16/9" - Widescreen aspect ratio
+   * aspectRatio="4/3" - Traditional aspect ratio
+   * aspectRatio="1/1" - Square
+   * aspectRatio="3/4" - Portrait
+   */
+  aspectRatio?: string;
+
+  /**
+   * Border style for the media container
+   * Only applies to images/videos in split/regular layouts (not backgroundMedia)
+   * @default "default" (2px solid border using theme border color)
+   * @example
+   * border="none" - No border
+   * border="default" - Theme border (2px solid)
+   * border="thick" - Thicker border (3px)
+   * border="thicker" - Even thicker border (4px)
+   */
+  border?: "none" | "default" | "thick" | "thicker";
+
+  /**
+   * Custom border color (CSS color value)
+   * Overrides default theme border color
+   * Only applies when border is not "none"
+   * @example
+   * borderColor="#3b82f6"
+   * borderColor="var(--theme-primary)"
+   * borderColor="rgba(0, 0, 0, 0.2)"
+   */
+  borderColor?: string;
+
+  /**
+   * Custom border width (CSS value)
+   * Overrides default border width
+   * Only applies when border is not "none"
+   * @example
+   * borderWidth="1px"
+   * borderWidth="3px"
+   * borderWidth="0.5rem"
+   */
+  borderWidth?: string;
+
+  /**
+   * Border radius for the media container (CSS value)
+   * Overrides default border radius
+   * @example
+   * borderRadius="8px"
+   * borderRadius="0" - Square corners
+   * borderRadius="50%" - Circular
+   */
+  borderRadius?: string;
+
+  /**
+   * Media credits/attribution
+   * React node or function that receives theme info and returns React node
+   * Typically shown as a small text overlay at the bottom of the image
+   * @example
+   * credits={
+   *   <>Photo by <a href="...">Photographer Name</a> on <a href="...">Unsplash</a></>
+   * }
+   * @example
+   * credits={({ isDark }) => (
+   *   <>Photo by <a href="...">{isDark ? 'Dark Photographer' : 'Light Photographer'}</a></>
+   * )}
+   */
+  credits?: ReactNode | ((options: { isDark: boolean }) => ReactNode);
+
+  /**
+   * Credits background color (CSS color or token)
+   * Overrides default token-driven background
+   * @example
+   * creditsBackgroundColor="var(--theme-surface)"
+   * creditsBackgroundColor="rgba(255,255,255,0.85)"
+   */
+  creditsBackgroundColor?: string;
+
+  /**
+   * Credits text color (CSS color or token)
+   * Overrides default token-driven text color
+   * @example
+   * creditsTextColor="var(--theme-text)"
+   * creditsTextColor="#ffffff"
+   */
+  creditsTextColor?: string;
+
+  /**
+   * Credits border color (CSS color or token)
+   * Overrides default token-driven border color
+   * @example
+   * creditsBorderColor="var(--theme-border)"
+   */
+  creditsBorderColor?: string;
+
+  /**
+   * Mark media as AI generated
+   * Shows an "AI Generated" badge on the media
+   * @default false
+   */
+  aiGenerated?: boolean;
+
+  /**
+   * Image filter configuration
+   * CSS filters for visual effects on images
+   * Only applies to images, not videos
+   */
+  filters?: {
+    /**
+     * Blur filter (CSS blur value)
+     * @example "0px", "2px", "10px"
+     */
+    blur?: string;
+
+    /**
+     * Brightness filter (0-1 or percentage)
+     * @example 0.5, "50%", "120%"
+     */
+    brightness?: number | string;
+
+    /**
+     * Contrast filter (0-1 or percentage)
+     * @example 1.2, "120%", "200%"
+     */
+    contrast?: number | string;
+
+    /**
+     * Grayscale filter (0-1 or percentage)
+     * @example 0, 1, "100%"
+     */
+    grayscale?: number | string;
+
+    /**
+     * Hue rotation (degrees)
+     * @example 0, 90, 180
+     */
+    hueRotate?: number;
+
+    /**
+     * Invert filter (0-1 or percentage)
+     * @example 0, 1, "100%"
+     */
+    invert?: number | string;
+
+    /**
+     * Opacity filter (0-1)
+     * @example 0.5, 1
+     */
+    opacity?: number;
+
+    /**
+     * Saturate filter (0-1 or percentage)
+     * @example 0, 1.5, "150%"
+     */
+    saturate?: number | string;
+
+    /**
+     * Sepia filter (0-1 or percentage)
+     * @example 0, 1, "100%"
+     */
+    sepia?: number | string;
+  };
+
+  /**
+   * Image animation configuration
+   * Entrance animations for images when they enter viewport
+   * Only applies to images, not videos
+   */
+  animation?: {
+    /**
+     * Animation type
+     * @default "none"
+     */
+    type?:
+      | "none"
+      | "fadeIn"
+      | "slideInLeft"
+      | "slideInRight"
+      | "slideInUp"
+      | "slideInDown"
+      | "zoomIn"
+      | "scaleUp"
+      | "rotateIn";
+
+    /**
+     * Animation duration in milliseconds
+     * @default 600
+     */
+    duration?: number;
+
+    /**
+     * Animation delay in milliseconds
+     * @default 0
+     */
+    delay?: number;
+
+    /**
+     * Animation easing function
+     * @default "ease-out"
+     */
+    easing?: string;
+  };
 }
 
 /**
@@ -573,6 +944,16 @@ export interface HeroProps {
   overlayIntensity?: number;
 
   /**
+   * Content theme for text and buttons over background media
+   * Use "light" for dark backgrounds/videos, "dark" for light backgrounds/videos
+   * @default "light" (when backgroundMedia exists), "auto" (when no backgroundMedia)
+   * @example
+   * contentTheme="light" - White text and borders (for dark video backgrounds)
+   * contentTheme="dark" - Dark text and borders (for light video backgrounds)
+   */
+  contentTheme?: "light" | "dark" | "auto";
+
+  /**
    * Content position for overlay layouts (split, full-bleed)
    * @default "center"
    */
@@ -582,6 +963,14 @@ export interface HeroProps {
    * Features for feature-showcase variant
    */
   features?: HeroFeature[];
+
+  /**
+   * Image position for split-image variant
+   * Controls whether image appears on left or right side
+   * Only applies to split-image variant
+   * @default "right"
+   */
+  imagePosition?: "left" | "right";
 
   /**
    * ARIA label for the hero section

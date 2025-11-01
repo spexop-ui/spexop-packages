@@ -8,22 +8,35 @@
  * @since 2025-10-24
  */
 
-import { useCallback, useContext } from "react";
-import { I18nContext } from "../providers/I18nProvider/I18nContext.js";
-import type { DateFormatOptions } from "../providers/I18nProvider/I18nProvider.types.js";
-import { formatDate } from "../providers/I18nProvider/formatters.js";
+import { useCallback } from "react";
+import { useI18nUtil } from "../utils/i18n.js";
 
+/**
+ * useFormatDate Hook
+ * Hook for formatting dates using i18n utility
+ *
+ * @example
+ * ```tsx
+ * function MyComponent() {
+ *   const formatDate = useFormatDate();
+ *
+ *   return <div>{formatDate(new Date())}</div>;
+ * }
+ * ```
+ */
 export function useFormatDate() {
-  const context = useContext(I18nContext);
+  const { formatDate } = useI18nUtil({
+    locale: "en",
+  });
 
   const format = useCallback(
-    (date: Date | number | string, options?: DateFormatOptions) => {
-      return formatDate(date, {
-        ...options,
-        locale: options?.locale || context?.locale,
-      });
+    (
+      date: Date | number | string,
+      options?: Parameters<typeof formatDate>[1],
+    ) => {
+      return formatDate(date, options);
     },
-    [context],
+    [formatDate],
   );
 
   return format;

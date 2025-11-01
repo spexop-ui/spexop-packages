@@ -295,8 +295,7 @@
   border-color: var(--theme-primary);
   color: var(--theme-primary-active);
   background: var(--theme-primary-light);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-width: var(--theme-border-width);
 }
 
 .quickLinkIcon {
@@ -445,10 +444,9 @@
 }
 
 .result:hover {
-  border-color: var(--theme-border);
+  border-color: var(--theme-primary);
   background: var(--theme-surface-secondary);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-width: var(--theme-border-width);
 }
 
 .result[data-active="true"] {

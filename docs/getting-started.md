@@ -31,9 +31,43 @@ import { Button, Grid, Card } from '@spexop/react';
 
 Available themes: default, tech, startup, healthcare, finance, ecommerce, education, corporate, agency, minimal, dark, pastel, vibrant
 
-### Option 2: ThemeProvider (Flexible)
+### Option 2: Utilities (Recommended - No Providers)
 
-Use React context for dynamic theme switching:
+Use utilities directly without provider wrappers:
+
+```typescript
+import { useThemeUtil } from '@spexop/react';
+import { generateCSS, techPreset } from '@spexop/theme';
+import { useEffect } from 'react';
+
+function App() {
+  // Inject theme CSS variables
+  useEffect(() => {
+    const css = generateCSS(techPreset);
+    const style = document.createElement('style');
+    style.textContent = css;
+    document.head.appendChild(style);
+  }, []);
+
+  // Use theme mode utility
+  const { resolvedMode, setMode } = useThemeUtil({ defaultMode: 'auto' });
+
+  return (
+    <>
+      <YourComponents />
+      <button onClick={() => setMode(resolvedMode === 'dark' ? 'light' : 'dark')}>
+        Toggle Theme
+      </button>
+    </>
+  );
+}
+```
+
+### Option 3: ThemeProvider (Deprecated - Use for Theme Config Only)
+
+> **Note**: `ThemeProvider` is deprecated. Use `useThemeUtil` for mode management and `generateCSS()` for theme injection instead. See [Migration Guide](./migrations/from-providers-to-utilities.md).
+
+If you need theme configuration injection (CSS variables), you can still use `ThemeProvider`:
 
 ```typescript
 import { ThemeProvider } from '@spexop/react';
@@ -41,19 +75,18 @@ import { techPreset } from '@spexop/theme';
 
 function App() {
   return (
-    <ThemeProvider theme={techPreset}>
+    <ThemeProvider theme={techPreset} defaultMode="auto">
       <YourComponents />
     </ThemeProvider>
   );
 }
 ```
 
-### Option 3: Custom Theme (Full Control)
-
-Create your own theme:
+For custom themes:
 
 ```typescript
 import { ThemeProvider } from '@spexop/react';
+import { generateCSS } from '@spexop/theme';
 import type { SpexopThemeConfig } from '@spexop/theme';
 
 const myTheme: SpexopThemeConfig = {
@@ -66,6 +99,15 @@ const myTheme: SpexopThemeConfig = {
   },
 };
 
+// Better approach: use generateCSS
+useEffect(() => {
+  const css = generateCSS(myTheme);
+  const style = document.createElement('style');
+  style.textContent = css;
+  document.head.appendChild(style);
+}, []);
+
+// Or use ThemeProvider (deprecated)
 <ThemeProvider theme={myTheme}>
   <App />
 </ThemeProvider>
@@ -228,26 +270,34 @@ const debouncedValue = useDebounce(value, 500);
 const [copied, copy] = useCopyToClipboard();
 ```
 
-### New Providers
+### Utilities (Recommended)
 
 ```typescript
 import { 
-  ThemeProvider, 
-  AccessibilityProvider, 
-  ModalProvider, 
-  ToastProvider 
+  useToastUtil,
+  useModalUtil,
+  useThemeUtil,
+  useAccessibilityUtil
 } from '@spexop/react';
 
-<ThemeProvider theme={techPreset}>
-  <AccessibilityProvider>
-    <ModalProvider>
-      <ToastProvider>
-        <App />
-      </ToastProvider>
-    </ModalProvider>
-  </AccessibilityProvider>
-</ThemeProvider>
+// No provider wrappers needed!
+function App() {
+  const { toast, renderToasts } = useToastUtil();
+  const { openModal, renderModals } = useModalUtil();
+  const { resolvedMode, setMode } = useThemeUtil({ defaultMode: 'auto' });
+  const { prefersReducedMotion } = useAccessibilityUtil();
+  
+  return (
+    <>
+      <YourComponents />
+      {renderToasts()}
+      {renderModals()}
+    </>
+  );
+}
 ```
+
+> **Note**: Providers are deprecated. See [Migration Guide: Providers to Utilities](../docs/migrations/from-providers-to-utilities.md) for details.
 
 ### Enhanced Components
 
@@ -282,5 +332,6 @@ Version 0.4.0 is a major release with significant improvements in accessibility,
 - **New to Spexop?** Explore [Examples](../examples/) to see components in action
 - **Migrating from v0.3.x?** Check the [Migration Guides](./migrations/) for detailed instructions
 - **Building with Spexop?** Read the [Component Docs](../packages/react/README.md) and [Theme System Guide](../packages/theme/README.md)
+- **Using the CLI?** See the [CLI Tools](../packages/cli/README.md) for scaffolding, audits, and tokens
 - **Need Help?** Join our [Discord Community](https://discord.gg/spexop) or [open an issue](https://github.com/spexop-ui/spexop-design-system)
 - **Custom Themes?** Try the [Theme Builder](https://builder.spexop.com)

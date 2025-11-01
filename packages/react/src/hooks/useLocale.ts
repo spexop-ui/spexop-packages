@@ -7,10 +7,16 @@
  * @version 0.4.0
  * @since 2025-10-24
  *
+ * @deprecated Use useI18nUtil from @spexop/react/utils instead
+ *
  * @example
  * ```tsx
  * function LanguageSwitcher() {
- *   const { locale, setLocale, locales } = useLocale();
+ *   const { locale, setLocale, locales } = useI18nUtil({
+ *     locale: "en",
+ *     locales: ["en", "es"],
+ *     translations: { en: {}, es: {} },
+ *   });
  *
  *   return (
  *     <select value={locale} onChange={(e) => setLocale(e.target.value)}>
@@ -21,21 +27,16 @@
  * ```
  */
 
-import { useContext } from "react";
-import { I18nContext } from "../providers/I18nProvider/I18nContext.js";
+import { useI18nUtil } from "../utils/i18n.js";
 
 export function useLocale() {
-  const context = useContext(I18nContext);
-
-  if (!context) {
-    throw new Error("useLocale must be used within an I18nProvider");
-  }
+  const i18n = useI18nUtil();
 
   return {
-    locale: context.locale,
-    locales: context.locales,
-    setLocale: context.setLocale,
-    isRTL: context.isRTL,
-    direction: context.direction,
+    locale: i18n.locale,
+    locales: i18n.locales,
+    setLocale: i18n.setLocale,
+    isRTL: i18n.isRTL,
+    direction: i18n.direction,
   };
 }

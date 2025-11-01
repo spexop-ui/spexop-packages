@@ -47,7 +47,7 @@
   "scripts": {
     "build": "tsup && npm run build:css",
     "build:css": "tsx scripts/build-css-presets.ts",
-    "dev": "tsup --watch",
+    "dev": "tsup --watch --dts",
     "clean": "rimraf dist",
     "test": "vitest",
     "type-check": "tsc --noEmit"

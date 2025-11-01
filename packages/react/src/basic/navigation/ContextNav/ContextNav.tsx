@@ -11,6 +11,7 @@
  */
 
 import { forwardRef, useEffect, useRef, useState } from "react";
+import type { MutableRefObject } from "react";
 import { Icon } from "../../indicators/Icon/Icon.js";
 import styles from "./ContextNav.module.css";
 
@@ -76,7 +77,9 @@ export const ContextNav = forwardRef<HTMLDivElement, ContextNavProps>(
     const [isMobile, setIsMobile] = useState(false);
     const [activeLink, setActiveLink] = useState<string | null>(null);
     const [hasScrolled, setHasScrolled] = useState(false);
-    const stickyRef = useRef<HTMLDivElement>(null);
+    const stickyRef = useRef<HTMLDivElement>(
+      null,
+    ) as MutableRefObject<HTMLDivElement | null>;
 
     // Detect scroll position (show when scrolled, hide at top)
     useEffect(() => {
@@ -141,7 +144,7 @@ export const ContextNav = forwardRef<HTMLDivElement, ContextNavProps>(
         window.removeEventListener("scroll", handleScroll);
         clearTimeout(scrollTimeout);
       };
-    }, [topOffset, scope]);
+    }, [topOffset, scope, stickyRef]);
 
     // Scroll spy for active link highlighting
     useEffect(() => {
@@ -201,11 +204,40 @@ export const ContextNav = forwardRef<HTMLDivElement, ContextNavProps>(
     };
 
     // Auto-close after clicking link on mobile
-    const handleLinkClick = () => {
-      if (isMobile) {
+    // Handle smooth scrolling with offset for sticky navigation
+    const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+      const target = e.currentTarget;
+      const href = target.getAttribute("href");
+      
+      if (href && href.startsWith("#")) {
+        const elementId = href.slice(1);
+        const element = document.getElementById(elementId);
+        
+        if (element) {
+          e.preventDefault();
+          
+          // Calculate offset for sticky navigation (topOffset + some spacing)
+          const offset = actualTopOffset + 20;
+          const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+          const offsetPosition = elementPosition - offset;
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth",
+          });
+          
+          // Update URL hash without triggering scroll
+          window.history.replaceState(null, "", href);
+          
+          // Close mobile menu if needed
+          if (isMobile) {
+            setIsExpanded(false);
+          }
+        }
+      } else if (isMobile) {
         setIsExpanded(false);
       }
-      // Let browser handle smooth scroll via href
+      // Let browser handle non-anchor links normally
     };
 
     const classes = [

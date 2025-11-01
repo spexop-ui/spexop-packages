@@ -5,6 +5,7 @@
  * Includes badges, icons, avatars, keyboard shortcuts, carousels, and code blocks.
  */
 
+export * from "./ActivityStream/index.js";
 export * from "./Avatar/index.js";
 export * from "./Badge/index.js";
 export * from "./Carousel/index.js";

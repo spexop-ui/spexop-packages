@@ -9,10 +9,15 @@ export { DataTable } from "./DataTable.js";
 export type {
   DataTableProps,
   Column,
+  SimpleColumn,
   SortState,
   SortDirection,
   PaginationState,
   FilterState,
   SelectionState,
   ColumnAlign,
+} from "./DataTable.types.js";
+export {
+  isSimpleColumn,
+  normalizeColumns,
 } from "./DataTable.types.js";

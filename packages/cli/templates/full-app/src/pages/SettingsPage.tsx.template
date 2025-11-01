@@ -1,0 +1,106 @@
+import {
+  Badge,
+  Breadcrumb,
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Heading,
+  Stack,
+} from "@spexop/react";
+
+interface SettingsPageProps {
+  toast?: {
+    success: (message: string) => string;
+    error: (message: string) => string;
+    warning: (message: string) => string;
+    info: (message: string) => string;
+  };
+}
+
+export default function SettingsPage({ toast }: SettingsPageProps = {}) {
+  return (
+    <Stack direction="vertical" gap={8}>
+      {/* Page Header */}
+      <div>
+        <Breadcrumb
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Settings", href: "/settings" },
+          ]}
+        />
+        <Heading level={1} style={{ marginTop: "1rem" }}>
+          Settings
+        </Heading>
+        <p
+          style={{ marginTop: "0.5rem", color: "var(--theme-text-secondary)" }}
+        >
+          Configuration and preferences for {{PROJECT_NAME}}
+        </p>
+      </div>
+
+      {/* Settings Cards */}
+      <Card>
+        <CardHeader
+          title="Theme Configuration"
+          subtitle="Current: {{THEME}} Theme"
+        />
+        <CardBody>
+          <Stack direction="vertical" gap={3}>
+            <div>
+              <strong>Active Theme:</strong> <Badge variant="info">{{THEME}}</Badge>
+            </div>
+            <div>
+              <strong>Router:</strong>{" "}
+              <Badge variant="success">{{ROUTER}}</Badge>
+            </div>
+            <div>
+              <strong>React Version:</strong>{" "}
+              <Badge variant="success">18.3.1</Badge>
+            </div>
+            <Button 
+              variant="outline" 
+              style={{ marginTop: "1rem" }}
+              onClick={() => toast?.info("Theme switching coming soon!")}
+            >
+              Change Theme
+            </Button>
+          </Stack>
+        </CardBody>
+      </Card>
+
+      <Card>
+        <CardHeader title="Features Enabled" subtitle="Built-in utilities" />
+        <CardBody>
+          <Stack direction="vertical" gap={2}>
+            <div>✅ Hash Router - Client-side routing</div>
+            <div>✅ Command Palette - Press ⌘K or Ctrl+K</div>
+            <div>✅ Search Modal - Click search icon</div>
+            <div>✅ Toast Notifications - Test on home page</div>
+            <div>✅ Settings Panel - Click settings icon</div>
+            <div>✅ Debug Mode - Press Ctrl+Shift+D</div>
+            <div>✅ Theme Switching - Light/Dark/Auto modes</div>
+          </Stack>
+        </CardBody>
+      </Card>
+
+      <Card>
+        <CardHeader title="Package Information" subtitle="Dependencies" />
+        <CardBody>
+          <Stack direction="vertical" gap={2}>
+            <div>
+              <code>@spexop/react</code>: ^0.4.7
+            </div>
+            <div>
+              <code>@spexop/theme</code>: ^0.4.0
+            </div>
+            <div>
+              <code>@spexop/icons</code>: ^0.1.1
+            </div>
+          </Stack>
+        </CardBody>
+      </Card>
+    </Stack>
+  );
+}
+

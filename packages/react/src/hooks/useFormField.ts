@@ -34,15 +34,12 @@
  */
 
 import { useEffect, useMemo } from "react";
-import type {
-  FieldConfig,
-  ValidationRule,
-} from "../providers/FormProvider/FormProvider.types.js";
+import type { FormFieldConfig, FormValidationRule } from "../utils/index.js";
 import { useForm } from "./useForm.js";
 
 export interface UseFormFieldOptions {
   name: string;
-  rules?: ValidationRule[];
+  rules?: FormValidationRule[];
   defaultValue?: unknown;
   validateOn?: "change" | "blur" | "submit";
   dependencies?: string[];
@@ -77,7 +74,7 @@ export function useFormField({
 
   // Register field on mount
   useEffect(() => {
-    const config: FieldConfig = {
+    const config: FormFieldConfig = {
       name,
       rules,
       defaultValue,

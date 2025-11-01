@@ -3,8 +3,17 @@
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": "./src",
-    "incremental": false
+    "incremental": false,
+    "paths": {
+      "@spexop/icons": ["../icons/dist/index.d.ts"]
+    }
   },
   "include": ["src"],
-  "exclude": ["dist", "node_modules", "**/*.test.tsx", "**/*.test.ts"]
+  "exclude": [
+    "dist",
+    "node_modules",
+    "**/*.test.tsx",
+    "**/*.test.ts",
+    "**/*.example.tsx"
+  ]
 }

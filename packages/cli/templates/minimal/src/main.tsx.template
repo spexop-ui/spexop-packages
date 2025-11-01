@@ -1,0 +1,157 @@
+/**
+ * {{PROJECT_NAME}}
+ * Minimal Spexop Application
+ */
+
+import "@spexop/react/dist/index.css";
+import "{{THEME_CSS}}";
+import {
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Container,
+  Grid,
+  GridItem,
+  Heading,
+  Stack,
+  createSpexopRoot,
+  useThemeUtil,
+  useToastUtil,
+} from "@spexop/react";
+
+function App() {
+  // Theme management
+  const { mode, toggleMode } = useThemeUtil({ defaultMode: "auto" });
+
+  // Toast notifications
+  const { toast, renderToasts } = useToastUtil({
+    position: "top-right",
+    maxToasts: 3,
+  });
+
+  return (
+    <>
+      <Container maxWidth="lg" style={{ padding: "2rem 1rem" }}>
+        <Stack direction="vertical" gap={8}>
+          {/* Header */}
+          <Stack direction="horizontal" justify="space-between" align="center">
+            <div>
+              <Heading level={1}>{{PROJECT_NAME}}</Heading>
+              <p style={{ color: "var(--theme-text-secondary)", marginTop: "0.5rem" }}>
+                Built with Spexop Design System
+              </p>
+            </div>
+            <Button variant="outline" onClick={toggleMode}>
+              {mode === "dark" ? "☀️" : "🌙"} Toggle Theme
+            </Button>
+          </Stack>
+
+          {/* Content Grid */}
+          <Grid columns={{ xs: 1, md: 2 }} gap={6}>
+            <GridItem>
+              <Card fullHeight>
+                <CardHeader
+                  title="Welcome"
+                  subtitle="Get Started with Spexop"
+                />
+                <CardBody>
+                  <Stack direction="vertical" gap={4}>
+                    <p>
+                      This is a minimal Spexop application using the{" "}
+                      <strong>{{THEME}}</strong> theme preset.
+                    </p>
+                    <p>
+                      Start building by editing{" "}
+                      <code style={{ 
+                        padding: "0.25rem 0.5rem", 
+                        background: "var(--theme-surface-hover)",
+                        borderRadius: "4px"
+                      }}>
+                        src/main.tsx
+                      </code>
+                    </p>
+                    <Button
+                      variant="primary"
+                      onClick={() =>
+                        toast.success("Welcome to Spexop!")
+                      }
+                    >
+                      Show Toast
+                    </Button>
+                  </Stack>
+                </CardBody>
+              </Card>
+            </GridItem>
+
+            <GridItem>
+              <Card fullHeight>
+                <CardHeader title="Resources" subtitle="Learn More" />
+                <CardBody>
+                  <Stack direction="vertical" gap={3}>
+                    <a
+                      href="https://npmjs.com/package/@spexop/react"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ color: "var(--theme-primary)" }}
+                    >
+                      📚 Documentation
+                    </a>
+                    <a
+                      href="https://github.com/spexop-ui/spexop-public"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ color: "var(--theme-primary)" }}
+                    >
+                      🔧 GitHub Repository
+                    </a>
+                    <a
+                      href="https://spexop.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ color: "var(--theme-primary)" }}
+                    >
+                      🌐 Official Website
+                    </a>
+                  </Stack>
+                </CardBody>
+              </Card>
+            </GridItem>
+          </Grid>
+
+          {/* Features */}
+          <Card>
+            <CardHeader title="What's Included" subtitle="Built-in features" />
+            <CardBody>
+              <Grid columns={{ xs: 1, md: 3 }} gap={4}>
+                <div>
+                  <strong>🎨 {{THEME}} Theme</strong>
+                  <p style={{ fontSize: "0.875rem", color: "var(--theme-text-secondary)", marginTop: "0.25rem" }}>
+                    Professional theme preset
+                  </p>
+                </div>
+                <div>
+                  <strong>🌓 Dark Mode</strong>
+                  <p style={{ fontSize: "0.875rem", color: "var(--theme-text-secondary)", marginTop: "0.25rem" }}>
+                    Automatic theme switching
+                  </p>
+                </div>
+                <div>
+                  <strong>📦 60+ Components</strong>
+                  <p style={{ fontSize: "0.875rem", color: "var(--theme-text-secondary)", marginTop: "0.25rem" }}>
+                    Ready to use components
+                  </p>
+                </div>
+              </Grid>
+            </CardBody>
+          </Card>
+        </Stack>
+      </Container>
+
+      {renderToasts()}
+    </>
+  );
+}
+
+createSpexopRoot("root").render(<App />);
+

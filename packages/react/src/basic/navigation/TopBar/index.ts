@@ -4,4 +4,4 @@
  */
 
 export { TopBar } from "./TopBar.js";
-export type { TopBarProps } from "./TopBar.types.js";
+export type { TopBarProps, TopBarNavItem } from "./TopBar.types.js";

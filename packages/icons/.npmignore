@@ -1,0 +1,30 @@
+# Test files
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+**/__tests__/**
+**/__mocks__/**
+**/*.test.d.ts
+**/*.spec.d.ts
+
+# Test configuration
+vitest.config.ts
+vitest.config.js
+
+# Development files
+*.config.ts
+*.config.js
+!tsup.config.ts
+coverage/
+
+# Icon assets (raw SVG files - these are compiled)
+assets/
+
+# Source maps (optional - uncomment if you don't want to publish them)
+# **/*.map
+
+# Scripts (development tools)
+scripts/
+
+

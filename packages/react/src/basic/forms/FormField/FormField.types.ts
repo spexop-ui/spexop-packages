@@ -8,7 +8,7 @@
  */
 
 import type { ReactNode } from "react";
-import type { ValidationRule } from "../../../providers/FormProvider/FormProvider.types.js";
+import type { FormValidationRule } from "../../../utils/index.js";
 
 export interface FormFieldProps {
   /**
@@ -29,7 +29,7 @@ export interface FormFieldProps {
   /**
    * Validation rules
    */
-  rules?: ValidationRule[];
+  rules?: FormValidationRule[];
 
   /**
    * Default value
@@ -78,4 +78,28 @@ export interface FormFieldProps {
    * @default false
    */
   hideError?: boolean;
+
+  /**
+   * Controlled value (for standalone usage without FormProvider)
+   */
+  value?: unknown;
+
+  /**
+   * Controlled onChange handler (for standalone usage without FormProvider)
+   */
+  onChange?: (
+    event: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => void;
+
+  /**
+   * Controlled onBlur handler (for standalone usage without FormProvider)
+   */
+  onBlur?: () => void;
+
+  /**
+   * Controlled error (for standalone usage without FormProvider)
+   */
+  error?: string;
 }

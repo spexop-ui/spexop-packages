@@ -1,0 +1,258 @@
+/**
+ * MobileHeader Component Styles
+ * Following "The Spexop Way" - borders before shadows, typography before decoration
+ *
+ * @component MobileHeader
+ * @packageName @spexop/react
+ * @description Mobile-optimized header styles
+ * @version 0.1.0
+ */
+
+/* Main Container */
+.mobileHeader {
+  width: 100%;
+  background: var(--theme-surface);
+  border-bottom: var(--theme-border-width) solid var(--theme-border);
+  display: flex;
+  align-items: center;
+  min-height: 56px;
+  padding: 0 var(--theme-spacing-3);
+  z-index: 200;
+}
+
+.sticky {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+}
+
+/* Content Container */
+.content {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Logo */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: var(--theme-spacing-2);
+  text-decoration: none;
+  color: var(--theme-text);
+  flex-shrink: 1;
+  min-width: 28px;
+  max-width: 80%;
+  transition: opacity 0.2s ease;
+  overflow: hidden;
+  height: 40px;
+}
+
+.logo:hover {
+  opacity: 0.8;
+}
+
+.logo:focus-visible {
+  outline: 2px solid var(--theme-primary);
+  outline-offset: 2px;
+  border-radius: var(--theme-radius-subtle);
+}
+
+.logoImage {
+  height: 32px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+  flex-shrink: 0;
+  max-width: 140px;
+  min-width: 28px;
+  object-position: left center;
+}
+
+.logoIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  font-size: var(--theme-font-size-base);
+  font-weight: var(--theme-font-weight-bold);
+  color: var(--theme-primary);
+  flex-shrink: 0;
+}
+
+.logoText {
+  font-size: var(--theme-font-size-sm);
+  font-weight: var(--theme-font-weight-semibold);
+  color: var(--theme-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100px;
+  min-width: 0;
+}
+
+/* Actions Container */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--theme-spacing-1);
+  flex-shrink: 0;
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 10000;
+  flex-wrap: nowrap;
+}
+
+/* Action Buttons */
+.actionButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 2px solid var(--theme-border);
+  border-radius: var(--theme-radius-md);
+  background: transparent;
+  color: var(--theme-text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.actionButton:hover {
+  background: var(--theme-surface-hover);
+  border-color: var(--theme-border-strong);
+}
+
+.actionButton:focus-visible {
+  outline: 2px solid var(--theme-primary);
+  outline-offset: 2px;
+}
+
+.actionButton:active {
+  background: var(--theme-surface-active);
+}
+
+.actionButtonActive {
+  background: var(--theme-surface-hover);
+  border-color: var(--theme-primary);
+  color: var(--theme-primary);
+}
+
+/* Menu Toggle Button */
+.menuButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 2px solid var(--theme-border);
+  border-radius: var(--theme-radius-md);
+  background: transparent;
+  color: var(--theme-text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 9999 !important;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.menuButton:hover {
+  background: var(--theme-surface-hover);
+  border-color: var(--theme-border-strong);
+}
+
+.menuButton:focus-visible {
+  outline: 2px solid var(--theme-primary);
+  outline-offset: 2px;
+}
+
+.menuButton:active {
+  background: var(--theme-surface-active);
+}
+
+.menuButton[aria-expanded="true"] {
+  background: var(--theme-surface-hover);
+  border-color: var(--theme-primary);
+  color: var(--theme-primary);
+}
+
+/* Small screens (very small mobile - xs) */
+@media (max-width: 374px) {
+  .mobileHeader {
+    padding: 0 var(--theme-spacing-2);
+    min-height: 52px;
+  }
+
+  .logo {
+    max-width: 45%;
+  }
+
+  .logoText {
+    display: none;
+  }
+
+  .actionButton,
+  .menuButton {
+    width: 36px;
+    height: 36px;
+  }
+
+  .actions {
+    gap: 0;
+  }
+}
+
+/* Menu positioned below header - MobileMenu handles this via position="top" */
+
+/* Tablet and up - hide mobile header by default */
+@media (min-width: 768px) {
+  .mobileHeader {
+    display: none;
+  }
+}
+
+/* Dark Theme */
+html[data-theme="dark"] .mobileHeader {
+  background: var(--theme-surface);
+  border-bottom-color: var(--theme-border);
+}
+
+html[data-theme="dark"] .logo {
+  color: var(--theme-text);
+}
+
+html[data-theme="dark"] .logoText {
+  color: var(--theme-text);
+}
+
+html[data-theme="dark"] .actionButton,
+html[data-theme="dark"] .menuButton {
+  border-color: var(--theme-border);
+  color: var(--theme-text);
+}
+
+html[data-theme="dark"] .actionButton:hover,
+html[data-theme="dark"] .menuButton:hover {
+  background: var(--theme-surface-hover);
+  border-color: var(--theme-border-strong);
+}
+
+html[data-theme="dark"] .actionButtonActive,
+html[data-theme="dark"] .menuButton[aria-expanded="true"] {
+  background: var(--theme-surface-hover);
+  border-color: var(--theme-primary);
+  color: var(--theme-primary);
+}
+
+

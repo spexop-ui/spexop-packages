@@ -57,7 +57,12 @@ function AppSidebar() {
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `children` | `ReactNode` | **required** | Footer content |
+| `children` | `ReactNode` | - | Footer content (takes precedence over structured props) |
+| `user` | `SidebarFooterUser` | - | User information (only used if children is not provided) |
+| `actions` | `SidebarFooterAction[]` | - | Action buttons (only used if children is not provided) |
+| `density` | `"compact" \| "normal" \| "spacious"` | `"normal"` | Padding density/spacing control |
+| `gap` | `SpacingScale` (0-10) | `3` | Gap between structured content sections |
+| `aria-label` | `string` | - | ARIA label for accessibility |
 | `className` | `string` | `""` | Additional CSS classes |
 
 ---

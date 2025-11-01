@@ -66,6 +66,57 @@
 .leftSection {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
+}
+
+/* Middle Section: Navigation */
+.navSection {
+  flex: 1;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--theme-spacing-4);
+}
+
+.navItems {
+  display: flex;
+  align-items: center;
+  gap: var(--theme-spacing-1);
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: var(--theme-spacing-2);
+  padding: var(--theme-spacing-2) var(--theme-spacing-3);
+  text-decoration: none;
+  color: var(--theme-text);
+  font-size: var(--theme-font-size-sm);
+  font-weight: var(--theme-font-weight-medium);
+  border-radius: var(--theme-radius-subtle);
+  transition: all 150ms ease;
+  white-space: nowrap;
+}
+
+.navItem:hover {
+  background: var(--theme-surface-secondary);
+  color: var(--theme-text);
+}
+
+.navItem:focus-visible {
+  outline: var(--theme-border-width) solid var(--theme-primary);
+  outline-offset: 2px;
+}
+
+.navItemActive {
+  color: var(--theme-primary);
+  font-weight: var(--theme-font-weight-semibold);
+  background: var(--theme-surface-secondary);
+}
+
+.navItemIcon {
+  flex-shrink: 0;
+  color: currentColor;
 }
 
 /* Logo */
@@ -78,10 +129,11 @@
   font-weight: var(--theme-font-weight-bold);
   font-size: var(--theme-font-size-lg);
   transition: opacity 150ms ease;
+  padding: var(--theme-spacing-1) 0;
 }
 
 .logo:hover {
-  opacity: 0.8;
+  opacity: var(--theme-opacity-hover);
 }
 
 .logo:focus-visible {
@@ -103,6 +155,12 @@
   font-size: var(--theme-font-size-base);
 }
 
+.logoImage {
+  height: 52px;
+  width: auto;
+  display: block;
+}
+
 .logoText {
   color: var(--theme-text);
   font-weight: var(--theme-font-weight-bold);
@@ -114,6 +172,7 @@
   display: flex;
   align-items: center;
   gap: var(--theme-spacing-3);
+  flex-shrink: 0;
 }
 
 /* Action Buttons */
@@ -146,11 +205,15 @@
 
 .button:active {
   background: var(--theme-surface-hover);
-  transform: scale(0.95);
+  transform: scale(0.95); /* Intentional slight press effect */
 }
 
-/* Mobile Menu Button */
-.mobileMenuButton {
+/* Visibility Classes */
+.desktopOnly {
+  display: flex;
+}
+
+.mobileOnly {
   display: none;
 }
 
@@ -159,16 +222,20 @@
 /* Mobile (< 768px) */
 @media (max-width: 767px) {
   .topBar {
-    padding: 0 var(--theme-spacing-4);
+    padding: var(--theme-spacing-3) var(--theme-spacing-4);
     /* Safe area insets for mobile devices */
-    padding-top: env(safe-area-inset-top);
+    padding-top: calc(var(--theme-spacing-3) + env(safe-area-inset-top));
     height: calc(64px + env(safe-area-inset-top));
   }
 
-  .mobileMenuButton {
+  .desktopOnly {
+    display: none;
+  }
+
+  .mobileOnly {
     display: flex;
-    min-width: 48px;
-    min-height: 48px;
+    min-width: 40px;
+    min-height: 40px;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
   }
@@ -177,42 +244,53 @@
     display: none;
   }
 
-  .button {
-    width: 48px;
+  .logoImage {
     height: 48px;
-    min-width: 48px;
-    min-height: 48px;
+  }
+
+  .button {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
   }
   
   .button:active {
-    transform: scale(0.92);
+    transform: scale(0.92); /* Strong press feedback */
     transition-duration: 80ms;
   }
 
   .rightSection {
+    display: flex;
     gap: var(--theme-spacing-2);
   }
   
   /* Mobile logo adjustments */
   .logo {
     font-size: var(--theme-font-size-base);
-    min-height: 48px;
-    padding: var(--theme-spacing-2) 0;
+    padding: 0;
   }
   
-  /* Mobile navigation items */
-  .navItem {
-    min-height: 48px;
-    padding: var(--theme-spacing-3) var(--theme-spacing-4);
+  /* Hide navigation section on mobile */
+  .navSection {
+    display: none;
   }
 }
 
 /* Tablet & Desktop (>= 768px) */
 @media (min-width: 768px) {
-  .mobileMenuButton {
+  .mobileOnly {
     display: none;
+  }
+
+  .desktopOnly {
+    display: flex;
+  }
+
+  .navSection {
+    display: flex;
   }
 }
 
@@ -242,6 +320,20 @@
 
 [data-theme="dark"] .button:active {
   background: var(--theme-border);
+}
+
+[data-theme="dark"] .navItem {
+  color: var(--theme-text);
+}
+
+[data-theme="dark"] .navItem:hover {
+  background: var(--theme-surface-hover);
+  color: var(--theme-text);
+}
+
+[data-theme="dark"] .navItemActive {
+  color: var(--theme-primary);
+  background: var(--theme-surface-secondary);
 }
 
 /* Accessibility */

@@ -9,35 +9,69 @@
  */
 
 import {
+  BarChart,
+  Book,
   Box,
+  Bug,
   Check,
+  CheckCircle,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
   ChevronUp,
+  Code,
+  Columns,
+  Command,
+  Compass,
   Copy,
+  Database,
+  Design,
   Download,
   Droplet,
   Edit,
+  ExternalLink,
   FileText,
+  GitBranch,
+  GitCommit,
+  GitFork,
+  GitMerge,
+  GitPullRequest,
   Github,
+  Globe,
   Grid,
   Heart,
+  HelpCircle,
   Home,
+  ImageIcon,
   Info,
+  Install,
+  Laptop,
+  Layers,
   Layout,
+  MapIcon,
+  MessageCircle,
+  Monitor,
   Package,
   Plus,
+  Refresh,
   Save,
   Search,
   Settings,
+  Share2,
+  Shield,
+  ShoppingCart,
   SquareStack,
   Star,
+  Terminal,
   Trash,
+  TrendingUp,
   Type,
   Upload,
   User,
+  Users,
   X,
+  XTwitter,
+  Zap,
 } from "@spexop/icons";
 import type { ComponentType } from "react";
 
@@ -46,8 +80,8 @@ import type { ComponentType } from "react";
  * Defines the expected shape of icon components from @spexop/icons
  */
 export interface IconProps {
-  size?: number;
-  strokeWidth?: number;
+  size?: number | string;
+  strokeWidth?: number | string;
   color?: string;
 }
 
@@ -88,10 +122,14 @@ export const ICON_MAP: Record<string, IconComponent> = {
   typography: Type,
   search: Search,
   settings: Settings,
+  Settings: Settings, // PascalCase variant
   user: User,
   heart: Heart,
+  Heart: Heart, // PascalCase variant
   star: Star,
+  Star: Star, // PascalCase variant
   plus: Plus,
+  Plus: Plus, // PascalCase variant
   edit: Edit,
   delete: Trash,
   save: Save,
@@ -99,9 +137,11 @@ export const ICON_MAP: Record<string, IconComponent> = {
   upload: Upload,
   copy: Copy,
   check: Check,
+  Check: Check, // PascalCase variant
   x: X,
   info: Info,
-  book: FileText,
+  book: Book,
+  Book: Book, // PascalCase variant (overrides FileText mapping)
   docs: FileText,
   foundations: Droplet,
   // Support both camelCase and kebab-case for chevrons
@@ -113,6 +153,104 @@ export const ICON_MAP: Record<string, IconComponent> = {
   "chevron-down": ChevronDown,
   chevronUp: ChevronUp,
   "chevron-up": ChevronUp,
+  // Additional icons used in website - support PascalCase
+  Grid: Grid,
+  grid: Grid,
+  // Additional icons
+  Github: Github,
+  github: Github,
+  XTwitter: XTwitter,
+  xTwitter: XTwitter,
+  Bug: Bug,
+  bug: Bug,
+  CheckCircle: CheckCircle,
+  checkCircle: CheckCircle,
+  Code: Code,
+  code: Code,
+  ExternalLink: ExternalLink,
+  externalLink: ExternalLink,
+  FileText: FileText,
+  fileText: FileText,
+  GitBranch: GitBranch,
+  gitBranch: GitBranch,
+  GitCommit: GitCommit,
+  gitCommit: GitCommit,
+  GitFork: GitFork,
+  gitFork: GitFork,
+  GitPullRequest: GitPullRequest,
+  gitPullRequest: GitPullRequest,
+  Install: Install,
+  install: Install,
+  MessageCircle: MessageCircle,
+  messageCircle: MessageCircle,
+  Design: Design,
+  design: Design,
+  Layers: Layers,
+  layers: Layers,
+  Package: Package,
+  package: Package,
+  Shield: Shield,
+  shield: Shield,
+  Terminal: Terminal,
+  terminal: Terminal,
+  Zap: Zap,
+  zap: Zap,
+  // Rocket doesn't exist - using Zap as fallback (rocket = fast/energy)
+  Rocket: Zap,
+  rocket: Zap,
+  // Additional missing icons
+  ImageIcon: ImageIcon,
+  imageIcon: ImageIcon,
+  Monitor: Monitor,
+  monitor: Monitor,
+  ShoppingCart: ShoppingCart,
+  shoppingCart: ShoppingCart,
+  Users: Users,
+  users: Users,
+  Box: Box,
+  box: Box,
+  // Missing icons - add mappings
+  Refresh: Refresh,
+  refresh: Refresh,
+  Compass: Compass,
+  compass: Compass,
+  Database: Database,
+  database: Database,
+  Palette: Droplet, // Palette doesn't exist, use Droplet (color/token icon)
+  palette: Droplet,
+  Globe: Globe,
+  globe: Globe,
+  BarChart: BarChart,
+  barChart: BarChart,
+  Columns: Columns,
+  columns: Columns,
+  Share2: Share2,
+  share2: Share2,
+  Command: Command,
+  command: Command,
+  TrendingUp: TrendingUp,
+  trendingUp: TrendingUp,
+  HelpCircle: HelpCircle,
+  helpCircle: HelpCircle,
+  GitMerge: GitMerge,
+  gitMerge: GitMerge,
+  Map: MapIcon, // Map icon for location/roadmap
+  map: MapIcon,
+  // Icon name mappings for documentation
+  Home: Home, // PascalCase variant
+  Download: Download, // PascalCase variant
+  Edit: Edit, // PascalCase variant
+  Type: Type, // PascalCase variant
+  Navigation: Grid, // Navigation doesn't exist, use Grid
+  navigation: Grid,
+  LayoutDashboard: Layout, // LayoutDashboard doesn't exist, use Layout
+  layoutDashboard: Layout,
+  Pointer: SquareStack, // Pointer doesn't exist, use SquareStack
+  pointer: SquareStack,
+  ShieldCheck: Shield, // ShieldCheck doesn't exist, use Shield
+  shieldCheck: Shield,
+  Brush: Design, // Brush doesn't exist, use Design (design tool)
+  brush: Design,
 };
 
 /**

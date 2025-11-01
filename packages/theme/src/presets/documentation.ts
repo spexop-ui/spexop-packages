@@ -2,6 +2,7 @@
  * Documentation Preset Theme
  * Clean, readable theme optimized for documentation sites
  * Perfect for technical documentation, API docs, and knowledge bases
+ * Enhanced with optimized navigation colors and interactions
  */
 
 import type { SpexopThemeConfig } from "../types/SpexopThemeConfig.js";
@@ -9,15 +10,15 @@ import type { SpexopThemeConfig } from "../types/SpexopThemeConfig.js";
 export const documentationPreset: SpexopThemeConfig = {
   meta: {
     name: "Documentation",
-    version: "1.0.0",
+    version: "1.1.0",
     description:
-      "Clean documentation theme optimized for reading and code examples",
+      "Clean documentation theme optimized for reading, code examples, and navigation",
     author: "Spexop Team",
-    tags: ["documentation", "technical", "readable", "accessible"],
+    tags: ["documentation", "technical", "readable", "accessible", "navigation"],
   },
 
   colors: {
-    // Primary brand color (professional blue)
+    // Primary brand color (professional blue) - optimized for navigation
     primary: "#2563eb",
     primaryHover: "#1d4ed8",
     primaryActive: "#1e40af",
@@ -31,7 +32,7 @@ export const documentationPreset: SpexopThemeConfig = {
     secondaryLight: "#f1f5f9",
     secondaryDark: "#334155",
 
-    // Surface colors (clean white with subtle gray)
+    // Surface colors (clean white with subtle gray) - optimized for sidebar
     surface: "#ffffff",
     surfaceSecondary: "#f8fafc",
     surfaceHover: "#f1f5f9",

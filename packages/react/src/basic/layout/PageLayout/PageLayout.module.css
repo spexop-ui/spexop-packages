@@ -1,24 +1,91 @@
-/* ═══════════════════════════════════════════════════════════════════════════
-   PageLayout Component - Page-level layout container
-   Built on Container primitive with page-optimized defaults
-   @version 0.4.1
-   @created 2025-10-24
-   ═══════════════════════════════════════════════════════════════════════════ */
+/**
+ * PageLayout Component Styles
+ *
+ * Built on Container primitive with page-optimized defaults.
+ *
+ * Following "The Spexop Way":
+ * - Principle 1: Primitives before patterns
+ * - Principle 4: Tokens before magic numbers
+ * - Principle 7: Accessibility before aesthetics
+ *
+ * @version 0.6.0
+ * @created 2025-10-24
+ * @updated 2025-11-01
+ */
 
 .pageLayout {
   /* Minimal styling - Container handles most layout */
   box-sizing: border-box;
+  position: relative;
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   PERFORMANCE OPTIMIZATIONS
-   ═══════════════════════════════════════════════════════════════════════════ */
+/* Debug mode */
+.debug {
+  outline: 2px dashed var(--theme-color-info-500, #3b82f6);
+  outline-offset: -2px;
+  position: relative;
 
-/* Container already applies hardware acceleration and optimizations */
+  &::before {
+    content: "PageLayout";
+    position: absolute;
+    top: var(--theme-spacing-2, 8px);
+    left: var(--theme-spacing-2, 8px);
+    padding: var(--theme-spacing-1, 4px) var(--theme-spacing-2, 8px);
+    background: var(--theme-color-info-500, #3b82f6);
+    color: var(--theme-color-white, #ffffff);
+    font-size: var(--theme-font-size-xs, 12px);
+    font-weight: var(--theme-font-weight-semibold, 600);
+    border-radius: var(--theme-radius-sm, 4px);
+    z-index: 9999;
+    pointer-events: none;
+  }
+}
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   REDUCED MOTION SUPPORT
-   ═══════════════════════════════════════════════════════════════════════════ */
+.debugInfo {
+  position: fixed;
+  bottom: var(--theme-spacing-4, 16px);
+  left: var(--theme-spacing-4, 16px);
+  padding: var(--theme-spacing-4, 16px);
+  background: var(--theme-color-neutral-900, #1f2937);
+  color: var(--theme-color-white, #ffffff);
+  border: 2px solid var(--theme-color-info-500, #3b82f6);
+  border-radius: var(--theme-radius-md, 8px);
+  font-size: var(--theme-font-size-xs, 12px);
+  font-family: var(--theme-font-mono, "Monaco", "Courier New", monospace);
+  z-index: 10000;
+  box-shadow: var(--theme-shadow-lg, 0 10px 15px -3px rgba(0, 0, 0, 0.1));
 
-/* Respect user's motion preferences - Container handles this */
+  p {
+    margin: var(--theme-spacing-1, 4px) 0;
+    line-height: 1.5;
+  }
+
+  p:first-child {
+    margin-top: 0;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+}
+
+/* Accessibility: Focus-visible support */
+.pageLayout:focus-visible {
+  outline: 2px solid var(--theme-color-primary-500, #3b82f6);
+  outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+  .pageLayout {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+
+  .debugInfo {
+    display: none;
+  }
+}
+
+/* Container already applies hardware acceleration and reduced motion support */
 

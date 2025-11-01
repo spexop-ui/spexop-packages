@@ -17,26 +17,29 @@
     "access": "public"
   },
   "type": "module",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
     }
   },
   "scripts": {
-    "build": "tsup",
+    "build": "pnpm run clean && pnpm run build:icons && tsup",
+    "build:icons": "tsx scripts/build-icons.ts",
     "clean": "rimraf dist",
     "dev": "tsup --watch",
     "type-check": "tsc --noEmit",
     "test": "vitest --run",
     "test:watch": "vitest",
-    "test:coverage": "vitest --coverage"
+    "test:coverage": "vitest --coverage",
+    "prepublishOnly": "pnpm run build"
   },
-  "files": ["dist/**/*", "README.md", "ICONS.md"],
+  "files": ["dist/**/*", "README.md"],
   "keywords": [
     "react",
     "icons",
@@ -60,6 +63,8 @@
     "react": "^18.3.1",
     "tsup": "^8.0.0",
     "typescript": "^5.0.0",
-    "vitest": "^1.6.0"
+    "vitest": "^1.6.0",
+    "tsx": "^4.7.0",
+    "svgo": "^3.2.0"
   }
 }

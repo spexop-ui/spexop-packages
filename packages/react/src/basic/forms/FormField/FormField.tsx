@@ -48,14 +48,34 @@ export function FormField({
   id,
   errorMessage,
   hideError = false,
+  // Controlled props for standalone usage
+  value: controlledValue,
+  onChange: controlledOnChange,
+  onBlur: controlledOnBlur,
+  error: controlledError,
 }: FormFieldProps) {
-  const field = useFormField({
-    name,
-    rules,
-    defaultValue,
-    validateOn,
-    dependencies,
-  });
+  // Use controlled props if provided, otherwise use form field hook
+  const isControlled =
+    controlledValue !== undefined ||
+    controlledOnChange !== undefined ||
+    controlledOnBlur !== undefined ||
+    controlledError !== undefined;
+
+  const field = isControlled
+    ? {
+        value: controlledValue,
+        onChange: controlledOnChange || (() => {}),
+        onBlur: controlledOnBlur || (() => {}),
+        error: controlledError,
+        touched: true,
+      }
+    : useFormField({
+        name,
+        rules,
+        defaultValue,
+        validateOn,
+        dependencies,
+      });
 
   // Generate unique ID
   const fieldId = id || `field-${name}`;
@@ -69,8 +89,10 @@ export function FormField({
   }, [rules, showRequired]);
 
   // Display error
-  const displayError = errorMessage || field.error;
-  const hasError = !hideError && field.touched && displayError;
+  const displayError =
+    errorMessage || controlledError || (isControlled ? undefined : field.error);
+  const hasError =
+    !hideError && (isControlled ? !!displayError : field.touched && displayError);
 
   // Clone child with field props
   const childElement = useMemo(() => {

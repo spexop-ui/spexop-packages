@@ -82,23 +82,34 @@ export function Icon({
   }
 
   // If name is provided, look it up in the icon map
-  if (name && ICON_MAP[name]) {
+  if (name) {
     const IconComponent = ICON_MAP[name];
 
-    return (
-      <span className={iconClasses} role="img" aria-label={`${name} icon`}>
-        <IconComponent
-          size={sizeMap[size]}
-          strokeWidth={1.5}
-          color="currentColor"
-        />
-      </span>
-    );
+    if (IconComponent) {
+      return (
+        <span className={iconClasses} role="img" aria-label={`${name} icon`}>
+          <IconComponent
+            size={sizeMap[size]}
+            strokeWidth={1.5}
+            color="currentColor"
+          />
+        </span>
+      );
+    }
+
+    // Debug: Log missing icons in development
+    if (process.env.NODE_ENV === "development") {
+      console.warn(
+        `[Icon] Icon "${name}" not found in ICON_MAP. Available keys:`,
+        Object.keys(ICON_MAP).slice(0, 20).join(", "),
+        "...",
+      );
+    }
   }
 
   // Fallback for unknown icon names
   return (
-    <span className={iconClasses} title={`Unknown icon: ${name}`}>
+    <span className={iconClasses} title={`Unknown icon: ${name || "none"}`}>
       ?
     </span>
   );

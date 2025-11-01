@@ -7,32 +7,32 @@
  * @version 0.4.0
  * @since 2025-10-24
  *
+ * @deprecated Use useI18nUtil from @spexop/react/utils instead
+ *
  * @example
  * ```tsx
  * function Header() {
- *   const { t } = useTranslation();
+ *   const { t } = useI18nUtil({
+ *     locale: "en",
+ *     translations: { en: { welcome: { title: "Welcome" } } },
+ *   });
  *   return <h1>{t('welcome.title')}</h1>;
  * }
  * ```
  */
 
-import { useContext } from "react";
-import { I18nContext } from "../providers/I18nProvider/I18nContext.js";
+import { useI18nUtil } from "../utils/i18n.js";
 
 export function useTranslation() {
-  const context = useContext(I18nContext);
-
-  if (!context) {
-    throw new Error("useTranslation must be used within an I18nProvider");
-  }
+  const i18n = useI18nUtil();
 
   return {
-    t: context.t,
-    tn: context.tn,
-    locale: context.locale,
-    setLocale: context.setLocale,
-    hasTranslation: context.hasTranslation,
-    isRTL: context.isRTL,
-    direction: context.direction,
+    t: i18n.t,
+    tn: i18n.tn,
+    locale: i18n.locale,
+    setLocale: i18n.setLocale,
+    hasTranslation: i18n.hasTranslation,
+    isRTL: i18n.isRTL,
+    direction: i18n.direction,
   };
 }

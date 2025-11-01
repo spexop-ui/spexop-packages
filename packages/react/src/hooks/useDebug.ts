@@ -1,7 +1,9 @@
 /**
  * useDebug Hook
- * Re-export from DebugProvider for convenient access
+ * Re-export from debug utility for convenient access
+ *
+ * @deprecated Use useDebugUtil from @spexop/react/utils instead
  */
 
-export { useDebug } from "../providers/DebugProvider/DebugProvider.js";
-export type { DebugContextValue } from "../providers/DebugProvider/DebugProvider.types.js";
+export { useDebugUtil as useDebug } from "../utils/debug.js";
+export type { DebugUtilReturn as DebugContextValue } from "../utils/debug.js";

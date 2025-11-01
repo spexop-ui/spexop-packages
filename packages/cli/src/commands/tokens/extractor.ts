@@ -94,9 +94,9 @@ function extractDescription(token: unknown): string | undefined {
 function extractColors(theme: SpexopThemeConfig): ColorToken[] {
   const colors: ColorToken[] = [];
 
-  if (!theme.color) return colors;
+  if (!theme.colors) return colors;
 
-  const colorEntries = Object.entries(theme.color);
+  const colorEntries = Object.entries(theme.colors);
 
   for (const [key, token] of colorEntries) {
     const value = extractValue(token);
@@ -233,9 +233,9 @@ function extractTypography(theme: SpexopThemeConfig): TypographyToken[] {
 function extractBorders(theme: SpexopThemeConfig): BorderToken[] {
   const borders: BorderToken[] = [];
 
-  if (!theme.border) return borders;
+  if (!theme.borders) return borders;
 
-  const borderEntries = Object.entries(theme.border);
+  const borderEntries = Object.entries(theme.borders);
 
   for (const [key, token] of borderEntries) {
     const value = extractValue(token);

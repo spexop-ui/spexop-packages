@@ -5,6 +5,9 @@
  * Unified command-line interface for Spexop Design System
  */
 
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import path from "node:path";
 import { Command } from "commander";
 import pc from "picocolors";
 import { addCommand } from "./commands/add.js";
@@ -13,12 +16,19 @@ import { createCommand } from "./commands/create.js";
 import { doctorCommand } from "./commands/doctor.js";
 import { tokensCommand } from "./commands/tokens.js";
 
+// Read version from package.json
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const packageJsonPath = path.resolve(__dirname, "../package.json");
+const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf-8"));
+const version = packageJson.version || "0.6.0";
+
 const program = new Command();
 
 program
   .name("spexop")
   .description("Spexop Design System CLI - Build beautiful apps faster")
-  .version("0.1.0");
+  .version(version);
 
 // Add sub-commands
 program.addCommand(createCommand);

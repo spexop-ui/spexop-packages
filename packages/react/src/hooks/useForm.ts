@@ -1,38 +1,34 @@
 /**
  * useForm Hook
- * Hook for accessing form context
+ * Hook for accessing form utility
  *
  * @packageName @spexop/react
  * @author @olmstedian | github.com/olmstedian | @spexop | github.com/spexop-ui
  * @version 0.4.0
  * @since 2025-10-24
  *
+ * @deprecated Use useFormUtil from @spexop/react/utils instead
+ *
  * @example
  * ```tsx
  * function MyForm() {
- *   const form = useForm();
+ *   const form = useFormUtil({
+ *     initialValues: { email: "", password: "" },
+ *     onSubmit: async (values) => {
+ *       await api.login(values);
+ *     },
+ *   });
  *
  *   return (
- *     <div>
+ *     <form onSubmit={form.handleSubmit}>
  *       <p>Form is valid: {form.isValid}</p>
  *       <p>Form is dirty: {form.isDirty}</p>
  *       <button onClick={() => form.resetForm()}>Reset</button>
- *     </div>
+ *     </form>
  *   );
  * }
  * ```
  */
 
-import { useContext } from "react";
-import { FormContext } from "../providers/FormProvider/FormContext.js";
-import type { FormContextValue } from "../providers/FormProvider/FormProvider.types.js";
-
-export function useForm(): FormContextValue {
-  const context = useContext(FormContext);
-
-  if (!context) {
-    throw new Error("useForm must be used within a FormProvider");
-  }
-
-  return context;
-}
+export { useFormUtil as useForm } from "../utils/form.js";
+export type { FormUtilReturn as FormContextValue } from "../utils/form.js";

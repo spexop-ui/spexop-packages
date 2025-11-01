@@ -8,22 +8,32 @@
  * @since 2025-10-24
  */
 
-import { useCallback, useContext } from "react";
-import { I18nContext } from "../providers/I18nProvider/I18nContext.js";
-import type { CurrencyFormatOptions } from "../providers/I18nProvider/I18nProvider.types.js";
-import { formatCurrency } from "../providers/I18nProvider/formatters.js";
+import { useCallback } from "react";
+import { useI18nUtil } from "../utils/i18n.js";
 
+/**
+ * useFormatCurrency Hook
+ * Hook for formatting currency using i18n utility
+ *
+ * @example
+ * ```tsx
+ * function MyComponent() {
+ *   const formatCurrency = useFormatCurrency();
+ *
+ *   return <div>{formatCurrency(100, { currency: 'USD' })}</div>;
+ * }
+ * ```
+ */
 export function useFormatCurrency() {
-  const context = useContext(I18nContext);
+  const { formatCurrency } = useI18nUtil({
+    locale: "en",
+  });
 
   const format = useCallback(
-    (value: number, options: CurrencyFormatOptions) => {
-      return formatCurrency(value, {
-        ...options,
-        locale: options.locale || context?.locale,
-      });
+    (value: number, options: Parameters<typeof formatCurrency>[1]) => {
+      return formatCurrency(value, options);
     },
-    [context],
+    [formatCurrency],
   );
 
   return format;

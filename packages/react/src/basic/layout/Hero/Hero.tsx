@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { FadeIn, ScaleUp, Stagger } from "../../animations/index.js";
-import { Button } from "../../buttons/Button/Button.js";
 import { AnimatedBackground } from "./AnimatedBackground.js";
 import styles from "./Hero.module.css";
 import type { HeroProps } from "./Hero.types.js";
@@ -71,15 +70,21 @@ export function Hero({
   statsLabelLineHeight,
   statsLabelLetterSpacing,
   overlayIntensity,
+  contentTheme = "auto",
   contentPosition = "center",
   features,
+  imagePosition = "right",
   ariaLabel,
   className = "",
   style,
 }: HeroProps) {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const backgroundVideoRef = useRef<HTMLVideoElement>(null);
+  const backgroundImageRef = useRef<HTMLImageElement>(null);
+  const mediaImageRef = useRef<HTMLImageElement>(null);
+  const heroRef = useRef<HTMLElement | null>(null);
 
   // Check for prefers-reduced-motion
   useEffect(() => {
@@ -93,6 +98,96 @@ export function Hero({
     mediaQuery.addEventListener("change", handleChange);
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
+
+  // Check for theme (dark/light)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const checkTheme = () => {
+      const html = document.documentElement;
+      // Priority: data-theme attribute > dark class > system preference
+      const dataTheme = html.getAttribute("data-theme");
+      let isDark = false;
+
+      if (dataTheme) {
+        // Explicit theme setting takes priority
+        isDark = dataTheme === "dark";
+      } else {
+        // Fallback to class or system preference
+        isDark =
+          html.classList.contains("dark") ||
+          window.matchMedia("(prefers-color-scheme: dark)").matches;
+      }
+
+      setIsDarkTheme((prev) => {
+        // Only update if changed to avoid unnecessary re-renders
+        return prev !== isDark ? isDark : prev;
+      });
+    };
+
+    // Initial check
+    checkTheme();
+
+    // Watch for theme changes on document element
+    const observer = new MutationObserver(() => {
+      // Small delay to ensure attribute is fully updated
+      setTimeout(checkTheme, 0);
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme", "class"],
+      subtree: false,
+    });
+
+    // Listen to system preference changes
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const handleSystemChange = () => {
+      setTimeout(checkTheme, 0);
+    };
+    mediaQuery.addEventListener("change", handleSystemChange);
+
+    return () => {
+      observer.disconnect();
+      mediaQuery.removeEventListener("change", handleSystemChange);
+    };
+  }, []);
+
+  // Update image src when theme changes
+  useEffect(() => {
+    if (media?.type === "image" && mediaImageRef.current) {
+      const getImageSrc = (): string => {
+        if (isDarkTheme && media.srcDark) {
+          return media.srcDark;
+        }
+        if (!isDarkTheme && media.srcLight) {
+          return media.srcLight;
+        }
+        return media.src;
+      };
+      const newSrc = getImageSrc();
+      // Always update - browser will handle if it's the same
+      mediaImageRef.current.src = newSrc;
+    }
+  }, [isDarkTheme, media]);
+
+  // Update background image src when theme changes
+  useEffect(() => {
+    if (backgroundMedia?.type === "image" && backgroundImageRef.current) {
+      const getBackgroundImageSrc = (): string => {
+        if (isDarkTheme && backgroundMedia.srcDark) {
+          return backgroundMedia.srcDark;
+        }
+        if (!isDarkTheme && backgroundMedia.srcLight) {
+          return backgroundMedia.srcLight;
+        }
+        return backgroundMedia.src;
+      };
+      const newSrc = getBackgroundImageSrc();
+      // Always update - browser will handle if it's the same
+      backgroundImageRef.current.src = newSrc;
+    }
+  }, [isDarkTheme, backgroundMedia]);
 
   // Handle video autoplay with intersection observer for media prop
   useEffect(() => {
@@ -140,6 +235,60 @@ export function Hero({
     }
   }, [backgroundMedia]);
 
+  // Handle parallax effect for background images
+  useEffect(() => {
+    if (
+      !backgroundMedia ||
+      backgroundMedia.type !== "image" ||
+      !backgroundMedia.parallax ||
+      backgroundMedia.parallax === "none" ||
+      prefersReducedMotion ||
+      !backgroundImageRef.current ||
+      !heroRef.current
+    ) {
+      return;
+    }
+
+    const image = backgroundImageRef.current;
+    const hero = heroRef.current;
+    const parallaxIntensity = backgroundMedia.parallax;
+
+    // Parallax speed multipliers
+    const speedMultipliers = {
+      subtle: 0.2,
+      medium: 0.4,
+      strong: 0.6,
+    };
+
+    const speed = speedMultipliers[parallaxIntensity] || 0.2;
+
+    const handleScroll = () => {
+      const rect = hero.getBoundingClientRect();
+      const scrollTop = window.scrollY || window.pageYOffset;
+      const heroTop = rect.top + scrollTop;
+      const heroHeight = rect.height;
+      const viewportHeight = window.innerHeight;
+
+      // Calculate how far through the hero section we've scrolled
+      const scrolled = scrollTop + viewportHeight - heroTop;
+      const progress = Math.max(
+        0,
+        Math.min(1, scrolled / (heroHeight + viewportHeight)),
+      );
+
+      // Apply parallax transform
+      const translateY = (progress - 0.5) * heroHeight * speed;
+      image.style.transform = `translate3d(0, ${translateY}px, 0)`;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll(); // Initial call
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [backgroundMedia, prefersReducedMotion]);
+
   // Animation config with defaults
   const animationConfig = {
     disabled: animation?.disabled || prefersReducedMotion,
@@ -149,12 +298,20 @@ export function Hero({
   };
 
   // Build CSS classes
+  // Map variant to CSS class name (handle renamed classes to avoid CSS module conflicts)
+  const variantClass = variant === "title" ? "titleVariant" : variant;
+
+  // Add image position class for split-image variant
+  const imagePositionClass =
+    variant === "split-image" ? styles[`hero--image-${imagePosition}`] : null;
+
   const heroClasses = [
     styles.hero,
-    styles[`hero--${variant}`],
+    styles[`hero--${variantClass}`],
     styles[`hero--${background}`],
     styles[`hero--align-${align}`],
     contentPosition && styles[`hero--position-${contentPosition}`],
+    imagePositionClass,
     className,
   ]
     .filter(Boolean)
@@ -178,8 +335,10 @@ export function Hero({
     );
   };
 
-  // Auto-detect if we need light text (for dark backgrounds)
+  // Determine content color scheme based on contentTheme prop
   const hasBackgroundMedia = Boolean(backgroundMedia);
+  const shouldUseLightContent =
+    contentTheme === "light" || (contentTheme === "auto" && hasBackgroundMedia);
 
   // Render title
   const renderTitle = () => {
@@ -187,7 +346,7 @@ export function Hero({
       fontSize: `clamp(${2.5 * titleSize}rem, ${8 * titleSize}vw, ${5 * titleSize}rem) !important`,
       ...(titleColor
         ? { color: titleColor }
-        : hasBackgroundMedia && { color: "#ffffff" }),
+        : shouldUseLightContent && { color: "#ffffff" }),
       ...(titleWeight && { fontWeight: titleWeight }),
       ...(titleLetterSpacing && { letterSpacing: titleLetterSpacing }),
       ...(titleLineHeight && { lineHeight: titleLineHeight }),
@@ -232,7 +391,7 @@ export function Hero({
       fontSize: `clamp(${1.25 * subtitleSize}rem, ${3 * subtitleSize}vw, ${1.75 * subtitleSize}rem) !important`,
       ...(subtitleColor
         ? { color: subtitleColor }
-        : hasBackgroundMedia && { color: "rgba(255, 255, 255, 0.9)" }),
+        : shouldUseLightContent && { color: "rgba(255, 255, 255, 0.9)" }),
       ...(subtitleWeight && { fontWeight: subtitleWeight }),
       ...(subtitleLetterSpacing && { letterSpacing: subtitleLetterSpacing }),
       ...(subtitleLineHeight && { lineHeight: subtitleLineHeight }),
@@ -277,7 +436,7 @@ export function Hero({
       fontSize: `clamp(${1 * descriptionSize}rem, ${2 * descriptionSize}vw, ${1.125 * descriptionSize}rem) !important`,
       ...(descriptionColor
         ? { color: descriptionColor }
-        : hasBackgroundMedia && { color: "rgba(255, 255, 255, 0.85)" }),
+        : shouldUseLightContent && { color: "rgba(255, 255, 255, 0.85)" }),
       ...(descriptionWeight && { fontWeight: descriptionWeight }),
       ...(descriptionLetterSpacing && {
         letterSpacing: descriptionLetterSpacing,
@@ -320,33 +479,115 @@ export function Hero({
   const renderActions = () => {
     if (!primaryAction && !secondaryAction) return null;
 
+    // Custom button styles following Spexop principles (borders before shadows)
+    const primaryButtonStyle: React.CSSProperties = shouldUseLightContent
+      ? {
+          padding: "var(--theme-spacing-4) var(--theme-spacing-8)",
+          fontSize: "var(--theme-font-size-lg)",
+          fontWeight: "var(--theme-font-weight-semibold)",
+          color: "#ffffff",
+          background: "transparent",
+          border: "2px solid #ffffff",
+          borderRadius: "var(--theme-radius-md)",
+          cursor: "pointer",
+          transition: "all 0.2s ease",
+        }
+      : {
+          padding: "var(--theme-spacing-4) var(--theme-spacing-8)",
+          fontSize: "var(--theme-font-size-lg)",
+          fontWeight: "var(--theme-font-weight-semibold)",
+          color: "var(--theme-text)",
+          background: "transparent",
+          border: "2px solid var(--theme-border-strong)",
+          borderRadius: "var(--theme-radius-md)",
+          cursor: "pointer",
+          transition: "all 0.2s ease",
+        };
+
+    const secondaryButtonStyle: React.CSSProperties = shouldUseLightContent
+      ? {
+          padding: "var(--theme-spacing-4) var(--theme-spacing-8)",
+          fontSize: "var(--theme-font-size-lg)",
+          fontWeight: "var(--theme-font-weight-semibold)",
+          color: "#ffffff",
+          background: "transparent",
+          border: "2px solid rgba(255, 255, 255, 0.6)",
+          borderRadius: "var(--theme-radius-md)",
+          cursor: "pointer",
+          transition: "all 0.2s ease",
+        }
+      : {
+          padding: "var(--theme-spacing-4) var(--theme-spacing-8)",
+          fontSize: "var(--theme-font-size-lg)",
+          fontWeight: "var(--theme-font-weight-semibold)",
+          color: "var(--theme-text-secondary)",
+          background: "transparent",
+          border: "2px solid var(--theme-border)",
+          borderRadius: "var(--theme-radius-md)",
+          cursor: "pointer",
+          transition: "all 0.2s ease",
+        };
+
     const buttons = (
       <>
         {primaryAction && (
-          <Button
+          <button
+            type="button"
             onClick={primaryAction.onClick}
-            variant={primaryAction.variant || "primary"}
-            size="lg"
             aria-label={primaryAction.ariaLabel}
             className={styles.heroButton}
+            style={primaryButtonStyle}
+            onMouseEnter={(e) => {
+              if (shouldUseLightContent) {
+                e.currentTarget.style.background = "rgba(255, 255, 255, 0.15)";
+              } else {
+                e.currentTarget.style.background = "var(--theme-surface-hover)";
+                e.currentTarget.style.borderColor = "var(--theme-primary)";
+              }
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "transparent";
+              if (!shouldUseLightContent) {
+                e.currentTarget.style.borderColor =
+                  "var(--theme-border-strong)";
+              }
+            }}
           >
             {primaryAction.iconLeft}
             {primaryAction.label}
             {primaryAction.iconRight}
-          </Button>
+          </button>
         )}
         {secondaryAction && (
-          <Button
+          <button
+            type="button"
             onClick={secondaryAction.onClick}
-            variant={secondaryAction.variant || "outline"}
-            size="lg"
             aria-label={secondaryAction.ariaLabel}
             className={styles.heroButton}
+            style={secondaryButtonStyle}
+            onMouseEnter={(e) => {
+              if (shouldUseLightContent) {
+                e.currentTarget.style.background = "rgba(255, 255, 255, 0.1)";
+                e.currentTarget.style.borderColor = "#ffffff";
+              } else {
+                e.currentTarget.style.background = "var(--theme-surface-hover)";
+                e.currentTarget.style.borderColor =
+                  "var(--theme-border-strong)";
+              }
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "transparent";
+              if (shouldUseLightContent) {
+                e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.6)";
+              } else {
+                e.currentTarget.style.borderColor = "var(--theme-border)";
+              }
+            }}
           >
             {secondaryAction.iconLeft}
             {secondaryAction.label}
             {secondaryAction.iconRight}
-          </Button>
+          </button>
         )}
       </>
     );
@@ -389,7 +630,7 @@ export function Hero({
       fontSize: `clamp(${2 * statsValueSize}rem, ${4 * statsValueSize}vw, ${3 * statsValueSize}rem) !important`,
       ...(statsValueColor
         ? { color: statsValueColor }
-        : hasBackgroundMedia && { color: "#ffffff" }),
+        : shouldUseLightContent && { color: "#ffffff" }),
       ...(statsValueWeight && { fontWeight: statsValueWeight }),
       ...(statsValueLineHeight && { lineHeight: statsValueLineHeight }),
       ...(statsValueLetterSpacing && {
@@ -402,7 +643,7 @@ export function Hero({
       ...(statsLabelSize && { fontSize: statsLabelSize }),
       ...(statsLabelColor
         ? { color: statsLabelColor }
-        : hasBackgroundMedia && { color: "rgba(255, 255, 255, 0.8)" }),
+        : shouldUseLightContent && { color: "rgba(255, 255, 255, 0.8)" }),
       ...(statsLabelWeight && { fontWeight: statsLabelWeight }),
       ...(statsLabelTransform && { textTransform: statsLabelTransform }),
       ...(statsLabelLineHeight && { lineHeight: statsLabelLineHeight }),
@@ -411,31 +652,13 @@ export function Hero({
       }),
     };
 
-    const statsContent = (
-      <div className={styles.heroStats}>
-        {stats.map((stat) => (
-          <div key={`${stat.value}-${stat.label}`} className={styles.heroStat}>
-            <div className={styles.heroStatValue} style={statsValueStyle}>
-              {stat.value}
-            </div>
-            <div className={styles.heroStatLabel} style={statsLabelStyle}>
-              {stat.label}
-            </div>
-          </div>
-        ))}
-      </div>
-    );
-
-    if (animationConfig.disabled) {
-      return statsContent;
-    }
-
     return (
       <div className={styles.heroStats}>
         <Stagger
           delay={animationConfig.staggerDelay}
           variant="zoomIn"
           duration={400}
+          disabled={animationConfig.disabled}
         >
           {stats.map((stat) => (
             <div
@@ -459,6 +682,191 @@ export function Hero({
   const renderMedia = () => {
     if (!media) return null;
 
+    // Size preset values
+    const sizePresets = {
+      compact: { width: "300px", maxWidth: "400px" },
+      medium: { width: "500px", maxWidth: "600px" },
+      large: { width: "700px", maxWidth: "800px" },
+      full: {},
+    };
+
+    // Image-specific styles
+    const imageStyle: React.CSSProperties =
+      media.type === "image"
+        ? {
+            objectFit: media.imageFit || "cover",
+            objectPosition: media.imagePosition || "center",
+          }
+        : {};
+
+    // Build CSS filter string for images
+    const buildFilterString = (): string => {
+      if (media.type !== "image" || !media.filters) return "";
+      const filters = media.filters;
+      const filterParts: string[] = [];
+
+      if (filters.blur !== undefined) {
+        filterParts.push(`blur(${filters.blur})`);
+      }
+      if (filters.brightness !== undefined) {
+        filterParts.push(
+          `brightness(${typeof filters.brightness === "number" ? filters.brightness : filters.brightness})`,
+        );
+      }
+      if (filters.contrast !== undefined) {
+        filterParts.push(
+          `contrast(${typeof filters.contrast === "number" ? filters.contrast : filters.contrast})`,
+        );
+      }
+      if (filters.grayscale !== undefined) {
+        filterParts.push(
+          `grayscale(${typeof filters.grayscale === "number" ? filters.grayscale : filters.grayscale})`,
+        );
+      }
+      if (filters.hueRotate !== undefined) {
+        filterParts.push(`hue-rotate(${filters.hueRotate}deg)`);
+      }
+      if (filters.invert !== undefined) {
+        filterParts.push(
+          `invert(${typeof filters.invert === "number" ? filters.invert : filters.invert})`,
+        );
+      }
+      if (filters.opacity !== undefined) {
+        filterParts.push(`opacity(${filters.opacity})`);
+      }
+      if (filters.saturate !== undefined) {
+        filterParts.push(
+          `saturate(${typeof filters.saturate === "number" ? filters.saturate : filters.saturate})`,
+        );
+      }
+      if (filters.sepia !== undefined) {
+        filterParts.push(
+          `sepia(${typeof filters.sepia === "number" ? filters.sepia : filters.sepia})`,
+        );
+      }
+
+      return filterParts.join(" ");
+    };
+
+    const filterString = buildFilterString();
+    if (filterString && media.type === "image") {
+      imageStyle.filter = filterString;
+    }
+
+    // Animation classes and styles
+    const animationConfig = media.animation;
+    const animationClass =
+      animationConfig?.type &&
+      animationConfig.type !== "none" &&
+      media.type === "image" &&
+      !prefersReducedMotion
+        ? styles[`heroMedia--animate-${animationConfig.type}`]
+        : null;
+
+    const animationStyle: React.CSSProperties =
+      animationConfig &&
+      animationConfig.type !== "none" &&
+      media.type === "image" &&
+      !prefersReducedMotion
+        ? {
+            animationDuration: `${animationConfig.duration || 600}ms`,
+            animationDelay: `${animationConfig.delay || 0}ms`,
+            animationTimingFunction: animationConfig.easing || "ease-out",
+          }
+        : {};
+
+    // Container styles for sizing (only for images, not backgroundMedia)
+    const containerStyle: React.CSSProperties = {};
+    if (media.type === "image") {
+      // Apply size preset if no custom dimensions provided
+      if (media.imageSize && !media.imageWidth && !media.imageHeight) {
+        const preset = sizePresets[media.imageSize];
+        if (preset && "width" in preset && preset.width) {
+          containerStyle.width = preset.width;
+        }
+        if (preset && "maxWidth" in preset && preset.maxWidth) {
+          containerStyle.maxWidth = preset.maxWidth;
+        }
+      }
+
+      // Custom dimensions override presets
+      if (media.imageWidth) {
+        containerStyle.width = media.imageWidth;
+      }
+      if (media.imageHeight) {
+        containerStyle.height = media.imageHeight;
+      }
+      if (media.maxImageWidth) {
+        containerStyle.maxWidth = media.maxImageWidth;
+      }
+      if (media.maxImageHeight) {
+        containerStyle.maxHeight = media.maxImageHeight;
+      }
+      if (media.aspectRatio) {
+        containerStyle.aspectRatio = media.aspectRatio;
+      }
+    }
+
+    // Border styles (applies to all media types)
+    const borderWidthMap = {
+      none: "0",
+      default: "2px",
+      thick: "3px",
+      thicker: "4px",
+    };
+
+    const borderSetting = media.border || "default";
+    if (borderSetting !== "none") {
+      // Apply border width
+      if (media.borderWidth) {
+        containerStyle.borderWidth = media.borderWidth;
+        containerStyle.borderStyle = "solid";
+      } else if (borderSetting !== "default") {
+        containerStyle.borderWidth = borderWidthMap[borderSetting];
+        containerStyle.borderStyle = "solid";
+      } else {
+        // Default border already in CSS, but ensure it's solid
+        containerStyle.borderStyle = "solid";
+      }
+
+      // Apply border color if provided
+      if (media.borderColor) {
+        containerStyle.borderColor = media.borderColor;
+      }
+    } else {
+      // Borderless
+      containerStyle.border = "none";
+    }
+
+    // Border radius
+    if (media.borderRadius !== undefined) {
+      containerStyle.borderRadius = media.borderRadius;
+    }
+
+    // Container size class
+    const sizeClass =
+      media.type === "image" && media.imageSize
+        ? styles[`heroMediaContainer--${media.imageSize}`]
+        : null;
+
+    // Border class
+    const borderClass = media.border
+      ? styles[`heroMediaContainer--border-${media.border}`]
+      : null;
+
+    // Determine image source based on theme
+    const getImageSrc = (): string => {
+      if (media.type === "image") {
+        if (isDarkTheme && media.srcDark) {
+          return media.srcDark;
+        }
+        if (!isDarkTheme && media.srcLight) {
+          return media.srcLight;
+        }
+      }
+      return media.src;
+    };
+
     const mediaContent =
       media.type === "video" ? (
         <video
@@ -472,25 +880,70 @@ export function Hero({
         />
       ) : (
         <img
-          className={styles.heroMedia}
-          src={media.src}
+          ref={mediaImageRef}
+          key={`media-${isDarkTheme}`}
+          className={`${styles.heroMedia} ${animationClass || ""}`.trim()}
+          src={getImageSrc()}
           alt={media.alt || ""}
           loading="lazy"
+          style={{ ...imageStyle, ...animationStyle }}
         />
       );
 
+    // Overlay position class
+    const overlayClass =
+      media.overlay && media.overlayPosition
+        ? styles[`heroMediaOverlay--${media.overlayPosition}`]
+        : null;
+
     return (
-      <div className={styles.heroMediaContainer}>
+      <div
+        className={`${styles.heroMediaContainer} ${sizeClass || ""} ${borderClass || ""}`.trim()}
+        style={
+          Object.keys(containerStyle).length > 0 ? containerStyle : undefined
+        }
+      >
         {mediaContent}
         {media.overlay && (
           <div
-            className={styles.heroMediaOverlay}
+            className={`${styles.heroMediaOverlay} ${overlayClass || ""}`.trim()}
             style={
               overlayIntensity !== undefined
                 ? { opacity: overlayIntensity }
                 : undefined
             }
           />
+        )}
+        {/* AI Generated Badge */}
+        {media.aiGenerated && (
+          <div className={styles.heroMediaAIBadge}>AI Generated</div>
+        )}
+        {/* Media Credits */}
+        {media.credits && (
+          <div
+            className={styles.heroMediaCredits}
+            style={{
+              background:
+                media.creditsBackgroundColor ||
+                (shouldUseLightContent
+                  ? "var(--theme-overlay)"
+                  : "var(--theme-surface)"),
+              color:
+                media.creditsTextColor ||
+                (shouldUseLightContent
+                  ? "var(--theme-surface)"
+                  : "var(--theme-text)"),
+              borderColor:
+                media.creditsBorderColor ||
+                (shouldUseLightContent
+                  ? "rgba(255, 255, 255, 0.2)"
+                  : "var(--theme-border)"),
+            }}
+          >
+            {typeof media.credits === "function"
+              ? media.credits({ isDark: isDarkTheme })
+              : media.credits}
+          </div>
         )}
       </div>
     );
@@ -546,6 +999,34 @@ export function Hero({
   const renderBackgroundMedia = () => {
     if (!backgroundMedia) return null;
 
+    // Image-specific styles
+    const imageStyle: React.CSSProperties =
+      backgroundMedia.type === "image"
+        ? {
+            objectFit: backgroundMedia.imageFit || "cover",
+            objectPosition: backgroundMedia.imagePosition || "center",
+          }
+        : {};
+
+    // Parallax data attribute
+    const parallaxDataAttr =
+      backgroundMedia.type === "image" && backgroundMedia.parallax
+        ? backgroundMedia.parallax
+        : null;
+
+    // Determine image source based on theme for background media
+    const getBackgroundImageSrc = (): string => {
+      if (backgroundMedia.type === "image") {
+        if (isDarkTheme && backgroundMedia.srcDark) {
+          return backgroundMedia.srcDark;
+        }
+        if (!isDarkTheme && backgroundMedia.srcLight) {
+          return backgroundMedia.srcLight;
+        }
+      }
+      return backgroundMedia.src;
+    };
+
     const mediaContent =
       backgroundMedia.type === "video" ? (
         <video
@@ -560,19 +1041,40 @@ export function Hero({
         />
       ) : (
         <img
+          key={`background-${isDarkTheme}`}
+          ref={backgroundImageRef}
           className={styles.heroBackgroundMedia}
-          src={backgroundMedia.src}
+          src={getBackgroundImageSrc()}
           alt={backgroundMedia.alt || ""}
           loading="lazy"
+          style={imageStyle}
+          data-parallax={parallaxDataAttr || undefined}
         />
       );
 
+    // Overlay position class
+    const overlayClass =
+      backgroundMedia.overlay && backgroundMedia.overlayPosition
+        ? styles[
+            `heroBackgroundMediaOverlay--${backgroundMedia.overlayPosition}`
+          ]
+        : null;
+
+    // Container class with parallax
+    const containerClasses = [
+      styles.heroBackgroundMediaContainer,
+      parallaxDataAttr &&
+        styles[`heroBackgroundMediaContainer--parallax-${parallaxDataAttr}`],
+    ]
+      .filter(Boolean)
+      .join(" ");
+
     return (
-      <div className={styles.heroBackgroundMediaContainer}>
+      <div className={containerClasses}>
         {mediaContent}
         {backgroundMedia.overlay && (
           <div
-            className={styles.heroBackgroundMediaOverlay}
+            className={`${styles.heroBackgroundMediaOverlay} ${overlayClass || ""}`.trim()}
             style={
               overlayIntensity !== undefined
                 ? { opacity: overlayIntensity }
@@ -598,6 +1100,7 @@ export function Hero({
 
   return (
     <section
+      ref={heroRef}
       className={heroClasses}
       style={style}
       aria-label={ariaLabel || "Hero section"}
@@ -631,6 +1134,21 @@ export function Hero({
           <>
             {renderMedia()}
             <div className={styles.heroSplitContent}>{renderContent()}</div>
+          </>
+        ) : /* Split-Image Variant with Image on Left/Right */ variant ===
+          "split-image" ? (
+          <>
+            {imagePosition === "left" ? (
+              <>
+                {renderMedia()}
+                <div className={styles.heroSplitContent}>{renderContent()}</div>
+              </>
+            ) : (
+              <>
+                <div className={styles.heroSplitContent}>{renderContent()}</div>
+                {renderMedia()}
+              </>
+            )}
           </>
         ) : /* Full-Bleed Variant */ variant === "full-bleed" ? (
           <>

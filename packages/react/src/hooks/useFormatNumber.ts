@@ -8,22 +8,32 @@
  * @since 2025-10-24
  */
 
-import { useCallback, useContext } from "react";
-import { I18nContext } from "../providers/I18nProvider/I18nContext.js";
-import type { NumberFormatOptions } from "../providers/I18nProvider/I18nProvider.types.js";
-import { formatNumber } from "../providers/I18nProvider/formatters.js";
+import { useCallback } from "react";
+import { useI18nUtil } from "../utils/i18n.js";
 
+/**
+ * useFormatNumber Hook
+ * Hook for formatting numbers using i18n utility
+ *
+ * @example
+ * ```tsx
+ * function MyComponent() {
+ *   const formatNumber = useFormatNumber();
+ *
+ *   return <div>{formatNumber(1234.56)}</div>;
+ * }
+ * ```
+ */
 export function useFormatNumber() {
-  const context = useContext(I18nContext);
+  const { formatNumber } = useI18nUtil({
+    locale: "en",
+  });
 
   const format = useCallback(
-    (value: number, options?: NumberFormatOptions) => {
-      return formatNumber(value, {
-        ...options,
-        locale: options?.locale || context?.locale,
-      });
+    (value: number, options?: Parameters<typeof formatNumber>[1]) => {
+      return formatNumber(value, options);
     },
-    [context],
+    [formatNumber],
   );
 
   return format;

@@ -11,6 +11,7 @@
  */
 
 import { forwardRef, useEffect, useRef, useState } from "react";
+import type { MutableRefObject } from "react";
 import styles from "./ContextNav.module.css";
 
 export interface ContextNavLink {
@@ -55,7 +56,9 @@ export const ContextNav = forwardRef<HTMLDivElement, ContextNavProps>(
     ref,
   ) => {
     const [isStuck, setIsStuck] = useState(false);
-    const stickyRef = useRef<HTMLDivElement>(null);
+    const stickyRef = useRef<HTMLDivElement>(
+      null,
+    ) as MutableRefObject<HTMLDivElement | null>;
 
     useEffect(() => {
       const element = stickyRef.current;
@@ -88,7 +91,7 @@ export const ContextNav = forwardRef<HTMLDivElement, ContextNavProps>(
         window.removeEventListener("scroll", handleScroll);
         clearTimeout(scrollTimeout);
       };
-    }, [topOffset]);
+    }, [topOffset, stickyRef]);
 
     const hasNavigation = navLinks && navLinks.length > 0;
 

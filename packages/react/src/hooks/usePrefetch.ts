@@ -24,19 +24,35 @@
  * ```
  */
 
-import { useCallback, useContext } from "react";
-import { DataFetchContext } from "../providers/DataFetchProvider/DataFetchContext.js";
-import type { FetchOptions } from "../providers/DataFetchProvider/DataFetchProvider.types.js";
-import { dataCache } from "../providers/DataFetchProvider/cache.js";
+import { useCallback } from "react";
+import { dataCache } from "../utils/dataCache.js";
+import type { FetchOptions } from "../utils/dataFetch.types.js";
 
+/**
+ * usePrefetch Hook
+ * Hook for prefetching data (standalone, no provider needed)
+ *
+ * @example
+ * ```tsx
+ * function ProductLink({ productId }) {
+ *   const prefetch = usePrefetch();
+ *
+ *   return (
+ *     <Link
+ *       to={`/products/${productId}`}
+ *       onMouseEnter={() => prefetch(`/api/products/${productId}`)}
+ *     >
+ *       View Product
+ *     </Link>
+ *   );
+ * }
+ * ```
+ */
 export function usePrefetch() {
-  const context = useContext(DataFetchContext);
-
   const prefetch = useCallback(
     async <T = unknown>(url: string, options?: FetchOptions): Promise<void> => {
       // Merge options with defaults
       const mergedOptions: FetchOptions = {
-        ...context?.defaultOptions,
         ...options,
       };
 
@@ -50,23 +66,8 @@ export function usePrefetch() {
 
       try {
         // Build full URL
-        const fullUrl = context?.baseURL ? `${context.baseURL}${url}` : url;
-
-        // Apply request interceptor
-        let requestUrl = fullUrl;
-        let requestOptions = mergedOptions;
-
-        if (context?.onRequest) {
-          const intercepted = await context.onRequest(
-            requestUrl,
-            requestOptions,
-          );
-          requestUrl = intercepted.url;
-          requestOptions = {
-            ...requestOptions,
-            ...intercepted.options,
-          };
-        }
+        const requestUrl = url;
+        const requestOptions = mergedOptions;
 
         // Fetch data - extract our custom cache config before passing to fetch
         const {
@@ -82,12 +83,7 @@ export function usePrefetch() {
           throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
 
-        let responseData = await response.json();
-
-        // Apply response interceptor
-        if (context?.onResponse) {
-          responseData = await context.onResponse(response, responseData);
-        }
+        const responseData = await response.json();
 
         // Cache result
         const ttl = mergedOptions.cache?.ttl ?? 300000;
@@ -97,7 +93,7 @@ export function usePrefetch() {
         console.warn("Prefetch failed:", error);
       }
     },
-    [context],
+    [],
   );
 
   return prefetch;

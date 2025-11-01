@@ -50,12 +50,19 @@ import {
   Settings,
   Sun,
 } from "@spexop/icons";
+import { createPortal } from "react-dom";
 import { Stack } from "../../primitives/Stack/index.js";
+import { isBrowser } from "../../../utils/index.js";
 import styles from "./TopBar.module.css";
 import type { TopBarProps } from "./TopBar.types.js";
 
 export function TopBar({
+  logo,
   logoText = "Spexop",
+  logoIcon,
+  logoImage,
+  logoImageLight,
+  logoImageDark,
   onLogoClick,
   onSearchClick,
   onThemeToggle,
@@ -63,15 +70,72 @@ export function TopBar({
   onSettingsClick,
   onMobileMenuClick,
   currentTheme = "auto",
+  resolvedTheme,
   showMobileMenu = true,
   gitHubUrl = "https://github.com/spexop-ui",
+  navItems,
+  onNavItemClick,
   className = "",
 }: TopBarProps) {
   // Select the appropriate theme icon
   const ThemeIcon =
     currentTheme === "light" ? Sun : currentTheme === "dark" ? Moon : Monitor;
 
-  return (
+  // Determine the actual theme (resolved theme for auto mode)
+  const actualTheme =
+    currentTheme === "auto"
+      ? resolvedTheme ||
+        (typeof document !== "undefined" &&
+        document.documentElement.getAttribute("data-theme") === "dark"
+          ? "dark"
+          : "light")
+      : currentTheme;
+
+  // Render logo content
+  const renderLogoContent = () => {
+    // Priority 1: Logo component
+    if (logo) {
+      return logo;
+    }
+
+    // Priority 2: Theme-aware logo images
+    if (logoImageLight || logoImageDark) {
+      const selectedLogoImage =
+        actualTheme === "dark"
+          ? logoImageDark || logoImageLight
+          : logoImageLight || logoImageDark;
+      if (selectedLogoImage) {
+        return (
+          <img
+            src={selectedLogoImage}
+            alt={logoText || "Logo"}
+            className={styles.logoImage}
+          />
+        );
+      }
+    }
+
+    // Priority 3: Logo image (fallback)
+    if (logoImage) {
+      return (
+        <img
+          src={logoImage}
+          alt={logoText || "Logo"}
+          className={styles.logoImage}
+        />
+      );
+    }
+
+    // Priority 4: Logo icon
+    if (logoIcon) {
+      return <div className={styles.logoIcon}>{logoIcon}</div>;
+    }
+
+    // Fallback: Default icon
+    return <div className={styles.logoIcon}>S</div>;
+  };
+
+  const topBarContent = (
     <>
       {/* Skip Navigation Links */}
       <div className={styles.skipLinks}>
@@ -91,29 +155,13 @@ export function TopBar({
           gap={0}
           className={styles.topBarContent}
         >
-          {/* Left Section: Mobile Menu + Logo */}
+          {/* Left Section: Logo */}
           <Stack
             direction="horizontal"
             align="center"
             gap={4}
             className={styles.leftSection}
           >
-            {/* Mobile Menu Button (< 768px only) */}
-            {showMobileMenu && onMobileMenuClick && (
-              <button
-                type="button"
-                className={`${styles.button} ${styles.mobileMenuButton}`}
-                onClick={onMobileMenuClick}
-                aria-label="Toggle sidebar"
-                title="Toggle sidebar"
-                tabIndex={0}
-                aria-expanded="false"
-                aria-controls="mobile-navigation"
-              >
-                <Menu size={20} strokeWidth={2} color="currentColor" />
-              </button>
-            )}
-
             {/* Logo */}
             <a
               href="/"
@@ -124,13 +172,57 @@ export function TopBar({
                   onLogoClick();
                 }
               }}
-              aria-label={`${logoText} - Home`}
+              aria-label={`${logoText || "Home"} - Home`}
               tabIndex={0}
             >
-              <div className={styles.logoIcon}>S</div>
-              <span className={styles.logoText}>{logoText}</span>
+              {renderLogoContent()}
+              {logoText && <span className={styles.logoText}>{logoText}</span>}
             </a>
           </Stack>
+
+          {/* Middle Section: Navigation Items (desktop only) */}
+          {navItems && navItems.length > 0 && (
+            <nav className={styles.navSection} aria-label="Main navigation">
+              <Stack
+                direction="horizontal"
+                align="center"
+                gap={2}
+                className={styles.navItems}
+              >
+                {navItems.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <a
+                      key={item.id}
+                      href={item.href}
+                      className={`${styles.navItem} ${
+                        item.active ? styles.navItemActive : ""
+                      }`}
+                      onClick={(e) => {
+                        if (onNavItemClick) {
+                          onNavItemClick(item, e);
+                        }
+                      }}
+                      target={item.external ? "_blank" : undefined}
+                      rel={item.external ? "noopener noreferrer" : undefined}
+                      aria-label={item.ariaLabel || item.label}
+                      aria-current={item.active ? "page" : undefined}
+                      tabIndex={0}
+                    >
+                      {Icon && (
+                        <Icon
+                          size={18}
+                          strokeWidth={1.5}
+                          className={styles.navItemIcon}
+                        />
+                      )}
+                      <span>{item.label}</span>
+                    </a>
+                  );
+                })}
+              </Stack>
+            </nav>
+          )}
 
           {/* Right Section: Action Buttons */}
           <Stack
@@ -139,11 +231,11 @@ export function TopBar({
             gap={3}
             className={styles.rightSection}
           >
-            {/* Search Button */}
+            {/* Search Button (desktop only) */}
             {onSearchClick && (
               <button
                 type="button"
-                className={styles.button}
+                className={`${styles.button} ${styles.desktopOnly}`}
                 onClick={onSearchClick}
                 aria-label="Search"
                 title="Search (⌘K)"
@@ -167,11 +259,11 @@ export function TopBar({
               </button>
             )}
 
-            {/* GitHub Link */}
+            {/* GitHub Link (desktop only) */}
             {onGitHubClick ? (
               <button
                 type="button"
-                className={styles.button}
+                className={`${styles.button} ${styles.desktopOnly}`}
                 onClick={onGitHubClick}
                 aria-label="GitHub repository"
                 title="GitHub repository"
@@ -184,7 +276,7 @@ export function TopBar({
                 href={gitHubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={styles.button}
+                className={`${styles.button} ${styles.desktopOnly}`}
                 aria-label="GitHub repository"
                 title="GitHub repository"
                 tabIndex={0}
@@ -193,11 +285,11 @@ export function TopBar({
               </a>
             )}
 
-            {/* Settings Button */}
+            {/* Settings Button (desktop only) */}
             {onSettingsClick && (
               <button
                 type="button"
-                className={styles.button}
+                className={`${styles.button} ${styles.desktopOnly}`}
                 onClick={onSettingsClick}
                 aria-label="Open settings"
                 title="Open settings"
@@ -206,9 +298,34 @@ export function TopBar({
                 <Settings size={20} strokeWidth={2} color="currentColor" />
               </button>
             )}
+
+            {/* Mobile Menu Button (mobile only) */}
+            {showMobileMenu && onMobileMenuClick && (
+              <button
+                type="button"
+                className={`${styles.button} ${styles.mobileOnly}`}
+                onClick={onMobileMenuClick}
+                aria-label="Toggle menu"
+                title="Toggle menu"
+                tabIndex={0}
+                aria-expanded="false"
+                aria-controls="mobile-navigation"
+              >
+                <Menu size={20} strokeWidth={2} color="currentColor" />
+              </button>
+            )}
           </Stack>
         </Stack>
       </header>
     </>
   );
+
+  // Render with portal to ensure fixed positioning works correctly
+  // (prevents issues when parent elements have transform/opacity/etc)
+  if (isBrowser()) {
+    return createPortal(topBarContent, document.body);
+  }
+
+  // Fallback for SSR
+  return topBarContent;
 }

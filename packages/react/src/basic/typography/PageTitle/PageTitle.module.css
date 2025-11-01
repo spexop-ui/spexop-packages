@@ -1,0 +1,209 @@
+/**
+ * PageTitle Component Styles
+ * 
+ * Follows "The Spexop Way":
+ * - Principle 2: Borders before shadows
+ * - Principle 3: Typography before decoration
+ * - Principle 4: Tokens before magic numbers
+ * - Principle 7: Accessibility before aesthetics
+ */
+
+.pageTitle {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Wrappers for better control */
+.titleWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.descriptionWrapper {
+  display: flex;
+  flex-direction: column;
+  max-width: 65ch; /* Optimal reading width */
+}
+
+/* Gap variants */
+.gap1 {
+  gap: var(--theme-spacing-1);
+}
+
+.gap2 {
+  gap: var(--theme-spacing-2);
+}
+
+.gap3 {
+  gap: var(--theme-spacing-3);
+}
+
+.gap4 {
+  gap: var(--theme-spacing-4);
+}
+
+/* Alignment variants */
+.alignLeft {
+  text-align: left;
+  align-items: flex-start;
+}
+
+.alignLeft .descriptionWrapper {
+  margin-right: auto;
+}
+
+.alignCenter {
+  text-align: center;
+  align-items: center;
+}
+
+.alignCenter .descriptionWrapper {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.alignRight {
+  text-align: right;
+  align-items: flex-end;
+}
+
+.alignRight .descriptionWrapper {
+  margin-left: auto;
+}
+
+/* Border accent - clean, minimal */
+.withBorder {
+  padding-bottom: var(--theme-spacing-4);
+  border-bottom: 2px solid var(--theme-border);
+}
+
+.withBorder.emphasis-strong {
+  border-bottom-width: 3px;
+  border-bottom-color: var(--theme-primary);
+}
+
+/* Accent band - horizontal bar below title in primary color */
+.withAccent .titleWrapper {
+  position: relative;
+  padding-bottom: var(--theme-spacing-3);
+}
+
+.accentBand {
+  position: absolute;
+  bottom: 0;
+  height: 4px;
+  background: var(--theme-primary);
+  border-radius: var(--theme-radius-sm);
+  transition: width 0.3s ease;
+}
+
+/* Accent width variants */
+.accent-short .accentBand {
+  width: 60px;
+}
+
+.accent-medium .accentBand {
+  width: 120px;
+}
+
+.accent-long .accentBand {
+  width: 180px;
+}
+
+.accent-full .accentBand {
+  width: 100%;
+}
+
+/* Accent alignment based on text alignment */
+.alignLeft .accentBand {
+  left: 0;
+}
+
+.alignCenter .accentBand {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.alignRight .accentBand {
+  right: 0;
+}
+
+/* Strong emphasis with accent band */
+.withAccent.emphasis-strong .accentBand {
+  height: 5px;
+}
+
+/* Padding variant */
+.padded {
+  padding: var(--theme-spacing-6) 0;
+}
+
+/* Emphasis variants */
+.emphasis-default .titleWrapper {
+  opacity: 1;
+}
+
+.emphasis-strong .titleWrapper {
+  position: relative;
+}
+
+.emphasis-strong .titleWrapper::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 60%;
+  background: var(--theme-primary);
+  border-radius: var(--theme-radius-sm);
+}
+
+.emphasis-strong.alignLeft .titleWrapper {
+  padding-left: var(--theme-spacing-4);
+}
+
+.emphasis-strong.alignRight .titleWrapper {
+  padding-right: var(--theme-spacing-4);
+}
+
+.emphasis-strong.alignRight .titleWrapper::before {
+  left: auto;
+  right: 0;
+}
+
+.emphasis-strong.alignCenter .titleWrapper::before {
+  display: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .descriptionWrapper {
+    max-width: 100%;
+  }
+  
+  .padded {
+    padding: var(--theme-spacing-4) 0;
+  }
+}
+
+/* Accessibility */
+.pageTitle:focus-within {
+  outline: 2px solid var(--theme-primary);
+  outline-offset: var(--theme-spacing-2);
+  border-radius: var(--theme-radius-md);
+}
+
+[data-theme="dark"] .pageTitle:focus-within {
+  outline-color: var(--theme-primary);
+}
+
+[data-theme="dark"] .withBorder {
+  border-bottom-color: var(--theme-border);
+}
+
+[data-theme="dark"] .withBorder.emphasis-strong {
+  border-bottom-color: var(--theme-primary);
+}
+

@@ -23,7 +23,6 @@
  */
 
 import { useEffect, useRef, useState } from "react";
-import { useIntersectionObserver } from "./useIntersectionObserver.js";
 
 export interface UseImageOptimizationOptions {
   src: string;
@@ -34,7 +33,7 @@ export interface UseImageOptimizationOptions {
 }
 
 export interface UseImageOptimizationReturn {
-  imgRef: React.RefObject<HTMLImageElement | null>;
+  imgRef: React.RefObject<HTMLImageElement>;
   loaded: boolean;
   error: boolean;
   isInView: boolean;
@@ -47,22 +46,41 @@ export function useImageOptimization({
   onLoad,
   onError,
 }: UseImageOptimizationOptions): UseImageOptimizationReturn {
-  const imgRef = useRef<HTMLImageElement | null>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
+  const [isInView, setIsInView] = useState(false);
 
-  // Use intersection observer for lazy loading
-  const [observerRef, isInView] = useIntersectionObserver({
-    threshold: 0.01,
-    triggerOnce: true,
-  });
-
-  // Set the ref
+  // Create intersection observer for lazy loading
   useEffect(() => {
-    if (imgRef.current && lazy && !priority) {
-      observerRef.current = imgRef.current;
+    const element = imgRef.current;
+    if (!element || !lazy || priority) {
+      // If not lazy or priority, set isInView to true
+      if (!lazy || priority) {
+        setIsInView(true);
+      }
+      return;
     }
-  }, [observerRef, lazy, priority]);
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+          observer.disconnect();
+        }
+      },
+      {
+        threshold: 0.01,
+        rootMargin: "0px",
+      },
+    );
+
+    observer.observe(element);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [lazy, priority]);
 
   // Determine if image should load
   const shouldLoad = priority || !lazy || isInView;

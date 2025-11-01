@@ -1,12 +1,14 @@
-import { forwardRef } from "react";
-import { Icon, type IconProps } from "../Icon";
+import { forwardRef } from 'react';
+import { Icon, type IconProps } from '../Icon';
 
-export const Coffee = forwardRef<SVGSVGElement, IconProps>((props, ref) => {
-  return (
-    <Icon ref={ref} {...props}>
-      <path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4zM6 1v3M10 1v3M14 1v3" />
-    </Icon>
-  );
-});
+export const Coffee = forwardRef<SVGSVGElement, IconProps>(
+  (props, ref) => {
+    return (
+      <Icon ref={ref} {...props}>
+        <path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4zM6 1v3M10 1v3M14 1v3"/>
+      </Icon>
+    );
+  }
+);
 
-Coffee.displayName = "Coffee";
+Coffee.displayName = 'Coffee';

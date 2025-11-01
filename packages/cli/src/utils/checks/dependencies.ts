@@ -82,13 +82,13 @@ export async function checkDependencies(): Promise<DependenciesCheckResult> {
     spexopReact: {
       installed: false,
       version: null,
-      latest: "0.5.0", // Hardcoded for now, could fetch from npm registry
+      latest: "0.6.0", // Hardcoded for now, could fetch from npm registry
       isLatest: false,
     },
     spexopTheme: {
       installed: false,
       version: null,
-      latest: "0.4.6", // Hardcoded for now
+      latest: "0.6.0", // Hardcoded for now
       isLatest: false,
     },
     spexopIcons: {

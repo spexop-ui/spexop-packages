@@ -11,7 +11,11 @@
  * - Principle 6: Standards before frameworks - Standard HTML elements
  * - Principle 7: Accessibility before aesthetics - Semantic HTML structure
  *
+ * @packageName @spexop/react
  * @author @olmstedian | github.com/olmstedian | @spexop | github.com/spexop-ui
+ * @version 0.6.0
+ * @since 2025-10-24
+ * @updated 2025-11-01
  *
  * @example
  * ```tsx
@@ -34,7 +38,9 @@
  */
 
 import type React from "react";
-import type { ResponsiveProp } from "../../../hooks/index.js";
+import { type ResponsiveProp, useDebug } from "../../../hooks/index.js";
+import { cn } from "../../../utils/index.js";
+import { validateResponsiveKeys } from "../../../utils/validation.js";
 import { Container } from "../../primitives/Container/Container.js";
 import type { SpacingScale } from "../../primitives/types.js";
 import styles from "./PageLayout.module.css";
@@ -78,21 +84,74 @@ export function PageLayout({
   style = {},
   as = "div",
 }: PageLayoutProps) {
+  // Debug mode
+  const { enabled: debugEnabled, showBoundaries, showTokens } = useDebug();
+
+  // Validate props (development only)
+  if (process.env.NODE_ENV === "development") {
+    // Check for responsive objects in padding
+    if (
+      typeof padding === "object" &&
+      padding !== null &&
+      typeof padding !== "number"
+    ) {
+      validateResponsiveKeys(
+        "PageLayout",
+        "padding",
+        padding as Record<string, unknown>,
+      );
+    }
+
+    // Validate padding variant
+    if (typeof padding === "string") {
+      const validVariants: SpacingVariant[] = ["none", "sm", "md", "lg", "xl"];
+      if (!validVariants.includes(padding as SpacingVariant)) {
+        console.warn(
+          `[PageLayout] Invalid padding variant "${padding}". Valid values: ${validVariants.join(", ")}`,
+        );
+      }
+    }
+
+    // Validate numeric padding
+    if (typeof padding === "number") {
+      if (padding < 0 || padding > 16) {
+        console.warn(
+          `[PageLayout] padding value ${padding} is outside the recommended range (0-16). Consider using a valid SpacingScale value.`,
+        );
+      }
+    }
+  }
+
   const resolvedPadding = resolvePadding(padding);
 
+  // Apply debug styles
+  const debugClass = debugEnabled && showBoundaries ? styles.debug : "";
+
   return (
-    <Container
-      maxWidth={maxWidth}
-      padding={resolvedPadding}
-      centered={centered}
-      className={`${styles.pageLayout} ${className}`.trim()}
-      style={style}
-      as={as}
-    >
-      {children}
-    </Container>
+    <>
+      <Container
+        maxWidth={maxWidth}
+        padding={resolvedPadding}
+        centered={centered}
+        className={cn(styles.pageLayout, debugClass, className)}
+        style={style}
+        as={as}
+      >
+        {children}
+      </Container>
+      {debugEnabled && showTokens && (
+        <div className={styles.debugInfo}>
+          <p>Max Width: {maxWidth}</p>
+          <p>Padding: {JSON.stringify(resolvedPadding)}</p>
+          <p>Centered: {centered ? "Yes" : "No"}</p>
+          <p>Element: {String(as)}</p>
+        </div>
+      )}
+    </>
   );
 }
+
+PageLayout.displayName = "PageLayout";
 
 // Re-export types
 export type { PageLayoutProps, SpacingVariant } from "./PageLayout.types.js";

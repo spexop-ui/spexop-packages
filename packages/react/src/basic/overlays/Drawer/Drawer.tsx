@@ -1,4 +1,5 @@
 import React, { useEffect, useId, useRef } from "react";
+import type { MutableRefObject } from "react";
 import { createPortal } from "react-dom";
 import { useBodyScrollLock } from "../../../hooks/useBodyScrollLock.js";
 import { useEscapeKey } from "../../../hooks/useEscapeKey.js";
@@ -198,7 +199,9 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
     ref,
   ) => {
     const drawerId = useId();
-    const drawerRef = useRef<HTMLDivElement>(null);
+    const drawerRef = useRef<HTMLDivElement>(
+      null,
+    ) as MutableRefObject<HTMLDivElement | null>;
     const previousFocusRef = useRef<HTMLElement | null>(null);
 
     // Use body scroll lock hook
@@ -238,7 +241,7 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
           previousFocusRef.current?.focus();
         }, animationDuration / 3);
       }
-    }, [isOpen, initialFocusRef, restoreFocus, animationDuration]);
+    }, [isOpen, initialFocusRef, restoreFocus, animationDuration, drawerRef]);
 
     // Focus trap
     useFocusTrap(
