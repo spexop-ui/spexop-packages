@@ -1,6 +1,6 @@
 {
   "name": "@spexop/cli",
-  "version": "0.6.0",
+  "version": "0.6.2",
   "description": "Unified CLI for Spexop Design System",
   "keywords": [
     "spexop",
@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "@clack/prompts": "^0.7.0",
-    "@spexop/theme": "workspace:*",
+    "@spexop/theme": "^0.6.0",
     "commander": "^12.0.0",
     "picocolors": "^1.1.0",
     "fs-extra": "^11.2.0",

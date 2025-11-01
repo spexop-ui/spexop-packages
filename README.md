@@ -7,9 +7,22 @@ Professional React component library with a flexible theme system. Build modern 
 - **[@spexop/react](./packages/react)** - 60+ React components with full theme support
 - **[@spexop/theme](./packages/theme)** - Theme system with 13 presets and 29+ export formats
 - **[@spexop/icons](./packages/icons)** - 269 icons with filled variants and brand icons
-- **[@spexop/cli](./packages/cli)** - CLI tools for scaffolding and utilities
+- **[@spexop/cli](./packages/cli)** - CLI tools for scaffolding and utilities (v0.6.2)
 
 ## 🚀 Quick Start
+
+### Scaffold a New Project
+
+The fastest way to get started:
+
+```bash
+# Create a new Spexop app (no installation needed)
+npx @spexop/cli create my-app
+
+# Or install globally
+npm install -g @spexop/cli
+spexop create my-app
+```
 
 ### For End Users (npm packages)
 

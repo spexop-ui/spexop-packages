@@ -31,8 +31,7 @@ export async function readTemplateFiles(
   // Check if template directory exists
   if (!(await fs.pathExists(templateDir))) {
     throw new Error(
-      `Template "${templateName}" not found at ${templateDir}. ` +
-        "Templates directory may be missing. Ensure templates are included in the package.",
+      `Template "${templateName}" not found at ${templateDir}. Templates directory may be missing. Ensure templates are included in the package.`,
     );
   }
 

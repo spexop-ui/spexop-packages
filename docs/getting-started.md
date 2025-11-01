@@ -1,19 +1,39 @@
 # Getting Started with Spexop
 
-## Installation
+## Quick Start with CLI (Recommended)
+
+The fastest way to get started:
 
 ```bash
-# Install both packages (latest v0.4.0)
-npm install @spexop/react@^0.4.0 @spexop/theme@^0.4.0
+# Create a new Spexop application (no installation needed)
+npx @spexop/cli create my-app
 
-# Or with pnpm
-pnpm add @spexop/react@^0.4.0 @spexop/theme@^0.4.0
+# Or install globally
+npm install -g @spexop/cli
+spexop create my-app
 
-# Or with yarn
-yarn add @spexop/react@^0.4.0 @spexop/theme@^0.4.0
+# Follow the interactive prompts to choose your template
 ```
 
-**Note**: If you're migrating from v0.3.x, see the [Migration Guides](./migrations/) for detailed instructions.
+This will scaffold a complete Spexop application with everything configured.
+
+## Manual Installation
+
+```bash
+# Install packages (latest v0.6.0+)
+npm install @spexop/react@^0.6.0 @spexop/theme@^0.6.0 @spexop/icons@^0.6.0
+
+# Or with pnpm
+pnpm add @spexop/react@^0.6.0 @spexop/theme@^0.6.0 @spexop/icons@^0.6.0
+
+# Or with yarn
+yarn add @spexop/react@^0.6.0 @spexop/theme@^0.6.0 @spexop/icons@^0.6.0
+
+# Optional: Install CLI for utilities
+npm install -D @spexop/cli@^0.6.2
+```
+
+**Note**: If you're migrating from v0.3.x or v0.4.x, see the [Migration Guides](./migrations/) for detailed instructions.
 
 ## Usage Options
 

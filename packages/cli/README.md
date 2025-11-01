@@ -2,20 +2,20 @@
 
 Unified command-line interface for Spexop Design System.
 
-> Version: v0.6.0 (initial publish aligned with other Spexop packages)
+> **Version: v0.6.2** (Latest stable release)
 
 ## Installation
 
 No installation needed! Use npx:
 
 ```bash
-npx spexop@^0.6.0 create my-app
+npx @spexop/cli create my-app
 ```
 
 Or install globally:
 
 ```bash
-npm install -g @spexop/cli@^0.6.0
+npm install -g @spexop/cli
 
 # Then use anywhere
 spexop create my-app
@@ -448,6 +448,40 @@ cd my-app
 pnpm install  # or npm install
 pnpm dev
 ```
+
+## Changelog
+
+### v0.6.2 (2025-11-01)
+
+**Bug Fixes:**
+- Fixed `workspace:*` dependency issue causing installation failures
+- Fixed linting error with string concatenation in error messages
+- All dependencies now properly resolved for npm installation
+
+**Changes:**
+- Updated `@spexop/theme` dependency from `workspace:*` to `^0.6.0`
+- Improved error message formatting in template file operations
+
+### v0.6.1 (2025-11-01)
+
+**Bug Fixes:**
+- Fixed TypeScript DTS build error (`TS5103: Invalid value for '--ignoreDeprecations'`)
+- Updated TypeScript configuration for compatibility with TypeScript 5.9.3
+
+**⚠️ Note:** This version had a dependency issue and should not be used. Use v0.6.2 instead.
+
+### v0.6.0 (2025-10-29)
+
+**Initial synchronized release** - First public release aligned with other Spexop packages.
+
+**Features:**
+- `spexop create` - Scaffold new Spexop applications
+- `spexop add` - Add component templates to existing projects
+- `spexop doctor` - Health check and diagnostics
+- `spexop audit` - Accessibility and quality audits
+- `spexop tokens` - Generate interactive token documentation
+- Full template system with minimal and full-app variants
+- Interactive CLI with beautiful prompts
 
 ## Development
 

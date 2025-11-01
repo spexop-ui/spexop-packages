@@ -7,6 +7,61 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.6.2] - 2025-11-01
+
+### 🔧 Bug Fix Release - CLI Package
+
+**Package Updates:**
+- @spexop/cli: 0.6.1 → 0.6.2
+
+#### @spexop/cli v0.6.2
+
+**Critical Fix:**
+- Fixed `workspace:*` dependency issue that prevented package installation
+- Changed `@spexop/theme` dependency from `workspace:*` to `^0.6.0`
+- Package is now installable via npm without errors
+
+**Code Quality:**
+- Fixed linting error with string concatenation in error messages
+- Improved error message formatting in template file operations
+
+**Verification:**
+- ✅ Installation tested: `npm install @spexop/cli` works correctly
+- ✅ CLI commands verified: All commands functional
+- ✅ Template system tested: Both minimal and full-app templates working
+
+**Migration from v0.6.1:**
+No migration needed. Simply update to v0.6.2:
+```bash
+npm install -g @spexop/cli@latest
+```
+
+**Note:** v0.6.1 should not be used due to broken dependencies. Use v0.6.2 instead.
+
+---
+
+## [0.6.1] - 2025-11-01
+
+### 🔧 Bug Fix Release - CLI Package
+
+**Package Updates:**
+- @spexop/cli: 0.6.0 → 0.6.1
+
+#### @spexop/cli v0.6.1
+
+**Bug Fixes:**
+- Fixed TypeScript DTS build error: `TS5103: Invalid value for '--ignoreDeprecations'`
+- Updated shared TypeScript configuration (`packages/tsconfig/base.json`)
+- Changed `ignoreDeprecations` from `"6.0"` to `"5.0"` for TypeScript 5.9.3 compatibility
+
+**Impact:**
+- Resolves build failures across all packages using shared TypeScript config
+- All packages now build successfully with TypeScript 5.9.3
+
+**⚠️ Known Issue:** This version has a dependency configuration issue. Use v0.6.2 instead.
+
+---
+
 ## [0.6.0] - 2025-10-29
 
 ### 🎉 Version Synchronization - "Foundation Complete"
@@ -85,7 +140,7 @@ No migration needed. Update your package.json:
     "@spexop/icons": "^0.6.0"
   },
   "devDependencies": {
-    "@spexop/cli": "^0.6.0"
+    "@spexop/cli": "^0.6.2"
   }
 }
 ```
